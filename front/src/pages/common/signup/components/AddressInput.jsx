@@ -51,6 +51,7 @@ const Wrapper = styled.div`
 const Label = styled.label`
   display: block;
   text-align: left;
+  margin-top: 8px;
   font-size: ${({ theme }) => theme.fontSizes.base};
   color: ${({ theme }) => theme.colors.gray[400]};
 `;
