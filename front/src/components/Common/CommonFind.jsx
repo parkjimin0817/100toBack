@@ -2,7 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import Logo from '../../assets/img/logo.png';
 
-const CommonFind = ({ children }) => {
+
+const CommonFind = ({children}) => {
   return (
     <Container>
       <Image src={Logo} alt="로고" />
@@ -30,3 +31,4 @@ const Container = styled.div`
 const Image = styled.img`
   margin-bottom: 50px;
 `;
+
