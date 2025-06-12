@@ -15,9 +15,15 @@ export default NextButton;
 const Button = styled.button`
   width: 400px;
   height: 50px;
+  display: block;
   margin: 0 auto;
   outline: none;
   border-radius: 10px;
-  background-color: #55df7e;
+  background-color: ${({ theme }) => theme.colors.green};
   color: white;
+  margin: 50px;
+
+  &:hover {
+    background-color: #44c86f;
+  }
 `;

@@ -2,17 +2,15 @@ import styled from 'styled-components';
 import SignUpProgressBar from './components/SignUpProgressBar';
 import { IoIosArrowForward } from 'react-icons/io';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import AgreeModal from './components/AgreeModal';
 import modalContents from '../../../assets/agreement';
 import CommonFind from '../../../components/Common/CommonFind';
 import NextButton from './components/NextButton';
 
-const steps = ['약관 동의', '기본 정보 입력', '아동 정보 입력', '가입 완료'];
+const steps = ['약관 동의', '기본 정보 입력', '근무 정보 입력', '가입 완료'];
 
 const TermsAgreement = () => {
   const currentStep = 0;
-  const navigate = useNavigate();
   //열려있는 모달 항목
   const [openModalKey, setOpenModalKey] = useState(null);
   //각 항목 체크박스 체크 여부
@@ -83,8 +81,8 @@ const TermsAgreement = () => {
               <IoIosArrowForward size={20} onClick={() => setOpenModalKey('sensitive')} />
             </TextWrapper>
           </AgreeBox>
+          <NextButton to="/signup/step2">다음 단계</NextButton>
         </Wrapper>
-        <NextButton to="/signup/step2">다음 단계</NextButton>
         {openModalKey && (
           <AgreeModal
             title={modalContents[openModalKey].title}
@@ -105,7 +103,6 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  height: 500px;
 `;
 
 const Wrapper = styled.div`
@@ -113,10 +110,12 @@ const Wrapper = styled.div`
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+  align-items: center;
 `;
 
 const Title = styled.span`
   display: block;
+  margin: 30px 0;
   font-size: ${({ theme }) => theme.fontSizes.lg};
   font-weight: 500;
 `;
