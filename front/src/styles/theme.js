@@ -3,11 +3,13 @@ const theme = {
     yellow: '#FFCF66',
     lightyellow: '#FFF2D8',
     orange: '#FF8267',
+    ligthorange: '#F8A896',
     blue: '#1B748D',
     green: '#55DF7E',
     lightblue: '#BAE8F5',
     purple: '#8772D3',
     white: '#ffffff',
+    lightwhite: `rgba(255,255,255, 55%)`,
     black: '#000000',
     gray: {
       100: '#f3f4f6',

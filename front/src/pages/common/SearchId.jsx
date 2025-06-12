@@ -4,8 +4,11 @@ import styled from 'styled-components';
 import CommonFind from '../../components/Common/CommonFind';
 import { SearchIdForm } from '../../styles/Common/Container';
 import SearchFormNav from '../../components/Common/SearchFormNav';
+import { Button } from '../../styles/Common/Button';
+import { useNavigate } from 'react-router-dom';
 
 const SearchId = () => {
+  const navigator = useNavigate();
   return (
     <>
       <CommonFind />
@@ -16,29 +19,39 @@ const SearchId = () => {
           <h2>아이디 찾기</h2>
           <Content>
             <Smalltext>이름과 생년월일을 입력해주세요.</Smalltext>
-            <ContentForm>
-              <table>
-                <tbody>
-                  <tr>
-                    <Tabletd>
-                      <InputTitle>이름</InputTitle>
-                    </Tabletd>
-                    <Tabletd>
-                      <InputName type="text" placeholder="이름을 입력해주세요." />
-                    </Tabletd>
-                  </tr>
-                  <tr>
-                    <Tabletd>
-                      <InputTitle>생년월일</InputTitle>
-                    </Tabletd>
-                    <Tabletd>
-                      <InputName type="date" />
-                    </Tabletd>
-                  </tr>
-                </tbody>
-              </table>
-              <Button>확인</Button>
-            </ContentForm>
+            <form>
+              <ContentDiv>
+                <table>
+                  <tbody>
+                    <tr>
+                      <Tabletd>
+                        <InputTitle>이름</InputTitle>
+                      </Tabletd>
+                      <Tabletd>
+                        <InputName type="text" placeholder="이름을 입력해주세요." />
+                      </Tabletd>
+                    </tr>
+                    <tr>
+                      <Tabletd>
+                        <InputTitle>생년월일</InputTitle>
+                      </Tabletd>
+                      <Tabletd>
+                        <InputName type="date" />
+                      </Tabletd>
+                    </tr>
+                  </tbody>
+                </table>
+              </ContentDiv>
+
+              <ButtonArea>
+                <Button1 type="submit" onClick={() => navigator('/findidsuccess')}>
+                  완료
+                </Button1>
+                <Button1 type="button" onClick={() => navigator('/login')}>
+                  돌아가기
+                </Button1>
+              </ButtonArea>
+            </form>
             <ContentFooter>
               <div>고객센터</div>
               <div>1 : 1 문의하기</div>
@@ -67,10 +80,12 @@ const Smalltext = styled.span`
   color: ${({ theme }) => theme.colors.gray[400]};
 `;
 
-const ContentForm = styled.form`
+const ContentDiv = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius.lg};
-  background: ${({ theme }) => theme.colors.lightyellow};
+  border: 1px solid ${({ theme }) => theme.colors.gray[400]};
+  /* background: ${({ theme }) => theme.colors.lightyellow}; */
   height: 180px;
+  width: 100%;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -78,7 +93,7 @@ const ContentForm = styled.form`
 `;
 
 const Tabletd = styled.td`
-  padding: 10px 20px;
+  padding: ${({ theme }) => theme.spacing[2]} ${({ theme }) => theme.spacing[5]};
 `;
 
 const InputTitle = styled.span`
@@ -94,12 +109,20 @@ const InputName = styled.input`
   width: 160px;
 `;
 
-const Button = styled.button`
+const ButtonArea = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: ${({ theme }) => theme.spacing[3]} 0;
+`;
+
+const Button1 = styled(Button)`
   background-color: ${({ theme }) => theme.colors.lightblue};
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
-  width: 100px;
-  height: 30px;
-  box-shadow: ${({ theme }) => theme.shadows.md};
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.green};
+  }
 `;
 
 const ContentFooter = styled.div`
