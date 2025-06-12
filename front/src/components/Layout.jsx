@@ -3,8 +3,9 @@ import styled from 'styled-components';
 import Header from './Header';
 import Footer from './Footer';
 import SideBar from './SideBar';
+import { Outlet } from 'react-router-dom'
 
-const Layout = ({ children }) => {
+const Layout = () => {
   return (
     <>
       <HeaderWrapper>
@@ -15,7 +16,9 @@ const Layout = ({ children }) => {
           <SideBar />
         </SideBarWrapper>
         <ContentWrapper>
-          <ContentInner>{children}</ContentInner>
+          <ContentInner>
+            <Outlet />
+          </ContentInner>
         </ContentWrapper>
       </MainWrapper>
       <FooterWrapper>
@@ -75,14 +78,13 @@ const ContentWrapper = styled.section`
 `;
 
 const ContentInner = styled.div`
-  padding: 24px;
   background-color: #ffffff;
-  border-radius: 12px;
+  border-radius: 20px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   min-height: 600px;
 
   @media (max-width: 768px) {
-    padding: 16px;
+    /* padding: 16px; */
   }
 `;
 

@@ -17,6 +17,7 @@ function App() {
           <Route element={<Layout />}>
             {/* Main Page */}
             <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             {/* 추가 페이지는 아래 붙이기. */}
           </Route>
           {/* Login Page */}
