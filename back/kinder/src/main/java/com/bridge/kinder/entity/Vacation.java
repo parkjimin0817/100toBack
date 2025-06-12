@@ -23,7 +23,7 @@ public class Vacation { //휴가, 워케이션
 
     @Column(name = "TYPE", length = 20)
     @Enumerated(EnumType.STRING)
-    private CommonEnums.VacationStatus type;
+    private CommonEnums.VacationType type;
     //종류(휴가, 워케이션)
 
     @Column(name = "TYPE_DETAIL", length = 30)
@@ -43,6 +43,9 @@ public class Vacation { //휴가, 워케이션
     private CommonEnums.AdmissionStatus status;
     //상태(승인, 거절, 대기)
 
+    @Column(name = "CREATE_DATE")
+    private LocalDateTime createDate;
+
 
     //---------------------------------------------------------------------------------------------
     @ManyToOne
@@ -59,6 +62,7 @@ public class Vacation { //휴가, 워케이션
     //---------------------------------------------------------------------------------------------
     @PrePersist
     protected void onCreate() {
+        this.createDate = LocalDateTime.now();
         if(this.status == null) {
             this.status = CommonEnums.AdmissionStatus.PENDING;
         }

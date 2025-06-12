@@ -71,21 +71,40 @@ public class Member {// 멤버
     private Center center;
     //시설
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CLASS_NO")
+    private ClassRoom classRoom;
+    //반
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @Builder.Default
     List<Resign> resigns = new ArrayList<>();
     //퇴직
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @Builder.Default
     List<Approval> approvals = new ArrayList<>();
     //승인, 거부
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @Builder.Default
     List<Attendance> attendances = new ArrayList<>();
     //근태
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @Builder.Default
     List<MemberChild> memberChilds = new ArrayList<>();
     //멤버-아동 중계테이블
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @Builder.Default
+    List<Schedule> schedules = new ArrayList<>();
+    //일정
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @Builder.Default
+    List<Board> boards = new ArrayList<>();
+    //게시판
 
 
     //---------------------------------------------------------------------------------------------

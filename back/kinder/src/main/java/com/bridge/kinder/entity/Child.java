@@ -61,9 +61,20 @@ public class Child {// 아동
 
 
     //---------------------------------------------------------------------------------------------
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CLASS_NO")
+    private ClassRoom classRoom;
+    //반
+
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
+    @Builder.Default
     List<MemberChild> memberChilds = new ArrayList<>();
     //멤버-아동 중계테이블
+
+    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
+    @Builder.Default
+    List<ChildAttendance> childAttendances = new ArrayList<>();
+    //출석
 
 
     //---------------------------------------------------------------------------------------------

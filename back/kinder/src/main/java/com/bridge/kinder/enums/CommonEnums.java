@@ -20,12 +20,37 @@ public class CommonEnums {
     }
 
     public enum ResignStatus {
-        Resign,         //퇴직
-        Working,        //재직
+        RESIGN,         //퇴직
+        WORKING,        //재직
     }
 
-    public enum VacationStatus {
+    public enum VacationType {
         VACATED,        //휴가
         WORKATION,      //워케이션
+    }
+
+    public enum ScheduleType {
+        CENTER,         //센터
+        MEMBER,         //멤버
+    }
+
+    public enum ChildAttendanceStatus {
+        PRESENT,        //출석
+        ABSENT,         //결석
+        HALF,           //부분 출석
+    }
+
+    public enum BoardType {
+        NOTICE,         //공지사항
+        LETTER_HOME,    //가정통신문
+        NOTE,           //알림장
+        PHOTO,          //사진
+        PRIVATE_DOC,    //개인서류
+        MEAL_PLAN,      //식단표
+    }
+
+    public enum BoardContentType {
+        TEXT,           //텍스트
+        FILE,           //파일(이미지)
     }
 }

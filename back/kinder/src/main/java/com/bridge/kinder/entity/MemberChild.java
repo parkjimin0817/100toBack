@@ -19,7 +19,7 @@ public class MemberChild {// 멤버-아동 중계
 
     //---------------------------------------------------------------------------------------------
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEMBEr_NO")
+    @JoinColumn(name = "MEMBER_NO")
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)

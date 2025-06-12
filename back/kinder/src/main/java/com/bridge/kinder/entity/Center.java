@@ -41,15 +41,30 @@ public class Center {// 시설
 
     //---------------------------------------------------------------------------------------------
     @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
+    @Builder.Default
     List<Resign> resigns = new ArrayList<>();
+    //퇴직
 
     @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
+    @Builder.Default
     List<Approval> approvals = new ArrayList<>();
+    //승인, 거부
 
     @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
+    @Builder.Default
     List<Member> members = new ArrayList<>();
+    //멤버
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
+    @Builder.Default
     List<Attendance> attendances = new ArrayList<>();
+    //근태
+
+    @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
+    @Builder.Default
+    List<Schedule> schedules = new ArrayList<>();
+    //일정
+
+
 
 }

@@ -50,7 +50,7 @@ public class Resign {// 퇴직
         this.enrollDate = LocalDateTime.now();
         this.resignDate = LocalDateTime.now();
         if(this.status == null) {
-            this.status = CommonEnums.ResignStatus.Working;
+            this.status = CommonEnums.ResignStatus.WORKING;
         }
     }
 
