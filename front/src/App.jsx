@@ -14,12 +14,23 @@ function App() {
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <Router>
-        <Layout>
-          <Routes>
+        <Routes>
+          <Route element={<Layout />}>
+            {/* Main Page */}
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<LoginPage />} />
-          </Routes>
-        </Layout>
+            {/* 추가 페이지는 아래 붙이기. */}
+          </Route>
+          {/* Login Page */}
+          <Route path="/login" element={<Home />}></Route>
+          {/* Regist Page */}
+          <Route path="/regist" element={<Home />}></Route>
+          {/* Find ID Page */}
+          <Route path="/findid" element={<Home />}></Route>
+          {/* Find Password Page */}
+          <Route path="/findpwd" element={<Home />}></Route>
+          {/* 404 Not Found */}
+          <Route path="*" element={<Home />}></Route>
+        </Routes>
       </Router>
     </ThemeProvider>
   );

@@ -24,23 +24,13 @@ const Layout = ({ children }) => {
     </>
   );
 };
-
-const Content = styled.main`
-  min-height: calc(100vh - 68px);
-  display: flex;
-  min-width: 1440px;
-  margin: auto;
-`;
-
-const ContentContainer = styled.div`
-  width: 100%;
-`;
-
 const HeaderWrapper = styled.header`
   width: 100%;
   min-width: 320px;
   background-color: #ffffff;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: center;
 `;
 
 const FooterWrapper = styled.footer`
@@ -49,6 +39,8 @@ const FooterWrapper = styled.footer`
   background-color: #ffffff;
   margin-top: auto;
   box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: center;
 `;
 
 const MainWrapper = styled.main`
@@ -70,8 +62,8 @@ const MainWrapper = styled.main`
 `;
 
 const SideBarWrapper = styled.aside`
-  /* width: 240px;
-  min-width: 240px; */
+  width: 120px;
+  /* min-width: 240px; */
   margin-right: 24px;
 `;
 
