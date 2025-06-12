@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import logo from '../assets/KinderBridge.png';
-import userProfile from '../assets/img/userProfile.png';
+import logo from '../../assets/img/KinderBridge.png';
+import userProfile from '../../assets/img/userProfile.png';
 import { IoCallOutline } from 'react-icons/io5';
 
 const Header = () => {
