@@ -10,14 +10,17 @@ const Layout = ({ children }) => {
       <HeaderWrapper>
         <Header />
       </HeaderWrapper>
+
       <MainWrapper>
         <SideBarWrapper>
           <SideBar />
         </SideBarWrapper>
+
         <ContentWrapper>
           <ContentInner>{children}</ContentInner>
         </ContentWrapper>
       </MainWrapper>
+
       <FooterWrapper>
         <Footer />
       </FooterWrapper>
