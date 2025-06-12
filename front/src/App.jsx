@@ -1,14 +1,14 @@
 import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LoginPage from './pages/common/LoginPage';
+
 import { ThemeProvider } from 'styled-components';
 import theme from './styles/theme';
 import GlobalStyle from './styles/GlobalStyle';
 import Layout from './components/Layout';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
@@ -16,6 +16,7 @@ function App() {
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/login" element={<LoginPage />} />
           </Routes>
         </Layout>
       </Router>
