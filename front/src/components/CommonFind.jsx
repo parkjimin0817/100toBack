@@ -13,6 +13,7 @@ const CommonFind = ({children}) => {
 
 export default CommonFind
 
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
