@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import Logo from '../../assets/img/logo.png';
 import CommonFind from '../../components/Common/CommonFind';
 
 const LoginPage = () => {
@@ -107,7 +108,8 @@ const CheckboxLine = styled.div`
 
 const LoginMaintain = styled.input`
   margin-left: 15px;
-`;
+`
+
 
 const LoginButtonLine = styled.div`
   margin-top: 80px;
