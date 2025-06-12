@@ -17,6 +17,8 @@ import ChildrenList from './components/ChildrenList';
 
 import SignUpWorkSpaceInfo from './pages/common/signup/SignUpWorkSpaceInfo';
 import SignUpComplete from './pages/common/signup/SignUpComplete';
+import SignUpChildInfo from './pages/common/signup/SignUpChildInfo';
+import SignUpCenterInfo from './pages/common/signup/SignUpCenterInfo';
 
 function App() {
   return (
@@ -38,9 +40,11 @@ function App() {
           {/* 회원가입 약관 동의 */}
           <Route path="/signup/terms" element={<TermsAgreement />} />
           {/* 회원가입 기본 정보 입력 */}
-          <Route path="/signup/step2" element={<SignUpBasicInfo />} />
-          <Route path="/signup/step3" element={<SignUpWorkSpaceInfo />} />
+          <Route path="/signup/info" element={<SignUpBasicInfo />} />
+          <Route path="/signup/teacher" element={<SignUpWorkSpaceInfo />} />
           <Route path="/signup/complete" element={<SignUpComplete />} />
+          <Route path="/signup/parent" element={<SignUpChildInfo />} />
+          <Route path="/signup/center" element={<SignUpCenterInfo />} />
           {/* Regist Page */}
           <Route path="/regist" element={<Home />}></Route>
           {/* Find ID Page */}

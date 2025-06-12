@@ -81,7 +81,7 @@ const TermsAgreement = () => {
               <IoIosArrowForward size={20} onClick={() => setOpenModalKey('sensitive')} />
             </TextWrapper>
           </AgreeBox>
-          <NextButton to="/signup/step2">다음 단계</NextButton>
+          <NextButton to="/signup/info">다음 단계</NextButton>
         </Wrapper>
         {openModalKey && (
           <AgreeModal
