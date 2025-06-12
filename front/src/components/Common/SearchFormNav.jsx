@@ -42,6 +42,7 @@ const Nav1 = styled.li`
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.lightblue};
+    cursor: pointer;
   }
 `;
 

@@ -2,12 +2,14 @@ import React from 'react'
 import styled from 'styled-components'
 import Child from '../assets/Child.png'
 
+
 const ChildrenList = () => {
+  
   return (
     <Container>
       <TitleLine>아동목록</TitleLine>
       <CardLine>
-        {/* 카드들은 배열로 받아서 map으로 쭉 받으면 될 듯 합니다. 일단 하드코딩! */}
+        {/* 카드들은 배열로 받아서 map으로 쭉 받으면 될 듯 합니다. 그리고 이름 부분도 일단 하드코딩! */}
         <Card>
           <PictureBox>
             <ChildPic src={Child} alt="아이사진" />
@@ -153,6 +155,10 @@ const PictureBox = styled.div`
   height: 160px;
   box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.25);
   border-radius: 5px;
+  &:hover{
+    border: solid 5px ${({theme}) => theme.colors.orange};
+    cursor: pointer;
+  }
 `
 
 const ChildPic = styled.img`
