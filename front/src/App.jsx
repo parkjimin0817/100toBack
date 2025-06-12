@@ -7,6 +7,8 @@ import theme from './styles/theme';
 import GlobalStyle from './styles/GlobalStyle';
 import Layout from './components/Layout';
 import Home from './pages/Home';
+import UserTypeSelect from './pages/common/signup/UserTypeSelect';
+import TermsAgreement from './pages/common/signup/TermsAgreement';
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup/userselect" element={<UserTypeSelect />} />
+            <Route path="/signup/terms" element={<TermsAgreement />} />
           </Routes>
         </Layout>
       </Router>

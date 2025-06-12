@@ -20,6 +20,7 @@ export default SignUpProgressBar;
 const Wrapper = styled.div`
   display: flex;
   width: 750px;
+  margin: 0 auto;
 `;
 
 const Step = styled.div`

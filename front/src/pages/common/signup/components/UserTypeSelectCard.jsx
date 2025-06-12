@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
-const UserTypeSelectCard = ({ title, imgSrc, description }) => {
+const UserTypeSelectCard = ({ onClick, title, imgSrc, description }) => {
   return (
-    <Card>
+    <Card onClick={onClick}>
       <Title>{title}</Title>
       <Img src={imgSrc} draggable="false" />
       <Description>{description}</Description>
@@ -32,16 +32,20 @@ const Card = styled.div`
   }
 `;
 
-const Title = styled.h2``;
+const Title = styled.h1`
+  font-weight: 800;
+`;
 
 const Img = styled.img`
   width: 280px;
   height: 330px;
   object-fit: contain;
+  margin: 20px 0 20px 0;
 `;
 
 const Description = styled.p`
   display: block;
-  width: 280px;
+  width: 260px;
   min-height: 100px;
+  font-weight: 600;
 `;
