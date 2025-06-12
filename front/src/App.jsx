@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LoginPage from './pages/common/LoginPage';
+
 import { ThemeProvider } from 'styled-components';
 import theme from './styles/theme';
 import GlobalStyle from './styles/GlobalStyle';
 import Layout from './components/Layout';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import SearchId from './pages/SearchId';
 
@@ -13,13 +15,22 @@ function App() {
       <GlobalStyle />
       <Router>
         <Routes>
-          <Route path="/" element={<SearchId />} />
-        </Routes>
-        {/* <Layout>
-          <Routes>
+          <Route element={<Layout />}>
+            {/* Main Page */}
             <Route path="/" element={<Home />} />
-          </Routes>
-        </Layout> */}
+            {/* 추가 페이지는 아래 붙이기. */}
+          </Route>
+          {/* Login Page */}
+          <Route path="/login" element={<Home />}></Route>
+          {/* Regist Page */}
+          <Route path="/regist" element={<Home />}></Route>
+          {/* Find ID Page */}
+          <Route path="/findid" element={<SearchId />}></Route>
+          {/* Find Password Page */}
+          <Route path="/findpwd" element={<Home />}></Route>
+          {/* 404 Not Found */}
+          <Route path="*" element={<Home />}></Route>
+        </Routes>
       </Router>
     </ThemeProvider>
   );
