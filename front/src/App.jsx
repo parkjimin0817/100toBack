@@ -15,7 +15,8 @@ import SignUpBasicInfo from './pages/common/signup/SignUpBasicInfo';
 
 import ChildrenList from './components/ChildrenList';
 
-
+import SignUpWorkSpaceInfo from './pages/common/signup/SignUpWorkSpaceInfo';
+import SignUpComplete from './pages/common/signup/SignUpComplete';
 
 function App() {
   return (
@@ -38,7 +39,8 @@ function App() {
           <Route path="/signup/terms" element={<TermsAgreement />} />
           {/* 회원가입 기본 정보 입력 */}
           <Route path="/signup/step2" element={<SignUpBasicInfo />} />
-
+          <Route path="/signup/step3" element={<SignUpWorkSpaceInfo />} />
+          <Route path="/signup/complete" element={<SignUpComplete />} />
           {/* Regist Page */}
           <Route path="/regist" element={<Home />}></Route>
           {/* Find ID Page */}
