@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../assets/KinderBridge.png';
+import logo from '../../assets/img/KinderBridge.png';
 import styled from 'styled-components';
 
 const Footer = () => {
