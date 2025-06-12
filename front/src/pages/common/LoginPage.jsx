@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Logo from '../../assets/logo.png';
+import CommonFind from '../../components/Common/CommonFind';
 
 const LoginPage = () => {
   const [checked, setChecked] = useState(false);
 
   return (
-    <Container>
-      <Image src={Logo} alt="로고" />
+    <CommonFind>
       <Wrapper>
         <Title>로그인</Title>
         <form>
@@ -17,7 +16,7 @@ const LoginPage = () => {
           </InputLine>
           <CheckboxLine>
             <label>
-              <input type="checkbox" checked={checked} onChange={() => setChecked(!checked)} />
+              <LoginMaintain type="checkbox" checked={checked} onChange={() => setChecked(!checked)} />
               로그인상태유지
             </label>
           </CheckboxLine>
@@ -25,7 +24,7 @@ const LoginPage = () => {
             <Button>로그인</Button>
           </LoginButtonLine>
           <EtcLine>
-            <Etc style={{ marginRight: '100px', marginLeft: '15px' }}>회원가입</Etc>
+            <Etc style={{ marginRight: '140px' }}>회원가입</Etc>
             <Etc>아이디찾기</Etc>
             <Etc>비밀번호찾기</Etc>
           </EtcLine>
@@ -37,7 +36,7 @@ const LoginPage = () => {
         <Foot>고객센터</Foot>
         <Foot>@KB Corp</Foot>
       </Footer>
-    </Container>
+    </CommonFind>
   );
 };
 
@@ -101,8 +100,13 @@ const CheckboxLine = styled.div`
   width: 100%;
   display: flex;
   justify-content: flex-start;
+  flex-direction: row;
   margin-left: 230px;
   margin-top: 10px;
+`;
+
+const LoginMaintain = styled.input`
+  margin-left: 15px;
 `;
 
 const LoginButtonLine = styled.div`

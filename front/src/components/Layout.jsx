@@ -11,16 +11,19 @@ const Layout = () => {
       <HeaderWrapper>
         <Header />
       </HeaderWrapper>
+
       <MainWrapper>
         <SideBarWrapper>
           <SideBar />
         </SideBarWrapper>
+
         <ContentWrapper>
           <ContentInner>
             <Outlet />
           </ContentInner>
         </ContentWrapper>
       </MainWrapper>
+
       <FooterWrapper>
         <Footer />
       </FooterWrapper>
