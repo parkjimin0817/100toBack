@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Logo from '../../assets/img/logo.png';
 
+
 const CommonFind = ({children}) => {
   return (
     <Container>
