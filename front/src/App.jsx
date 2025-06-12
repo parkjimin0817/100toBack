@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/common/LoginPage';
-import CommonFind from './components/CommonFind';
+import CommonFind from './components/Common/CommonFind';
 import { ThemeProvider } from 'styled-components';
 import theme from './styles/theme';
 import GlobalStyle from './styles/GlobalStyle';
 import Layout from './components/Layout';
 import Home from './pages/Home';
-import SearchId from './pages/SearchId';
-
+import SearchId from './pages/common/SearchId';
 
 function App() {
   return (
@@ -18,7 +17,7 @@ function App() {
         <Routes>
           <Route element={<Layout />}>
             {/* Main Page */}
-            <Route path="/" element={<Home />} />
+            {/* <Route path="/" element={<Home />} /> */}
             {/* 추가 페이지는 아래 붙이기. */}
           </Route>
           {/* Login Page */}
@@ -26,7 +25,7 @@ function App() {
           {/* Regist Page */}
           <Route path="/regist" element={<Home />}></Route>
           {/* Find ID Page */}
-          <Route path="/findid" element={<SearchId />}></Route>
+          <Route path="/" element={<SearchId />}></Route>
           {/* Find Password Page */}
           <Route path="/findpwd" element={<Home />}></Route>
           {/* 404 Not Found */}
