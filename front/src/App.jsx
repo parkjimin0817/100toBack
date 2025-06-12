@@ -8,6 +8,8 @@ import GlobalStyle from './styles/GlobalStyle';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import SearchId from './pages/common/SearchId';
+import ChildrenList from './components/ChildrenList';
+
 
 function App() {
   return (
@@ -21,13 +23,15 @@ function App() {
             {/* 추가 페이지는 아래 붙이기. */}
           </Route>
           {/* Login Page */}
-          <Route path="/login" element={<Home />}></Route>
+          <Route path="/login" element={<LoginPage />}></Route>
           {/* Regist Page */}
           <Route path="/regist" element={<Home />}></Route>
           {/* Find ID Page */}
           <Route path="/" element={<SearchId />}></Route>
           {/* Find Password Page */}
           <Route path="/findpwd" element={<Home />}></Route>
+          {/* Find Password Page */}
+          <Route path="/list" element={<ChildrenList />}></Route>
           {/* 404 Not Found */}
           <Route path="*" element={<Home />}></Route>
         </Routes>
