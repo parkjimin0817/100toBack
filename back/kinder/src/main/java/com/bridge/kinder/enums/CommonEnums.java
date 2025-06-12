@@ -14,8 +14,18 @@ public class CommonEnums {
     }
 
     public enum AdmissionStatus {
-        APPROVED,
-        REJECTED,
-        PENDING,
+        APPROVED,       //승인
+        REJECTED,       //거절
+        PENDING,        //대기
+    }
+
+    public enum ResignStatus {
+        Resign,         //퇴직
+        Working,        //재직
+    }
+
+    public enum VacationStatus {
+        VACATED,        //휴가
+        WORKATION,      //워케이션
     }
 }
