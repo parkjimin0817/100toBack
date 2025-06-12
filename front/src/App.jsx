@@ -5,7 +5,7 @@ import CommonFind from './components/Common/CommonFind';
 import { ThemeProvider } from 'styled-components';
 import theme from './styles/theme';
 import GlobalStyle from './styles/GlobalStyle';
-import Layout from './components/Layout';
+import Layout from './components/Common/Layout';
 import Home from './pages/Home';
 import SearchId from './pages/common/SearchId';
 
