@@ -14,7 +14,7 @@ export default UserTypeSelectCard;
 
 const Card = styled.div`
   width: 300px;
-  height: 650px;
+  height: 600px;
   margin: 30px;
   border: 1px solid rgb(150, 150, 150);
   border-radius: 20px;
@@ -32,20 +32,20 @@ const Card = styled.div`
   }
 `;
 
-const Title = styled.h1`
+const Title = styled.h2`
   font-weight: 800;
 `;
 
 const Img = styled.img`
-  width: 280px;
-  height: 330px;
+  width: 250px;
+  height: 300px;
   object-fit: contain;
   margin: 20px 0 20px 0;
 `;
 
 const Description = styled.p`
   display: block;
-  width: 260px;
+  width: 230px;
   min-height: 100px;
   font-weight: 600;
 `;

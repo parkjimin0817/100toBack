@@ -2,13 +2,17 @@ import styled from 'styled-components';
 import SignUpProgressBar from './components/SignUpProgressBar';
 import { IoIosArrowForward } from 'react-icons/io';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AgreeModal from './components/AgreeModal';
 import modalContents from '../../../assets/agreement';
+import CommonFind from '../../../components/Common/CommonFind';
+import NextButton from './components/NextButton';
 
 const steps = ['약관 동의', '기본 정보 입력', '아동 정보 입력', '가입 완료'];
 
 const TermsAgreement = () => {
   const currentStep = 0;
+  const navigate = useNavigate();
   //열려있는 모달 항목
   const [openModalKey, setOpenModalKey] = useState(null);
   //각 항목 체크박스 체크 여부
@@ -36,60 +40,61 @@ const TermsAgreement = () => {
   };
 
   return (
-    <Container>
-      <SignUpProgressBar steps={steps} currentStep={currentStep} />
-      <Title>다음 내용에 동의해주세요</Title>
-      <Wrapper>
-        <AgreeAllBox>
-          <Checkbox type="checkbox" checked={isAllAgreed} onChange={toggleAll} />
-          <Text>모두 동의</Text>
-          <Info>필수 항목에 모두 동의</Info>
-        </AgreeAllBox>
-        <AgreeBox>
-          <Checkbox
-            type="checkbox"
-            checked={agreements.service}
-            onChange={() => setAgreements((prev) => ({ ...prev, service: !prev.service }))}
+    <CommonFind>
+      <Container>
+        <SignUpProgressBar steps={steps} currentStep={currentStep} />
+        <Title>다음 내용에 동의해주세요</Title>
+        <Wrapper>
+          <AgreeAllBox>
+            <Checkbox type="checkbox" checked={isAllAgreed} onChange={toggleAll} />
+            <Text>모두 동의</Text>
+            <Info>필수 항목에 모두 동의</Info>
+          </AgreeAllBox>
+          <AgreeBox>
+            <Checkbox
+              type="checkbox"
+              checked={agreements.service}
+              onChange={() => setAgreements((prev) => ({ ...prev, service: !prev.service }))}
+            />
+            <TextWrapper>
+              <Text>킨더브릿지 서비스 이용약관 동의 (필수)</Text>
+              <IoIosArrowForward size={20} onClick={() => setOpenModalKey('service')} />
+            </TextWrapper>
+          </AgreeBox>
+          <AgreeBox>
+            <Checkbox
+              type="checkbox"
+              checked={agreements.privacy}
+              onChange={() => setAgreements((prev) => ({ ...prev, privacy: !prev.privacy }))}
+            />
+            <TextWrapper>
+              <Text>개인정보 수집 및 이용 동의 (필수)</Text>
+              <IoIosArrowForward size={20} onClick={() => setOpenModalKey('privacy')} />
+            </TextWrapper>
+          </AgreeBox>
+          <AgreeBox>
+            <Checkbox
+              type="checkbox"
+              checked={agreements.sensitive}
+              onChange={() => setAgreements((prev) => ({ ...prev, sensitive: !prev.sensitive }))}
+            />
+            <TextWrapper>
+              <Text>민감정보 수집 및 이용 동의 (필수)</Text>
+              <IoIosArrowForward size={20} onClick={() => setOpenModalKey('sensitive')} />
+            </TextWrapper>
+          </AgreeBox>
+        </Wrapper>
+        <NextButton to="/signup/step2">다음 단계</NextButton>
+        {openModalKey && (
+          <AgreeModal
+            title={modalContents[openModalKey].title}
+            content={modalContents[openModalKey].content}
+            onClose={handleCloseModal}
+            onAgree={handleAgree}
           />
-          <TextWrapper>
-            <Text>킨더브릿지 서비스 이용약관 동의 (필수)</Text>
-            <IoIosArrowForward size={20} onClick={() => setOpenModalKey('service')} />
-          </TextWrapper>
-        </AgreeBox>
-        <AgreeBox>
-          <Checkbox
-            type="checkbox"
-            checked={agreements.privacy}
-            onChange={() => setAgreements((prev) => ({ ...prev, privacy: !prev.privacy }))}
-          />
-          <TextWrapper>
-            <Text>개인정보 수집 및 이용 동의 (필수)</Text>
-            <IoIosArrowForward size={20} onClick={() => setOpenModalKey('privacy')} />
-          </TextWrapper>
-        </AgreeBox>
-        <AgreeBox>
-          <Checkbox
-            type="checkbox"
-            checked={agreements.sensitive}
-            onChange={() => setAgreements((prev) => ({ ...prev, sensitive: !prev.sensitive }))}
-          />
-          <TextWrapper>
-            <Text>민감정보 수집 및 이용 동의 (필수)</Text>
-            <IoIosArrowForward size={20} onClick={() => setOpenModalKey('sensitive')} />
-          </TextWrapper>
-        </AgreeBox>
-      </Wrapper>
-      <Button>다음 단계</Button>
-
-      {openModalKey && (
-        <AgreeModal
-          title={modalContents[openModalKey].title}
-          content={modalContents[openModalKey].content}
-          onClose={handleCloseModal}
-          onAgree={handleAgree}
-        />
-      )}
-    </Container>
+        )}
+      </Container>
+    </CommonFind>
   );
 };
 
@@ -161,15 +166,6 @@ const AgreeBox = styled.div`
   display: flex;
   align-items: center;
   border-bottom: 1px solid black;
-`;
-
-const Button = styled.button`
-  width: 400px;
-  height: 50px;
-  margin: 0 auto;
-  outline: none;
-  border-radius: 10px;
-  background-color: #55df7e;
 `;
 
 const TextWrapper = styled.div`
