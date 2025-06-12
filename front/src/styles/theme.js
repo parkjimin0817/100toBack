@@ -1,11 +1,12 @@
 const theme = {
   colors: {
-    primary: '#646cff',
-    secondary: '#535bf2',
-    info: '#61dafb',
-    success: '#22c55e',
-    warning: '#f59e0b',
-    danger: '#ef4444',
+    yellow: '#FFCF66',
+    lightyellow: '#FFF2D8',
+    orange: '#FF8267',
+    blue: '#1B748D',
+    green: '#55DF7E',
+    lightblue: '#BAE8F5',
+    purple: '#8772D3',
     white: '#ffffff',
     black: '#000000',
     gray: {
