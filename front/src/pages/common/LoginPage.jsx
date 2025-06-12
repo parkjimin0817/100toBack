@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Logo from '../../assets/logo.png';
-import CommonFind from '../../components/CommonFind';
+import CommonFind from '../../components/Common/CommonFind';
 
 const LoginPage = () => {
   const [checked, setChecked] = useState(false);
@@ -108,8 +107,7 @@ const CheckboxLine = styled.div`
 
 const LoginMaintain = styled.input`
   margin-left: 15px;
-`
-
+`;
 
 const LoginButtonLine = styled.div`
   margin-top: 80px;
