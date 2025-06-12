@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Logo from '../../assets/img/logo.png';
 import CommonFind from '../../components/Common/CommonFind';
+import { useNavigate } from 'react-router-dom';
+
 
 const LoginPage = () => {
   const [checked, setChecked] = useState(false);
+  const navigator = useNavigate();
 
   return (
     <CommonFind>
@@ -27,7 +30,7 @@ const LoginPage = () => {
           <EtcLine>
             <Etc style={{ marginRight: '140px' }}>회원가입</Etc>
             <Etc>아이디찾기</Etc>
-            <Etc>비밀번호찾기</Etc>
+            <Etc onClick={() => navigator('/findpwd')}>비밀번호찾기</Etc>
           </EtcLine>
         </form>
       </Wrapper>
