@@ -2,7 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Home = () => {
-  return <Content>Home</Content>;
+  return (
+    <Content>홈 테스트</Content>
+  );
 };
 
 const Content = styled.div`
