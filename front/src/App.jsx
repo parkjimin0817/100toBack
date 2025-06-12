@@ -8,9 +8,14 @@ import GlobalStyle from './styles/GlobalStyle';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import SearchId from './pages/common/SearchId';
+
 import UserTypeSelect from './pages/common/signup/UserTypeSelect';
 import TermsAgreement from './pages/common/signup/TermsAgreement';
 import SignUpBasicInfo from './pages/common/signup/SignUpBasicInfo';
+
+import ChildrenList from './components/ChildrenList';
+
+
 
 function App() {
   return (
@@ -25,18 +30,22 @@ function App() {
           </Route>
           {/* Login Page */}
           <Route path="/login" element={<LoginPage />}></Route>
+
           {/* 회원가입 권한 선택 */}
           <Route path="/signup/userselect" element={<UserTypeSelect />} />
           {/* 회원가입 약관 동의 */}
           <Route path="/signup/terms" element={<TermsAgreement />} />
           {/* 회원가입 기본 정보 입력 */}
           <Route path="/signup/step2" element={<SignUpBasicInfo />} />
+
           {/* Regist Page */}
           <Route path="/regist" element={<Home />}></Route>
           {/* Find ID Page */}
           <Route path="/" element={<SearchId />}></Route>
           {/* Find Password Page */}
           <Route path="/findpwd" element={<Home />}></Route>
+          {/* Find Password Page */}
+          <Route path="/list" element={<ChildrenList />}></Route>
           {/* 404 Not Found */}
           <Route path="*" element={<Home />}></Route>
         </Routes>
