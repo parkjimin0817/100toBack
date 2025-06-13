@@ -3,7 +3,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 
 const AddressInput = () => {
-  const [zonecode, setZoneCode] = useState('');
+  const [zonecode, setZonecode] = useState('');
   const [address, setAddress] = useState('');
   const [detail, setDetail] = useState('');
 
@@ -15,7 +15,7 @@ const AddressInput = () => {
 
     new window.daum.Postcode({
       oncomplete: (data) => {
-        setZoneCode(data.zonecode);
+        setZonecode(data.zonecode);
         setAddress(data.address);
       },
     }).open();

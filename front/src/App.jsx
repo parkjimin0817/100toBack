@@ -17,12 +17,13 @@ import ChildrenList from './components/ChildrenList';
 import SearchFormNav from './components/Common/SearchFormNav';
 import SearchPassword from './pages/common/SearchPassword';
 import AuthenticationUser from './pages/common/AuthenticationUser';
-import ChangePassword from './pages/common/ChangePassword'
+import ChangePassword from './pages/common/ChangePassword';
 
 import SignUpWorkSpaceInfo from './pages/common/signup/SignUpWorkSpaceInfo';
 import SignUpComplete from './pages/common/signup/SignUpComplete';
 import SignUpChildInfo from './pages/common/signup/SignUpChildInfo';
 import SignUpCenterInfo from './pages/common/signup/SignUpCenterInfo';
+import MyVacation from './pages/teacher/MyVacation';
 
 function App() {
   return (
@@ -35,6 +36,8 @@ function App() {
             <Route path="/home" element={<Home />} />
             {/* <Route path="/" element={<Home />} /> */}
             {/* 추가 페이지는 아래 붙이기. */}
+            {/* 교사 휴가 워케이션 신청 페이지 */}
+            <Route path="/myvacation" element={<MyVacation />} />
           </Route>
           {/* Login Page */}
           <Route path="/login" element={<LoginPage />}></Route>
@@ -62,7 +65,7 @@ function App() {
           {/* Change Password Page - 비밀번호 재설정 페이지 */}
           <Route path="/list" element={<ChildrenList />}></Route>
           {/* 404 Not Found */}
-          <Route path="*" element={<Home />}></Route>
+          {/* <Route path="*" element={<Home />}></Route> */}
         </Routes>
       </Router>
     </ThemeProvider>
