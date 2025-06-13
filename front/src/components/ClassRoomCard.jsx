@@ -31,7 +31,7 @@ const ClassRoomCard = ({ classes }) => {
         ))} */}
 
         <ClassList
-          img={sun}
+          img={null}
           className={'햇님'}
           mateCount={10}
           pullCount={12}
@@ -40,7 +40,14 @@ const ClassRoomCard = ({ classes }) => {
           address={'/classDetail'}
         />
 
-        <ClassList img={sun} className={'폭우'} mateCount={10} pullCount={12} teacher={'정의철'} classColor={'blue'} />
+        <ClassList
+          img={sun}
+          className={'해바라기'}
+          mateCount={10}
+          pullCount={12}
+          teacher={'정의철'}
+          classColor={'blue'}
+        />
 
         <ClassList
           img={sun}

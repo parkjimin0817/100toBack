@@ -31,6 +31,7 @@ import ChildHealthCheck from './pages/teacher/ChildHealthCheck';
 import SeachIdSuccess from './pages/common/SeachIdSuccss';
 import AttendanceClassList from './pages/AttendanceClassList';
 import DailySchedule from './pages/DailySchedule';
+import DailyScheduleDetail from './pages/DailyScheduleDetail';
 
 
 function App() {
@@ -44,10 +45,11 @@ function App() {
             <Route path="/home" element={<Home />} />
             {/* <Route path="/" element={<Home />} /> */}
             {/* 유치원 반 목록 페이지(교사 -> 아동 출결) */}
-
             <Route path="/class" element={<AttendanceClassList />} />
             {/* 반별 일과표 목록 페이지 */}
             <Route path="/daily" element={<DailySchedule />} />
+            {/* 반별 일과표 목록  */}
+            <Route path="/dailyDetail" element={<DailyScheduleDetail />} />
             {/* 추가 페이지는 아래 붙이기. */}
             {/* 교사 휴가 워케이션 신청 페이지 */}
             <Route path="/myvacation" element={<MyVacation />} />
@@ -56,7 +58,6 @@ function App() {
           </Route>
           {/* Login Page */}
           <Route path="/login" element={<LoginPage />}></Route>
-
           {/* 회원가입 권한 선택 */}
           <Route path="/signup/userselect" element={<UserTypeSelect />} />
           {/* 회원가입 약관 동의 */}

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import sun from '../assets/img/sun.png';
 import { useNavigate } from 'react-router-dom';
+import { GiRialtoBridge } from 'react-icons/gi';
 
 /**
  * img : 반 별 이미지
@@ -19,9 +20,7 @@ const ClassList = ({ img, className, mateCount, pullCount, teacher, classColor, 
     <Card $Color={classColor} onClick={() => navigator(address)}>
       <CardInfo>
         <div>
-          <CardImg>
-            <img src={img} alt="사진" />
-          </CardImg>
+          <CardImg>{img === null ? <Icon /> : <img src={img} alt="사진" />}</CardImg>
         </div>
         <CardInner>
           <h3>{className}반</h3>
@@ -89,6 +88,15 @@ const CardTeacherName = styled.div`
   font-size: ${({ theme }) => theme.fontSizes.xs};
   font-weight: ${({ theme }) => theme.fontWeights.medium};
   text-align: right;
+`;
+
+const Icon = styled(GiRialtoBridge)`
+  width: 60px;
+  height: 60px;
+  color: ${({ theme }) => theme.colors.gray[100]};
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export default ClassList;
