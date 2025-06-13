@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import sun from '../assets/img/sun.png';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * img : 반 별 이미지
@@ -9,11 +10,13 @@ import sun from '../assets/img/sun.png';
  * pullConut : 정해진 반의 총 인원
  * teacher : 선생님 이름
  * classColor : 각 반의 색깔
+ * address : 주소자자
  */
 
-const ClassList = ({ img, className, mateCount, pullCount, teacher, classColor }) => {
+const ClassList = ({ img, className, mateCount, pullCount, teacher, classColor, address }) => {
+  const navigator = useNavigate();
   return (
-    <Card $Color={classColor}>
+    <Card $Color={classColor} onClick={() => navigator(address)}>
       <CardInfo>
         <div>
           <CardImg>
@@ -48,8 +51,8 @@ const Card = styled.div`
   cursor: pointer;
 
   &:hover {
-    scale: 1.01;
-    transition: 0.33s ease-out;
+    box-shadow: ${({ theme }) => theme.shadows.lg};
+    transition: 0.2s ease-out;
   }
 `;
 
