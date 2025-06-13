@@ -11,7 +11,7 @@ const mockCenters = [
   { id: 7, name: '서울4유치원' },
 ];
 
-const CenterSearchInput = ({ onSelect }) => {
+const CenterSearchInput = ({ onSelect, label }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [showDropDown, setShowDropDown] = useState(false);
@@ -50,7 +50,7 @@ const CenterSearchInput = ({ onSelect }) => {
 
   return (
     <Wrapper>
-      <Label>근무 시설명</Label>
+      <Label>{label}</Label>
       <InputRow>
         <Input
           value={query}
@@ -89,7 +89,6 @@ const Wrapper = styled.div`
   width: 400px;
   margin: 0 auto;
   margin-top: 10px;
-  margin-bottom: 200px;
   position: relative;
 `;
 

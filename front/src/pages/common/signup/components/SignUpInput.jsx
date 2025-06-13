@@ -16,7 +16,7 @@ const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 400px;
-  margin: 10px 0 10px 0;
+  margin: 10px 0 0;
 `;
 
 const Label = styled.label`

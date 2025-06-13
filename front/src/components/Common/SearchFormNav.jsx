@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FaUnlock } from 'react-icons/fa';
 import { FaUser, FaUserPlus } from 'react-icons/fa6';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 const SearchFormNav = () => {
   const navigator = useNavigate();
+
   return (
     <>
       <FormNav>
@@ -35,7 +36,7 @@ const Nav1 = styled.li`
   display: flex;
   justify-content: center;
   align-items: center;
-
+  cursor: pointer;
   width: 100%;
   height: 100%;
 
@@ -57,9 +58,4 @@ const LockIcon = styled(FaUnlock)`
   margin: ${({ theme }) => theme.spacing[2]};
 `;
 
-const EnrollIcon = styled(FaUserPlus)`
-  width: 20px;
-  height: 20px;
-  margin: ${({ theme }) => theme.spacing[2]};
-`;
 export default SearchFormNav;
