@@ -96,20 +96,21 @@ const PhoneRow = styled.div`
   width: 450px; /* Input과 동일한 너비 */
 `;
 
-const VerifyButton = styled.button`
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  background-color: white;
-  border: #bdbcbc solid 1px;
-  border-radius: 20px;
-  padding: 0 12px;
-  height: 30px;
-  font-size: 16px;
-  font-weight: normal;
-  cursor: pointer;
-`;
+ const VerifyButton = styled.button`
+   position: absolute;
+   top: 50%;
+   right: 10px;
+   transform: translateY(-50%);
+   background-color: white;
+   border: #BDBCBC solid 1px;
+   border-radius: 20px;
+   padding: 0 12px;
+   height: 30px;
+   font-size: 12px;
+   font-weight: normal;
+   cursor: pointer;
+ `;
+
 
 const PhoneLine = styled.div`
   display: flex;
