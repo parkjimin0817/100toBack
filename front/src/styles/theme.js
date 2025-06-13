@@ -3,6 +3,7 @@ const theme = {
     yellow: '#FFCE65',
     lightyellow: '#FFF2D8',
     orange: '#F36B4D',
+    lightorange: '#F58a72',
     blue: '#1A748E',
     green: '#4FD377',
     lightblue: '#8FD7EB',
