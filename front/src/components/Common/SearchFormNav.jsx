@@ -1,9 +1,11 @@
 import React from 'react';
 import { FaUnlock } from 'react-icons/fa';
 import { FaUser, FaUserPlus } from 'react-icons/fa6';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const SearchFormNav = () => {
+  const navigator = useNavigate();
   return (
     <>
       <FormNav>
@@ -11,7 +13,7 @@ const SearchFormNav = () => {
           <UserIcon />
           아이디 찾기
         </Nav1>
-        <Nav1 onClick={() => navigator('/')}>
+        <Nav1 onClick={() => navigator('/findpwd')}>
           <LockIcon />
           비밀번호 찾기
         </Nav1>

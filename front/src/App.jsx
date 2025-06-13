@@ -8,19 +8,17 @@ import GlobalStyle from './styles/GlobalStyle';
 import Layout from './components/Common/Layout';
 import Home from './pages/Home';
 import SearchId from './pages/common/SearchId';
-
 import UserTypeSelect from './pages/common/signup/UserTypeSelect';
 import TermsAgreement from './pages/common/signup/TermsAgreement';
 import SignUpBasicInfo from './pages/common/signup/SignUpBasicInfo';
-
-import ChildrenList from './components/ChildrenList';
+import ChildList from '././pages/teacher/ChildList'
 import SearchFormNav from './components/Common/SearchFormNav';
 import SearchPassword from './pages/common/SearchPassword';
 import AuthenticationUser from './pages/common/AuthenticationUser';
 import ChangePassword from './pages/common/ChangePassword'
-
 import SignUpWorkSpaceInfo from './pages/common/signup/SignUpWorkSpaceInfo';
 import SignUpComplete from './pages/common/signup/SignUpComplete';
+import ClassPlacement from './pages/manager/ClassPlacement';
 
 function App() {
   return (
@@ -32,6 +30,10 @@ function App() {
             {/* Main Page */}
             <Route path="/home" element={<Home />} />
             {/* <Route path="/" element={<Home />} /> */}
+            <Route path="/childlist" element={<ChildList />} />
+            {/* 아동목록 페이지(교사) */}
+            <Route path="/manager/classplacement" element={<ClassPlacement />} />
+            {/* 아동목록 페이지(교사) */}
             {/* 추가 페이지는 아래 붙이기. */}
           </Route>
           {/* Login Page */}
@@ -48,7 +50,7 @@ function App() {
           {/* Regist Page */}
           <Route path="/regist" element={<Home />}></Route>
           {/* Find ID Page */}
-          <Route path="/" element={<SearchId />}></Route>
+          <Route path="/findid" element={<SearchId />}></Route>
           {/* Find Password Page */}
           <Route path="/findpwd" element={<SearchPassword />}></Route>
           {/* Find Password Page -처음으로 나오는 비밀번호 찾기 페이지*/}
@@ -56,7 +58,6 @@ function App() {
           {/* authenticationuser -비밀번호 찾기 사용자인증 페이지  */}
           <Route path="/changepwd" element={<ChangePassword />}></Route>
           {/* Change Password Page - 비밀번호 재설정 페이지 */}
-          <Route path="/list" element={<ChildrenList />}></Route>
           {/* 404 Not Found */}
           <Route path="*" element={<Home />}></Route>
         </Routes>
