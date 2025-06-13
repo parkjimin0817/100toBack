@@ -24,6 +24,7 @@ import SignUpComplete from './pages/common/signup/SignUpComplete';
 import SignUpChildInfo from './pages/common/signup/SignUpChildInfo';
 import SignUpCenterInfo from './pages/common/signup/SignUpCenterInfo';
 import MyVacation from './pages/teacher/MyVacation';
+import ChildHealthCheck from './pages/teacher/ChildHealthCheck';
 
 function App() {
   return (
@@ -38,6 +39,8 @@ function App() {
             {/* 추가 페이지는 아래 붙이기. */}
             {/* 교사 휴가 워케이션 신청 페이지 */}
             <Route path="/myvacation" element={<MyVacation />} />
+            {/* 교사 아동 건강 체크리스트 페이지 */}
+            <Route path="/childhealthcheck" element={<ChildHealthCheck />} />
           </Route>
           {/* Login Page */}
           <Route path="/login" element={<LoginPage />}></Route>
