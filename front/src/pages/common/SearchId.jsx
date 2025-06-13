@@ -9,6 +9,10 @@ import { useNavigate } from 'react-router-dom';
 
 const SearchId = () => {
   const navigator = useNavigate();
+
+  const BIRTHDAY_YEAR_LIST = Array.from({ length: 36 }, (_, i) => `${i + 1990}년`);
+  const BIRTHDAY_MONTH_LIST = Array.from({ length: 12 }, (_, i) => `${i + 1}월`);
+  const BIRTHDAY_DAY_LIST = Array.from({ length: 31 }, (_, i) => `${i + 1}일`);
   return (
     <>
       <CommonFind />
@@ -20,28 +24,30 @@ const SearchId = () => {
           <Content>
             <Smalltext>이름과 생년월일을 입력해주세요.</Smalltext>
             <form>
-              <ContentDiv>
-                <table>
-                  <tbody>
-                    <tr>
-                      <Tabletd>
-                        <InputTitle>이름</InputTitle>
-                      </Tabletd>
-                      <Tabletd>
-                        <InputName type="text" placeholder="이름을 입력해주세요." />
-                      </Tabletd>
-                    </tr>
-                    <tr>
-                      <Tabletd>
-                        <InputTitle>생년월일</InputTitle>
-                      </Tabletd>
-                      <Tabletd>
-                        <InputName type="date" />
-                      </Tabletd>
-                    </tr>
-                  </tbody>
-                </table>
-              </ContentDiv>
+              <ContentInner>
+                <h3>이름</h3>
+                <Input type="text" placeholder="이름을 입력해주세요." />
+              </ContentInner>
+              <ContentInner>
+                <h3>생년월일</h3>
+                <ContentDiv>
+                  <SelectBar>
+                    {BIRTHDAY_YEAR_LIST.map((year, index) => (
+                      <option key={index}>{year}</option>
+                    ))}
+                  </SelectBar>
+                  <SelectBar>
+                    {BIRTHDAY_MONTH_LIST.map((month, index) => (
+                      <option key={index}>{month}</option>
+                    ))}
+                  </SelectBar>
+                  <SelectBar>
+                    {BIRTHDAY_DAY_LIST.map((day, index) => (
+                      <option key={index}>{day}</option>
+                    ))}
+                  </SelectBar>
+                </ContentDiv>
+              </ContentInner>
 
               <ButtonArea>
                 <Button1 type="submit" onClick={() => navigator('/findidsuccess')}>
@@ -67,46 +73,19 @@ const SearchId = () => {
 };
 
 const ContentArea = styled.div`
-  padding: ${({ theme }) => theme.spacing[6]};
+  padding: ${({ theme }) => theme.spacing[12]};
+  padding-bottom: ${({ theme }) => theme.spacing[2]};
   text-align: left;
 `;
 
 const Content = styled.div`
   padding: ${({ theme }) => theme.spacing[8]} 0;
+  padding-bottom: 0;
 `;
 
 const Smalltext = styled.span`
   font-size: ${({ theme }) => theme.fontSizes.xs};
   color: ${({ theme }) => theme.colors.gray[400]};
-`;
-
-const ContentDiv = styled.div`
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
-  border: 1px solid ${({ theme }) => theme.colors.gray[400]};
-  /* background: ${({ theme }) => theme.colors.lightyellow}; */
-  height: 180px;
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  flex-direction: column;
-`;
-
-const Tabletd = styled.td`
-  padding: ${({ theme }) => theme.spacing[2]} ${({ theme }) => theme.spacing[5]};
-`;
-
-const InputTitle = styled.span`
-  font-size: ${({ theme }) => theme.fontSizes.lg};
-  font-weight: ${({ theme }) => theme.fontWeights.bold};
-`;
-
-const InputName = styled.input`
-  box-shadow: ${({ theme }) => theme.shadows.md};
-  outline: none;
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
-  padding: ${({ theme }) => theme.spacing[2]};
-  width: 160px;
 `;
 
 const ButtonArea = styled.div`
@@ -126,12 +105,41 @@ const Button1 = styled(Button)`
 `;
 
 const ContentFooter = styled.div`
+  padding-top: ${({ theme }) => theme.spacing[16]};
   display: flex;
   justify-content: right;
   align-items: center;
   gap: 15px;
-
   font-size: ${({ theme }) => theme.fontSizes.sm};
+`;
+
+const ContentInner = styled.div`
+  padding: ${({ theme }) => theme.spacing[2]} 0;
+`;
+
+const ContentDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const SelectBar = styled.select`
+  width: 30%;
+  height: 40px;
+  text-align: center;
+  font-size: ${({ theme }) => theme.fontSizes.base};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border: 1px solid ${({ theme }) => theme.colors.gray[400]};
+  outline: none;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  height: 40px;
+  border: 1px solid ${({ theme }) => theme.colors.gray[400]};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: ${({ theme }) => theme.spacing[2]};
+  outline: none;
 `;
 
 export default SearchId;

@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { Button } from '../../styles/Common/Button';
 import { useNavigate } from 'react-router-dom';
 
-const SeachIdSuccss = () => {
+const SeachIdSuccess = () => {
   const navigator = useNavigate();
   return (
     <>
@@ -27,7 +27,7 @@ const SeachIdSuccss = () => {
 
             <ButtonArea>
               <Button1 onClick={() => navigator('/login')}>로그인하기</Button1>
-              <Button1 onClick={() => navigator('/')}>비밀번호 찾기</Button1>
+              <Button1 onClick={() => navigator('/authenticationuser')}>비밀번호 찾기</Button1>
             </ButtonArea>
 
             <ContentFooter>
@@ -85,11 +85,11 @@ const Button1 = styled(Button)`
 `;
 
 const ContentFooter = styled.div`
+  padding-top: ${({ theme }) => theme.spacing[16]};
   display: flex;
   justify-content: right;
   align-items: center;
   gap: 15px;
-
   font-size: ${({ theme }) => theme.fontSizes.sm};
 `;
 
@@ -102,4 +102,4 @@ const UserID = styled.span`
   color: ${({ theme }) => theme.colors.orange};
 `;
 
-export default SeachIdSuccss;
+export default SeachIdSuccess;

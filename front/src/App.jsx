@@ -18,10 +18,12 @@ import ChildrenList from './components/ChildrenList';
 import SearchFormNav from './components/Common/SearchFormNav';
 import SearchPassword from './pages/common/SearchPassword';
 import AuthenticationUser from './pages/common/AuthenticationUser';
-import ChangePassword from './pages/common/ChangePassword'
+import ChangePassword from './pages/common/ChangePassword';
 
 import SignUpWorkSpaceInfo from './pages/common/signup/SignUpWorkSpaceInfo';
 import SignUpComplete from './pages/common/signup/SignUpComplete';
+import SeachIdSuccess from './pages/common/SeachIdSuccss';
+import Class from './pages/Class';
 
 function App() {
   return (
@@ -33,6 +35,8 @@ function App() {
             {/* Main Page */}
             <Route path="/home" element={<Home />} />
             {/* <Route path="/" element={<Home />} /> */}
+            {/* 유치원 반 목록 페이지(교사 -> 아동 출결) */}
+            <Route path="/class" element={<Class />} />
             {/* 추가 페이지는 아래 붙이기. */}
           </Route>
           {/* Login Page */}
@@ -51,7 +55,7 @@ function App() {
           {/* Find ID Page */}
           <Route path="/findid" element={<SearchId />}></Route>
           {/* Find ID Success Page */}
-          <Route path="/findidsuccess" element={<SeachIdSuccss />}></Route>
+          <Route path="/findidsuccess" element={<SeachIdSuccess />}></Route>
           {/* Find Password Page */}
           <Route path="/findpwd" element={<SearchPassword />}></Route>
           {/* Find Password Page -처음으로 나오는 비밀번호 찾기 페이지*/}

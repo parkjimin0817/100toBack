@@ -14,7 +14,7 @@ const SearchFormNav = () => {
           <UserIcon />
           아이디 찾기
         </Nav1>
-        <Nav1 onClick={() => navigator('/')}>
+        <Nav1 onClick={() => navigator('/authenticationuser')}>
           <LockIcon />
           비밀번호 찾기
         </Nav1>

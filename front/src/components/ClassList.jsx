@@ -11,24 +11,24 @@ import sun from '../assets/img/sun.png';
  * classColor : 각 반의 색깔
  */
 
-const ClassList = (img, className, mateCount, pullCount, teacher, classColor) => {
+const ClassList = ({ img, className, mateCount, pullCount, teacher, classColor }) => {
   return (
-    <Card>
+    <Card $Color={classColor}>
       <CardInfo>
         <div>
           <CardImg>
-            <img src={sun} alt="사진" />
+            <img src={img} alt="사진" />
           </CardImg>
         </div>
         <CardInner>
-          <h3>햇님반</h3>
+          <h3>{className}반</h3>
           <Cardinnerinner>
-            <span>현재 : 10명</span>
-            <span>정원 : 12명</span>
+            <span>현재 : {mateCount}명</span>
+            <span>정원 : {pullCount}명</span>
           </Cardinnerinner>
         </CardInner>
       </CardInfo>
-      <CardTeacherName>정의철 선생님</CardTeacherName>
+      <CardTeacherName>{teacher} 선생님</CardTeacherName>
     </Card>
   );
 };
@@ -41,9 +41,16 @@ const Card = styled.div`
   padding: ${({ theme }) => theme.spacing[4]};
   border-radius: 10px;
   width: 240px;
-  height: 160px;
-  background-color: ${({ theme }) => theme.colors.orange};
+  background-color: ${({ theme, $Color }) => theme.colors[$Color]};
   color: ${({ theme }) => theme.colors.white};
+  gap: 5px;
+  box-shadow: ${({ theme }) => theme.shadows.md};
+  cursor: pointer;
+
+  &:hover {
+    scale: 1.01;
+    transition: 0.33s ease-out;
+  }
 `;
 
 const CardInfo = styled.div`
@@ -54,7 +61,6 @@ const CardInfo = styled.div`
 `;
 
 const CardImg = styled.div`
-  border: 1px solid ${({ theme }) => theme.colors.ligthorange};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   background-color: ${({ theme }) => theme.colors.lightwhite};
   padding: ${({ theme }) => theme.spacing[2]};
@@ -77,7 +83,7 @@ const Cardinnerinner = styled.div`
 
 const CardTeacherName = styled.div`
   width: 100%;
-  font-size: ${({ theme }) => theme.fontSizes.sm};
+  font-size: ${({ theme }) => theme.fontSizes.xs};
   font-weight: ${({ theme }) => theme.fontWeights.medium};
   text-align: right;
 `;

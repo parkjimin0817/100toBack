@@ -20,7 +20,6 @@ const Container = styled.div`
   justify-content: flex-start; /* 상단 정렬 */
   max-width: 1440px;
   max-height: 1300px;
-  padding-bottom: 200px;
   width: 100%;
   margin: 0 auto;
   padding-top: 0;
