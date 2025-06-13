@@ -109,7 +109,7 @@ const PhoneRow = styled.div`
    border-radius: 20px;
    padding: 0 12px;
    height: 30px;
-   font-size: 16px;
+   font-size: 12px;
    font-weight: normal;
    cursor: pointer;
  `;
