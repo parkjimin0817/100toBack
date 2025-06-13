@@ -13,8 +13,7 @@ import SeachIdSuccss from './pages/common/SeachIdSuccss';
 import UserTypeSelect from './pages/common/signup/UserTypeSelect';
 import TermsAgreement from './pages/common/signup/TermsAgreement';
 import SignUpBasicInfo from './pages/common/signup/SignUpBasicInfo';
-
-import ChildrenList from './components/ChildrenList';
+import ChildList from '././pages/teacher/ChildList'
 import SearchFormNav from './components/Common/SearchFormNav';
 import SearchPassword from './pages/common/SearchPassword';
 import AuthenticationUser from './pages/common/AuthenticationUser';
@@ -32,6 +31,7 @@ import SeachIdSuccess from './pages/common/SeachIdSuccss';
 import AttendanceClassList from './pages/AttendanceClassList';
 import DailySchedule from './pages/DailySchedule';
 
+import ClassPlacement from './pages/manager/ClassPlacement';
 
 function App() {
   return (
@@ -48,6 +48,10 @@ function App() {
             <Route path="/class" element={<AttendanceClassList />} />
             {/* 반별 일과표 목록 페이지 */}
             <Route path="/daily" element={<DailySchedule />} />
+            <Route path="/childlist" element={<ChildList />} />
+            {/* 아동목록 페이지(교사) */}
+            <Route path="/manager/classplacement" element={<ClassPlacement />} />
+            {/* 아동목록 페이지(교사) */}
             {/* 추가 페이지는 아래 붙이기. */}
             {/* 교사 휴가 워케이션 신청 페이지 */}
             <Route path="/myvacation" element={<MyVacation />} />
@@ -80,7 +84,6 @@ function App() {
           {/* authenticationuser -비밀번호 찾기 사용자인증 페이지  */}
           <Route path="/changepwd" element={<ChangePassword />}></Route>
           {/* Change Password Page - 비밀번호 재설정 페이지 */}
-          <Route path="/list" element={<ChildrenList />}></Route>
           {/* 404 Not Found */}
           {/* <Route path="*" element={<Home />}></Route> */}
         </Routes>
