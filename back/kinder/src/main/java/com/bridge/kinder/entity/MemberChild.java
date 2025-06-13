@@ -21,9 +21,11 @@ public class MemberChild {// 멤버-아동 중계
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_NO")
     private Member member;
+    //멤버
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CHILD_NO")
     private Child child;
+    //아동
     
 }

@@ -76,6 +76,21 @@ public class Child {// 아동
     List<ChildAttendance> childAttendances = new ArrayList<>();
     //출석
 
+    @OneToOne(mappedBy = "child", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ChildHealthData childHealthData;
+    //아동 건강 정보
+
+    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<ChildHealthLog> childHealthLogs = new ArrayList<>();
+    //아동 건강 기록
+
+    @OneToOne(mappedBy = "child", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ChildActivityData childActivityData;
+    //아동 생활 정보
+
+    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<ChildActivityLog> childActivityLogs = new ArrayList<>();
+
 
     //---------------------------------------------------------------------------------------------
     @PrePersist

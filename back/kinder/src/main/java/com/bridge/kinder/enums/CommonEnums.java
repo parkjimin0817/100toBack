@@ -29,9 +29,10 @@ public class CommonEnums {
         WORKATION,      //워케이션
     }
 
-    public enum ScheduleType {
+    public enum RollType {
         CENTER,         //센터
         MEMBER,         //멤버
+        CHILD,          //아동
     }
 
     public enum ChildAttendanceStatus {

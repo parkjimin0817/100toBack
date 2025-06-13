@@ -19,7 +19,7 @@ public class Center {// 시설
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CENTER_NO")
     private int centerNo;
-    //시설번호
+    //시설 번호
 
     @Column(name = "CENTER_NAME", length = 50, nullable = false, unique = true)
     private String centerName;
@@ -27,16 +27,16 @@ public class Center {// 시설
 
     @Column(name = "CENTER_ADDRESS", length = 200, nullable = false)
     private String centerAddress;
-    //시설주소
+    //시설 주소
 
     @Column(name = "CENTER_TYPE", length = 20, nullable = false)
     @Enumerated(EnumType.STRING)
     private CommonEnums.CenterType centerType;
-    //시설유형
+    //시설 유형
 
     @Column(name = "CENTER_TEL", length = 40)
     private String centerTel;
-    //시설연락처
+    //시설 연락처
 
 
     //---------------------------------------------------------------------------------------------

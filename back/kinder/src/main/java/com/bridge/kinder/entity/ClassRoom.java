@@ -18,15 +18,22 @@ public class ClassRoom {// 반
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CLASS_NO")
     private int classNo;
+    //반 번호
 
     @Column(name = "CLASS_NAME", length = 20, nullable = false)
     private String className;
+    //반 명
 
     @Column(name = "CAPACITY", nullable = false)
     private int capacity;
+    //정원
 
     @Column(name = "CLASS_IMAGE", length = 100)
     private String classImage;
+    //반 이미지
+
+    @Column(name = "COLOR", length = 6)
+    private String color;
 
 
     //---------------------------------------------------------------------------------------------

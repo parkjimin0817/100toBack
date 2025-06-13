@@ -91,6 +91,15 @@ public class Member {// 멤버
     List<Attendance> attendances = new ArrayList<>();
     //근태
 
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+    private Leave leave;
+    //연차
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @Builder.Default
+    List<Vacation> vacations = new ArrayList<>();
+    //휴가, 워케이션
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     @Builder.Default
     List<MemberChild> memberChilds = new ArrayList<>();
@@ -105,6 +114,11 @@ public class Member {// 멤버
     @Builder.Default
     List<Board> boards = new ArrayList<>();
     //게시판
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    List<MemberHealthLog> memberHealthLogs = new ArrayList<>();
+    //건강 기록
 
 
     //---------------------------------------------------------------------------------------------

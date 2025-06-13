@@ -18,7 +18,7 @@ public class Resign {// 퇴직
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "RESIGN_NO")
     private int resignNo;
-    //퇴직번호
+    //퇴직 번호
 
     @Column(name = "ENROLL_DATE")
     private LocalDateTime enrollDate;
@@ -31,17 +31,19 @@ public class Resign {// 퇴직
     @Column(name = "STATUS", length = 20, nullable = false)
     @Enumerated(EnumType.STRING)
     private CommonEnums.ResignStatus status;
-    //퇴사여부
+    //퇴사 여부
 
 
     //---------------------------------------------------------------------------------------------
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CENTER_NO")
     private Center center;
+    //시설
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_NO")
     private Member member;
+    //멤버
 
 
     //---------------------------------------------------------------------------------------------

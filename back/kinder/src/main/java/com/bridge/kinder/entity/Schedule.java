@@ -42,7 +42,7 @@ public class Schedule {// 일정
 
     @Column(name = "TYPE", length = 20)
     @Enumerated(EnumType.STRING)
-    private CommonEnums.ScheduleType type;
+    private CommonEnums.RollType type;
     //분류(시설, 멤버)
 
 

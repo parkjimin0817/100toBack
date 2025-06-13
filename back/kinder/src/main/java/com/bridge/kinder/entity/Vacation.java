@@ -45,15 +45,16 @@ public class Vacation { //휴가, 워케이션
 
     @Column(name = "CREATE_DATE")
     private LocalDateTime createDate;
+    //생성일
 
 
     //---------------------------------------------------------------------------------------------
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_NO")
     private Member member;
     //멤버
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LEAVE_NO")
     private Leave leave;
     //연차
