@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/common/LoginPage';
-import CommonFind from './components/Common/CommonFind';
+
 import { ThemeProvider } from 'styled-components';
 import theme from './styles/theme';
 import GlobalStyle from './styles/GlobalStyle';
 import Layout from './components/Common/Layout';
 import Home from './pages/Home';
 import SearchId from './pages/common/SearchId';
+import SeachIdSuccss from './pages/common/SeachIdSuccss';
 
 import UserTypeSelect from './pages/common/signup/UserTypeSelect';
 import TermsAgreement from './pages/common/signup/TermsAgreement';
@@ -21,10 +22,16 @@ import ChangePassword from './pages/common/ChangePassword';
 
 import SignUpWorkSpaceInfo from './pages/common/signup/SignUpWorkSpaceInfo';
 import SignUpComplete from './pages/common/signup/SignUpComplete';
+
 import SignUpChildInfo from './pages/common/signup/SignUpChildInfo';
 import SignUpCenterInfo from './pages/common/signup/SignUpCenterInfo';
 import MyVacation from './pages/teacher/MyVacation';
 import ChildHealthCheck from './pages/teacher/ChildHealthCheck';
+
+import SeachIdSuccess from './pages/common/SeachIdSuccss';
+import AttendanceClassList from './pages/AttendanceClassList';
+import DailySchedule from './pages/DailySchedule';
+
 
 function App() {
   return (
@@ -36,6 +43,11 @@ function App() {
             {/* Main Page */}
             <Route path="/home" element={<Home />} />
             {/* <Route path="/" element={<Home />} /> */}
+            {/* 유치원 반 목록 페이지(교사 -> 아동 출결) */}
+
+            <Route path="/class" element={<AttendanceClassList />} />
+            {/* 반별 일과표 목록 페이지 */}
+            <Route path="/daily" element={<DailySchedule />} />
             {/* 추가 페이지는 아래 붙이기. */}
             {/* 교사 휴가 워케이션 신청 페이지 */}
             <Route path="/myvacation" element={<MyVacation />} />
@@ -58,7 +70,9 @@ function App() {
           {/* Regist Page */}
           <Route path="/regist" element={<Home />}></Route>
           {/* Find ID Page */}
-          <Route path="/" element={<SearchId />}></Route>
+          <Route path="/findid" element={<SearchId />}></Route>
+          {/* Find ID Success Page */}
+          <Route path="/findidsuccess" element={<SeachIdSuccess />}></Route>
           {/* Find Password Page */}
           <Route path="/findpwd" element={<SearchPassword />}></Route>
           {/* Find Password Page -처음으로 나오는 비밀번호 찾기 페이지*/}
