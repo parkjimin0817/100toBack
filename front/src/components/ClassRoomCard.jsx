@@ -9,77 +9,27 @@ import styled from 'styled-components';
  * ex.유치원 반 목록, 일과표, 반 생성 페이지 부분에서 사용됩니다.
  *
  *
- * classes는 모든 반들을 가르킵니다.
+ * rooms 모든 반들을 가르킵니다.
  *
  * address 부분은 페이지마다 다르게 들어가야합니다.
  */
 
-const ClassRoomCard = ({ classes }) => {
+const ClassRoomCard = ({ rooms, address }) => {
   return (
     <>
       <FlexContainer>
-        {/* {classes.map((room) => (
+        {rooms.map((room) => (
           <ClassList
+            key={room.id}
             img={room.class_image}
             className={room.class_name}
             mateCount={room.mate_count}
-            pullCount={room.capacity}
+            capacity={room.capacity}
             teacher={room.teacher}
-            classColor={room.color}
-            address={'/classDetail'}
+            classColor={room.class_color}
+            address={address}
           />
-        ))} */}
-
-        <ClassList
-          img={null}
-          className={'햇님'}
-          mateCount={10}
-          pullCount={12}
-          teacher={'정의철'}
-          classColor={'orange'}
-          address={'/classDetail'}
-        />
-
-        <ClassList
-          img={sun}
-          className={'해바라기'}
-          mateCount={10}
-          pullCount={12}
-          teacher={'정의철'}
-          classColor={'blue'}
-        />
-
-        <ClassList
-          img={sun}
-          className={'햇님'}
-          mateCount={10}
-          pullCount={12}
-          teacher={'정의철'}
-          classColor={'yellow'}
-          address={'/classDetail'}
-        />
-
-        <ClassList
-          img={sun}
-          className={'햇님'}
-          mateCount={10}
-          pullCount={12}
-          teacher={'정의철'}
-          classColor={'purple'}
-          address={'/classDetail'}
-        />
-
-        <ClassList
-          img={sun}
-          className={'햇님'}
-          mateCount={10}
-          pullCount={12}
-          teacher={'정의철'}
-          classColor={'lightblue'}
-          address={'/classDetail'}
-        />
-
-        <ClassList img={sun} className={'햇님'} mateCount={10} pullCount={12} teacher={'정의철'} classColor={'green'} />
+        ))}
       </FlexContainer>
     </>
   );

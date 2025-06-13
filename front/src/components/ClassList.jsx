@@ -11,10 +11,10 @@ import { GiRialtoBridge } from 'react-icons/gi';
  * pullConut : 정해진 반의 총 인원
  * teacher : 선생님 이름
  * classColor : 각 반의 색깔
- * address : 주소자자
+ * address : 주소
  */
 
-const ClassList = ({ img, className, mateCount, pullCount, teacher, classColor, address }) => {
+const ClassList = ({ img, className, mateCount, capacity, teacher, classColor, address }) => {
   const navigator = useNavigate();
   return (
     <Card $Color={classColor} onClick={() => navigator(address)}>
@@ -26,7 +26,7 @@ const ClassList = ({ img, className, mateCount, pullCount, teacher, classColor, 
           <h3>{className}반</h3>
           <Cardinnerinner>
             <span>현재 : {mateCount}명</span>
-            <span>정원 : {pullCount}명</span>
+            <span>정원 : {capacity}명</span>
           </Cardinnerinner>
         </CardInner>
       </CardInfo>
@@ -93,7 +93,7 @@ const CardTeacherName = styled.div`
 const Icon = styled(GiRialtoBridge)`
   width: 60px;
   height: 60px;
-  color: ${({ theme }) => theme.colors.gray[100]};
+  color: ${({ theme }) => theme.colors.gray[400]};
   display: flex;
   justify-content: center;
   align-items: center;
