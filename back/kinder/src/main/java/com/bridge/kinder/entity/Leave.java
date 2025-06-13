@@ -33,7 +33,7 @@ public class Leave {// 연차
     //남은 연차 일수
 
     //---------------------------------------------------------------------------------------------
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "MEMBER_NO")
     private Member member;
     //멤버
