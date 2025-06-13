@@ -22,10 +22,16 @@ import ChangePassword from './pages/common/ChangePassword';
 
 import SignUpWorkSpaceInfo from './pages/common/signup/SignUpWorkSpaceInfo';
 import SignUpComplete from './pages/common/signup/SignUpComplete';
+
+import SignUpChildInfo from './pages/common/signup/SignUpChildInfo';
+import SignUpCenterInfo from './pages/common/signup/SignUpCenterInfo';
+import MyVacation from './pages/teacher/MyVacation';
+
 import SeachIdSuccess from './pages/common/SeachIdSuccss';
 import AttendanceClassList from './pages/AttendanceClassList';
 import DailySchedule from './pages/DailySchedule';
 import DailyScheduleDetail from './pages/DailyScheduleDetail';
+
 
 function App() {
   return (
@@ -44,6 +50,8 @@ function App() {
             {/* 반별 일과표 목록  */}
             <Route path="/dailyDetail" element={<DailyScheduleDetail />} />
             {/* 추가 페이지는 아래 붙이기. */}
+            {/* 교사 휴가 워케이션 신청 페이지 */}
+            <Route path="/myvacation" element={<MyVacation />} />
           </Route>
           {/* Login Page */}
           <Route path="/login" element={<LoginPage />}></Route>
@@ -52,9 +60,11 @@ function App() {
           {/* 회원가입 약관 동의 */}
           <Route path="/signup/terms" element={<TermsAgreement />} />
           {/* 회원가입 기본 정보 입력 */}
-          <Route path="/signup/step2" element={<SignUpBasicInfo />} />
-          <Route path="/signup/step3" element={<SignUpWorkSpaceInfo />} />
+          <Route path="/signup/info" element={<SignUpBasicInfo />} />
+          <Route path="/signup/teacher" element={<SignUpWorkSpaceInfo />} />
           <Route path="/signup/complete" element={<SignUpComplete />} />
+          <Route path="/signup/parent" element={<SignUpChildInfo />} />
+          <Route path="/signup/center" element={<SignUpCenterInfo />} />
           {/* Regist Page */}
           <Route path="/regist" element={<Home />}></Route>
           {/* Find ID Page */}
@@ -70,7 +80,7 @@ function App() {
           {/* Change Password Page - 비밀번호 재설정 페이지 */}
           <Route path="/list" element={<ChildrenList />}></Route>
           {/* 404 Not Found */}
-          <Route path="*" element={<Home />}></Route>
+          {/* <Route path="*" element={<Home />}></Route> */}
         </Routes>
       </Router>
     </ThemeProvider>
