@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import CheckListSearchBar from './components/CheckListSearchBar';
 import HealthCheckListTable from './components/HealthCheckListTable';
 import { useState } from 'react';
+import { format } from 'date-fns';
 
 const mockData = [
   {
@@ -50,13 +51,20 @@ const ChildHealthCheck = () => {
   const [matchedData, setMatchedData] = useState(null);
 
   const handleSearch = () => {
-    if (!selectedDate || !selectedClass) {
+    if (!selectedDate || !(selectedDate instanceof Date) || !selectedClass) {
       alert('반과 날짜를 모두 선택해주세요.');
       return;
     }
 
-    const formattedDate = selectedDate.toISOString().split('T')[0];
+    const formattedDate = format(selectedDate, 'yyyy-MM-dd'); //뒤에 시간 버리기
+    console.log('📅 formattedDate:', formattedDate);
+    console.log('🏫 selectedClass:', selectedClass);
+    const found = mockData.find((data) => data.date === formattedDate && data.class === selectedClass);
+    console.log('🔍 matched result:', found);
+
+    setMatchedData(found);
   };
+
   return (
     <Wrapper>
       <ContentHeader
@@ -69,14 +77,22 @@ const ChildHealthCheck = () => {
         ]}
       />
       <Content>
-        <CheckListSearchBar />
-        <HealthCheckListTable data={mockData} />
+        <CheckListSearchBar
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+          selectedClass={selectedClass}
+          setSelectedClass={setSelectedClass}
+          onSearch={handleSearch}
+        />
+        <HealthCheckListTable data={matchedData ? matchedData.checklist : []} />
+        {!matchedData && <p style={{ marginTop: '10px' }}>조회된 결과가 없습니다.</p>}
       </Content>
     </Wrapper>
   );
 };
 
 export default ChildHealthCheck;
+const Wrapper = styled.div``;
 
 const Content = styled.div`
   width: 100%;

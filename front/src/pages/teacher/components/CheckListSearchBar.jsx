@@ -8,12 +8,23 @@ import Button from '../../../components/Common/Button';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-const classdata = [{ value: '햇님반', name: '햇님반' }];
+const classdata = [
+  { value: '햇님반', name: '햇님반' },
+  { value: '달님반', name: '달님반' },
+];
 
 const CheckListSearchBar = ({ selectedDate, setSelectedDate, selectedClass, setSelectedClass, onSearch }) => {
+  console.log('선택된 반:', selectedClass);
+  console.log('선택된 날짜:', selectedDate);
+  console.log('날짜 타입:', typeof selectedDate);
+  console.log('Date 객체인가?', selectedDate instanceof Date);
+
   return (
     <SearchBox>
       <SelectClass value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}>
+        <option value="" disabled>
+          반 선택
+        </option>
         {classdata.map((classItem) => (
           <option key={classItem.value} value={classItem.value}>
             {classItem.name}
@@ -30,7 +41,15 @@ const CheckListSearchBar = ({ selectedDate, setSelectedDate, selectedClass, setS
         />
         <CalendarIcon />
       </DateInputWrapper>
-      <Button onClick={onSearch} width="50px" color="orange" hovercolor="lightorange">
+      <Button
+        onClick={() => {
+          console.log('✅ 버튼 클릭 됨');
+          onSearch();
+        }}
+        width="50px"
+        color="orange"
+        hovercolor="lightorange"
+      >
         조회
       </Button>
     </SearchBox>
