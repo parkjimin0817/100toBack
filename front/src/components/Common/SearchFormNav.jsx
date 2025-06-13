@@ -7,17 +7,13 @@ const SearchFormNav = () => {
   return (
     <>
       <FormNav>
-        <Nav1>
+        <Nav1 onClick={() => navigator('/findid')}>
           <UserIcon />
           아이디 찾기
         </Nav1>
-        <Nav1>
+        <Nav1 onClick={() => navigator('/')}>
           <LockIcon />
           비밀번호 찾기
-        </Nav1>
-        <Nav1>
-          <EnrollIcon />
-          회원가입
         </Nav1>
       </FormNav>
     </>
@@ -43,6 +39,7 @@ const Nav1 = styled.li`
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.lightblue};
+    cursor: pointer;
   }
 `;
 
