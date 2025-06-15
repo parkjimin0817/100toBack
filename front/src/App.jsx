@@ -13,7 +13,7 @@ import SeachIdSuccss from './pages/common/SeachIdSuccss';
 import UserTypeSelect from './pages/common/signup/UserTypeSelect';
 import TermsAgreement from './pages/common/signup/TermsAgreement';
 import SignUpBasicInfo from './pages/common/signup/SignUpBasicInfo';
-import ChildList from '././pages/teacher/ChildList'
+import ChildList from '././pages/teacher/ChildList';
 import SearchFormNav from './components/Common/SearchFormNav';
 import SearchPassword from './pages/common/SearchPassword';
 import AuthenticationUser from './pages/common/AuthenticationUser';
@@ -30,6 +30,7 @@ import ChildHealthCheck from './pages/teacher/ChildHealthCheck';
 import SeachIdSuccess from './pages/common/SeachIdSuccss';
 import AttendanceClassList from './pages/AttendanceClassList';
 import DailySchedule from './pages/DailySchedule';
+import DailyScheduleDetail from './pages/DailyScheduleDetail';
 
 import ClassPlacement from './pages/manager/ClassPlacement';
 
@@ -44,10 +45,11 @@ function App() {
             <Route path="/home" element={<Home />} />
             {/* <Route path="/" element={<Home />} /> */}
             {/* 유치원 반 목록 페이지(교사 -> 아동 출결) */}
-
             <Route path="/class" element={<AttendanceClassList />} />
             {/* 반별 일과표 목록 페이지 */}
             <Route path="/daily" element={<DailySchedule />} />
+            {/* 반별 일과표 목록  */}
+            <Route path="/dailyDetail" element={<DailyScheduleDetail />} />
             <Route path="/childlist" element={<ChildList />} />
             {/* 아동목록 페이지(교사) */}
             <Route path="/manager/classplacement" element={<ClassPlacement />} />
@@ -60,7 +62,6 @@ function App() {
           </Route>
           {/* Login Page */}
           <Route path="/login" element={<LoginPage />}></Route>
-
           {/* 회원가입 권한 선택 */}
           <Route path="/signup/userselect" element={<UserTypeSelect />} />
           {/* 회원가입 약관 동의 */}
