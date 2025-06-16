@@ -18,8 +18,8 @@ const SignUpBasicInfo = () => {
   });
   return (
     <CommonFind>
+      <SignUpProgressBar steps={steps} currentStep={currentStep} />
       <Form>
-        <SignUpProgressBar steps={steps} currentStep={currentStep} />
         <SignUpInput type="text" label="아이디" description="영문 소문자, 숫자를 포함해 6~15문자로 입력해주세요." />
         <SignUpInput type="password" label="비밀번호" description="최소 8문자 이상 입력해주세요." />
         <SignUpInput type="password" label="비밀번호 확인" description="비밀번호를 다시 한 번 입력해주세요." />
@@ -58,15 +58,18 @@ const SignUpBasicInfo = () => {
             </Select>
           </SelectWrapper>
         </BirthWrapper>
-        <ProfileImageUpload />
+        <ProfileImageUpload label="본인 사진 등록" />
         <PhoneInput
           label="전화번호"
           placeholder="'-'제외 11자리를 입력해주세요."
           onClick={() => console.log('인증 요청')}
         />
         <SignUpInput type="text" label="" description="인증번호를 입력해주세요" />
-        <NextButton to="/signup/step3">다음 단계</NextButton>
+        {/* 나중에 버튼 폼 안으로 넣기 */}
       </Form>
+      <NextButton to="/signup/teacher">교사 다음 단계</NextButton>
+      <NextButton to="/signup/parent">학부모 다음 단계</NextButton>
+      <NextButton to="/signup/center">시설장 다음 단계</NextButton>
     </CommonFind>
   );
 };

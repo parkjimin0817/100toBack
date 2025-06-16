@@ -38,18 +38,15 @@ const tableInfo = {
 }
 
 const Home = () => {
-
   return (
     <Content>
-      <ContentHeader 
-        Title={'HOME'} 
+      <ContentHeader
+        Title={'HOME'}
         Color={'lightblue'}
-        ButtonProps={
-          [
-            {Title : '뒤로가기', func : () => alert('뒤로가기~')},
-            {Title : '앞으로가기', func : () => alert('앞으로가기~')},
-          ]
-        }
+        ButtonProps={[
+          { Title: '뒤로가기', func: () => alert('뒤로가기~') },
+          { Title: '앞으로가기', func: () => alert('앞으로가기~') },
+        ]}
       ></ContentHeader>
       
       <BoardContainer>

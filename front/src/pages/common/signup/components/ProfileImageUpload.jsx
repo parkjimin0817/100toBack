@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 
-const ProfileImageUpload = () => {
+const ProfileImageUpload = ({ label }) => {
   const fileInputRef = useRef();
   const [preview, setPreview] = useState(null);
 
@@ -29,7 +29,7 @@ const ProfileImageUpload = () => {
 
   return (
     <ImageUploadWrapper>
-      <Label>본인 이미지 등록</Label>
+      <Label>{label}</Label>
       <PreviewRow>
         <PreviewImage src={preview || '/src/assets/defaultimg.png'} alt="프로필 미리보기" />
         <UploadButton type="button" onClick={() => fileInputRef.current.click()}>
@@ -66,6 +66,7 @@ const Label = styled.label`
 
 const PreviewRow = styled.div`
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 16px;
   margin-bottom: 8px;
