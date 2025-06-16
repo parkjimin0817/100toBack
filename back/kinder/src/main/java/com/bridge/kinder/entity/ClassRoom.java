@@ -34,6 +34,7 @@ public class ClassRoom {// 반
 
     @Column(name = "COLOR", length = 6)
     private String color;
+    //반 테마 색
 
 
     //---------------------------------------------------------------------------------------------

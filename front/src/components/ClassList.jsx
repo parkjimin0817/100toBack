@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import sun from '../assets/img/sun.png';
 import { useNavigate } from 'react-router-dom';
+import { GiRialtoBridge } from 'react-icons/gi';
 
 /**
  * img : 반 별 이미지
@@ -10,24 +11,22 @@ import { useNavigate } from 'react-router-dom';
  * pullConut : 정해진 반의 총 인원
  * teacher : 선생님 이름
  * classColor : 각 반의 색깔
- * address : 주소자자
+ * address : 주소
  */
 
-const ClassList = ({ img, className, mateCount, pullCount, teacher, classColor, address }) => {
+const ClassList = ({ img, className, mateCount, capacity, teacher, classColor, address }) => {
   const navigator = useNavigate();
   return (
     <Card $Color={classColor} onClick={() => navigator(address)}>
       <CardInfo>
         <div>
-          <CardImg>
-            <img src={img} alt="사진" />
-          </CardImg>
+          <CardImg>{img === null ? <Icon /> : <img src={img} alt="사진" />}</CardImg>
         </div>
         <CardInner>
           <h3>{className}반</h3>
           <Cardinnerinner>
             <span>현재 : {mateCount}명</span>
-            <span>정원 : {pullCount}명</span>
+            <span>정원 : {capacity}명</span>
           </Cardinnerinner>
         </CardInner>
       </CardInfo>
@@ -89,6 +88,15 @@ const CardTeacherName = styled.div`
   font-size: ${({ theme }) => theme.fontSizes.xs};
   font-weight: ${({ theme }) => theme.fontWeights.medium};
   text-align: right;
+`;
+
+const Icon = styled(GiRialtoBridge)`
+  width: 60px;
+  height: 60px;
+  color: ${({ theme }) => theme.colors.gray[400]};
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export default ClassList;

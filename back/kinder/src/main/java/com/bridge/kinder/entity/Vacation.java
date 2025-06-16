@@ -38,6 +38,14 @@ public class Vacation { //휴가, 워케이션
     private LocalDate endDate;
     //종료일
 
+    @Column(name = "REASON", columnDefinition = "TEXT")
+    private String reason;
+    //사유
+
+    @Column(name = "ATTACHMENT", length = 100)
+    private String attachment;
+    //첨부파일
+
     @Column(name = "STATUS", length = 20)
     @Enumerated(EnumType.STRING)
     private CommonEnums.AdmissionStatus status;
