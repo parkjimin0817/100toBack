@@ -36,6 +36,9 @@ import DailySchedule from './pages/DailySchedule';
 import DailyScheduleDetail from './pages/DailyScheduleDetail';
 
 import ClassPlacement from './pages/manager/ClassPlacement';
+
+import ChildDetail from './pages/teacher/ChildDetail';
+
 import FamilyCommunityPage from './pages/teacher/FamilyCommunityPage';
 
 import ManagerMyPage from './pages/manager/ManagerMyPage';
@@ -73,6 +76,8 @@ function App() {
             <Route path="/myvacation" element={<MyVacation />} />
             {/* 교사 아동 건강 체크리스트 페이지 */}
             <Route path="/childhealthcheck" element={<ChildHealthCheck />} />
+            {/* 교사 아동 상세보기 페이지 */}
+            <Route path="/child/detail" element={<ChildDetail />} />
             {/* 시설장 마이페이지  페이지 */}
             <Route path="/managermypage" element={<ManagerMyPage />} />
           </Route>

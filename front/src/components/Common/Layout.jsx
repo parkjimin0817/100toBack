@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Header from './Header';
 import Footer from './Footer';
 import SideBar from './Sidebar';
-import { Outlet } from 'react-router-dom'
+import { Outlet } from 'react-router-dom';
 
 const Layout = () => {
   return (
