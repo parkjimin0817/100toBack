@@ -1,149 +1,132 @@
+
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-import { LuBaby } from "react-icons/lu";
-import { FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
-import { MdFilterFrames } from "react-icons/md";
-import { RiHealthBookLine } from "react-icons/ri";
-
-// 사이드 바 리팩토링 필수. 
 
 const SideBar = () => {
-  const [isExpanded , setIsExpanded] = useState(false);
-  const [openMenus, setOpenMenus] = useState({
-    menu1 : false,
-    menu2 : false,
-    menu3 : false,
-    menu4 : false,
-    menu5 : false,
-  });
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [openMenus, setOpenMenus] = useState({});
   const sidebarRef = useRef(null);
+
+  const handleMenuToggle = (menuId) => {
+    setOpenMenus(prev => ({ ...prev, [menuId]: !prev[menuId] }));
+  };
 
   return (
     <SidebarContainer
       ref={sidebarRef}
       onMouseEnter={() => setIsExpanded(true)}
-      onMouseLeave={() => setIsExpanded(false)}
+      onMouseLeave={() => {
+        setIsExpanded(false);
+        setOpenMenus({});
+      }}
       $isExpanded={isExpanded}
     >
-      <SidebarList
-        $isExpanded={isExpanded}
-      >
-        <SidebarItem
-          onMouseLeave={() => setOpenMenus(menus => ({...menus, menu1 : false}))}
-          $SidebarColor={'orange'}
-        >
-          <SidebarItemButton 
-            onMouseEnter={() => setOpenMenus(menus => ({...menus, menu1 : !menus.menu1}))}
-            $isExpanded={isExpanded && openMenus.menu1}
-            $SidebarColor={'orange'}
+      <SidebarList $isExpanded={isExpanded}>
+        {sidebarMenus.map(menu => (
+          <SidebarItem
+            key={menu.id}
+            $SidebarColor={menu.color}
+            onMouseLeave={() => setOpenMenus(prev => ({ ...prev, [menu.id]: false }))}
           >
-            <LuBaby />
-            <p>아동 관리</p>
-          </SidebarItemButton>
-          {openMenus.menu1 && isExpanded && (
-            <SidebarSublist $SidebarColor={'orange'}>
-              <SidebarSubItem $SidebarColor={'orange'}>아동 목록</SidebarSubItem>
-              <SidebarSubItem $SidebarColor={'orange'}>아동 출결</SidebarSubItem>
-              <SidebarSubItem $SidebarColor={'orange'}>아동 건강</SidebarSubItem>
-              <SidebarSubItem $SidebarColor={'orange'}>아동 생활</SidebarSubItem>
-            </SidebarSublist>
-          )}
-        </SidebarItem>
-        <SidebarItem
-          onMouseLeave={() => setOpenMenus(menus => ({...menus, menu2 : false}))}
-          $SidebarColor={'purple'}
-        >
-          <SidebarItemButton 
-            onMouseEnter={() => setOpenMenus(menus => ({...menus, menu2 : !menus.menu2}))}
-            $isExpanded={isExpanded && openMenus.menu2}
-            $SidebarColor={'purple'}
-          >
-            <FaRegCalendarAlt />
-            <p>일정 관리</p>
-          </SidebarItemButton>
-          {openMenus.menu2 && isExpanded && (
-            <SidebarSublist $SidebarColor={'purple'}>
-              <SidebarSubItem $SidebarColor={'purple'}>유치원 일정</SidebarSubItem>
-              <SidebarSubItem $SidebarColor={'purple'}>일과표</SidebarSubItem>
-              <SidebarSubItem $SidebarColor={'purple'}>학부모 상담 일정</SidebarSubItem>
-            </SidebarSublist>
-          )}
-        </SidebarItem>
-        <SidebarItem
-          onMouseLeave={() => setOpenMenus(menus => ({...menus, menu3 : false}))}
-          $SidebarColor={'green'}
-        >
-          <SidebarItemButton 
-            onMouseEnter={() => setOpenMenus(menus => ({...menus, menu3 : !menus.menu3}))}
-            $isExpanded={isExpanded && openMenus.menu3}
-            $SidebarColor={'green'}
-          >
-            <MdFilterFrames />
-            <p>유치원 게시판</p>
-          </SidebarItemButton>
-          {openMenus.menu3 && isExpanded && (
-            <SidebarSublist $SidebarColor={'green'}>
-              <SidebarSubItem $SidebarColor={'green'}>공지사항</SidebarSubItem>
-              <SidebarSubItem $SidebarColor={'green'}>가정통신문</SidebarSubItem>
-              <SidebarSubItem $SidebarColor={'green'}>식단표</SidebarSubItem>
-              <SidebarSubItem $SidebarColor={'green'}>알림장</SidebarSubItem>
-              <SidebarSubItem $SidebarColor={'green'}>사진 게시판</SidebarSubItem>
-            </SidebarSublist>
-          )}
-        </SidebarItem>
-        <SidebarItem
-          onMouseLeave={() => setOpenMenus(menus => ({...menus, menu4 : false}))}
-          $SidebarColor={'blue'}
-        >
-          <SidebarItemButton 
-            onMouseEnter={() => setOpenMenus(menus => ({...menus, menu4 : !menus.menu4}))}
-            $isExpanded={isExpanded && openMenus.menu4}
-            $SidebarColor={'blue'}
-          >
-            <FaRegClock />
-            <p>업무 관리</p>
-          </SidebarItemButton>
-          {openMenus.menu4 && isExpanded && (
-            <SidebarSublist $SidebarColor={'blue'}>
-              <SidebarSubItem $SidebarColor={'blue'}>근태 관리</SidebarSubItem>
-              <SidebarSubItem $SidebarColor={'blue'}>휴가 관리</SidebarSubItem>
-              <SidebarSubItem $SidebarColor={'blue'}>학부모 연락처 관리</SidebarSubItem>
-            </SidebarSublist>
-          )}
-        </SidebarItem>
-        <SidebarItem
-          onMouseLeave={() => setOpenMenus(menus => ({...menus, menu5 : false}))}
-          $SidebarColor={'yellow'}
-        >
-          <SidebarItemButton 
-            onMouseEnter={() => setOpenMenus(menus => ({...menus, menu5 : !menus.menu5}))}
-            $isExpanded={isExpanded && openMenus.menu5}
-            $SidebarColor={'yellow'}
-          >
-            <RiHealthBookLine />
-            <p>내 건강 관리</p>
-          </SidebarItemButton>
-          {openMenus.menu5 && isExpanded && (
-            <SidebarSublist
-              $SidebarColor={'yellow'}
+            <SidebarItemButton
+              $SidebarColor={menu.color}
+              $isExpanded={isExpanded}
+              onMouseEnter={() => handleMenuToggle(menu.id)}
             >
-              <SidebarSubItem $SidebarColor={'yellow'}>나의 건강 데이터</SidebarSubItem>
-              <SidebarSubItem $SidebarColor={'yellow'}>건강 관리</SidebarSubItem>
-            </SidebarSublist>
-          )}
-        </SidebarItem>
+              {menu.icon}
+              <p>{menu.label}</p>
+            </SidebarItemButton>
+
+            {openMenus[menu.id] && isExpanded && (
+              <SidebarSublist $SidebarColor={menu.color}>
+                {menu.subItems.map((item, idx) => (
+                  <NavLink to={item.link}>
+                    <SidebarSubItem key={idx} $SidebarColor={menu.color}>
+                      {item.label}
+                    </SidebarSubItem>
+                  </NavLink>
+                ))}
+              </SidebarSublist>
+            )}
+          </SidebarItem>
+        ))}
       </SidebarList>
     </SidebarContainer>
   );
 };
 
+export default SideBar;
+
+// sidebarMenu.ts
+import { LuBaby } from "react-icons/lu";
+import { FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
+import { MdFilterFrames } from "react-icons/md";
+import { RiHealthBookLine } from "react-icons/ri";
+import { NavLink } from 'react-router-dom';
+
+const sidebarMenus = [
+  {
+    id: "menu1",
+    label: "아동 관리",
+    icon: <LuBaby />,
+    color: "orange",
+    subItems: [
+      {label : "아동 목록", link : ""}, 
+      {label : "아동 출결", link : ""}, 
+      {label : "아동 건강", link : ""}, 
+      {label : "아동 생활", link : ""}],
+  },
+  {
+    id: "menu2",
+    label: "일정 관리",
+    icon: <FaRegCalendarAlt />,
+    color: "purple",
+    subItems: [
+      {label : "유치원 일정", link : ""}, 
+      {label : "일과표", link : ""}, 
+      {label : "학부모 상담 일정", link : ""}],
+  },
+  {
+    id: "menu3",
+    label: "유치원 게시판",
+    icon: <MdFilterFrames />,
+    color: "green",
+    subItems: [
+      {label : "공지사항", link : ""}, 
+      {label : "가정통신문", link : ""}, 
+      {label : "식단표", link : ""}, 
+      {label : "알림장", link : ""}, 
+      {label : "사진 게시판", link : ""}],
+  },
+  {
+    id: "menu4",
+    label: "업무 관리",
+    icon: <FaRegClock />,
+    color: "blue",
+    subItems: [
+      {label : "근태 관리", link : ""}, 
+      {label : "휴가 관리", link : ""}, 
+      {label : "학부모 연락처 관리", link : ""}],
+  },
+  {
+    id: "menu5",
+    label: "내 건강 관리",
+    icon: <RiHealthBookLine />,
+    color: "yellow",
+    subItems: [
+      {label : "나의 건강 데이터", link : ""}, 
+      {label : "건강 관리", link : ""}],
+  },
+];
+
 const SidebarContainer = styled.div`
   width: ${({ $isExpanded }) => ($isExpanded ? '300px' : '120px')};
-  z-index: 100;
-  position: relative;
+  transition: width 0.3s ease;
   background-color: white;
   padding: 20px;
-  border-radius: 20px;
+  /* border-radius: 20px; */
+  z-index: 100;
+  position: relative;
 `;
 
 const SidebarList = styled.ul`
@@ -154,74 +137,85 @@ const SidebarList = styled.ul`
   z-index: 100;
 `;
 
-const SidebarItem = styled.div`
+const SidebarItem = styled.li`
+  color: ${({ theme, $SidebarColor }) => theme.colors[$SidebarColor]};
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  color: ${({theme, $SidebarColor}) => theme.colors[$SidebarColor]};
 `;
 
-const SidebarItemButton = styled.li`
-  display : flex;
+const SidebarItemButton = styled.div`
+  display: flex;
   align-items: center;
   flex-direction: ${({ $isExpanded }) => ($isExpanded ? 'row' : 'column')};
   justify-content: ${({ $isExpanded }) => ($isExpanded ? 'flex-start' : 'center')};
   width: ${({ $isExpanded }) => ($isExpanded ? '260px' : '80px')};
   height: 80px;
-  border: 3px ${({theme, $SidebarColor}) => theme.colors[$SidebarColor]} solid;
+  border: 3px solid ${({ theme, $SidebarColor }) => theme.colors[$SidebarColor]};
   border-radius: 10px;
+  transition: all 0.3s ease;
   font-size: 12px;
-  z-index : 100;
 
   & > svg {
     width: 35px;
     height: 40px;
-    margin-bottom: ${({ $isExpanded }) => ($isExpanded ? '0' : '5px')};
     margin-left: ${({ $isExpanded }) => ($isExpanded ? '20px' : '0')};
     margin-right: ${({ $isExpanded }) => ($isExpanded ? '15px' : '0')};
+    margin-bottom: ${({ $isExpanded }) => ($isExpanded ? '0' : '5px')};
   }
 
   &:hover {
-    background-color : ${({theme, $SidebarColor}) => theme.colors[$SidebarColor]};
+    background-color: ${({ theme, $SidebarColor }) => theme.colors[$SidebarColor]};
     color: white;
+    font-size: 16px;
   }
 `;
 
 const SidebarSublist = styled.ul`
   display: flex;
   flex-direction: column;
-  position: relative;
+  overflow: hidden;
+  animation: slideDown 0.3s ease forwards;
   margin-left: 40px;
-  text-align: left;
+  position: relative;
   gap: 10px;
-  top: calc(100%);
-  right: 0;
 
   &::before {
-    content: ''; /* content는 꼭 있어야 함 (비워도 됨) */
+    content: '';
     position: absolute;
     left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    
-    width: 4px;             /* 작대기 두께 */
-    height: 100%;           /* 작대기 길이 */
-    background-color: ${({theme, $SidebarColor}) => theme.colors[$SidebarColor]};;  /* 작대기 색상 (예: 주황) */
-    border-radius: 2px;     /* 끝을 둥글게 처리 */
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background-color: ${({ theme, $SidebarColor }) => theme.colors[$SidebarColor]};
+    border-radius: 2px;
+  }
+
+  @keyframes slideDown {
+    0% {
+      max-height: 0;
+      opacity: 0;
+    }
+    100% {
+      max-height: 500px;
+      opacity: 1;
+    }
   }
 `;
 
 const SidebarSubItem = styled.li`
-  margin-left: 20px;
+  display: flex;
+  align-items: center;
   padding: 8px 15px;
+  margin-left: 20px;
   font-size: 12px;
   border-radius: 5px;
+  min-height: 40px;
 
   &:hover {
-    background-color : ${({theme, $SidebarColor}) => theme.colors[$SidebarColor]};
+    background-color: ${({ theme, $SidebarColor }) => theme.colors[$SidebarColor]};
     color: white;
+    font-size: 16px;
   }
 `;
-
-export default SideBar;
