@@ -21,10 +21,10 @@ import styled from 'styled-components';
  * }
  */
 
-const ContentHeader = ({ Title, Color, ButtonProps }) => {
+const ContentHeader = ({ Title, Color, ButtonProps, FontSize }) => {
   return (
     <ContentHeaderContainer $HeaderColor={Color}>
-      <ContentHeaderTitle>{Title}</ContentHeaderTitle>
+      <ContentHeaderTitle $HeaderFontSize={FontSize}>{Title}</ContentHeaderTitle>
       <ButtonContainer>
         {ButtonProps &&
           ButtonProps.length > 0 &&
@@ -50,7 +50,7 @@ const ContentHeaderContainer = styled.div`
 `;
 
 const ContentHeaderTitle = styled.h2`
-  font-size: 24px;
+  font-size: ${({ theme, $HeaderFontSize }) => theme.fontSizes[$HeaderFontSize]};
 `;
 
 const ButtonContainer = styled.div`

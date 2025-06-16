@@ -2,8 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Logo from '../../assets/img/logo.png';
 
-
-const CommonFind = ({children}) => {
+const CommonFind = ({ children }) => {
   return (
     <Container>
       <Image src={Logo} alt="로고" />
@@ -21,7 +20,6 @@ const Container = styled.div`
   justify-content: flex-start; /* 상단 정렬 */
   max-width: 1440px;
   max-height: 1300px;
-  padding-bottom: 200px;
   width: 100%;
   margin: 0 auto;
   padding-top: 0;
@@ -31,4 +29,3 @@ const Container = styled.div`
 const Image = styled.img`
   margin-bottom: 50px;
 `;
-
