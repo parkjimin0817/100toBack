@@ -136,7 +136,7 @@ const SidebarContainer = styled.div`
   transition: width 0.3s ease;
   background-color: white;
   padding: 20px;
-  /* border-radius: 20px; */
+  border-radius: 20px;
   z-index: 100;
   position: relative;
 `;
