@@ -33,6 +33,7 @@ import DailySchedule from './pages/DailySchedule';
 import DailyScheduleDetail from './pages/DailyScheduleDetail';
 
 import ClassPlacement from './pages/manager/ClassPlacement';
+import FamilyCommunityPage from './pages/teacher/FamilyCommunityPage';
 
 function App() {
   return (
@@ -55,6 +56,10 @@ function App() {
             <Route path="/manager/classplacement" element={<ClassPlacement />} />
             {/* 아동목록 페이지(교사) */}
             {/* 추가 페이지는 아래 붙이기. */}
+
+            {/* 교사 가정통신문 게시글 목록 페이지 */}
+            <Route path="/familycommunity/list" element={<FamilyCommunityPage />} />
+
             {/* 교사 휴가 워케이션 신청 페이지 */}
             <Route path="/myvacation" element={<MyVacation />} />
             {/* 교사 아동 건강 체크리스트 페이지 */}
