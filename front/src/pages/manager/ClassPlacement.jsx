@@ -30,7 +30,7 @@ const ClassPlacement = () => {
   }
 
   return (
-    <>
+    <Content>
       <ContentHeader
         Title="아동 반 배치"
         Color="blue"
@@ -70,11 +70,19 @@ const ClassPlacement = () => {
         sortBy={sort}
         roleBy={role}
       />
-    </>
+    </Content>
   )
 }
 
 export default ClassPlacement
+
+const Content = styled.div`
+  width: 100%;
+  min-height: 600px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+`;
 
 const ButtonLine = styled.div`
   display: flex;

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ClassRoomCard from '../components/ClassRoomCard';
 import ContentHeader from '../components/Common/ContentHeader';
 import sun from '../assets/img/sun.png';
+import styled from 'styled-components';
 
 //일과표 반별 리스트 페이지(모든 반이 나옴)
 const DailySchedule = () => {
@@ -45,11 +46,19 @@ const DailySchedule = () => {
   ];
 
   return (
-    <>
+    <Content>
       <ContentHeader Title={'일과표'} Color={'purple'} />
       <ClassRoomCard rooms={thermeData} address={'/dailyDetail'} />
-    </>
+    </Content>
   );
 };
+
+const Content = styled.div`
+  width: 100%;
+  min-height: 600px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+`;
 
 export default DailySchedule;
