@@ -77,7 +77,7 @@ const BoardTHead = styled.thead`
 
 const BoardTH = styled.th`
   min-width : 30px;
-  width : ${({ $width }) => $width ? $width : ""};
+  max-width : ${({ $width }) => $width ? $width : ""};
   text-align : ${({ $align }) => $align ? $align : ""};
   padding: 10px 5px;
 `;
@@ -91,6 +91,9 @@ const BoardTR = styled.tr`
 `;
 
 const BoardTD = styled.td`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   padding: 10px 5px;
 `;
 
