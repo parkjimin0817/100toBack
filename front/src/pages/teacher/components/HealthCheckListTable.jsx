@@ -13,6 +13,7 @@ const HealthCheckListTable = ({ data }) => {
             <th>몸무게</th>
             <th>증상</th>
             <th>메모</th>
+            <th>비고</th>
           </tr>
         </thead>
         <tbody>
@@ -24,6 +25,7 @@ const HealthCheckListTable = ({ data }) => {
               <td>{child.weight}kg</td>
               <td>{child.symptom}</td>
               <td>{child.memo}</td>
+              <td>버튼</td>
             </tr>
           ))}
         </tbody>
@@ -74,7 +76,11 @@ const VacationTable = styled.table`
   }
   th:nth-child(6),
   td:nth-child(6) {
-    width: 32%;
+    width: 22%;
     text-align: left;
+  }
+  th:nth-child(7),
+  td:nth-child(7) {
+    width: 10%;
   }
 `;
