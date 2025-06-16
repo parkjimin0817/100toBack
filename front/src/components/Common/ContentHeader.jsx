@@ -29,7 +29,11 @@ const ContentHeader = ({ Title, Color, ButtonProps, FontSize }) => {
         {ButtonProps &&
           ButtonProps.length > 0 &&
           ButtonProps.map((ButtonProp, index) => (
-            <HeaderButton key={index + 'key'} onClick={ButtonProp.func} $HeaderColor={Color}>
+            <HeaderButton 
+              key={index + 'key'} 
+              onClick={ButtonProp.func} 
+              $HeaderColor={Color}
+            >
               {ButtonProp.Title}
             </HeaderButton>
           ))}
