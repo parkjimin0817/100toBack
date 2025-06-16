@@ -57,12 +57,12 @@ const SideBar = () => {
 
 export default SideBar;
 
-// sidebarMenu.ts
 import { LuBaby } from "react-icons/lu";
 import { FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
 import { MdFilterFrames } from "react-icons/md";
 import { RiHealthBookLine } from "react-icons/ri";
 import { NavLink } from 'react-router-dom';
+import { IoPeopleOutline } from "react-icons/io5";
 
 const sidebarMenus = [
   {
@@ -71,9 +71,9 @@ const sidebarMenus = [
     icon: <LuBaby />,
     color: "orange",
     subItems: [
-      {label : "아동 목록", link : ""}, 
-      {label : "아동 출결", link : ""}, 
-      {label : "아동 건강", link : ""}, 
+      {label : "아동 목록", link : "/childlist"}, 
+      {label : "아동 출결", link : "/class"}, 
+      {label : "아동 건강", link : "/childhealthcheck"}, 
       {label : "아동 생활", link : ""}],
   },
   {
@@ -83,7 +83,7 @@ const sidebarMenus = [
     color: "purple",
     subItems: [
       {label : "유치원 일정", link : ""}, 
-      {label : "일과표", link : ""}, 
+      {label : "일과표", link : "/daily"}, 
       {label : "학부모 상담 일정", link : ""}],
   },
   {
@@ -105,7 +105,7 @@ const sidebarMenus = [
     color: "blue",
     subItems: [
       {label : "근태 관리", link : ""}, 
-      {label : "휴가 관리", link : ""}, 
+      {label : "휴가 관리", link : "/myvacation"}, 
       {label : "학부모 연락처 관리", link : ""}],
   },
   {
@@ -116,6 +116,18 @@ const sidebarMenus = [
     subItems: [
       {label : "나의 건강 데이터", link : ""}, 
       {label : "건강 관리", link : ""}],
+  },
+  {
+    id: "menu6",
+    label: "사용자 관리",
+    icon: <IoPeopleOutline />,
+    color: "blue",
+    subItems: [
+      {label : "근태 관리", link : ""}, 
+      {label : "휴가 관리", link : ""}, 
+      {label : "회원가입 승인", link : "/approvalList"}, 
+      {label : "교사 소개", link : ""}, 
+      {label : "반 배정", link : "/manager/classplacement"}],
   },
 ];
 
