@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ContentHeader from '../../components/Common/ContentHeader';
 import styled from 'styled-components';
 import CheckListSearchBar from './components/CheckListSearchBar';
@@ -46,8 +46,8 @@ const mockData = [
 ];
 
 const ChildHealthCheck = () => {
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedClass, setSelectedClass] = useState('');
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedClass, setSelectedClass] = useState('햇님반'); //로그인된 유저 반 예시
   const [matchedData, setMatchedData] = useState(null);
 
   const handleSearch = () => {
@@ -64,6 +64,13 @@ const ChildHealthCheck = () => {
 
     setMatchedData(found);
   };
+
+  //페이지 들어오면 자동으로 1번 조회
+  useEffect(() => {
+    if (selectedDate && selectedClass) {
+      handleSearch();
+    }
+  }, []);
 
   return (
     <Wrapper>
