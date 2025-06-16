@@ -17,10 +17,13 @@ import ChildrenList from './components/ChildrenList';
 import SearchFormNav from './components/Common/SearchFormNav';
 import SearchPassword from './pages/common/SearchPassword';
 import AuthenticationUser from './pages/common/AuthenticationUser';
-import ChangePassword from './pages/common/ChangePassword'
+import ChangePassword from './pages/common/ChangePassword';
 
 import SignUpWorkSpaceInfo from './pages/common/signup/SignUpWorkSpaceInfo';
 import SignUpComplete from './pages/common/signup/SignUpComplete';
+
+import ApprovalList from './pages/ApprovalList';
+import ApprovalListAdmin from './pages/ApprovalListAdmin';
 
 function App() {
   return (
@@ -33,6 +36,10 @@ function App() {
             <Route path="/home" element={<Home />} />
             {/* <Route path="/" element={<Home />} /> */}
             {/* 추가 페이지는 아래 붙이기. */}
+            {/* 승인 리스트 */}
+            <Route path="/approvalList" element={<ApprovalList />}></Route>
+            {/* 관리자-시설장 승인 리스트 */}
+            <Route path="/approvalListAdmin" element={<ApprovalListAdmin />}></Route>
           </Route>
           {/* Login Page */}
           <Route path="/login" element={<LoginPage />}></Route>

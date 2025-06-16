@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import styled from 'styled-components'
+import React, { useEffect } from 'react';
+import styled from 'styled-components';
 
 // 모든 페이지에 공통으로 들어가는 컨텐츠 헤더.
 /**
@@ -7,11 +7,11 @@ import styled from 'styled-components'
  * ! Title : 해당 페이지의 이름. ex) 아동 전체 목록.
  * ! Color : 해당 페이지의 테마 색상.
  * ! ButtonProps : 버튼의 이름과 클릭시 이벤트 함수를 가지는 배열.
- * ! ButtonProps[n].Title : 버튼의 이름. 
+ * ! ButtonProps[n].Title : 버튼의 이름.
  * ! ButtonProps[n].Func : 버튼의 함수.
- * 
- * 실제 예시 : 
- * Title={'HOME'} 
+ *
+ * 실제 예시 :
+ * Title={'HOME'}
  * Color={'lightblue'}
  * ButtonProps={
  *  [
@@ -21,22 +21,22 @@ import styled from 'styled-components'
  * }
  */
 
-const ContentHeader = ({Title, Color, ButtonProps}) => {
+const ContentHeader = ({ Title, Color, ButtonProps }) => {
   return (
     <ContentHeaderContainer $HeaderColor={Color}>
       <ContentHeaderTitle>{Title}</ContentHeaderTitle>
       <ButtonContainer>
-        {ButtonProps && ButtonProps.length > 0 && 
+        {ButtonProps &&
+          ButtonProps.length > 0 &&
           ButtonProps.map((ButtonProp, index) => (
             <HeaderButton key={index + 'key'} onClick={ButtonProp.func} $HeaderColor={Color}>
               {ButtonProp.Title}
             </HeaderButton>
-          ))
-        }
+          ))}
       </ButtonContainer>
     </ContentHeaderContainer>
-  )
-}
+  );
+};
 
 const ContentHeaderContainer = styled.div`
   background-color: ${({ theme, $HeaderColor }) => theme.colors[$HeaderColor]};
@@ -56,7 +56,6 @@ const ContentHeaderTitle = styled.h2`
 const ButtonContainer = styled.div`
   display: flex;
   gap: 10px;
-
 `;
 
 const HeaderButton = styled.button`
@@ -67,4 +66,4 @@ const HeaderButton = styled.button`
   font-size: 12px;
 `;
 
-export default ContentHeader
+export default ContentHeader;
