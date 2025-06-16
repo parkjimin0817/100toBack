@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Button = ({ width, color, hovercolor, children }) => {
+const Button = ({ width, color, hovercolor, children, onClick }) => {
   return (
-    <CommonButton $width={width} $color={color} $hovercolor={hovercolor}>
+    <CommonButton $width={width} $color={color} $hovercolor={hovercolor} onClick={onClick}>
       {children}
     </CommonButton>
   );
