@@ -248,8 +248,6 @@ const Table = styled.table`
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  /* border-radius: ${({ theme }) => theme.borderRadius.xl}; */
-  /* border: 2px solid ${({ theme }) => theme.colors.gray[400]}; */
   font-size: ${({ theme }) => theme.fontSizes.base};
 
   thead {

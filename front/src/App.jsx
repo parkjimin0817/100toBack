@@ -24,6 +24,7 @@ import SignUpComplete from './pages/common/signup/SignUpComplete';
 
 import ApprovalList from './pages/ApprovalList';
 import ApprovalListAdmin from './pages/ApprovalListAdmin';
+import VacationList from './pages/VacationList';
 
 function App() {
   return (
@@ -40,6 +41,8 @@ function App() {
             <Route path="/approvalList" element={<ApprovalList />}></Route>
             {/* 관리자-시설장 승인 리스트 */}
             <Route path="/approvalListAdmin" element={<ApprovalListAdmin />}></Route>
+            {/* 관리자-휴가/워케이션 리스트 */}
+            <Route path="/vacationList" element={<VacationList />}></Route>
           </Route>
           {/* Login Page */}
           <Route path="/login" element={<LoginPage />}></Route>
