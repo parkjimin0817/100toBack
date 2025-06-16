@@ -22,6 +22,9 @@ import ChangePassword from './pages/common/ChangePassword';
 import SignUpWorkSpaceInfo from './pages/common/signup/SignUpWorkSpaceInfo';
 import SignUpComplete from './pages/common/signup/SignUpComplete';
 
+import ApprovalList from './pages/ApprovalList';
+import ApprovalListAdmin from './pages/ApprovalListAdmin';
+
 import SignUpChildInfo from './pages/common/signup/SignUpChildInfo';
 import SignUpCenterInfo from './pages/common/signup/SignUpCenterInfo';
 import MyVacation from './pages/teacher/MyVacation';
@@ -33,6 +36,7 @@ import DailySchedule from './pages/DailySchedule';
 import DailyScheduleDetail from './pages/DailyScheduleDetail';
 
 import ClassPlacement from './pages/manager/ClassPlacement';
+
 
 function App() {
   return (
@@ -55,6 +59,10 @@ function App() {
             <Route path="/manager/classplacement" element={<ClassPlacement />} />
             {/* 아동목록 페이지(교사) */}
             {/* 추가 페이지는 아래 붙이기. */}
+            {/* 승인 리스트 */}
+            <Route path="/approvalList" element={<ApprovalList />}></Route>
+            {/* 관리자-시설장 승인 리스트 */}
+            <Route path="/approvalListAdmin" element={<ApprovalListAdmin />}></Route>
             {/* 교사 휴가 워케이션 신청 페이지 */}
             <Route path="/myvacation" element={<MyVacation />} />
             {/* 교사 아동 건강 체크리스트 페이지 */}

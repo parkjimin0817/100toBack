@@ -87,7 +87,7 @@ const GlobalStyle = createGlobalStyle`
 
   /* 기본 포커스 스타일 */
   :focus {
-    outline: 2px solid #007bff;
+    /* outline: 2px solid #007bff; */
     outline-offset: 2px;
   }
 
