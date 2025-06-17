@@ -3,10 +3,23 @@ import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import ChildImg from '../../assets/Child.png';
 import theme from '../../styles/theme';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { List } from '../../components/ChildDummyData';
 
 const ChildDetail = () => {
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get('id'); // URL에서 ?id= 추출
+
   const [select, setSelect] = useState(true);
+  const [child, setChild] = useState(null);
+
+  useEffect(() => {
+    const found = List.find((item) => item.id === parseInt(id));
+    if (found) setChild(found);
+  }, [id]);
+
+  if (!child) return <div>로딩중...</div>;
 
   const handleSelect = (value) => {
     setSelect(value); // true 또는 false로 설정
@@ -26,39 +39,37 @@ const ChildDetail = () => {
             <Picture src={ChildImg} alt="아이사진" />
           </PictureLine>
           <FirstInfo>
-            <Name>김동글</Name>
+            <Name>{child.name}</Name>
             <Info>
               <InfoColumn>생년월일 </InfoColumn>
-              <InfoResult>2022.06.14</InfoResult>
+              <InfoResult>{child.birth}</InfoResult>
             </Info>
             <Info>
               <InfoColumn>키 </InfoColumn>
-              <InfoResult>63cm</InfoResult>
+              <InfoResult>{child.height}</InfoResult>
             </Info>
             <Info>
               <InfoColumn>몸무게 </InfoColumn>
-              <InfoResult>12kg</InfoResult>
+              <InfoResult>{child.weight}</InfoResult>
             </Info>
             <Info style={{ marginBottom: '45px' }}>
               <InfoColumn>주소</InfoColumn>
-              <InfoResult>경기도 용인시 기흥구 어정로 12-34, 405동 1402호</InfoResult>
+              <InfoResult>{child.address}</InfoResult>
             </Info>
           </FirstInfo>
           <FirstInfo style={{ marginLeft: '45px' }}>
-            <Class>햇님반</Class>
-            <Info>
-              <InfoColumn>생년월일 </InfoColumn>
-              <InfoResult>2022.06.14</InfoResult>
-            </Info>
+            <Class>{child.className}</Class>
             <Info>
               <InfoColumn>학부모 </InfoColumn>
-              <InfoResult>부:김동길, 모:최동순</InfoResult>
+              <InfoResult>
+                부:{child.parents.father}, 모:{child.parents.mother}
+              </InfoResult>
             </Info>
             <Info>
               <InfoColumn>비상연락처 </InfoColumn>
               <Phone>
-                <InfoResult>부:010-1234-5678</InfoResult>
-                <InfoResult>모:010-9876-5432</InfoResult>
+                <InfoResult>부:{child.phone.father}</InfoResult>
+                <InfoResult>모:{child.phone.mother}</InfoResult>
               </Phone>
             </Info>
           </FirstInfo>
@@ -74,73 +85,165 @@ const ChildDetail = () => {
           </LifeStyle>
         </SelectHeader>
         <DetailInfoContainer>
-          <Title>하루 건강</Title>
-          <HeaderColumn>
-            <DateColumn>날짜</DateColumn>
-            <TempColumn>체온</TempColumn>
-            <HeightColumn>키</HeightColumn>
-            <WeightColumn>몸무게</WeightColumn>
-            <SymptomColumn>증상</SymptomColumn>
-            <MemoColumn>메모</MemoColumn>
-          </HeaderColumn>
-          <ContentColumn>
-            <DateColumn>2025.06.05</DateColumn>
-            <TempColumn>37.5°C</TempColumn>
-            <HeightColumn>100cm</HeightColumn>
-            <WeightColumn>18kg</WeightColumn>
-            <SymptomColumn>기침</SymptomColumn>
-            <MemoColumn>점심먹고 배가 아프다 했어요</MemoColumn>
-          </ContentColumn>
-          <ContentColumn>
-            <DateColumn>2025.06.04</DateColumn>
-            <TempColumn>37.5°C</TempColumn>
-            <HeightColumn>100cm</HeightColumn>
-            <WeightColumn>18kg</WeightColumn>
-            <SymptomColumn>기침</SymptomColumn>
-            <MemoColumn>점심먹고 배가 아프다 했어요</MemoColumn>
-          </ContentColumn>
-          <ContentColumn>
-            <DateColumn>2025.06.03</DateColumn>
-            <TempColumn>37.5°C</TempColumn>
-            <HeightColumn>100cm</HeightColumn>
-            <WeightColumn>18kg</WeightColumn>
-            <SymptomColumn>기침</SymptomColumn>
-            <MemoColumn>점심먹고 배가 아프다 했어요</MemoColumn>
-          </ContentColumn>
-          <ContentColumn>
-            <DateColumn>2025.06.02</DateColumn>
-            <TempColumn>37.5°C</TempColumn>
-            <HeightColumn>100cm</HeightColumn>
-            <WeightColumn>18kg</WeightColumn>
-            <SymptomColumn>기침</SymptomColumn>
-            <MemoColumn>점심먹고 배가 아프다 했어요</MemoColumn>
-          </ContentColumn>
-          <LoadMoreButton>더보기</LoadMoreButton>
-          <FooterInfoLine>
-            <FooterBox>
-              <FooterTitle>복약정보</FooterTitle>
-              <FooterColumn>약이름:타이레놀 어린이시럽</FooterColumn>
-              <FooterColumn>복용 용량:5ml</FooterColumn>
-              <FooterColumn>복용 시간:식후 30분</FooterColumn>
-              <FooterColumn>복용 기간:6월22일~24일</FooterColumn>
-              <FooterColumn>복용 목적:열,콧물</FooterColumn>
-              <FooterColumn>메모:열 없으면 투약 중단, 너무 거부하면 사탕이랑 같이</FooterColumn>
-            </FooterBox>
-            <FooterBox>
-              <FooterTitle>예방접종</FooterTitle>
-              <FooterColumn>예방접종 내용은 통을 입력하게</FooterColumn>
-              <FooterColumn>BCG:2026.12.22</FooterColumn>
-              <FooterColumn>접종 예정:2025.06.25</FooterColumn>
-            </FooterBox>
-            <FooterBox>
-              <FooterTitle>알레르기</FooterTitle>
-              <FooterColumn>알레르기:계란,해산물,복숭아</FooterColumn>
-              <FooterColumn>반응:호흡곤란,두드러기</FooterColumn>
-              <FooterColumn>심각도:가벼움</FooterColumn>
-              <FooterColumn>메모:계란 알레르기가 심합니다. 유의 부탁드립니다.</FooterColumn>
-            </FooterBox>
-          </FooterInfoLine>
-          <LoadMoreButton>수정</LoadMoreButton>
+          {select && (
+            <>
+              <Title>하루 건강</Title>
+              <HeaderColumn>
+                <DateColumn>날짜</DateColumn>
+                <TempColumn>체온</TempColumn>
+                <HeightColumn>키</HeightColumn>
+                <WeightColumn>몸무게</WeightColumn>
+                <SymptomColumn>증상</SymptomColumn>
+                <MemoColumn>메모</MemoColumn>
+              </HeaderColumn>
+
+              {child.healthRecords &&
+                [...child.healthRecords]
+                  .sort((a, b) => new Date(b.date) - new Date(a.date))
+                  .slice(0, 4)
+                  .map((record, index) => (
+                    <ContentColumn key={index}>
+                      <DateColumn>{record.date}</DateColumn>
+                      <TempColumn>{record.temp}</TempColumn>
+                      <HeightColumn>{record.height}</HeightColumn>
+                      <WeightColumn>{record.weight}</WeightColumn>
+                      <SymptomColumn>{record.symptom}</SymptomColumn>
+                      <MemoColumn>{record.memo}</MemoColumn>
+                    </ContentColumn>
+                  ))}
+
+              <LoadMoreButton>더보기</LoadMoreButton>
+
+              <FooterInfoLine>
+                <FooterBox>
+                  <FooterTitle>복약정보</FooterTitle>
+                  <FooterColumn>
+                    <FooterDetailColumn>약 이름</FooterDetailColumn>
+                    {child.medication.name}
+                  </FooterColumn>
+                  <FooterColumn>
+                    <FooterDetailColumn>복용 용량</FooterDetailColumn>
+                    {child.medication.dose}
+                  </FooterColumn>
+                  <FooterColumn>
+                    <FooterDetailColumn>복용 시간</FooterDetailColumn>
+                    {child.medication.time}
+                  </FooterColumn>
+                  <FooterColumn>
+                    <FooterDetailColumn>복용 기간</FooterDetailColumn>
+                    {child.medication.period}
+                  </FooterColumn>
+                  <FooterColumn>
+                    <FooterDetailColumn>복용 목적</FooterDetailColumn>
+                    {child.medication.purpose}
+                  </FooterColumn>
+                  <FooterColumn>
+                    <FooterDetailColumn>메모</FooterDetailColumn>
+                    {child.medication.note}
+                  </FooterColumn>
+                </FooterBox>
+                <FooterBox>
+                  <FooterTitle>예방접종</FooterTitle>
+                  <FooterColumn>
+                    <FooterDetailColumn>BCG</FooterDetailColumn>
+                    {child.vaccination.BCG}
+                  </FooterColumn>
+                  <FooterColumn>
+                    <FooterDetailColumn>접종 예정 </FooterDetailColumn>
+                    {child.vaccination.schedule}
+                  </FooterColumn>
+                </FooterBox>
+                <FooterBox>
+                  <FooterTitle>알레르기</FooterTitle>
+                  <FooterColumn>
+                    <FooterDetailColumn>알레르기</FooterDetailColumn>
+                    {child.allergy.items}
+                  </FooterColumn>
+                  <FooterColumn>
+                    <FooterDetailColumn>반응</FooterDetailColumn>
+                    {child.allergy.reaction}
+                  </FooterColumn>
+                  <FooterColumn>
+                    <FooterDetailColumn>심각도</FooterDetailColumn>
+                    {child.allergy.severity}
+                  </FooterColumn>
+                  <FooterColumn>
+                    <FooterDetailColumn>메모</FooterDetailColumn>
+                    {child.allergy.note}
+                  </FooterColumn>
+                </FooterBox>
+              </FooterInfoLine>
+              <LoadMoreButton>수정</LoadMoreButton>
+            </>
+          )}
+          {!select && (
+            <>
+              <Title>하루 생활</Title>
+              <HeaderColumn>
+                <DateColumn>날짜</DateColumn>
+                <TempColumn>식사</TempColumn>
+                <DateColumn>낮잠시간</DateColumn>
+                <DateColumn>놀이참여</DateColumn>
+                <DateColumn>교우관계</DateColumn>
+                <MemoColumn>메모</MemoColumn>
+              </HeaderColumn>
+
+              {child.lifeRecords &&
+                [...child.lifeRecords]
+                  .sort((a, b) => new Date(b.date) - new Date(a.date))
+                  .slice(0, 4) //최신순으로 상위 4개까지 잘라냄
+                  .map((record, index) => (
+                    <ContentColumn key={index}>
+                      <DateColumn>{record.date}</DateColumn>
+                      <TempColumn>{record.meal}</TempColumn>
+                      <DateColumn>{record.napTime}</DateColumn>
+                      <DateColumn>{record.play}</DateColumn>
+                      <DateColumn>{record.social}</DateColumn>
+                      <MemoColumn>{record.memo}</MemoColumn>
+                    </ContentColumn>
+                  ))}
+
+              <LoadMoreButton>더보기</LoadMoreButton>
+
+              <FooterInfoLine>
+                <FooterBox2>
+                  <FooterTitle style={{ marginBottom: '20px' }}>식습관</FooterTitle>
+                  <FooterColumn2>
+                    <FooterDetailColumn>좋아하는 음식 </FooterDetailColumn>
+                    {child.eatingHabit.likes}
+                  </FooterColumn2>
+                  <FooterColumn2>
+                    <FooterDetailColumn>싫어하는 음식 </FooterDetailColumn>
+                    {child.eatingHabit.dislikes}
+                  </FooterColumn2>
+                  <FooterColumn2>
+                    <FooterDetailColumn>식사량 </FooterDetailColumn>
+                    {child.eatingHabit.status}
+                  </FooterColumn2>
+                  <FooterColumn2>
+                    <FooterDetailColumn>메모 </FooterDetailColumn>
+                    {child.eatingHabit.note}
+                  </FooterColumn2>
+                </FooterBox2>
+                <FooterBox2>
+                  <FooterTitle style={{ marginBottom: '20px' }}>교우관계</FooterTitle>
+                  <FooterColumn2>
+                    <FooterDetailColumn>친한친구 </FooterDetailColumn>
+                    {child.socialRelation.closeFriends}
+                  </FooterColumn2>
+                  <FooterColumn2>
+                    <FooterDetailColumn>좋아하는 놀이</FooterDetailColumn>
+                    {child.socialRelation.favoritePlay}
+                  </FooterColumn2>
+                  <FooterColumn2>
+                    <FooterDetailColumn>메모</FooterDetailColumn>
+                    {child.socialRelation.note}
+                  </FooterColumn2>
+                </FooterBox2>
+              </FooterInfoLine>
+              <LoadMoreButton>수정</LoadMoreButton>
+            </>
+          )}
         </DetailInfoContainer>
       </HealthInfoContainer>
     </>
@@ -369,6 +472,16 @@ const FooterBox = styled.div`
   margin-right: 25px;
 `;
 
+const FooterBox2 = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  height: 260px;
+  background-color: rgba(255, 206, 101, 0.25);
+  border-radius: 10px;
+  margin-right: 90px;
+`;
+
 const FooterTitle = styled.div`
   font-size: 18px;
   font-weight: bold;
@@ -382,4 +495,19 @@ const FooterColumn = styled.div`
   font-size: 14px;
   margin-left: 30px;
   margin-bottom: 10px;
+`;
+
+const FooterColumn2 = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  max-width: 220px;
+  font-size: 14px;
+  margin-bottom: 10px;
+  margin-left: 55px;
+`;
+
+const FooterDetailColumn = styled.div`
+  font-weight: bold;
+  margin-right: 10px;
+  white-space: nowrap; // 줄바꿈 금지(메모 글자가 세로로 들어가서)
 `;
