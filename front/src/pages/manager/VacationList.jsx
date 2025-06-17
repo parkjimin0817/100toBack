@@ -1,20 +1,30 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import ContentHeader from '../components/Common/ContentHeader';
-import App from '../App';
+import ContentHeader from '../../components/Common/ContentHeader';
+import App from '../../App';
 import { LuSearch } from 'react-icons/lu';
 
-const ApprovalListAdmin = () => {
-  const [selectedType, setSelectedType] = useState('시설장');
+const ApprovalList = () => {
+  const [selectedType, setSelectedType] = useState('전체');
+
+  const data = [
+    { date: '2023-10-09', type: '휴가', type_detail: '병가', name: '김선생', file: 'O', status: '승인' },
+    { date: '2023-10-05', type: '휴가', type_detail: '연차', name: '이선생', file: 'X', status: '거절' },
+    { date: '2023-10-02', type: '워케이션', type_detail: '사전답사', name: '이선생', file: 'O', status: '승인' },
+  ];
+
+  const filteredData = selectedType === '전체' ? data : data.filter((item) => item.type === selectedType);
 
   return (
     <Content>
-      <ContentHeader Title={'회원가입 관리'} Color={'blue'}></ContentHeader>
+      <ContentHeader Title={'휴가 / 워케이션 관리'} Color={'blue'}></ContentHeader>
       <Navigation>
         <NavigationLeft>
-          <MemberType isActive={selectedType === '시설장'} onClick={() => setSelectedType('교사')}>
-            시설장
-          </MemberType>
+          {['전체', '휴가', '워케이션'].map((type) => (
+            <MemberType key={type} isActive={selectedType === type} onClick={() => setSelectedType(type)}>
+              {type}
+            </MemberType>
+          ))}
         </NavigationLeft>
 
         <NavigationRight>
@@ -27,47 +37,33 @@ const ApprovalListAdmin = () => {
 
       <ApprovalLists>
         <TableWrapper>
-          {selectedType === '시설장' && (
-            <Table>
-              <thead>
-                <tr>
-                  <th>번호</th>
-                  <th>시설명</th>
-                  <th>시설장명</th>
-                  <th>시설유형</th>
-                  <th>전화번호</th>
-                  <th>가입일</th>
-                  <th>승인여부</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>어린이집1</td>
-                  <td>김원장</td>
-                  <td>어린이집</td>
-                  <td>010-1234-5678</td>
-                  <td>2023-10-02</td>
+          <Table>
+            <thead>
+              <tr>
+                <th>작성일</th>
+                <th>분류</th>
+                <th>이름</th>
+                <th>첨부파일</th>
+                <th>승인여부</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredData.map((data, index) => (
+                <tr key={index}>
+                  <td>{data.date}</td>
+                  <td>
+                    {data.type} - {data.type_detail}
+                  </td>
+                  <td>{data.name}</td>
+                  <td>{data.file}</td>
                   <td>
                     <button>승인</button>
                     <button>거절</button>
                   </td>
                 </tr>
-                <tr>
-                  <td>2</td>
-                  <td>강남아동보호센터</td>
-                  <td>박원장</td>
-                  <td>아동보호센터</td>
-                  <td>010-1234-5678</td>
-                  <td>2023-10-02</td>
-                  <td>
-                    <button>승인</button>
-                    <button>거절</button>
-                  </td>
-                </tr>
-              </tbody>
-            </Table>
-          )}
+              ))}
+            </tbody>
+          </Table>
         </TableWrapper>
       </ApprovalLists>
     </Content>
@@ -148,7 +144,8 @@ const ApprovalLists = styled.div`
 
 const TableWrapper = styled.div`
   width: 100%;
-  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  border-top-left-radius: ${({ theme }) => theme.borderRadius.xl};
+  border-top-right-radius: ${({ theme }) => theme.borderRadius.xl};
   overflow: hidden;
 `;
 
@@ -156,8 +153,7 @@ const Table = styled.table`
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border-radius: ${({ theme }) => theme.borderRadius.xl};
-  font-size: ${({ theme }) => theme.fontSizes.sm};
+  font-size: ${({ theme }) => theme.fontSizes.base};
 
   thead {
     background-color: ${({ theme }) => theme.colors.blue};
@@ -169,39 +165,34 @@ const Table = styled.table`
     text-align: center;
     font-weight: ${({ theme }) => theme.fontWeights.bold};
   }
-  td {
-    color: ${({ theme }) => theme.colors.blue};
-    font-weight: ${({ theme }) => theme.fontWeights.bold};
-    padding: ${({ theme }) => theme.spacing[1]};
-    border-bottom: 2px solid ${({ theme }) => theme.colors.gray[400]};
-    text-align: center;
-    min-height: 48px;
-  }
   th:nth-child(1) {
-    width: 10%;
+    width: 20%;
   }
   th:nth-child(2) {
-    width: 15%;
+    width: 30%;
   }
   th:nth-child(3) {
-    width: 10%;
+    width: 15%;
   }
   th:nth-child(4) {
     width: 15%;
   }
   th:nth-child(5) {
-    width: 15%;
-  }
-  th:nth-child(6) {
-    width: 15%;
-  }
-  th:nth-child(7) {
     width: 20%;
   }
-  td:nth-child(7) {
+  td {
+    color: ${({ theme }) => theme.colors.blue};
+    font-weight: ${({ theme }) => theme.fontWeights.bold};
+    padding: ${({ theme }) => theme.spacing[3]};
+    text-align: center;
+    border-bottom: 2px solid ${({ theme }) => theme.colors.gray[400]};
+    min-height: 50px;
+  }
+
+  td:nth-child(5) {
+    border-right: none;
     display: flex;
     justify-content: center;
-    align-items: center;
     gap: ${({ theme }) => theme.spacing[4]};
   }
 
@@ -220,4 +211,4 @@ const Table = styled.table`
   }
 `;
 
-export default ApprovalListAdmin;
+export default ApprovalList;

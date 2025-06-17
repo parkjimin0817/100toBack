@@ -1,11 +1,51 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import ContentHeader from '../components/Common/ContentHeader';
-import App from '../App';
+import ContentHeader from '../../components/Common/ContentHeader';
+import App from '../../App';
 import { LuSearch } from 'react-icons/lu';
 
 const ApprovalList = () => {
   const [selectedType, setSelectedType] = useState('교사');
+
+  const data_member = [
+    {
+      id: 1,
+      name: '김선생',
+      memeber_phone: '010-1234-5678',
+      member_type: '교사',
+      create_date: '2023-10-01',
+      status: '대기',
+    },
+    {
+      id: 2,
+      name: '정의철',
+      memeber_phone: '010-4567-8901',
+      member_type: '학부모',
+      create_date: '2023-10-02',
+      status: '대기',
+    },
+    {
+      id: 3,
+      name: '이선생',
+      memeber_phone: '010-2345-6789',
+      member_type: '교사',
+      create_date: '2023-10-03',
+      status: '승인',
+    },
+    {
+      id: 4,
+      name: '박학부모',
+      memeber_phone: '010-3456-7890',
+      member_type: '학부모',
+      create_date: '2023-10-04',
+      status: '거절',
+    },
+  ];
+  const data_child = [
+    { id: 1, member_name: '정의철', name: '정형일', create_date: '2023-10-02', status: '대기' },
+    { id: 2, member_name: '정의철', name: '정형이', create_date: '2023-10-03', status: '대기' },
+    { id: 3, member_name: '정의철', name: '정형삼', create_date: '2023-10-03', status: '승인' },
+  ];
 
   return (
     <Content>
@@ -45,26 +85,21 @@ const ApprovalList = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>김선생</td>
-                  <td>010-1234-5678</td>
-                  <td>2023-10-02</td>
-                  <td>
-                    <button>승인</button>
-                    <button>거절</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>김선생</td>
-                  <td>010-1234-5678</td>
-                  <td>2023-10-02</td>
-                  <td>
-                    <button>승인</button>
-                    <button>거절</button>
-                  </td>
-                </tr>
+                {selectedType === '교사' &&
+                  data_member
+                    .filter((item) => item.member_type === '교사' && item.status === '대기')
+                    .map((item, index) => (
+                      <tr key={item.id}>
+                        <td>{index + 1}</td>
+                        <td>{item.name}</td>
+                        <td>{item.memeber_phone}</td>
+                        <td>{item.create_date}</td>
+                        <td>
+                          <button className="approved">승인</button>
+                          <button className="rejected">거절</button>
+                        </td>
+                      </tr>
+                    ))}
               </tbody>
             </Table>
           )}
@@ -81,36 +116,21 @@ const ApprovalList = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>정의철</td>
-                  <td>010-4567-8901</td>
-                  <td>2023-10-01</td>
-                  <td>
-                    <button>승인</button>
-                    <button>거절</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>정의철</td>
-                  <td>010-4567-8901</td>
-                  <td>2023-10-01</td>
-                  <td>
-                    <button>승인</button>
-                    <button>거절</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>정의철</td>
-                  <td>010-4567-8901</td>
-                  <td>2023-10-01</td>
-                  <td>
-                    <button>승인</button>
-                    <button>거절</button>
-                  </td>
-                </tr>
+                {selectedType === '학부모' &&
+                  data_member
+                    .filter((item) => item.member_type === '학부모' && item.status === '대기')
+                    .map((item, index) => (
+                      <tr key={item.id}>
+                        <td>{index + 1}</td>
+                        <td>{item.name}</td>
+                        <td>{item.memeber_phone}</td>
+                        <td>{item.create_date}</td>
+                        <td>
+                          <button className="approved">승인</button>
+                          <button className="rejected">거절</button>
+                        </td>
+                      </tr>
+                    ))}
               </tbody>
             </Table>
           )}
@@ -127,36 +147,21 @@ const ApprovalList = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>정의철</td>
-                  <td>정형일</td>
-                  <td>2023-10-01</td>
-                  <td>
-                    <button>승인</button>
-                    <button>거절</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>정의철</td>
-                  <td>정형일</td>
-                  <td>2023-10-01</td>
-                  <td>
-                    <button>승인</button>
-                    <button>거절</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>정의철</td>
-                  <td>정형일</td>
-                  <td>2023-10-01</td>
-                  <td>
-                    <button>승인</button>
-                    <button>거절</button>
-                  </td>
-                </tr>
+                {selectedType === '아동' &&
+                  data_child
+                    .filter((item) => item.status === '대기')
+                    .map((item, index) => (
+                      <tr key={item.id}>
+                        <td>{index + 1}</td>
+                        <td>{item.member_name}</td>
+                        <td>{item.name}</td>
+                        <td>{item.create_date}</td>
+                        <td>
+                          <button className="approved">승인</button>
+                          <button className="rejected">거절</button>
+                        </td>
+                      </tr>
+                    ))}
               </tbody>
             </Table>
           )}
@@ -235,12 +240,12 @@ const ApprovalLists = styled.div`
   flex-direction: column;
   align-items: center;
   gap: ${({ theme }) => theme.spacing[4]};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
 `;
 
 const TableWrapper = styled.div`
   width: 100%;
-  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  border-top-left-radius: ${({ theme }) => theme.borderRadius.xl};
+  border-top-right-radius: ${({ theme }) => theme.borderRadius.xl};
   overflow: hidden;
 `;
 
@@ -303,10 +308,13 @@ const Table = styled.table`
     cursor: pointer;
     font-size: ${({ theme }) => theme.fontSizes.xs};
     color: ${({ theme }) => theme.colors.white};
+  }
+
+  button.approved {
     background-color: ${({ theme }) => theme.colors.green};
   }
 
-  button:nth-child(2) {
+  button.rejected {
     background-color: ${({ theme }) => theme.colors.orange};
   }
 `;

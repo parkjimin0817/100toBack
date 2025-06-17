@@ -9,7 +9,7 @@ public class CommonEnums {
 
     public enum MemberType {
         ADMIN,          //관리자
-        DIRECTOR,       //시설장
+        MANAGER,       //시설장
         TEACHER,        //교사
         PARENT,         //학부모
     }
