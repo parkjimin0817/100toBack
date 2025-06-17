@@ -45,6 +45,7 @@ import ManagerMyPage from './pages/manager/ManagerMyPage';
 import MyHealth from './pages/teacher/MyHealth';
 import MyHealthDetail from './pages/teacher/MyHealthDetail';
 import MyHealthForm from './pages/teacher/MyHealthForm';
+import ParentContact from './pages/teacher/ParentContact';
 
 function App() {
   return (
@@ -91,6 +92,8 @@ function App() {
             <Route path="/myhealth/form" element={<MyHealthForm />} />
             {/* 교사 건강관리 수정 페이지 */}
             <Route path="/myhealth/edit/:id" element={<MyHealthForm />} />
+            {/* 교사 학부모 연락처 조회 페이지 */}
+            <Route path="/parentcontact" element={<ParentContact />} />
           </Route>
           {/* Login Page */}
           <Route path="/login" element={<LoginPage />}></Route>

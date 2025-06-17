@@ -13,7 +13,7 @@ const prevData = {
 
 const MyHealthForm = () => {
   const { id } = useParams(); //수정이면 id가 있음
-  const isEdit = Boolean(id);
+  const isEdit = Boolean(id); //id가 있으면 isEdit : true
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -47,7 +47,7 @@ const MyHealthForm = () => {
     navigate('/myhealth');
   };
   return (
-    <>
+    <Content>
       <ContentHeader
         Title={isEdit ? '내 건강 정보 수정' : '내 건강 정보 작성'}
         Color="yellow"
@@ -88,11 +88,18 @@ const MyHealthForm = () => {
           onChange={handleChange}
         />
       </Wrapper>
-    </>
+    </Content>
   );
 };
 
 export default MyHealthForm;
+
+const Content = styled.div`
+  min-height: 600px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+`;
 
 const Wrapper = styled.div`
   display: flex;

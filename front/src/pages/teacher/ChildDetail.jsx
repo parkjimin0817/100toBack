@@ -2,7 +2,6 @@
 import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import ChildImg from '../../assets/Child.png';
-import theme from '../../styles/theme';
 import React, { useState } from 'react';
 
 const ChildDetail = () => {
@@ -18,7 +17,6 @@ const ChildDetail = () => {
         <ContentHeader
           Title={'아동 상세보기'}
           Color={'orange'}
-          FontSize="xl"
           ButtonProps={[{ Title: '뒤로가기', func: () => alert('뒤로가기~') }, { Title: '아동정보 삭제' }]}
         />
         <BasicInfo>
