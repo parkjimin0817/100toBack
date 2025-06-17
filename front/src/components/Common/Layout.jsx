@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Header from './Header';
 import Footer from './Footer';
 import SideBar from './Sidebar';
-import { Outlet } from 'react-router-dom'
+import { Outlet } from 'react-router-dom';
 
 const Layout = () => {
   return (
@@ -81,10 +81,10 @@ const ContentWrapper = styled.section`
 `;
 
 const ContentInner = styled.div`
-  background-color: #ffffff;
+  /* background-color: #ffffff;
   border-radius: 20px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  min-height: 600px;
+  min-height: 600px; */
 
   @media (max-width: 768px) {
     /* padding: 16px; */
