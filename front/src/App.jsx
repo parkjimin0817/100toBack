@@ -77,11 +77,7 @@ function App() {
             <Route path="/myvacation" element={<MyVacation />} />
             {/* 교사 아동 건강 체크리스트 페이지 */}
             <Route path="/childhealthcheck" element={<ChildHealthCheck />} />
-            {/* 승인 리스트 */}
-            <Route path="/approvalList" element={<ApprovalList />}></Route>
-            {/* 관리자-시설장 승인 리스트 */}
-            <Route path="/approvalListAdmin" element={<ApprovalListAdmin />}></Route>
-            {/* 관리자-휴가/워케이션 리스트 */}
+            {/* 시설장 휴가/워케이션 리스트 */}
             <Route path="/vacationList" element={<VacationList />}></Route>
             {/* 교사 아동 상세보기 페이지 */}
             <Route path="/child/detail" element={<ChildDetail />} />

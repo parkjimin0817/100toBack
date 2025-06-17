@@ -1,16 +1,126 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
-import App from '../../App';
 import { LuSearch } from 'react-icons/lu';
+import App from '../../App';
+import Modal from '../manager/components/VacationDetail';
 
 const ApprovalList = () => {
   const [selectedType, setSelectedType] = useState('전체');
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedData, setSelectedData] = useState(null);
 
   const data = [
-    { date: '2023-10-09', type: '휴가', type_detail: '병가', name: '김선생', file: 'O', status: '승인' },
-    { date: '2023-10-05', type: '휴가', type_detail: '연차', name: '이선생', file: 'X', status: '거절' },
-    { date: '2023-10-02', type: '워케이션', type_detail: '사전답사', name: '이선생', file: 'O', status: '승인' },
+    {
+      create_date: '2023-10-09',
+      start_date: '2023-10-10',
+      end_date: '2023-10-12',
+      type: '휴가',
+      type_detail: '병가',
+      name: '김선생',
+      reason: '다리 부상',
+      file: 'O',
+      status: '승인',
+    },
+    {
+      create_date: '2023-10-05',
+      start_date: '2023-10-06',
+      end_date: '2023-10-08',
+      type: '휴가',
+      type_detail: '연차',
+      name: '박지민',
+      reason: '여행',
+      file: 'X',
+      status: '거절',
+    },
+    {
+      create_date: '2023-10-02',
+      start_date: '2023-10-03',
+      end_date: '2023-10-04',
+      type: '워케이션',
+      type_detail: '사전답사',
+      name: '이선생',
+      reason: '소풍 사전답사',
+      file: 'O',
+      status: '승인',
+    },
+    {
+      create_date: '2023-09-30',
+      start_date: '2023-10-01',
+      end_date: '2023-10-02',
+      type: '휴가',
+      type_detail: '병가',
+      name: '김승기',
+      reason: '몸살감기',
+      file: 'O',
+      status: '승인',
+    },
+    {
+      create_date: '2023-09-28',
+      start_date: '2023-09-29',
+      end_date: '2023-09-30',
+      type: '워케이션',
+      type_detail: '세미나 참석',
+      name: '최선생',
+      reason: '세미나 참석',
+      file: 'X',
+      status: '대기',
+    },
+    {
+      create_date: '2023-09-25',
+      start_date: '2023-09-26',
+      end_date: '2023-09-28',
+      type: '휴가',
+      type_detail: '연차',
+      name: '정형일',
+      reason: '놀고싶음',
+      file: 'O',
+      status: '대기',
+    },
+    {
+      create_date: '2023-09-20',
+      start_date: '2023-09-21',
+      end_date: '2023-09-22',
+      type: '워케이션',
+      type_detail: '사전답사',
+      name: '홍선생',
+      reason: '소풍 사전답사',
+      file: 'O',
+      status: '거절',
+    },
+    {
+      create_date: '2023-09-15',
+      start_date: '2023-09-16',
+      end_date: '2023-09-18',
+      type: '휴가',
+      type_detail: '병가',
+      name: '정의철',
+      reason: '아픔...',
+      file: 'X',
+      status: '대기',
+    },
+    {
+      create_date: '2023-09-10',
+      start_date: '2023-09-11',
+      end_date: '2023-09-11',
+      type: '워케이션',
+      type_detail: '세미나 참석',
+      name: '양동민',
+      reason: '세미나 참석',
+      file: 'O',
+      status: '승인',
+    },
+    {
+      create_date: '2023-09-05',
+      start_date: '2023-09-06',
+      end_date: '2023-09-07',
+      type: '휴가',
+      type_detail: '연차',
+      name: '박선생',
+      reason: '휴가엔 사유가 필요 없다',
+      file: 'X',
+      status: '거절',
+    },
   ];
 
   const filteredData = selectedType === '전체' ? data : data.filter((item) => item.type === selectedType);
@@ -48,30 +158,43 @@ const ApprovalList = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredData.map((data, index) => (
-                <tr key={index}>
-                  <td>{data.date}</td>
-                  <td>
-                    {data.type} - {data.type_detail}
-                  </td>
-                  <td>{data.name}</td>
-                  <td>{data.file}</td>
-                  <td>
-                    <button>승인</button>
-                    <button>거절</button>
-                  </td>
-                </tr>
-              ))}
+              {filteredData
+                .filter((data) => data.status === '대기')
+                .map((data, index) => (
+                  <tr
+                    key={index}
+                    onClick={() => {
+                      setSelectedData(data);
+                      setOpenModal(true);
+                    }}
+                  >
+                    <td>{data.create_date}</td>
+                    <td>
+                      {data.type} - {data.type_detail}
+                    </td>
+                    <td>{data.name}</td>
+                    <td>{data.file}</td>
+                    <td>
+                      <button className="approved">승인</button>
+                      <button className="rejected">거절</button>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </Table>
         </TableWrapper>
       </ApprovalLists>
+      <Modal isOpen={openModal} onClose={() => setOpenModal(false)} data={selectedData} />
     </Content>
   );
 };
 
 const Content = styled.div`
   width: 100%;
+  min-height: 600px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 `;
 
 const Navigation = styled.div`
@@ -147,6 +270,7 @@ const TableWrapper = styled.div`
   border-top-left-radius: ${({ theme }) => theme.borderRadius.xl};
   border-top-right-radius: ${({ theme }) => theme.borderRadius.xl};
   overflow: hidden;
+  margin-bottom: ${({ theme }) => theme.spacing[6]};
 `;
 
 const Table = styled.table`
@@ -180,6 +304,16 @@ const Table = styled.table`
   th:nth-child(5) {
     width: 20%;
   }
+
+  tbody > tr {
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.gray[100]};
+    }
+  }
+
   td {
     color: ${({ theme }) => theme.colors.blue};
     font-weight: ${({ theme }) => theme.fontWeights.bold};
@@ -203,10 +337,13 @@ const Table = styled.table`
     cursor: pointer;
     font-size: ${({ theme }) => theme.fontSizes.xs};
     color: ${({ theme }) => theme.colors.white};
+  }
+
+  button.approved {
     background-color: ${({ theme }) => theme.colors.green};
   }
 
-  button:nth-child(2) {
+  button.rejected {
     background-color: ${({ theme }) => theme.colors.orange};
   }
 `;
