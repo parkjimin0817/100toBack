@@ -38,6 +38,13 @@ const MyHealthForm = () => {
     }));
   };
 
+  const handleStressChange = (val) => {
+    setForm((prev) => ({
+      ...prev,
+      stress: String(val),
+    }));
+  };
+
   const handleSave = () => {
     if (isEdit) {
       console.log('수정요청', form);
@@ -69,7 +76,6 @@ const MyHealthForm = () => {
           name="stress"
           value={form.stress}
           onChange={handleChange}
-          type="number"
         />
         <MyHealthInputCard
           text="오늘은 몇시간 주무셨나요?"

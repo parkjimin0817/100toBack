@@ -8,8 +8,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 const data = {
   createDate: '2025-07-29',
   temp: '24',
-  stress: '2',
-  sleep: '3',
+  stress: '5',
+  sleep: '5',
   symptom: '두통',
 };
 
@@ -42,7 +42,7 @@ const MyHealthDetail = () => {
         </DateRow>
         <Content>
           <MyHealthDetailCard label="체온" value={`${data.temp} ℃`} />
-          <MyHealthDetailCard label="스트레스 지수" />
+          <MyHealthDetailCard label="스트레스 지수" value={data.stress} />
           <MyHealthDetailCard label="수면시간" value={`${data.sleep}시간`} />
           <MyHealthDetailCard label="증상" value={data.symptom || '없음'} />
         </Content>

@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import StressInputBar from './StressInputBar';
 
 const MyHealthInputCard = ({ text, label, name, value, onChange, type = 'text', unit }) => {
   return (
@@ -9,8 +10,22 @@ const MyHealthInputCard = ({ text, label, name, value, onChange, type = 'text', 
         <Info>
           <Label>{label}</Label>
           <InputWrapper>
-            <Value type={type} name={name} value={value} onChange={onChange} />
-            <Unit>{unit}</Unit>
+            {name === 'stress' ? (
+              <StressInputBar
+                value={Number(value)}
+                onChange={(val) => {
+                  const fakeEvent = {
+                    target: { name, value: String(val) },
+                  };
+                  onChange(fakeEvent);
+                }}
+              />
+            ) : (
+              <>
+                <Value type={type} name={name} value={value} onChange={onChange} />
+                <Unit>{unit}</Unit>
+              </>
+            )}
           </InputWrapper>
         </Info>
       </Box>
