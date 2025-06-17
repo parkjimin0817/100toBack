@@ -2,10 +2,14 @@
 import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import ChildImg from '../../assets/Child.png';
+
+import React, { useState } from 'react';
+
 import theme from '../../styles/theme';
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { List } from '../../components/ChildDummyData';
+
 
 const ChildDetail = () => {
   const [searchParams] = useSearchParams();
@@ -31,7 +35,6 @@ const ChildDetail = () => {
         <ContentHeader
           Title={'아동 상세보기'}
           Color={'orange'}
-          FontSize="xl"
           ButtonProps={[{ Title: '뒤로가기', func: () => alert('뒤로가기~') }, { Title: '아동정보 삭제' }]}
         />
         <BasicInfo>
