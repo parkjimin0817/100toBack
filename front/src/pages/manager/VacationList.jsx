@@ -13,51 +13,55 @@ const ApprovalList = () => {
   const data = [
     {
       create_date: '2023-10-09',
-      start_date: '2023-10-10',
-      end_date: '2023-10-12',
+      start_date: '2023-10-11',
+      end_date: '2023-10-14',
       type: '휴가',
       type_detail: '병가',
       name: '김선생',
       reason: '다리 부상',
       file: 'O',
       status: '승인',
+      decision_date: '2023-10-10',
     },
     {
       create_date: '2023-10-05',
-      start_date: '2023-10-06',
-      end_date: '2023-10-08',
+      start_date: '2023-10-08',
+      end_date: '2023-10-10',
       type: '휴가',
       type_detail: '연차',
       name: '박지민',
       reason: '여행',
       file: 'X',
       status: '거절',
+      decision_date: '2023-10-07',
     },
     {
       create_date: '2023-10-02',
-      start_date: '2023-10-03',
-      end_date: '2023-10-04',
+      start_date: '2023-10-08',
+      end_date: '2023-10-08',
       type: '워케이션',
       type_detail: '사전답사',
       name: '이선생',
       reason: '소풍 사전답사',
       file: 'O',
       status: '승인',
+      decision_date: '2023-10-03',
     },
     {
       create_date: '2023-09-30',
       start_date: '2023-10-01',
-      end_date: '2023-10-02',
+      end_date: '2023-10-01',
       type: '휴가',
       type_detail: '병가',
       name: '김승기',
       reason: '몸살감기',
       file: 'O',
       status: '승인',
+      decision_date: '2023-10-01',
     },
     {
       create_date: '2023-09-28',
-      start_date: '2023-09-29',
+      start_date: '2023-09-30',
       end_date: '2023-09-30',
       type: '워케이션',
       type_detail: '세미나 참석',
@@ -65,6 +69,7 @@ const ApprovalList = () => {
       reason: '세미나 참석',
       file: 'X',
       status: '대기',
+      decision_date: null,
     },
     {
       create_date: '2023-09-25',
@@ -76,6 +81,7 @@ const ApprovalList = () => {
       reason: '놀고싶음',
       file: 'O',
       status: '대기',
+      decision_date: null,
     },
     {
       create_date: '2023-09-20',
@@ -87,6 +93,7 @@ const ApprovalList = () => {
       reason: '소풍 사전답사',
       file: 'O',
       status: '거절',
+      decision_date: '2023-09-20',
     },
     {
       create_date: '2023-09-15',
@@ -98,17 +105,19 @@ const ApprovalList = () => {
       reason: '아픔...',
       file: 'X',
       status: '대기',
+      decision_date: null,
     },
     {
       create_date: '2023-09-10',
-      start_date: '2023-09-11',
-      end_date: '2023-09-11',
+      start_date: '2023-09-13',
+      end_date: '2023-09-14',
       type: '워케이션',
       type_detail: '세미나 참석',
       name: '양동민',
       reason: '세미나 참석',
       file: 'O',
       status: '승인',
+      decision_date: '2023-10-11',
     },
     {
       create_date: '2023-09-05',
@@ -120,6 +129,7 @@ const ApprovalList = () => {
       reason: '휴가엔 사유가 필요 없다',
       file: 'X',
       status: '거절',
+      decision_date: '2023-09-06',
     },
   ];
 
@@ -158,28 +168,34 @@ const ApprovalList = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredData
-                .filter((data) => data.status === '대기')
-                .map((data, index) => (
-                  <tr
-                    key={index}
-                    onClick={() => {
-                      setSelectedData(data);
-                      setOpenModal(true);
-                    }}
-                  >
-                    <td>{data.create_date}</td>
-                    <td>
-                      {data.type} - {data.type_detail}
-                    </td>
-                    <td>{data.name}</td>
-                    <td>{data.file}</td>
-                    <td>
-                      <button className="approved">승인</button>
-                      <button className="rejected">거절</button>
-                    </td>
-                  </tr>
-                ))}
+              {filteredData.map((data, index) => (
+                <tr
+                  key={index}
+                  onClick={() => {
+                    setSelectedData(data);
+                    setOpenModal(true);
+                  }}
+                >
+                  <td>{data.create_date}</td>
+                  <td>
+                    {data.type} - {data.type_detail}
+                  </td>
+                  <td>{data.name}</td>
+                  <td>{data.file}</td>
+                  <td>
+                    {data.decision_date === null ? (
+                      <>
+                        <button className="approved">승인</button>
+                        <button className="rejected">거절</button>
+                      </>
+                    ) : data.status === '승인' ? (
+                      <ApprovedDecisionDate>{data.decision_date}</ApprovedDecisionDate>
+                    ) : (
+                      <RejectedDecisionDate>{data.decision_date}</RejectedDecisionDate>
+                    )}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </Table>
         </TableWrapper>
@@ -346,6 +362,30 @@ const Table = styled.table`
   button.rejected {
     background-color: ${({ theme }) => theme.colors.orange};
   }
+`;
+
+const ApprovedDecisionDate = styled.span`
+  background-color: ${({ theme }) => theme.colors.green};
+  color: ${({ theme }) => theme.colors.white};
+  border: none;
+  padding: 0 ${({ theme }) => theme.spacing[6]};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const RejectedDecisionDate = styled.span`
+  background-color: ${({ theme }) => theme.colors.orange};
+  color: ${({ theme }) => theme.colors.white};
+  border: none;
+  padding: 0 ${({ theme }) => theme.spacing[6]};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export default ApprovalList;
