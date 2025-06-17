@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ContentHeader from '../../components/Common/ContentHeader';
 import styled from 'styled-components';
 import CheckListSearchBar from './components/CheckListSearchBar';
 import HealthCheckListTable from './components/HealthCheckListTable';
 import { useState } from 'react';
+import { format } from 'date-fns';
 
 const mockData = [
   {
@@ -45,18 +46,32 @@ const mockData = [
 ];
 
 const ChildHealthCheck = () => {
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedClass, setSelectedClass] = useState('');
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedClass, setSelectedClass] = useState('햇님반'); //로그인된 유저 반 예시
   const [matchedData, setMatchedData] = useState(null);
 
   const handleSearch = () => {
-    if (!selectedDate || !selectedClass) {
+    if (!selectedDate || !(selectedDate instanceof Date) || !selectedClass) {
       alert('반과 날짜를 모두 선택해주세요.');
       return;
     }
 
-    const formattedDate = selectedDate.toISOString().split('T')[0];
+    const formattedDate = format(selectedDate, 'yyyy-MM-dd'); //뒤에 시간 버리기
+    console.log('📅 formattedDate:', formattedDate);
+    console.log('🏫 selectedClass:', selectedClass);
+    const found = mockData.find((data) => data.date === formattedDate && data.class === selectedClass);
+    console.log('🔍 matched result:', found);
+
+    setMatchedData(found);
   };
+
+  //페이지 들어오면 자동으로 1번 조회
+  useEffect(() => {
+    if (selectedDate && selectedClass) {
+      handleSearch();
+    }
+  }, []);
+
   return (
     <Wrapper>
       <ContentHeader
@@ -69,14 +84,27 @@ const ChildHealthCheck = () => {
         ]}
       />
       <Content>
-        <CheckListSearchBar />
-        <HealthCheckListTable data={mockData} />
+        <CheckListSearchBar
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+          selectedClass={selectedClass}
+          setSelectedClass={setSelectedClass}
+          onSearch={handleSearch}
+        />
+        <HealthCheckListTable data={matchedData ? matchedData.checklist : []} />
+        {!matchedData && <p style={{ marginTop: '10px' }}>조회된 결과가 없습니다.</p>}
       </Content>
     </Wrapper>
   );
 };
 
 export default ChildHealthCheck;
+const Wrapper = styled.div`
+  min-height: 600px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+`;
 
 const Content = styled.div`
   width: 100%;

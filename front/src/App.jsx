@@ -38,6 +38,12 @@ import DailyScheduleDetail from './pages/DailyScheduleDetail';
 
 import ClassPlacement from './pages/manager/ClassPlacement';
 
+import ChildDetail from './pages/teacher/ChildDetail';
+
+import FamilyCommunityPage from './pages/teacher/FamilyCommunityPage';
+
+import ManagerMyPage from './pages/manager/ManagerMyPage';
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -54,11 +60,19 @@ function App() {
             <Route path="/daily" element={<DailySchedule />} />
             {/* 반별 일과표 목록  */}
             <Route path="/dailyDetail" element={<DailyScheduleDetail />} />
+            {/* 아동목록 페이지(교사) */}
             <Route path="/childlist" element={<ChildList />} />
-            {/* 아동목록 페이지(교사) */}
+            {/* 아동 반배치 페이지(시설장) */}
             <Route path="/manager/classplacement" element={<ClassPlacement />} />
-            {/* 아동목록 페이지(교사) */}
             {/* 추가 페이지는 아래 붙이기. */}
+
+            {/* 교사 가정통신문 게시글 목록 페이지 */}
+            <Route path="/familycommunity/list" element={<FamilyCommunityPage />} />
+
+            {/* 회원가입 승인 리스트(시설장) */}
+            <Route path="/approvalList" element={<ApprovalList />}></Route>
+            {/* 시설장 승인 리스트(관리자) */}
+            <Route path="/approvalListAdmin" element={<ApprovalListAdmin />}></Route>
             {/* 교사 휴가 워케이션 신청 페이지 */}
             <Route path="/myvacation" element={<MyVacation />} />
             {/* 교사 아동 건강 체크리스트 페이지 */}
@@ -69,6 +83,10 @@ function App() {
             <Route path="/approvalListAdmin" element={<ApprovalListAdmin />}></Route>
             {/* 관리자-휴가/워케이션 리스트 */}
             <Route path="/vacationList" element={<VacationList />}></Route>
+            {/* 교사 아동 상세보기 페이지 */}
+            <Route path="/child/detail" element={<ChildDetail />} />
+            {/* 시설장 마이페이지  페이지 */}
+            <Route path="/managermypage" element={<ManagerMyPage />} />
           </Route>
           {/* Login Page */}
           <Route path="/login" element={<LoginPage />}></Route>
@@ -96,7 +114,7 @@ function App() {
           <Route path="/changepwd" element={<ChangePassword />}></Route>
           {/* Change Password Page - 비밀번호 재설정 페이지 */}
           {/* 404 Not Found */}
-          {/* <Route path="*" element={<Home />}></Route> */}
+          <Route path="*" element={<Home />}></Route>
         </Routes>
       </Router>
     </ThemeProvider>

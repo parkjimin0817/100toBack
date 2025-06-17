@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ClassRoomCard from '../components/ClassRoomCard';
 import ContentHeader from '../components/Common/ContentHeader';
 import sun from '../assets/img/sun.png';
+import styled from 'styled-components';
 
 //출석 체크 시 반별 페이지(모든 반이 나옴)
 const AttendanceClassList = () => {
@@ -45,11 +46,20 @@ const AttendanceClassList = () => {
   ];
 
   return (
-    <>
+    <Content>
       <ContentHeader Title={'유치원 출결 반 선택'} Color={'orange'} />
       <ClassRoomCard rooms={thermeData} address={'/classDetail'} />
-    </>
+    </Content>
   );
 };
+
+const Content = styled.div`
+  width: 100%;
+  min-height: 600px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+`;
+
 
 export default AttendanceClassList;
