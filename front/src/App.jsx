@@ -22,8 +22,9 @@ import ChangePassword from './pages/common/ChangePassword';
 import SignUpWorkSpaceInfo from './pages/common/signup/SignUpWorkSpaceInfo';
 import SignUpComplete from './pages/common/signup/SignUpComplete';
 
-import ApprovalList from './pages/ApprovalList';
-import ApprovalListAdmin from './pages/ApprovalListAdmin';
+import ApprovalList from './pages/manager/ApprovalList';
+import ApprovalListAdmin from './pages/admin/ApprovalListAdmin';
+import VacationList from './pages/manager/VacationList';
 
 import SignUpChildInfo from './pages/common/signup/SignUpChildInfo';
 import SignUpCenterInfo from './pages/common/signup/SignUpCenterInfo';
@@ -80,6 +81,8 @@ function App() {
             <Route path="/myvacation" element={<MyVacation />} />
             {/* 교사 아동 건강 체크리스트 페이지 */}
             <Route path="/childhealthcheck" element={<ChildHealthCheck />} />
+            {/* 시설장 휴가/워케이션 리스트 */}
+            <Route path="/vacationList" element={<VacationList />}></Route>
             {/* 교사 아동 상세보기 페이지 */}
             <Route path="/child/detail" element={<ChildDetail />} />
             {/* 시설장 마이페이지  페이지 */}
