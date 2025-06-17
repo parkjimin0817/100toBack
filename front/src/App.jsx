@@ -22,8 +22,9 @@ import ChangePassword from './pages/common/ChangePassword';
 import SignUpWorkSpaceInfo from './pages/common/signup/SignUpWorkSpaceInfo';
 import SignUpComplete from './pages/common/signup/SignUpComplete';
 
-import ApprovalList from './pages/ApprovalList';
-import ApprovalListAdmin from './pages/ApprovalListAdmin';
+import ApprovalList from './pages/manager/ApprovalList';
+import ApprovalListAdmin from './pages/admin/ApprovalListAdmin';
+import VacationList from './pages/manager/VacationList';
 
 import SignUpChildInfo from './pages/common/signup/SignUpChildInfo';
 import SignUpCenterInfo from './pages/common/signup/SignUpCenterInfo';
@@ -40,9 +41,12 @@ import ClassPlacement from './pages/manager/ClassPlacement';
 import ChildDetail from './pages/teacher/ChildDetail';
 
 import FamilyCommunityPage from './pages/teacher/FamilyCommunityPage';
-
 import ManagerMyPage from './pages/manager/ManagerMyPage';
 import ChildLifeCheck from './pages/teacher/ChildLifeCheck';
+import MyHealth from './pages/teacher/MyHealth';
+import MyHealthDetail from './pages/teacher/MyHealthDetail';
+import MyHealthForm from './pages/teacher/MyHealthForm';
+import ParentContact from './pages/teacher/ParentContact';
 
 function App() {
   return (
@@ -79,10 +83,22 @@ function App() {
             <Route path="/childhealthcheck" element={<ChildHealthCheck />} />
             {/* 교사 아동 건강 체크리스트 페이지 */}
             <Route path="/childlifecheck" element={<ChildLifeCheck />} />
+            {/* 시설장 휴가/워케이션 리스트 */}
+            <Route path="/vacationList" element={<VacationList />}></Route>
             {/* 교사 아동 상세보기 페이지 */}
             <Route path="/child/detail" element={<ChildDetail />} />
             {/* 시설장 마이페이지  페이지 */}
             <Route path="/managermypage" element={<ManagerMyPage />} />
+            {/* 교사 건강관리 목록 페이지 */}
+            <Route path="/myhealth" element={<MyHealth />} />
+            {/* 교사 건강관리 상세 페이지 */}
+            <Route path="/myhealth/:id" element={<MyHealthDetail />} />
+            {/* 교사 건강관리 작성 페이지 */}
+            <Route path="/myhealth/form" element={<MyHealthForm />} />
+            {/* 교사 건강관리 수정 페이지 */}
+            <Route path="/myhealth/edit/:id" element={<MyHealthForm />} />
+            {/* 교사 학부모 연락처 조회 페이지 */}
+            <Route path="/parentcontact" element={<ParentContact />} />
           </Route>
           {/* Login Page */}
           <Route path="/login" element={<LoginPage />}></Route>
@@ -90,7 +106,7 @@ function App() {
           <Route path="/signup/userselect" element={<UserTypeSelect />} />
           {/* 회원가입 약관 동의 */}
           <Route path="/signup/terms" element={<TermsAgreement />} />
-          {/* 회원가입 기본 정보 입력 */}
+          {/* 회원가입 정보 입력 */}
           <Route path="/signup/info" element={<SignUpBasicInfo />} />
           <Route path="/signup/teacher" element={<SignUpWorkSpaceInfo />} />
           <Route path="/signup/complete" element={<SignUpComplete />} />
