@@ -77,7 +77,6 @@ const ChildHealthCheck = () => {
       <ContentHeader
         Title={'아동 건강 체크리스트'}
         Color={'orange'}
-        FontSize="xl"
         ButtonProps={[
           { Title: '뒤로가기', func: () => alert('뒤로가기~') },
           { Title: '앞으로가기', func: () => alert('앞으로가기~') },
