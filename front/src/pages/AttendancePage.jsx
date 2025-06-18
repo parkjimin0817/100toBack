@@ -3,11 +3,17 @@ import ContentHeader from '../components/Common/ContentHeader';
 import styled from 'styled-components';
 import CommonCalendar from '../components/CommonCalendar';
 import AttendanceList from '../components/Common/AttendanceList';
+import { useNavigate } from 'react-router-dom';
 
 const AttendancePage = () => {
+  const navigate = useNavigate();
   return (
     <Content>
-      <ContentHeader Title={'아동 출결'} Color={'orange'} />
+      <ContentHeader
+        Title={'반 출결'}
+        Color={'orange'}
+        ButtonProps={[{ Title: '뒤로가기', func: () => navigate(-1) }]}
+      />
       <Wrapper>
         <CalendarWrapper>
           <CommonCalendar />

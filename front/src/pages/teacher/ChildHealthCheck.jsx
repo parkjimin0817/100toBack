@@ -5,6 +5,7 @@ import CheckListSearchBar from './components/CheckListSearchBar';
 import HealthCheckListTable from './components/HealthCheckListTable';
 import { useState } from 'react';
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 const mockData = [
   {
@@ -46,6 +47,7 @@ const mockData = [
 ];
 
 const ChildHealthCheck = () => {
+  const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedClass, setSelectedClass] = useState('햇님반'); //로그인된 유저 반 예시
   const [matchedData, setMatchedData] = useState(null);
@@ -74,14 +76,7 @@ const ChildHealthCheck = () => {
 
   return (
     <Wrapper>
-      <ContentHeader
-        Title={'아동 건강 체크리스트'}
-        Color={'orange'}
-        ButtonProps={[
-          { Title: '뒤로가기', func: () => alert('뒤로가기~') },
-          { Title: '앞으로가기', func: () => alert('앞으로가기~') },
-        ]}
-      />
+      <ContentHeader Title={'아동 건강 체크리스트'} Color={'orange'} />
       <Content>
         <CheckListSearchBar
           selectedDate={selectedDate}
