@@ -42,6 +42,11 @@ const TeacherList = () => {
             placeholder="교사명을 입력해 주세요."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                setFilteredName(searchTerm.trim());
+              }
+            }}
           />
           <SearchIcon src={SearchButton} onClick={() => setFilteredName(searchTerm.trim())} />
         </SearchBox>
