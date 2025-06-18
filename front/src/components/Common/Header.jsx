@@ -17,7 +17,7 @@ const Header = () => {
       </HeaderLeftBox>
       <HeaderRightBox>
         <UserProfile>
-          <Img src={userProfile} alt="사용자 프로필" onClick={() => navigate('/teachermypage')} />
+          <Img src={userProfile} alt="사용자 프로필" onClick={() => navigate('/teacher/mypage')} />
           <UserNameAndRole>
             <p>정형일</p>
             <p>교사</p>

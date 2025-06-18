@@ -106,9 +106,9 @@ const sidebarMenus = [
     icon: <FaRegClock />,
     color: 'blue',
     subItems: [
-      { label: '근태 관리', link: '' },
-      { label: '휴가 관리', link: '/myvacation' },
-      { label: '학부모 연락처 관리', link: '/parentcontact' },
+      { label: '근태 관리', link: '/teacher/myattendance' },
+      { label: '휴가 관리', link: '/teacher/workcation' },
+      { label: '학부모 연락처 관리', link: '/teacher/parentcontactinfo' },
     ],
   },
   {
@@ -117,7 +117,7 @@ const sidebarMenus = [
     icon: <RiHealthBookLine />,
     color: 'yellow',
     subItems: [
-      { label: '나의 건강 데이터', link: '/myhealth' },
+      { label: '나의 건강 데이터', link: '/teacherhealth' },
       { label: '건강 관리', link: '' },
     ],
   },
@@ -127,7 +127,7 @@ const sidebarMenus = [
     icon: <IoPeopleOutline />,
     color: 'blue',
     subItems: [
-      { label: '근태 관리', link: '/teacherattendance' },
+      { label: '근태 관리', link: '/manager/teacherattendance' },
       { label: '휴가 관리', link: '' },
       { label: '회원가입 승인', link: '/approvalList' },
       { label: '교사 소개', link: '' },

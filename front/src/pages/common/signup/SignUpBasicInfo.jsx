@@ -93,7 +93,7 @@ const Form = styled.form`
 const BirthLabel = styled.label`
   display: block;
   text-align: left;
-  margin-bottom: 4px;
+  margin-bottom: ${({ theme }) => theme.spacing[1]};
   font-size: ${({ theme }) => theme.fontSizes.base};
   color: ${({ theme }) => theme.colors.gray[400]};
 `;
@@ -108,8 +108,8 @@ const Select = styled.select`
   height: 40px;
   outline: none;
   border: 1px solid ${({ theme }) => theme.colors.gray[300]};
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   font-size: ${({ theme }) => theme.fontSizes.sm};
-  padding: 8px;
-  margin-bottom: 8px;
+  padding: ${({ theme }) => theme.spacing[2]};
+  margin-bottom: ${({ theme }) => theme.spacing[2]};
 `;

@@ -115,24 +115,24 @@ const Wrapper = styled.div`
 
 const Title = styled.span`
   display: block;
-  margin: 30px 0;
+  margin: ${({ theme }) => theme.spacing[8]} 0;
   font-size: ${({ theme }) => theme.fontSizes.lg};
-  font-weight: 500;
+  font-weight: ${({ theme }) => theme.fontWeights.medium};
 `;
 
 const Checkbox = styled.input`
   width: 25px;
   height: 25px;
-  margin: 15px;
+  margin: ${({ theme }) => theme.spacing[4]};
   border: 1px solid black;
-  border-radius: 0;
+  border-radius: ${({ theme }) => theme.borderRadius.none};
   appearance: none;
   outline: none;
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.white};
   cursor: pointer;
 
   &:checked {
-    background-color: #ff8267;
+    background-color: ${({ theme }) => theme.colors.orange};
   }
 `;
 
@@ -148,7 +148,7 @@ const AgreeAllBox = styled.div`
 const Text = styled.span`
   display: block;
   font-size: ${({ theme }) => theme.fontSizes.base};
-  font-weight: 500;
+  font-weight: ${({ theme }) => theme.fontWeights.medium};
 `;
 
 const Info = styled.span`

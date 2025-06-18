@@ -4,7 +4,6 @@ import Logo from '../../assets/img/logo.png';
 import CommonFind from '../../components/Common/CommonFind';
 import { useNavigate } from 'react-router-dom';
 
-
 const LoginPage = () => {
   const [checked, setChecked] = useState(false);
   const navigator = useNavigate();
@@ -28,7 +27,9 @@ const LoginPage = () => {
             <Button>로그인</Button>
           </LoginButtonLine>
           <EtcLine>
-            <Etc style={{ marginRight: '140px' }}>회원가입</Etc>
+            <Etc style={{ marginRight: '140px' }} onClick={() => navigator('/signup/userselect')}>
+              회원가입
+            </Etc>
             <Etc>아이디찾기</Etc>
             <Etc onClick={() => navigator('/findpwd')}>비밀번호찾기</Etc>
           </EtcLine>
@@ -111,8 +112,7 @@ const CheckboxLine = styled.div`
 
 const LoginMaintain = styled.input`
   margin-left: 15px;
-`
-
+`;
 
 const LoginButtonLine = styled.div`
   margin-top: 80px;

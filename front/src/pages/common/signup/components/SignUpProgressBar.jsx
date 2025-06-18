@@ -41,17 +41,17 @@ const Circle = styled.div`
 
 const Bar = styled.div`
   position: absolute;
-  top: 8px;
+  top: ${({ theme }) => theme.spacing[2]};
   left: 50%;
   width: 100%;
   height: 5px;
   background-color: ${(props) => (props.active ? '#F36B4D' : '#BCBCBC')};
-  z-index: 0;
+  z-index: ${({ theme }) => theme.zIndices.base};
 `;
 
 const Label = styled.span`
-  margin-top: 8px;
-  font-size: 12px;
+  margin-top: ${({ theme }) => theme.spacing[2]};
+  font-size: ${({ theme }) => theme.fontSizes.xs};
   font-weight: ${(props) => (props.active ? 900 : 400)};
   text-align: center;
   color: #444;

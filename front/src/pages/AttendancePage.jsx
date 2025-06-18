@@ -6,9 +6,19 @@ import { useNavigate } from 'react-router-dom';
 import CustomCalendar from './common/CustomCalendar';
 import { useState } from 'react';
 
+const data = [
+  { name: '박지민', child_no: '1', class_no: '1', create_date: '2025-06-18', status: 'present' },
+  { name: '김승기', child_no: '2', class_no: '1', create_date: '2025-06-18', status: 'absent' },
+  { name: '양동민', child_no: '3', class_no: '1', create_date: '2025-06-18', status: 'half' },
+  { name: '정형일', child_no: '4', class_no: '1', create_date: '2025-06-18', status: 'present' },
+  { name: '정의철', child_no: '5', class_no: '1', create_date: '2025-06-18', status: 'present' },
+  { name: '지피티', child_no: '6', class_no: '1', create_date: '2025-06-18', status: 'present' },
+];
+
 const AttendancePage = () => {
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(new Date());
+
   return (
     <Wrapper>
       <ContentHeader
@@ -58,9 +68,4 @@ const Div1 = styled.div`
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 `;
 
-const Div2 = styled.div`
-  width: 30%;
-  min-height: 500px;
-  border-radius: 20px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-`;
+const Div2 = styled.div``;

@@ -39,7 +39,7 @@ const ManagerMyPage = () => {
           <MyPageMenuBox
             menuName="휴가 및 워케이션 관리"
             icon={<FaUmbrellaBeach size={60} />}
-            url="/myvacation"
+            url="/teacher/workcation"
             color="blue"
           />
         </MenuBox>
