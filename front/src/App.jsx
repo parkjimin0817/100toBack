@@ -53,8 +53,6 @@ import TeacherMyPage from './pages/teacher/TeacherMyPage';
 import AttendancePage from './pages/AttendancePage';
 import TeacherAttendance from './pages/manager/TeacherAttendance';
 import TeacherIntroList from './pages/manager/TeacherIntroList';
-import TeacherDetail from './pages/teacher/TeacherDetail';
-
 import ScheduleTeacher from './pages/teacher/ScheduleTeacher';
 
 function App() {
@@ -123,8 +121,6 @@ function App() {
             <Route path="/teacherattendance" element={<TeacherAttendance />} />
             {/* 시설장 교사 소개 및 조회 */}
             <Route path="/manager/introteacher" element={<TeacherIntroList />} />
-            {/* 교사 상세보기 및 마이페이지 */}
-            <Route path="/manager/teacherdetail" element={<TeacherDetail />} />
           </Route>
           {/* Login Page */}
           <Route path="/login" element={<LoginPage />}></Route>
