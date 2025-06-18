@@ -11,7 +11,7 @@ const MyHealth = () => {
       <ContentHeader
         Title="나의 건강 데이터"
         Color="yellow"
-        ButtonProps={[{ Title: '작성하기', func: () => navigate('/myhealth/form') }]}
+        ButtonProps={[{ Title: '작성하기', func: () => navigate('/teacherhealth/write') }]}
       />
       <MyHealthList />
     </Wrapper>

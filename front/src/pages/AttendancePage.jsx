@@ -58,9 +58,4 @@ const Div1 = styled.div`
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 `;
 
-const Div2 = styled.div`
-  width: 30%;
-  min-height: 500px;
-  border-radius: 20px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-`;
+const Div2 = styled.div``;

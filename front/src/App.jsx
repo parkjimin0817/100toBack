@@ -54,6 +54,7 @@ import AttendancePage from './pages/AttendancePage';
 import TeacherAttendance from './pages/manager/TeacherAttendance';
 
 import ScheduleTeacher from './pages/teacher/ScheduleTeacher';
+import MyAttendance from './pages/teacher/MyAttendance';
 
 function App() {
   return (
@@ -92,7 +93,7 @@ function App() {
             {/* 시설장 승인 리스트(관리자) */}
             <Route path="/approvalListAdmin" element={<ApprovalListAdmin />} />
             {/* 교사 휴가 워케이션 신청 페이지 */}
-            <Route path="/myvacation" element={<MyVacation />} />
+            <Route path="/teacher/workcation" element={<MyVacation />} />
             {/* 교사 아동 건강 체크리스트 페이지 */}
             <Route path="/childhealthcheck" element={<ChildHealthCheck />} />
             {/* 교사 아동 건강 체크리스트 페이지 */}
@@ -100,25 +101,27 @@ function App() {
             {/* 시설장 휴가/워케이션 리스트 */}
             <Route path="/vacationList" element={<VacationList />}></Route>
             {/* 시설장 마이페이지  페이지 */}
-            <Route path="/managermypage" element={<ManagerMyPage />} />
+            <Route path="/manager/mypage" element={<ManagerMyPage />} />
             {/* 교사 건강관리 목록 페이지 */}
-            <Route path="/myhealth" element={<MyHealth />} />
+            <Route path="/teacherhealth" element={<MyHealth />} />
             {/* 교사 건강관리 상세 페이지 */}
             <Route path="/myhealth/:id" element={<MyHealthDetail />} />
             {/* 교사 건강관리 작성 페이지 */}
-            <Route path="/myhealth/form" element={<MyHealthForm />} />
+            <Route path="/teacherhealth/write" element={<MyHealthForm />} />
             {/* 교사 건강관리 수정 페이지 */}
             <Route path="/myhealth/edit/:id" element={<MyHealthForm />} />
             {/* 교사 학부모 연락처 조회 페이지 */}
-            <Route path="/parentcontact" element={<ParentContact />} />
+            <Route path="/teacher/parentcontactinfo" element={<ParentContact />} />
             {/* 유치원 일정관리(교사) */}
             <Route path="/ScheduleTeacher" element={<ScheduleTeacher />} />
             {/* 교사 마이페이지 */}
-            <Route path="/teachermypage" element={<TeacherMyPage />} />
+            <Route path="/teacher/mypage" element={<TeacherMyPage />} />
             {/* 아동 출결 페이지 */}
-            <Route path="/attendance" element={<AttendancePage />} />
+            <Route path="/childattendance" element={<AttendancePage />} />
             {/* 시설장 교사 근태 관리 */}
-            <Route path="/teacherattendance" element={<TeacherAttendance />} />
+            <Route path="/manager/teacherattendance" element={<TeacherAttendance />} />
+            {/* 교사 근태 관리 */}
+            <Route path="/teacher/myattendance" element={<MyAttendance />} />
           </Route>
           {/* Login Page */}
           <Route path="/login" element={<LoginPage />}></Route>

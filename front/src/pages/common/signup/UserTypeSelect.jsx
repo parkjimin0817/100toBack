@@ -68,7 +68,7 @@ const Footer = styled.div`
 
 const Foot = styled.div`
   width: 94px;
-  font-size: 16px;
+  font-size: ${({ theme }) => theme.fontSizes.base};
   font-weight: bold;
 
   &:hover {
