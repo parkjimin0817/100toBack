@@ -5,8 +5,7 @@ import CheckListSearchBar from './components/CheckListSearchBar';
 import { List } from '../../components/ChildDummyData';
 import { format } from 'date-fns';
 import HealthCheckListTable from './components/HealthCheckListTable';
-import { useState } from 'react';
-import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 const mockData = [
   {

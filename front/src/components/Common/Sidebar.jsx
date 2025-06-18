@@ -73,7 +73,7 @@ const sidebarMenus = [
       { label: '아동 목록', link: '/childlist' },
       { label: '아동 출결', link: '/classlist' },
       { label: '아동 건강', link: '/childhealthcheck' },
-      { label: '아동 생활', link: '' },
+      { label: '아동 생활', link: '/childlifecheck' },
     ],
   },
   {
@@ -127,7 +127,7 @@ const sidebarMenus = [
     icon: <IoPeopleOutline />,
     color: 'blue',
     subItems: [
-      { label: '근태 관리', link: '' },
+      { label: '근태 관리', link: '/teacherattendance' },
       { label: '휴가 관리', link: '' },
       { label: '회원가입 승인', link: '/approvalList' },
       { label: '교사 소개', link: '' },
