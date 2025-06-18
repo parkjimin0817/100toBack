@@ -24,7 +24,30 @@ const TeacherAttendanceCard = () => {
           </AttendanceCount>
         </AttendanceCountBox>
       </TopContent>
-      <BottomContent></BottomContent>
+      <BottomContent>
+        <AttendanceDetailBox>
+          <AttendanceDetailDate>2025-06-03(화)</AttendanceDetailDate>
+          <ButtonDiv>
+            <AttendanceEditButton>근태 수정</AttendanceEditButton>
+          </ButtonDiv>
+          <DetailContent>
+            <Table>
+              <tr>
+                <th>상태:</th>
+                <td>출근</td>
+              </tr>
+              <tr>
+                <th>출근시간: </th>
+                <td>09:00</td>
+              </tr>
+              <tr>
+                <th>퇴근시간: </th>
+                <td>18:00</td>
+              </tr>
+            </Table>
+          </DetailContent>
+        </AttendanceDetailBox>
+      </BottomContent>
     </>
   );
 };
@@ -34,14 +57,12 @@ export default TeacherAttendanceCard;
 const TopContent = styled.div`
   width: 100%;
   display: flex;
-  border: 1px solid black;
 `;
 
 const BottomContent = styled.div`
   width: 100%;
-  height: 200px;
+  height: 250px;
   display: flex;
-  border: 1px solid black;
 `;
 
 const ProfileDiv = styled.div`
@@ -82,4 +103,64 @@ const Count = styled.div`
   justify-content: center;
   margin: 4px 0;
   font-weight: ${({ theme }) => theme.fontWeights.bold};
+`;
+
+const AttendanceDetailBox = styled.div`
+  margin: 10px auto;
+  width: 300px;
+  height: 200px;
+  border: 3px solid ${({ theme }) => theme.colors.blue};
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+`;
+
+const AttendanceDetailDate = styled.div`
+  width: 140px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  padding-top: 4px;
+  background-color: ${({ theme }) => theme.colors.blue};
+  color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+  border-radius: 0 0 5px;
+`;
+
+const ButtonDiv = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 8px 8px;
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const AttendanceEditButton = styled.button`
+  width: 80px;
+  height: 30px;
+  background-color: ${({ theme }) => theme.colors.blue};
+  border-radius: 5px;
+  color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+`;
+
+const DetailContent = styled.div`
+  width: 100%;
+  height: 75%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+const Table = styled.table`
+  width: 50%;
+  margin: 0 auto;
+  th {
+    text-align: center;
+  }
+  & > tr:first-child {
+    height: 60px; /* 줄 간격을 넓히는 예시 */
+  }
 `;
