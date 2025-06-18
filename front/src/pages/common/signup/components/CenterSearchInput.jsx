@@ -88,14 +88,14 @@ export default CenterSearchInput;
 const Wrapper = styled.div`
   width: 400px;
   margin: 0 auto;
-  margin-top: 10px;
+  margin-top: ${({ theme }) => theme.spacing[3]};
   position: relative;
 `;
 
 const Label = styled.label`
   display: block;
   text-align: left;
-  margin-bottom: 4px;
+  margin-bottom: ${({ theme }) => theme.spacing[1]};
   font-size: ${({ theme }) => theme.fontSizes.base};
   color: ${({ theme }) => theme.colors.gray[400]};
 `;
@@ -110,11 +110,11 @@ const Input = styled.input`
   flex: 1;
   height: 40px;
   border: 1px solid ${({ theme }) => theme.colors.gray[300]};
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   outline: none;
   font-size: ${({ theme }) => theme.fontSizes.sm};
-  padding: 10px;
-  padding-right: 100px;
+  padding: ${({ theme }) => theme.spacing[3]};
+  padding-right: ${({ theme }) => theme.spacing[24]};
   box-sizing: border-box;
 
   &::placeholder {
@@ -124,15 +124,15 @@ const Input = styled.input`
 
 const Button = styled.button`
   position: absolute;
-  right: 8px;
+  right: ${({ theme }) => theme.spacing[2]};
   height: 30px;
-  padding: 0 12px;
+  padding: ${({ theme }) => `${theme.spacing[0]} ${theme.spacing[3]}`};
   outline: none;
   background-color: ${({ theme }) => theme.colors.lightblue};
   color: ${({ theme }) => theme.colors.gray[800]};
   font-size: ${({ theme }) => theme.fontSizes.sm};
   border: none;
-  border-radius: 6px;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
   cursor: pointer;
 
   &:hover {
@@ -145,21 +145,21 @@ const Dropdown = styled.ul`
   width: 100%;
   max-height: 200px;
   overflow-y: auto;
-  background-color: #fff;
-  border: 1px solid #ccc;
+  background-color: ${({ theme }) => theme.colors.white};
+  border: 1px solid ${({ theme }) => theme.colors.gray[300]};
   border-top: none;
-  z-index: 10;
+  z-index: ${({ theme }) => theme.zIndices.docked};
 `;
 
 const DropdownItem = styled.li`
-  padding: 10px;
+  padding: ${({ theme }) => theme.spacing[3]};
   cursor: pointer;
   &:hover {
-    background-color: #f0f0f0;
+    background-color: ${({ theme }) => theme.colors.gray[300]};
   }
 `;
 
 const NoResult = styled.li`
-  padding: 10px;
-  color: gray;
+  padding: ${({ theme }) => theme.spacing[3]};
+  color: ${({ theme }) => theme.colors.gray[500]};
 `;

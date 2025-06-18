@@ -33,7 +33,7 @@ const InputWrapper = styled.div`
 const Label = styled.label`
   text-align: left;
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: ${({ theme }) => theme.spacing[1]};
   font-size: ${({ theme }) => theme.fontSizes.base};
   color: ${({ theme }) => theme.colors.gray[400]};
 `;
@@ -42,7 +42,7 @@ const InputRow = styled.div`
   display: flex;
   width: 400px;
   justify-content: space-between;
-  margin-bottom: 5px;
+  margin-bottom: ${({ theme }) => theme.spacing[1]};
 `;
 
 const Text = styled.span`
@@ -56,10 +56,10 @@ const InputName = styled.input`
   width: 100px;
   height: 40px;
   border: 1px solid ${({ theme }) => theme.colors.gray[300]};
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   outline: none;
   font-size: ${({ theme }) => theme.fontSizes.sm};
-  padding: 10px;
+  padding: ${({ theme }) => theme.spacing[3]};
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.gray[300]};
@@ -70,10 +70,10 @@ const InputPhone = styled.input`
   width: 180px;
   height: 40px;
   border: 1px solid ${({ theme }) => theme.colors.gray[300]};
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   outline: none;
   font-size: ${({ theme }) => theme.fontSizes.sm};
-  padding: 10px;
+  padding: ${({ theme }) => theme.spacing[3]};
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.gray[300]};

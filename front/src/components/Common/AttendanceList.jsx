@@ -77,37 +77,41 @@ const AttendanceList = ({ selectedDate }) => {
               <Th>출결상태</Th>
             </Tr>
           </Thead>
-          <Tbody>
-            {filteredData.map((item, index) => (
-              <Tr key={index}>
-                <Td>{item.name}</Td>
-                <Td>
-                  <Button
-                    $status="출석"
-                    $active={item.status === '출석'}
-                    onClick={() => handleStatusChange(index, '출석')}
-                  >
-                    출석
-                  </Button>
-                  <Button
-                    $status="결석"
-                    $active={item.status === '결석'}
-                    onClick={() => handleStatusChange(index, '결석')}
-                  >
-                    결석
-                  </Button>
-                  <Button
-                    $status="지각"
-                    $active={item.status === '지각'}
-                    onClick={() => handleStatusChange(index, '지각')}
-                  >
-                    지각
-                  </Button>
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
         </Table>
+        <TbodyWrapper>
+          <Table>
+            <Tbody>
+              {filteredData.map((item, index) => (
+                <Tr key={index}>
+                  <Td>{item.name}</Td>
+                  <Td>
+                    <Button
+                      $status="출석"
+                      $active={item.status === '출석'}
+                      onClick={() => handleStatusChange(index, '출석')}
+                    >
+                      출석
+                    </Button>
+                    <Button
+                      $status="결석"
+                      $active={item.status === '결석'}
+                      onClick={() => handleStatusChange(index, '결석')}
+                    >
+                      결석
+                    </Button>
+                    <Button
+                      $status="지각"
+                      $active={item.status === '지각'}
+                      onClick={() => handleStatusChange(index, '지각')}
+                    >
+                      지각
+                    </Button>
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </TbodyWrapper>
       </TableWrapper>
     </Wrapper>
   );
@@ -181,12 +185,22 @@ const Select = styled.select`
 const TableWrapper = styled.div`
   max-height: 340px;
   display: flex;
+  flex-direction: column;
   padding: 5px 10px;
-  overflow-y: scroll;
+`;
+
+const TbodyWrapper = styled.div`
+  height: 300px;
+  overflow-y: auto;
+
+  /* 스크롤 영역에 헤더 너비 맞추기 */
+  /* table {
+    width: 100%;
+  } */
 `;
 
 const Table = styled.table`
-  width: 350px;
+  width: 300px;
   text-align: center;
   table-layout: fixed;
   transition: none;
@@ -197,7 +211,7 @@ const Table = styled.table`
   }
   th:nth-child(2),
   td:nth-child(2) {
-    width: 70%;
+    width: 60%;
   }
 `;
 
