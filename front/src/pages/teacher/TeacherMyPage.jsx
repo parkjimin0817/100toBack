@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import ContentHeader from '../../components/Common/ContentHeader';
 import styled from 'styled-components';
-import MyPageProfileImage from './components/MyPageProfileImage';
-import MyPageMyInfo from './components/MyPageMyInfo';
-import MyPageCenterInfo from './components/MyPageCenterInfo';
-import MyPageMenuBox from './components/MyPageMenuBox';
+import MyPageProfileImage from '../manager/components/MyPageProfileImage';
+import MyPageMyInfo from '../manager/components/MyPageMyInfo';
+import MyPageCenterInfo from '../manager/components/MyPageCenterInfo';
+import MyPageMenuBox from '../manager/components/MyPageMenuBox';
 import { FaUmbrellaBeach, FaRegClock } from 'react-icons/fa';
 import { RiHealthBookLine } from 'react-icons/ri';
 
-const ManagerMyPage = () => {
+const TeacherMyPage = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const hanldeEditClick = () => {
     setIsEditMode((prev) => !prev);
@@ -30,7 +30,7 @@ const ManagerMyPage = () => {
             <MyPageMyInfo isEditMode={isEditMode} />
           </MyInfoBox>
           <CenterInfoBox>
-            <MyPageCenterInfo isEditMode={isEditMode} />
+            <MyPageCenterInfo />
           </CenterInfoBox>
         </InfoBox>
         <MenuBox>
@@ -48,7 +48,7 @@ const ManagerMyPage = () => {
   );
 };
 
-export default ManagerMyPage;
+export default TeacherMyPage;
 
 const Content = styled.div`
   min-height: 600px;

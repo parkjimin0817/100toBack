@@ -32,11 +32,12 @@ import MyVacation from './pages/teacher/MyVacation';
 import ChildHealthCheck from './pages/teacher/ChildHealthCheck';
 
 import SeachIdSuccess from './pages/common/SeachIdSuccss';
-import AttendanceClassList from './pages/AttendanceClassList';
-import DailySchedule from './pages/DailySchedule';
-import DailyScheduleDetail from './pages/DailyScheduleDetail';
+import AttendanceClassList from './pages/teacher/AttendanceClassList';
 
 import ClassPlacement from './pages/manager/ClassPlacement';
+import DailySchedule from './pages/teacher/DailySchedule';
+import DailyScheduleDetail from './pages/teacher/DailyScheduleDetail';
+import { ToastContainer } from 'react-toastify';
 
 import ChildDetail from './pages/teacher/ChildDetail';
 
@@ -47,6 +48,10 @@ import MyHealth from './pages/teacher/MyHealth';
 import MyHealthDetail from './pages/teacher/MyHealthDetail';
 import MyHealthForm from './pages/teacher/MyHealthForm';
 import ParentContact from './pages/teacher/ParentContact';
+import TeacherList from './pages/manager/TeacherList';
+import TeacherMyPage from './pages/teacher/TeacherMyPage';
+import AttendancePage from './pages/AttendancePage';
+import TeacherAttendance from './pages/manager/TeacherAttendance';
 
 import ScheduleTeacher from './pages/teacher/ScheduleTeacher';
 
@@ -60,17 +65,24 @@ function App() {
             {/* Main Page */}
             <Route path="/home" element={<Home />} />
             {/* <Route path="/" element={<Home />} /> */}
+            {/* 아동 목록 페이지(교사) */}
+            <Route path="/childlist" element={<ChildList />} />
             {/* 유치원 반 목록 페이지(교사 -> 아동 출결) */}
-            <Route path="/class" element={<AttendanceClassList />} />
+            <Route path="/classlist" element={<AttendanceClassList />} />
             {/* 반별 일과표 목록 페이지 */}
             <Route path="/daily" element={<DailySchedule />} />
             {/* 반별 일과표 목록  */}
-            <Route path="/dailyDetail" element={<DailyScheduleDetail />} />
-            {/* 아동목록 페이지(교사) */}
+            <Route path="/dailyDetail/:SCHADULE_NO" element={<DailyScheduleDetail />} />
             <Route path="/childlist" element={<ChildList />} />
+            {/* 아동목록 페이지(교사) */}
+            <Route path="/dailyDetail" element={<DailyScheduleDetail />} />
             {/* 아동 반배치 페이지(시설장) */}
             <Route path="/manager/classplacement" element={<ClassPlacement />} />
+            {/* 교사 목록 페이지(시설장) */}
+            <Route path="/manager/teacherlist" element={<TeacherList />} />
             {/* 추가 페이지는 아래 붙이기. */}
+            {/* 교사 아동 상세보기 페이지 */}
+            <Route path="/child/detail" element={<ChildDetail />} />
 
             {/* 교사 가정통신문 게시글 목록 페이지 */}
             <Route path="/familycommunity/list" element={<FamilyCommunityPage />} />
@@ -78,7 +90,7 @@ function App() {
             {/* 회원가입 승인 리스트(시설장) */}
             <Route path="/approvalList" element={<ApprovalList />}></Route>
             {/* 시설장 승인 리스트(관리자) */}
-            <Route path="/approvalListAdmin" element={<ApprovalListAdmin />}></Route>
+            <Route path="/approvalListAdmin" element={<ApprovalListAdmin />} />
             {/* 교사 휴가 워케이션 신청 페이지 */}
             <Route path="/myvacation" element={<MyVacation />} />
             {/* 교사 아동 건강 체크리스트 페이지 */}
@@ -87,8 +99,6 @@ function App() {
             <Route path="/childlifecheck" element={<ChildLifeCheck />} />
             {/* 시설장 휴가/워케이션 리스트 */}
             <Route path="/vacationList" element={<VacationList />}></Route>
-            {/* 교사 아동 상세보기 페이지 */}
-            <Route path="/child/detail" element={<ChildDetail />} />
             {/* 시설장 마이페이지  페이지 */}
             <Route path="/managermypage" element={<ManagerMyPage />} />
             {/* 교사 건강관리 목록 페이지 */}
@@ -103,6 +113,12 @@ function App() {
             <Route path="/parentcontact" element={<ParentContact />} />
             {/* 유치원 일정관리(교사) */}
             <Route path="/ScheduleTeacher" element={<ScheduleTeacher />} />
+            {/* 교사 마이페이지 */}
+            <Route path="/teachermypage" element={<TeacherMyPage />} />
+            {/* 아동 출결 페이지 */}
+            <Route path="/attendance" element={<AttendancePage />} />
+            {/* 시설장 교사 근태 관리 */}
+            <Route path="/teacherattendance" element={<TeacherAttendance />} />
           </Route>
           {/* Login Page */}
           <Route path="/login" element={<LoginPage />}></Route>
@@ -133,6 +149,16 @@ function App() {
           <Route path="*" element={<Home />}></Route>
         </Routes>
       </Router>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        closeOnClick
+        draggable
+        hideProgressBar={false}
+        newestOnTop
+        theme="light"
+        pauseOnHover
+      />
     </ThemeProvider>
   );
 }

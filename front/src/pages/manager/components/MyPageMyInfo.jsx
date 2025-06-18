@@ -38,7 +38,7 @@ const MyPageMyInfo = ({ isEditMode }) => {
       <InfoRow>
         <InfoType>직위</InfoType>
         <Info>
-          {isEditMode ? (
+          {/* {isEditMode ? (
             <Select value={data.role} onChange={(e) => handleChange('role', e.target.value)}>
               <option value="시설장">시설장</option>
               <option value="교사">교사</option>
@@ -46,7 +46,8 @@ const MyPageMyInfo = ({ isEditMode }) => {
             </Select>
           ) : (
             data.role
-          )}
+          )} */}
+          {data.role}
         </Info>
       </InfoRow>
     </Wrapper>

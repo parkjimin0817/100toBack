@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import ClassRoomCard from '../components/ClassRoomCard';
-import ContentHeader from '../components/Common/ContentHeader';
-import sun from '../assets/img/sun.png';
+
+import sun from '../../assets/img/sun.png';
+import ContentHeader from '../../components/Common/ContentHeader';
+import ClassRoomCard from '../../components/ClassRoomCard';
 import styled from 'styled-components';
 
 //일과표 반별 리스트 페이지(모든 반이 나옴)
@@ -48,7 +49,7 @@ const DailySchedule = () => {
   return (
     <Content>
       <ContentHeader Title={'일과표'} Color={'purple'} />
-      <ClassRoomCard rooms={thermeData} address={'/dailyDetail'} />
+      <ClassRoomCard rooms={thermeData} address={`/dailyDetail`} />
     </Content>
   );
 };
