@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import TeacherAttendanceCard from './components/TeacherAttendanceCard';
+import ChildrenList from '../../components/ChildrenList';
 
 const TeacherAttendance = () => {
   return (
@@ -28,12 +29,12 @@ const Wrapper = styled.div`
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
 `;
 
 const Content = styled.div`
   display: flex;
   justify-content: space-around;
+  margin: 20px 0;
 `;
 
 const Div1 = styled.div`
