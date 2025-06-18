@@ -21,6 +21,16 @@ const TeacherMyPage = () => {
         FontSize="xl"
         ButtonProps={[{ Title: isEditMode ? '저장하기' : '수정하기', func: hanldeEditClick }]}
       />
+
+      {/* 만약, 시설장이 들어갈 경우, 
+      Title={'교사 상세보기'}
+      Color={'blue'}
+      ButtonProps={[{ Title: '뒤로가기', func: () => navigate(-1) }, { Title: '퇴사 처리' }]}
+      교사 본인이 들어올 경우,
+      Title={'교사 마이페이지'}
+      Color={'orange'}
+      ButtonProps={[{ Title: '뒤로가기', func: () => navigate(-1) }, { Title: '탈퇴하기' }]} */}
+
       <Wrapper>
         <InfoBox>
           <ProfileImgBox>
