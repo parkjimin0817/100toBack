@@ -1,18 +1,19 @@
-import React from 'react';
+import { useState } from 'react';
 import ContentHeader from '../../../components/Common/ContentHeader';
-import ChildrenList from '../../../components/ChildrenList';
 import styled from 'styled-components';
-const TeacherAttendanceCard = () => {
+import TeacherProfilePhoto from './TeacherProfilePhoto';
+import TeacherAttendanceEditModal from './TeacherAttendanceEditModal';
+
+const TeacherAttendanceCard = ({ selectedDate }) => {
+  const [openModal, setOpenModal] = useState(false);
+
   return (
     <>
-      <ContentHeader
-        Title="근태 관리"
-        Color={'blue'}
-        FontSize={'sm'}
-        ButtonProps={[{ Title: '일정수정', func: () => alert('ㅇㅑ호') }]}
-      />
+      <ContentHeader Title="근태 관리" Color={'blue'} FontSize={'sm'} />
       <TopContent>
-        <ProfileDiv>{/* <ChildrenList showAll={false} roleBy="child" Color="blue" /> */}</ProfileDiv>
+        <ProfileDiv>
+          <TeacherProfilePhoto />
+        </ProfileDiv>
         <AttendanceCountBox>
           <AttendanceCount>
             <Name>출근</Name>
@@ -26,28 +27,46 @@ const TeacherAttendanceCard = () => {
       </TopContent>
       <BottomContent>
         <AttendanceDetailBox>
-          <AttendanceDetailDate>2025-06-03(화)</AttendanceDetailDate>
+          <AttendanceDetailDate>
+            {selectedDate.toLocaleDateString('ko-KR', {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              weekday: 'short',
+            })}
+          </AttendanceDetailDate>
           <ButtonDiv>
-            <AttendanceEditButton>근태 수정</AttendanceEditButton>
+            <AttendanceEditButton onClick={() => setOpenModal(true)}>근태 수정</AttendanceEditButton>
           </ButtonDiv>
           <DetailContent>
             <Table>
-              <tr>
-                <th>상태:</th>
-                <td>출근</td>
-              </tr>
-              <tr>
-                <th>출근시간: </th>
-                <td>09:00</td>
-              </tr>
-              <tr>
-                <th>퇴근시간: </th>
-                <td>18:00</td>
-              </tr>
+              <tbody>
+                <tr>
+                  <th>상태:</th>
+                  <td>출근</td>
+                </tr>
+                <tr>
+                  <th>출근시간: </th>
+                  <td>09:00</td>
+                </tr>
+                <tr>
+                  <th>퇴근시간: </th>
+                  <td>18:00</td>
+                </tr>
+              </tbody>
             </Table>
           </DetailContent>
         </AttendanceDetailBox>
       </BottomContent>
+      {openModal && (
+        <TeacherAttendanceEditModal
+          onClose={() => setOpenModal(false)}
+          onEdit={(data) => {
+            console.log(data);
+            setOpenModal(false);
+          }}
+        />
+      )}
     </>
   );
 };
@@ -68,7 +87,6 @@ const BottomContent = styled.div`
 const ProfileDiv = styled.div`
   width: 200px;
   height: 200px;
-  border: 1px solid black;
 `;
 
 const AttendanceCountBox = styled.div`
@@ -107,6 +125,7 @@ const Count = styled.div`
 
 const AttendanceDetailBox = styled.div`
   margin: 10px auto;
+  margin-top: 65px;
   width: 300px;
   height: 200px;
   border: 3px solid ${({ theme }) => theme.colors.blue};
@@ -149,18 +168,22 @@ const AttendanceEditButton = styled.button`
 const DetailContent = styled.div`
   width: 100%;
   height: 75%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 `;
 
 const Table = styled.table`
   width: 50%;
   margin: 0 auto;
-  th {
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  th,
+  td {
+    padding: 8px;
     text-align: center;
+    border: none;
   }
-  & > tr:first-child {
-    height: 60px; /* 줄 간격을 넓히는 예시 */
+
+  tbody > tr:first-child {
+    height: 60px;
   }
 `;

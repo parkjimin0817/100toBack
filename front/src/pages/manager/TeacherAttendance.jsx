@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import TeacherAttendanceCard from './components/TeacherAttendanceCard';
-import ChildrenList from '../../components/ChildrenList';
+import CustomCalendar from '../common/CustomCalendar';
 
 const TeacherAttendance = () => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
   return (
     <Wrapper>
       <ContentHeader Title={'교사 근태 관리'} Color={'blue'} />
       <Content>
-        <Div1></Div1>
+        <Div1>
+          <CustomCalendar onDateClick={(date) => setSelectedDate(date)} />
+        </Div1>
         <Div2>
-          <TeacherAttendanceCard></TeacherAttendanceCard>
+          <TeacherAttendanceCard selectedDate={selectedDate} />
         </Div2>
       </Content>
     </Wrapper>
@@ -42,13 +45,15 @@ const Div1 = styled.div`
   min-height: 500px;
   margin: 10;
   border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 `;
 
 const Div2 = styled.div`
   width: 30%;
   min-height: 500px;
-  margin: 10;
   border-radius: 20px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 `;
