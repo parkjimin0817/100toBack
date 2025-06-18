@@ -136,72 +136,74 @@ const ApprovalList = () => {
   const filteredData = selectedType === '전체' ? data : data.filter((item) => item.type === selectedType);
 
   return (
-    <Content>
-      <ContentHeader Title={'휴가 / 워케이션 관리'} Color={'blue'}></ContentHeader>
-      <Navigation>
-        <NavigationLeft>
-          {['전체', '휴가', '워케이션'].map((type) => (
-            <MemberType key={type} isActive={selectedType === type} onClick={() => setSelectedType(type)}>
-              {type}
-            </MemberType>
-          ))}
-        </NavigationLeft>
+    <>
+      <Content>
+        <ContentHeader Title={'휴가 / 워케이션 관리'} Color={'blue'}></ContentHeader>
+        <Navigation>
+          <NavigationLeft>
+            {['전체', '휴가', '워케이션'].map((type) => (
+              <MemberType key={type} isActive={selectedType === type} onClick={() => setSelectedType(type)}>
+                {type}
+              </MemberType>
+            ))}
+          </NavigationLeft>
 
-        <NavigationRight>
-          <SearchInput type="text" placeholder="검색어를 입력해주세요" />
-          <SearchButton>
-            <SearchIcon />
-          </SearchButton>
-        </NavigationRight>
-      </Navigation>
+          <NavigationRight>
+            <SearchInput type="text" placeholder="검색어를 입력해주세요" />
+            <SearchButton>
+              <SearchIcon />
+            </SearchButton>
+          </NavigationRight>
+        </Navigation>
 
-      <ApprovalLists>
-        <TableWrapper>
-          <Table>
-            <thead>
-              <tr>
-                <th>작성일</th>
-                <th>분류</th>
-                <th>이름</th>
-                <th>첨부파일</th>
-                <th>승인여부</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredData.map((data, index) => (
-                <tr
-                  key={index}
-                  onClick={() => {
-                    setSelectedData(data);
-                    setOpenModal(true);
-                  }}
-                >
-                  <td>{data.create_date}</td>
-                  <td>
-                    {data.type} - {data.type_detail}
-                  </td>
-                  <td>{data.name}</td>
-                  <td>{data.file}</td>
-                  <td>
-                    {data.decision_date === null ? (
-                      <>
-                        <button className="approved">승인</button>
-                        <button className="rejected">거절</button>
-                      </>
-                    ) : data.status === '승인' ? (
-                      <ApprovedDecisionDate>{data.decision_date}</ApprovedDecisionDate>
-                    ) : (
-                      <RejectedDecisionDate>{data.decision_date}</RejectedDecisionDate>
-                    )}
-                  </td>
+        <ApprovalLists>
+          <TableWrapper>
+            <Table>
+              <thead>
+                <tr>
+                  <th>작성일</th>
+                  <th>분류</th>
+                  <th>이름</th>
+                  <th>첨부파일</th>
+                  <th>승인여부</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
-        </TableWrapper>
-      </ApprovalLists>
+              </thead>
+              <tbody>
+                {filteredData.map((data, index) => (
+                  <tr
+                    key={index}
+                    onClick={() => {
+                      setSelectedData(data);
+                      setOpenModal(true);
+                    }}
+                  >
+                    <td>{data.create_date}</td>
+                    <td>
+                      {data.type} - {data.type_detail}
+                    </td>
+                    <td>{data.name}</td>
+                    <td>{data.file}</td>
+                    <td>
+                      {data.decision_date === null ? (
+                        <>
+                          <button className="approved">승인</button>
+                          <button className="rejected">거절</button>
+                        </>
+                      ) : data.status === '승인' ? (
+                        <ApprovedDecisionDate>{data.decision_date}</ApprovedDecisionDate>
+                      ) : (
+                        <RejectedDecisionDate>{data.decision_date}</RejectedDecisionDate>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </TableWrapper>
+        </ApprovalLists>
+      </Content>
       <Modal isOpen={openModal} onClose={() => setOpenModal(false)} data={selectedData} />
-    </Content>
+    </>
   );
 };
 
