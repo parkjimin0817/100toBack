@@ -52,7 +52,7 @@ import TeacherList from './pages/manager/TeacherList';
 import TeacherMyPage from './pages/teacher/TeacherMyPage';
 import AttendancePage from './pages/AttendancePage';
 import TeacherAttendance from './pages/manager/TeacherAttendance';
-
+import TeacherIntroList from './pages/manager/TeacherIntroList';
 import ScheduleTeacher from './pages/teacher/ScheduleTeacher';
 
 function App() {
@@ -119,6 +119,8 @@ function App() {
             <Route path="/attendance" element={<AttendancePage />} />
             {/* 시설장 교사 근태 관리 */}
             <Route path="/teacherattendance" element={<TeacherAttendance />} />
+            {/* 시설장 교사 소개 및 조회 */}
+            <Route path="/manager/introteacher" element={<TeacherIntroList />} />
           </Route>
           {/* Login Page */}
           <Route path="/login" element={<LoginPage />}></Route>
