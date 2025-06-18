@@ -2,15 +2,16 @@ package com.bridge.kinder.enums;
 
 public class CommonEnums {
     public enum CenterType {
-        DAYCARE,        // 어린이집
-        KINDERGARTEN,   // 유치원
-        CHILD_CENTER    // 지역아동센터
+        DAYCARE,        //어린이집
+        KINDERGARTEN,   //유치원
+        CHILD_CENTER    //지역아동센터
     }
 
     public enum MemberType {
-        DIRECTOR,       // 시설장
-        TEACHER,        // 교사
-        PARENT,         // 학부모
+        ADMIN,          //관리자
+        MANAGER,       //시설장
+        TEACHER,        //교사
+        PARENT,         //학부모
     }
 
     public enum AdmissionStatus {
@@ -31,6 +32,7 @@ public class CommonEnums {
 
     public enum RollType {
         CENTER,         //센터
+        CLASSROOM,      //반
         MEMBER,         //멤버
         CHILD,          //아동
     }

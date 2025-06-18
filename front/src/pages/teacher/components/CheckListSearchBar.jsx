@@ -5,18 +5,21 @@ import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/locale';
 import { CiCalendar } from 'react-icons/ci';
 import Button from '../../../components/Common/Button';
-
 import 'react-datepicker/dist/react-datepicker.css';
+import { List } from '../../../components/ChildDummyData'; // 더미데이터 활용
 
-const classdata = [{ value: '햇님반', name: '햇님반' }];
+const classList = Array.from(new Set(List.map((child) => child.className).filter(Boolean)));
 
 const CheckListSearchBar = ({ selectedDate, setSelectedDate, selectedClass, setSelectedClass, onSearch }) => {
   return (
     <SearchBox>
       <SelectClass value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}>
-        {classdata.map((classItem) => (
-          <option key={classItem.value} value={classItem.value}>
-            {classItem.name}
+        <option value="" disabled>
+          반 선택
+        </option>
+        {classList.map((className) => (
+          <option key={className} value={className}>
+            {className}
           </option>
         ))}
       </SelectClass>
@@ -27,6 +30,7 @@ const CheckListSearchBar = ({ selectedDate, setSelectedDate, selectedClass, setS
           locale={ko}
           dateFormat="yyyy.MM.dd (eee)" // 요일까지 출력!
           placeholderText="날짜 선택"
+          maxDate={new Date()}
         />
         <CalendarIcon />
       </DateInputWrapper>
