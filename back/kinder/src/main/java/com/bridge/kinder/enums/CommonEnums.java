@@ -54,6 +54,6 @@ public class CommonEnums {
 
     public enum BoardContentType {
         TEXT,           //텍스트
-        FILE,           //파일(이미지)
+        IMG,           //이미지
     }
 }
