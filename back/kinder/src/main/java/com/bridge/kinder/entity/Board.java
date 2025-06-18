@@ -39,6 +39,10 @@ public class Board {// 게시판
     private LocalDateTime createDate;
     //생성일
 
+    @Column(name = "ATTACHMENT")
+    private String attachment;
+    //첨부파일
+
 
     //---------------------------------------------------------------------------------------------
     @ManyToOne(fetch = FetchType.LAZY)

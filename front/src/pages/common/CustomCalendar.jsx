@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
-const CustomCalendar = () => {
+const CustomCalendar = ({ scheduleData, onDateClick }) => {
   return (
     <StyledCalendar
       calendarType="gregory"
@@ -12,6 +12,7 @@ const CustomCalendar = () => {
       next2Label={null}
       minDetail="year"
       maxDetail="month"
+      onClickDay={onDateClick}
       tileClassName={({ date, view }) => {
         if (view === 'month' && date.getDay() === 0) {
           return 'sunday';
