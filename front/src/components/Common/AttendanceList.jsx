@@ -16,7 +16,7 @@ const initialData = [
   { name: '정의철', status: '출석' },
 ];
 
-const AttendanceList = () => {
+const AttendanceList = ({ selectedDate }) => {
   const [data, setData] = useState(initialData);
   const [selectedStatus, setSelectedStatus] = useState('전체');
 
@@ -35,7 +35,14 @@ const AttendanceList = () => {
   return (
     <Wrapper>
       <ContentHeader Title="땡땡반 출석 현황" Color="orange" FontSize="base" />
-      <DateRow>2025-06-14(금)</DateRow>
+      <DateRow>
+        {selectedDate.toLocaleDateString('ko-KR', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          weekday: 'short',
+        })}
+      </DateRow>
       <Div>
         <AttendanceCount>
           <Name>전체</Name>
@@ -172,9 +179,9 @@ const Select = styled.select`
 `;
 
 const TableWrapper = styled.div`
-  max-height: 390px;
+  max-height: 340px;
   display: flex;
-  padding: 10px;
+  padding: 5px 10px;
   overflow-y: scroll;
 `;
 
