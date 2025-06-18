@@ -35,7 +35,7 @@ const ManagerMyPage = () => {
         </InfoBox>
         <MenuBox>
           <MyPageMenuBox menuName="근태관리" icon={<FaRegClock size={60} />} url="/근태관리" color="blue" />
-          <MyPageMenuBox menuName="나의 건강" icon={<RiHealthBookLine size={60} />} url="/나의건강" color="yellow" />
+          <MyPageMenuBox menuName="나의 건강" icon={<RiHealthBookLine size={60} />} url="/myhealth" color="yellow" />
           <MyPageMenuBox
             menuName="휴가 및 워케이션 관리"
             icon={<FaUmbrellaBeach size={60} />}
