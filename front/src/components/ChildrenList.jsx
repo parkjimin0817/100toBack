@@ -7,7 +7,7 @@ import { List } from './ChildDummyData';
 // 하드코딩된 예시 데이터
 
 // ChildrenList.jsx 내부
-const ChildrenList = ({ showAll, sortBy, roleBy, classFilter, Color }) => {
+const ChildrenList = ({ showAll, sortBy, roleBy, classFilter, Color, nameFilter }) => {
   const navigate = useNavigate();
   let list = [...List];
 
@@ -30,6 +30,10 @@ const ChildrenList = ({ showAll, sortBy, roleBy, classFilter, Color }) => {
 
   if (classFilter) {
     list = list.filter((item) => item.className === classFilter);
+  }
+
+  if (nameFilter) {
+    list = list.filter((item) => item.name.toLowerCase().includes(nameFilter.toLowerCase()));
   }
 
   return (
@@ -74,7 +78,6 @@ const Card = styled.div`
   position: relative;
   width: 160px;
   height: 185px;
-  margin-top: 55px;
   border: 2px solid white;
   display: flex;
   flex-direction: column;

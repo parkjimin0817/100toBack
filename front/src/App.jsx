@@ -47,6 +47,7 @@ import MyHealth from './pages/teacher/MyHealth';
 import MyHealthDetail from './pages/teacher/MyHealthDetail';
 import MyHealthForm from './pages/teacher/MyHealthForm';
 import ParentContact from './pages/teacher/ParentContact';
+import TeacherList from './pages/manager/TeacherList';
 
 function App() {
   return (
@@ -68,6 +69,8 @@ function App() {
             <Route path="/childlist" element={<ChildList />} />
             {/* 아동 반배치 페이지(시설장) */}
             <Route path="/manager/classplacement" element={<ClassPlacement />} />
+            {/* 교사 목록 페이지(시설장) */}
+            <Route path="/manager/teacherlist" element={<TeacherList />} />
             {/* 추가 페이지는 아래 붙이기. */}
 
             {/* 교사 가정통신문 게시글 목록 페이지 */}
