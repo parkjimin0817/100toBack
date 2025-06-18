@@ -55,6 +55,7 @@ import TeacherAttendance from './pages/manager/TeacherAttendance';
 import TeacherIntroList from './pages/manager/TeacherIntroList';
 import ScheduleTeacher from './pages/teacher/ScheduleTeacher';
 import MyAttendance from './pages/teacher/MyAttendance';
+import ParentMainPage from './pages/common/ParentMain/ParentMainPage';
 
 function App() {
   return (
@@ -65,6 +66,7 @@ function App() {
           <Route element={<Layout />}>
             {/* Main Page */}
             <Route path="/home" element={<Home />} />
+            <Route path="/parent/main" element={<ParentMainPage />} />
             {/* <Route path="/" element={<Home />} /> */}
             {/* 아동 목록 페이지(교사) */}
             <Route path="/childlist" element={<ChildList />} />
@@ -119,10 +121,9 @@ function App() {
             {/* 아동 출결 페이지 */}
             <Route path="/childattendance" element={<AttendancePage />} />
             {/* 시설장 교사 근태 관리 */}
-
+            <Route path="/manager/teacherattendance" element={<TeacherAttendance />} />
             {/* 시설장 교사 소개 및 조회 */}
             <Route path="/manager/introteacher" element={<TeacherIntroList />} />
-            <Route path="/manager/teacherattendance" element={<TeacherAttendance />} />
             {/* 교사 근태 관리 */}
             <Route path="/teacher/myattendance" element={<MyAttendance />} />
           </Route>
