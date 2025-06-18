@@ -2,12 +2,13 @@
 import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import ChildImg from '../../assets/Child.png';
-import theme from '../../styles/theme';
+
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { List } from '../../components/ChildDummyData';
 
 const ChildDetail = () => {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const id = searchParams.get('id'); // URL에서 ?id= 추출
 
@@ -31,7 +32,7 @@ const ChildDetail = () => {
         <ContentHeader
           Title={'아동 상세보기'}
           Color={'orange'}
-          ButtonProps={[{ Title: '뒤로가기', func: () => alert('뒤로가기~') }, { Title: '아동정보 삭제' }]}
+          ButtonProps={[{ Title: '뒤로가기', func: () => navigate(-1) }, { Title: '아동정보 삭제' }]}
         />
         <BasicInfo>
           <PictureLine>

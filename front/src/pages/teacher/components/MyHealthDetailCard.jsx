@@ -1,12 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
+import StressInputBar from './StressInputBar';
 
 const MyHealthDetailCard = ({ label, value }) => {
   return (
     <Box>
       <Info>
         <Label>{label}</Label>
-        <Value>{value}</Value>
+        {label === '스트레스 지수' ? <StressInputBar value={value} disabled /> : <Value>{value}</Value>}
       </Info>
     </Box>
   );

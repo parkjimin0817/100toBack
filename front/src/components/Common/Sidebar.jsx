@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 
@@ -8,7 +7,7 @@ const SideBar = () => {
   const sidebarRef = useRef(null);
 
   const handleMenuToggle = (menuId) => {
-    setOpenMenus(prev => ({ ...prev, [menuId]: !prev[menuId] }));
+    setOpenMenus((prev) => ({ ...prev, [menuId]: !prev[menuId] }));
   };
 
   return (
@@ -22,11 +21,11 @@ const SideBar = () => {
       $isExpanded={isExpanded}
     >
       <SidebarList $isExpanded={isExpanded}>
-        {sidebarMenus.map(menu => (
+        {sidebarMenus.map((menu) => (
           <SidebarItem
             key={menu.id}
             $SidebarColor={menu.color}
-            onMouseLeave={() => setOpenMenus(prev => ({ ...prev, [menu.id]: false }))}
+            onMouseLeave={() => setOpenMenus((prev) => ({ ...prev, [menu.id]: false }))}
           >
             <SidebarItemButton
               $SidebarColor={menu.color}
@@ -57,77 +56,83 @@ const SideBar = () => {
 
 export default SideBar;
 
-import { LuBaby } from "react-icons/lu";
-import { FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
-import { MdFilterFrames } from "react-icons/md";
-import { RiHealthBookLine } from "react-icons/ri";
+import { LuBaby } from 'react-icons/lu';
+import { FaRegCalendarAlt, FaRegClock } from 'react-icons/fa';
+import { MdFilterFrames } from 'react-icons/md';
+import { RiHealthBookLine } from 'react-icons/ri';
 import { NavLink } from 'react-router-dom';
-import { IoPeopleOutline } from "react-icons/io5";
+import { IoPeopleOutline } from 'react-icons/io5';
 
 const sidebarMenus = [
   {
-    id: "menu1",
-    label: "아동 관리",
+    id: 'menu1',
+    label: '아동 관리',
     icon: <LuBaby />,
-    color: "orange",
+    color: 'orange',
     subItems: [
-      {label : "아동 목록", link : "/childlist"}, 
-      {label : "아동 출결", link : "/class"}, 
-      {label : "아동 건강", link : "/childhealthcheck"}, 
-      {label : "아동 생활", link : ""}],
+      { label: '아동 목록', link: '/childlist' },
+      { label: '아동 출결', link: '/classlist' },
+      { label: '아동 건강', link: '/childhealthcheck' },
+      { label: '아동 생활', link: '' },
+    ],
   },
   {
-    id: "menu2",
-    label: "일정 관리",
+    id: 'menu2',
+    label: '일정 관리',
     icon: <FaRegCalendarAlt />,
-    color: "purple",
+    color: 'purple',
     subItems: [
-      {label : "유치원 일정", link : ""}, 
-      {label : "일과표", link : "/daily"}, 
-      {label : "학부모 상담 일정", link : ""}],
+      { label: '유치원 일정', link: '' },
+      { label: '일과표', link: '/daily' },
+      { label: '학부모 상담 일정', link: '' },
+    ],
   },
   {
-    id: "menu3",
-    label: "유치원 게시판",
+    id: 'menu3',
+    label: '유치원 게시판',
     icon: <MdFilterFrames />,
-    color: "green",
+    color: 'green',
     subItems: [
-      {label : "공지사항", link : ""}, 
-      {label : "가정통신문", link : "/familycommunity/list"}, 
-      {label : "식단표", link : ""}, 
-      {label : "알림장", link : ""}, 
-      {label : "사진 게시판", link : ""}],
+      { label: '공지사항', link: '' },
+      { label: '가정통신문', link: '/familycommunity/list' },
+      { label: '식단표', link: '' },
+      { label: '알림장', link: '' },
+      { label: '사진 게시판', link: '' },
+    ],
   },
   {
-    id: "menu4",
-    label: "업무 관리",
+    id: 'menu4',
+    label: '업무 관리',
     icon: <FaRegClock />,
-    color: "blue",
+    color: 'blue',
     subItems: [
-      {label : "근태 관리", link : ""}, 
-      {label : "휴가 관리", link : "/myvacation"}, 
-      {label : "학부모 연락처 관리", link : ""}],
+      { label: '근태 관리', link: '' },
+      { label: '휴가 관리', link: '/myvacation' },
+      { label: '학부모 연락처 관리', link: '/parentcontact' },
+    ],
   },
   {
-    id: "menu5",
-    label: "내 건강 관리",
+    id: 'menu5',
+    label: '내 건강 관리',
     icon: <RiHealthBookLine />,
-    color: "yellow",
+    color: 'yellow',
     subItems: [
-      {label : "나의 건강 데이터", link : ""}, 
-      {label : "건강 관리", link : ""}],
+      { label: '나의 건강 데이터', link: '/myhealth' },
+      { label: '건강 관리', link: '' },
+    ],
   },
   {
-    id: "menu6",
-    label: "사용자 관리",
+    id: 'menu6',
+    label: '사용자 관리',
     icon: <IoPeopleOutline />,
-    color: "blue",
+    color: 'blue',
     subItems: [
-      {label : "근태 관리", link : ""}, 
-      {label : "휴가 관리", link : ""}, 
-      {label : "회원가입 승인", link : "/approvalList"}, 
-      {label : "교사 소개", link : ""}, 
-      {label : "반 배정", link : "/manager/classplacement"}],
+      { label: '근태 관리', link: '' },
+      { label: '휴가 관리', link: '' },
+      { label: '회원가입 승인', link: '/approvalList' },
+      { label: '교사 소개', link: '' },
+      { label: '반 배정', link: '/manager/classplacement' },
+    ],
   },
 ];
 

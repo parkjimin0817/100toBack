@@ -38,6 +38,13 @@ const MyHealthForm = () => {
     }));
   };
 
+  const handleStressChange = (val) => {
+    setForm((prev) => ({
+      ...prev,
+      stress: String(val),
+    }));
+  };
+
   const handleSave = () => {
     if (isEdit) {
       console.log('수정요청', form);
@@ -51,7 +58,7 @@ const MyHealthForm = () => {
       <ContentHeader
         Title={isEdit ? '내 건강 정보 수정' : '내 건강 정보 작성'}
         Color="yellow"
-        ButtonProps={[{ Title: isEdit ? '수정하기' : '저장하기', func: handleSave }]}
+        ButtonProps={[{ Title: '저장하기', func: handleSave }]}
       />
       <Wrapper>
         <Text>오늘의 건강 상태를 입력해주세요!</Text>
@@ -69,7 +76,6 @@ const MyHealthForm = () => {
           name="stress"
           value={form.stress}
           onChange={handleChange}
-          type="number"
         />
         <MyHealthInputCard
           text="오늘은 몇시간 주무셨나요?"
