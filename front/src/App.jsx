@@ -56,6 +56,7 @@ import TeacherIntroList from './pages/manager/TeacherIntroList';
 import ScheduleTeacher from './pages/teacher/ScheduleTeacher';
 import PersonalHealth from './pages/parent/PersonalHealth';
 import PersonalLife from './pages/parent/PersonalLife';
+import TeacherMainPage from './pages/teacher/TeacherMainPage';
 
 function App() {
   return (
@@ -127,6 +128,8 @@ function App() {
             <Route path="/child/healthlist" element={<PersonalHealth />} />
             {/* 개인 건강체크리스트 */}
             <Route path="/child/lifelist" element={<PersonalLife />} />
+            {/* 교사 메인페이지 */}
+            <Route path="/teacher/main" element={<TeacherMainPage />} />
           </Route>
           {/* Login Page */}
           <Route path="/login" element={<LoginPage />}></Route>
