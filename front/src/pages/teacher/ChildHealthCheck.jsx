@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 import HealthCheckListTable from './components/HealthCheckListTable';
 import { useNavigate } from 'react-router-dom';
 
+
 const mockData = [
   {
     date: '2025-06-13',
