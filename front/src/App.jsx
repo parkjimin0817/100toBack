@@ -48,6 +48,8 @@ import MyHealthDetail from './pages/teacher/MyHealthDetail';
 import MyHealthForm from './pages/teacher/MyHealthForm';
 import ParentContact from './pages/teacher/ParentContact';
 
+import ScheduleTeacher from './pages/teacher/ScheduleTeacher';
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -97,6 +99,8 @@ function App() {
             <Route path="/myhealth/edit/:id" element={<MyHealthForm />} />
             {/* 교사 학부모 연락처 조회 페이지 */}
             <Route path="/parentcontact" element={<ParentContact />} />
+            {/* 유치원 일정관리(교사) */}
+            <Route path="/ScheduleTeacher" element={<ScheduleTeacher />} />
           </Route>
           {/* Login Page */}
           <Route path="/login" element={<LoginPage />}></Route>
