@@ -40,7 +40,16 @@ const ChildrenList = ({ showAll, sortBy, roleBy, classFilter, Color, nameFilter 
     <Container>
       <CardLine>
         {list.map((child) => (
-          <Card key={child.id} onClick={() => navigate(`/child/detail?id=${child.id}`)}>
+          <Card
+            key={child.id}
+            onClick={() => {
+              if (child.role === 'child') {
+                navigate(`/child/detail?id=${child.id}`);
+              } else if (child.role === 'teacher') {
+                navigate(`/teacherattendance?id=${child.id}`);
+              }
+            }}
+          >
             <PictureBox Color={Color}>
               <ChildPic src={ChildImg} alt="아이사진" />
             </PictureBox>
