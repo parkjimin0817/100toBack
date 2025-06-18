@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import ClassRoomCard from '../components/ClassRoomCard';
-import ContentHeader from '../components/Common/ContentHeader';
-import sun from '../assets/img/sun.png';
+import ClassRoomCard from '../../components/ClassRoomCard';
+import ContentHeader from '../../components/Common/ContentHeader';
+import sun from '../../assets/img/sun.png';
 
 //출석 체크 시 반별 페이지(모든 반이 나옴)
 const AttendanceClassList = () => {
