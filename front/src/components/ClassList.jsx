@@ -15,9 +15,9 @@ import { GiRialtoBridge } from 'react-icons/gi';
  */
 
 const ClassList = ({ img, className, mateCount, capacity, teacher, classColor, address }) => {
-  const navigator = useNavigate();
+  const navigate = useNavigate();
   return (
-    <Card $Color={classColor} onClick={() => navigator(address)}>
+    <Card $Color={classColor} onClick={() => navigate(address)}>
       <CardInfo>
         <div>
           <CardImg>{img === null ? <Icon /> : <img src={img} alt="사진" />}</CardImg>

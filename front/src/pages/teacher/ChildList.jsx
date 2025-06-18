@@ -5,11 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const ChildList = () => {
-  const navigator = useNavigate();
-  const buttons = [
-    { Title: '반 목록', func: () => navigator('/classlist') },
-    { Title: '뒤로가기', func: () => navigator(-1) },
-  ];
+  const navigate = useNavigate();
+  const buttons = [{ Title: '반 목록', func: () => navigate('/classlist') }];
+
   return (
     <Content>
       <ContentHeader Title="아동 목록" Color="orange" ButtonProps={buttons} />
