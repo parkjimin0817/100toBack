@@ -47,6 +47,7 @@ import MyHealth from './pages/teacher/MyHealth';
 import MyHealthDetail from './pages/teacher/MyHealthDetail';
 import MyHealthForm from './pages/teacher/MyHealthForm';
 import ParentContact from './pages/teacher/ParentContact';
+import TeacherList from './pages/manager/TeacherList';
 import TeacherMyPage from './pages/teacher/TeacherMyPage';
 import AttendancePage from './pages/AttendancePage';
 import TeacherAttendance from './pages/manager/TeacherAttendance';
@@ -71,6 +72,9 @@ function App() {
             <Route path="/dailyDetail" element={<DailyScheduleDetail />} />
             {/* 아동 반배치 페이지(시설장) */}
             <Route path="/manager/classplacement" element={<ClassPlacement />} />
+            {/* 교사 목록 페이지(시설장) */}
+            <Route path="/manager/teacherlist" element={<TeacherList />} />
+            {/* 추가 페이지는 아래 붙이기. */}
             {/* 교사 아동 상세보기 페이지 */}
             <Route path="/child/detail" element={<ChildDetail />} />
 
