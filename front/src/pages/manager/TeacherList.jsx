@@ -34,7 +34,7 @@ const TeacherList = () => {
             setSearchTerm('');
           }}
         >
-          전체보기전체보기전체보기전체보기전체보기
+          전체보기
         </ShowAllButton>
         <SearchBox>
           <StyledInput
