@@ -32,11 +32,12 @@ import MyVacation from './pages/teacher/MyVacation';
 import ChildHealthCheck from './pages/teacher/ChildHealthCheck';
 
 import SeachIdSuccess from './pages/common/SeachIdSuccss';
-import AttendanceClassList from './pages/AttendanceClassList';
-import DailySchedule from './pages/DailySchedule';
-import DailyScheduleDetail from './pages/DailyScheduleDetail';
+import AttendanceClassList from './pages/teacher/AttendanceClassList';
 
 import ClassPlacement from './pages/manager/ClassPlacement';
+import DailySchedule from './pages/teacher/DailySchedule';
+import DailyScheduleDetail from './pages/teacher/DailyScheduleDetail';
+import { ToastContainer } from 'react-toastify';
 
 import ChildDetail from './pages/teacher/ChildDetail';
 
@@ -69,6 +70,9 @@ function App() {
             {/* 반별 일과표 목록 페이지 */}
             <Route path="/daily" element={<DailySchedule />} />
             {/* 반별 일과표 목록  */}
+            <Route path="/dailyDetail/:SCHADULE_NO" element={<DailyScheduleDetail />} />
+            <Route path="/childlist" element={<ChildList />} />
+            {/* 아동목록 페이지(교사) */}
             <Route path="/dailyDetail" element={<DailyScheduleDetail />} />
             {/* 아동 반배치 페이지(시설장) */}
             <Route path="/manager/classplacement" element={<ClassPlacement />} />
@@ -141,6 +145,16 @@ function App() {
           <Route path="*" element={<Home />}></Route>
         </Routes>
       </Router>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        closeOnClick
+        draggable
+        hideProgressBar={false}
+        newestOnTop
+        theme="light"
+        pauseOnHover
+      />
     </ThemeProvider>
   );
 }
