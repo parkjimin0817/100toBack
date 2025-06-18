@@ -2,14 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 import ContentHeader from '../components/Common/ContentHeader';
 import BoardTable from '../components/Board/BoardTable';
-import theme from "../styles/theme";
+import theme from '../styles/theme';
 
 const columns = [
   {
     label: '번호',
     key: 'id',
     width: '100px',
-    align: 'center'
+    align: 'center',
   },
   {
     label: '제목',
@@ -25,17 +25,17 @@ const columns = [
 ];
 
 const BoardData = [
-  { id : 1, title : "test1", writer : "정형일"},
-  { id : 2, writer : "정형일", title : "test2"},
-  { id : 3, title : "test3", writer : "정형일"},
+  { id: 1, title: 'test1', writer: '정형일' },
+  { id: 2, writer: '정형일', title: 'test2' },
+  { id: 3, title: 'test3', writer: '정형일' },
 ];
 
 const tableInfo = {
-  color : theme.colors.white,
-  backgroundColor : theme.colors.green,
-  thFontSize : theme.fontSizes.lg,
-  tbFontSize : theme.fontSizes.base,
-}
+  color: theme.colors.white,
+  backgroundColor: theme.colors.green,
+  thFontSize: theme.fontSizes.lg,
+  tbFontSize: theme.fontSizes.base,
+};
 
 const Home = () => {
   return (
@@ -48,13 +48,9 @@ const Home = () => {
           { Title: '앞으로가기', func: () => alert('앞으로가기~') },
         ]}
       ></ContentHeader>
-      
+
       <BoardContainer>
-        <BoardTable 
-          tableInfo={tableInfo}
-          columns={columns}
-          boardData={BoardData}
-        />
+        <BoardTable tableInfo={tableInfo} columns={columns} boardData={BoardData} />
       </BoardContainer>
     </Content>
   );

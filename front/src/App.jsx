@@ -55,6 +55,8 @@ import TeacherAttendance from './pages/manager/TeacherAttendance';
 import TeacherIntroList from './pages/manager/TeacherIntroList';
 import TeacherDetail from './pages/teacher/TeacherDetail';
 
+import ScheduleTeacher from './pages/teacher/ScheduleTeacher';
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -111,6 +113,8 @@ function App() {
             <Route path="/myhealth/edit/:id" element={<MyHealthForm />} />
             {/* 교사 학부모 연락처 조회 페이지 */}
             <Route path="/parentcontact" element={<ParentContact />} />
+            {/* 유치원 일정관리(교사) */}
+            <Route path="/ScheduleTeacher" element={<ScheduleTeacher />} />
             {/* 교사 마이페이지 */}
             <Route path="/teachermypage" element={<TeacherMyPage />} />
             {/* 아동 출결 페이지 */}
