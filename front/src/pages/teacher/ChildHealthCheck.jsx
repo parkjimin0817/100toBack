@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react';
-import ContentHeader from '../../components/Common/ContentHeader';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import ContentHeader from '../../components/Common/ContentHeader';
 import CheckListSearchBar from './components/CheckListSearchBar';
+import { List } from '../../components/ChildDummyData';
+import { format } from 'date-fns';
 import HealthCheckListTable from './components/HealthCheckListTable';
 import { useState } from 'react';
 import { format } from 'date-fns';
-import { useNavigate } from 'react-router-dom';
 
 const mockData = [
   {
@@ -49,8 +50,8 @@ const mockData = [
 const ChildHealthCheck = () => {
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedClass, setSelectedClass] = useState('햇님반'); //로그인된 유저 반 예시
-  const [matchedData, setMatchedData] = useState(null);
+  const [selectedClass, setSelectedClass] = useState('햇님반');
+  const [checklist, setChecklist] = useState([]);
 
   const handleSearch = () => {
     if (!selectedDate || !(selectedDate instanceof Date) || !selectedClass) {
@@ -58,21 +59,39 @@ const ChildHealthCheck = () => {
       return;
     }
 
-    const formattedDate = format(selectedDate, 'yyyy-MM-dd'); //뒤에 시간 버리기
-    console.log('📅 formattedDate:', formattedDate);
-    console.log('🏫 selectedClass:', selectedClass);
-    const found = mockData.find((data) => data.date === formattedDate && data.class === selectedClass);
-    console.log('🔍 matched result:', found);
+    const formattedDate = format(selectedDate, 'yyyy-MM-dd');
 
-    setMatchedData(found);
+    const childrenInClass = List.filter((child) => child.className === selectedClass);
+
+    const filledChecklist = childrenInClass.map((child) => {
+      const record = child.healthRecords?.find((r) => r.date === formattedDate);
+      return {
+        name: child.name,
+        temp: record?.temp || '',
+        height: record?.height || '',
+        weight: record?.weight || '',
+        symptom: record?.symptom || '',
+        memo: record?.memo || '',
+        editable: false,
+      };
+    });
+
+    setChecklist(filledChecklist);
   };
 
-  //페이지 들어오면 자동으로 1번 조회
   useEffect(() => {
     if (selectedDate && selectedClass) {
       handleSearch();
     }
   }, []);
+
+  const toggleEdit = (index) => {
+    setChecklist((prev) => prev.map((item, i) => (i === index ? { ...item, editable: !item.editable } : item)));
+  };
+
+  const handleChange = (index, field, value) => {
+    setChecklist((prev) => prev.map((item, i) => (i === index ? { ...item, [field]: value } : item)));
+  };
 
   return (
     <Wrapper>
@@ -85,14 +104,14 @@ const ChildHealthCheck = () => {
           setSelectedClass={setSelectedClass}
           onSearch={handleSearch}
         />
-        <HealthCheckListTable data={matchedData ? matchedData.checklist : []} />
-        {!matchedData && <p style={{ marginTop: '10px' }}>조회된 결과가 없습니다.</p>}
+        <HealthCheckListTable data={checklist} onEdit={toggleEdit} onChange={handleChange} />
       </Content>
     </Wrapper>
   );
 };
 
 export default ChildHealthCheck;
+
 const Wrapper = styled.div`
   min-height: 600px;
   background-color: #ffffff;
