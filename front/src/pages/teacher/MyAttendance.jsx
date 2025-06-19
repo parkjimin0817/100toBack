@@ -1,27 +1,30 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
-import TeacherAttendanceCard from './components/TeacherAttendanceCard';
+import MyAttendaceCard from './components/MyAttendaceCard';
+
 import CustomCalendar from '../common/CustomCalendar';
 
-const TeacherAttendance = () => {
+const MyAttendance = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   return (
-    <Wrapper>
-      <ContentHeader Title={'교사 근태 관리'} Color={'blue'} />
-      <Content>
-        <Div1>
-          <CustomCalendar onDateClick={(date) => setSelectedDate(date)} />
-        </Div1>
-        <Div2>
-          <TeacherAttendanceCard selectedDate={selectedDate} />
-        </Div2>
-      </Content>
-    </Wrapper>
+    <div>
+      <Wrapper>
+        <ContentHeader Title={' 근태 관리'} Color={'blue'} />
+        <Content>
+          <Div1>
+            <CustomCalendar onDateClick={(date) => setSelectedDate(date)} />
+          </Div1>
+          <Div2>
+            <MyAttendaceCard selectedDate={selectedDate} />
+          </Div2>
+        </Content>
+      </Wrapper>
+    </div>
   );
 };
 
-export default TeacherAttendance;
+export default MyAttendance;
 
 const Wrapper = styled.div`
   width: 100%;

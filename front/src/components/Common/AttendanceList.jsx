@@ -16,7 +16,7 @@ const initialData = [
   { name: '정의철', status: '출석' },
 ];
 
-const AttendanceList = () => {
+const AttendanceList = ({ selectedDate }) => {
   const [data, setData] = useState(initialData);
   const [selectedStatus, setSelectedStatus] = useState('전체');
 
@@ -35,7 +35,14 @@ const AttendanceList = () => {
   return (
     <Wrapper>
       <ContentHeader Title="땡땡반 출석 현황" Color="orange" FontSize="base" />
-      <DateRow>2025-06-14(금)</DateRow>
+      <DateRow>
+        {selectedDate.toLocaleDateString('ko-KR', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          weekday: 'short',
+        })}
+      </DateRow>
       <Div>
         <AttendanceCount>
           <Name>전체</Name>
@@ -70,37 +77,41 @@ const AttendanceList = () => {
               <Th>출결상태</Th>
             </Tr>
           </Thead>
-          <Tbody>
-            {filteredData.map((item, index) => (
-              <Tr key={index}>
-                <Td>{item.name}</Td>
-                <Td>
-                  <Button
-                    $status="출석"
-                    $active={item.status === '출석'}
-                    onClick={() => handleStatusChange(index, '출석')}
-                  >
-                    출석
-                  </Button>
-                  <Button
-                    $status="결석"
-                    $active={item.status === '결석'}
-                    onClick={() => handleStatusChange(index, '결석')}
-                  >
-                    결석
-                  </Button>
-                  <Button
-                    $status="지각"
-                    $active={item.status === '지각'}
-                    onClick={() => handleStatusChange(index, '지각')}
-                  >
-                    지각
-                  </Button>
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
         </Table>
+        <TbodyWrapper>
+          <Table>
+            <Tbody>
+              {filteredData.map((item, index) => (
+                <Tr key={index}>
+                  <Td>{item.name}</Td>
+                  <Td>
+                    <Button
+                      $status="출석"
+                      $active={item.status === '출석'}
+                      onClick={() => handleStatusChange(index, '출석')}
+                    >
+                      출석
+                    </Button>
+                    <Button
+                      $status="결석"
+                      $active={item.status === '결석'}
+                      onClick={() => handleStatusChange(index, '결석')}
+                    >
+                      결석
+                    </Button>
+                    <Button
+                      $status="지각"
+                      $active={item.status === '지각'}
+                      onClick={() => handleStatusChange(index, '지각')}
+                    >
+                      지각
+                    </Button>
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </TbodyWrapper>
       </TableWrapper>
     </Wrapper>
   );
@@ -172,14 +183,24 @@ const Select = styled.select`
 `;
 
 const TableWrapper = styled.div`
-  max-height: 390px;
+  max-height: 340px;
   display: flex;
-  padding: 10px;
-  overflow-y: scroll;
+  flex-direction: column;
+  padding: 5px 10px;
+`;
+
+const TbodyWrapper = styled.div`
+  height: 300px;
+  overflow-y: auto;
+
+  /* 스크롤 영역에 헤더 너비 맞추기 */
+  /* table {
+    width: 100%;
+  } */
 `;
 
 const Table = styled.table`
-  width: 350px;
+  width: 300px;
   text-align: center;
   table-layout: fixed;
   transition: none;
@@ -190,7 +211,7 @@ const Table = styled.table`
   }
   th:nth-child(2),
   td:nth-child(2) {
-    width: 70%;
+    width: 60%;
   }
 `;
 

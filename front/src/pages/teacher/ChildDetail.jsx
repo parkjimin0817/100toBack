@@ -2,7 +2,6 @@
 import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import ChildImg from '../../assets/Child.png';
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { List } from '../../components/ChildDummyData';

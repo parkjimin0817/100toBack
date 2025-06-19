@@ -33,33 +33,33 @@ const Wrapper = styled.div`
 `;
 
 const Card = styled.div`
-  padding: 40px 30px;
+  padding: ${({ theme }) => `${theme.spacing[10]} ${theme.spacing[8]}`};
   text-align: center;
 `;
 
 const Icon = styled.div`
-  font-size: 48px;
-  margin-bottom: 20px;
+  font-size: ${({ theme }) => theme.fontSizes['5xl']};
+  margin-bottom: ${({ theme }) => theme.spacing[5]};
 `;
 
 const Title = styled.h2`
-  margin-bottom: 12px;
+  margin-bottom: ${({ theme }) => theme.spacing[3]};
 `;
 
 const Message = styled.p`
-  font-size: 15px;
+  font-size: ${({ theme }) => theme.fontSizes.base};
   color: ${({ theme }) => theme.colors.gray[600]};
-  margin-bottom: 24px;
+  margin-bottom: ${({ theme }) => theme.spacing[6]};
 `;
 
 const Button = styled.button`
-  padding: 12px 20px;
-  font-size: 16px;
+  padding: ${({ theme }) => `${theme.spacing[3]} ${theme.spacing[5]}`};
+  font-size: ${({ theme }) => theme.fontSizes.base};
   background-color: ${({ theme }) => theme.colors.green};
   color: white;
   border: none;
   outline: none;
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   cursor: pointer;
 
   &:hover {

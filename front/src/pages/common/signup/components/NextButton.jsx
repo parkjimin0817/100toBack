@@ -18,10 +18,10 @@ const Button = styled.button`
   display: block;
   margin: 0 auto;
   outline: none;
-  border-radius: 10px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   background-color: ${({ theme }) => theme.colors.green};
-  color: white;
-  margin: 50px;
+  color: ${({ theme }) => theme.colors.white};
+  margin: ${({ theme }) => theme.spacing[12]};
 
   &:hover {
     background-color: #44c86f;

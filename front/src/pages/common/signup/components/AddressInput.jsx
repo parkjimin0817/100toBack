@@ -45,30 +45,30 @@ const Wrapper = styled.div`
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: ${({ theme }) => theme.spacing[1]};
 `;
 
 const Label = styled.label`
   display: block;
   text-align: left;
-  margin-top: 8px;
+  margin-top: ${({ theme }) => theme.spacing[2]};
   font-size: ${({ theme }) => theme.fontSizes.base};
   color: ${({ theme }) => theme.colors.gray[400]};
 `;
 
 const Row = styled.div`
   display: flex;
-  gap: 10px;
+  gap: ${({ theme }) => theme.spacing[3]};
 `;
 
 const ShortInput = styled.input`
   flex: 1;
   height: 40px;
-  padding: 10px;
+  padding: ${({ theme }) => theme.spacing[2]};
   outline: none;
   font-size: ${({ theme }) => theme.fontSizes.sm};
   border: 1px solid ${({ theme }) => theme.colors.gray[300]};
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   &::placeholder {
     color: ${({ theme }) => theme.colors.gray[300]};
   }
@@ -77,11 +77,11 @@ const ShortInput = styled.input`
 const LongInput = styled.input`
   width: 100%;
   height: 40px;
-  padding: 10px;
+  padding: ${({ theme }) => theme.spacing[2]};
   outline: none;
   font-size: ${({ theme }) => theme.fontSizes.sm};
   border: 1px solid ${({ theme }) => theme.colors.gray[300]};
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   &::placeholder {
     color: ${({ theme }) => theme.colors.gray[300]};
   }
@@ -95,7 +95,7 @@ const SearchButton = styled.button`
   color: ${({ theme }) => theme.colors.gray[900]};
   font-size: ${({ theme }) => theme.fontSizes.sm};
   border: none;
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   cursor: pointer;
 
   &:hover {
