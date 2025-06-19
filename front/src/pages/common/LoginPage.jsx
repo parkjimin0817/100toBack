@@ -3,37 +3,84 @@ import styled from 'styled-components';
 import Logo from '../../assets/img/logo.png';
 import CommonFind from '../../components/Common/CommonFind';
 import { useNavigate } from 'react-router-dom';
+import { ContentArea, SearchIdForm } from '../../styles/Common/Container';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 
+const loginSchema = yup.object().shape({
+  memberId: yup
+    .string()
+    .min(6, '6자 이상 입력해주세요.')
+    .matches(/^[가-힣a-zA-Z][^!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\s]*$/, '특수문자와 숫자가 없어야합니다.')
+    .required('아이디를 입력해주세요.'),
+  memberPwd: yup
+    .string()
+    .min(8, '8자 이상 입력해주세요.')
+    .matches(/^[가-힣a-zA-Z][^!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\s]*$/, '특수문자와 숫자가 없어야합니다.')
+    .required('비밀번호를 입력해주세요.'),
+});
 
 const LoginPage = () => {
   const [checked, setChecked] = useState(false);
   const navigator = useNavigate();
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(loginSchema),
+  });
+
+  const onSubmit = async () => {};
+
   return (
     <CommonFind>
-      <Wrapper>
-        <Title>로그인</Title>
-        <form>
-          <InputLine>
-            <Input type="text" placeholder="아이디를 입력해주세요." />
-            <Input type="text" placeholder="비밀번호를 입력해주세요." />
-          </InputLine>
-          <CheckboxLine>
-            <label>
-              <LoginMaintain type="checkbox" checked={checked} onChange={() => setChecked(!checked)} />
-              로그인상태유지
-            </label>
-          </CheckboxLine>
-          <LoginButtonLine>
-            <Button>로그인</Button>
-          </LoginButtonLine>
-          <EtcLine>
-            <Etc style={{ marginRight: '140px' }}>회원가입</Etc>
-            <Etc>아이디찾기</Etc>
-            <Etc onClick={() => navigator('/findpwd')}>비밀번호찾기</Etc>
-          </EtcLine>
-        </form>
-      </Wrapper>
+      <SearchIdForm>
+        <ContentArea>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Title>로그인</Title>
+
+            <Content>
+              <InputLine>
+                <Input
+                  id="memberId"
+                  type="text"
+                  placeholder="아이디를 입력해주세요."
+                  {...register('memberId')}
+                  $error={errors.memberId}
+                />
+                {errors.memberId && <ErrorMessage>{errors.memberId.message}</ErrorMessage>}
+                <Input
+                  id="memberPwd"
+                  type="password"
+                  placeholder="비밀번호를 입력해주세요."
+                  {...register('memberPwd')}
+                  $error={errors.memberPwd}
+                />
+                {errors.memberPwd && <ErrorMessage>{errors.memberPwd.message}</ErrorMessage>}
+              </InputLine>
+              <CheckboxLine>
+                <Lable>
+                  <LoginMaintain type="checkbox" checked={checked} onChange={() => setChecked(!checked)} />
+                  로그인 상태유지
+                </Lable>
+              </CheckboxLine>
+              <LoginButtonLine>
+                <Button type="submit">로그인하기</Button>
+              </LoginButtonLine>
+              <EtcLine>
+                <Etc onClick={() => navigator('/signup/terms')}>회원가입</Etc>
+                <SearchArea>
+                  <Etc onClick={() => navigator('/findid')}>아이디찾기</Etc>
+                  <Etc onClick={() => navigator('/findpwd')}>비밀번호찾기</Etc>
+                </SearchArea>
+              </EtcLine>
+            </Content>
+          </form>
+        </ContentArea>
+      </SearchIdForm>
       <Footer>
         <Foot>이용약관</Foot>
         <Foot style={{ width: '140px' }}>개인정보 처리방침</Foot>
@@ -46,54 +93,47 @@ const LoginPage = () => {
 
 export default LoginPage;
 
-const Container = styled.div`
+const ErrorMessage = styled.span`
+  color: ${({ theme }) => theme.colors.orange};
+  font-size: ${({ theme }) => theme.fontSizes.base};
+  font-weight: ${({ theme }) => theme.fontWeights.medium};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const SearchArea = styled.div`
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  justify-content: flex-start; /* 상단 정렬 */
-  max-width: 1440px;
-  max-height: 1024px;
-  width: 100%;
-  margin: 0 auto;
-  padding-top: 0;
-  flex-grow: 0;
 `;
 
-const Image = styled.img`
-  margin-bottom: 50px;
+const Content = styled.div`
+  padding: ${({ theme }) => theme.spacing[16]};
 `;
 
-const Wrapper = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  width: 575px;
-  height: 510px;
-  border: 0.8px solid #b4b2b2;
-`;
-
-const Title = styled.div`
-  margin-top: 30px;
-  font-size: 24px;
+const Title = styled.h2`
+  text-align: center;
 `;
 
 const InputLine = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-direction: column;
-  margin-top: 68px;
+
+  gap: ${({ theme }) => theme.spacing[3]};
 `;
 
 const Input = styled.input`
-  width: 345px;
-  height: 50px;
-  padding-left: 10px;
+  width: 100%;
+  height: 44px;
+  padding: ${({ theme }) => theme.spacing[3]};
   color: black;
-  font-weight: bold;
-  font-size: 18px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  border: 0.8px solid black;
+  font-weight: ${({ theme }) => theme.fontWeights.medium};
+  font-size: ${({ theme }) => theme.fontSizes.base};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  border: 1px solid ${({ theme }) => theme.colors.gray[500]};
 
   &::placeholder {
     color: #b4b2b2; /* placeholder만 회색 */
@@ -103,38 +143,46 @@ const Input = styled.input`
 const CheckboxLine = styled.div`
   width: 100%;
   display: flex;
-  justify-content: flex-start;
-  flex-direction: row;
-  margin-left: 230px;
-  margin-top: 10px;
+  justify-content: flex-end;
+  padding-top: ${({ theme }) => theme.spacing[2]};
+`;
+
+const Lable = styled.label`
+  &:hover {
+    cursor: pointer;
+    font-weight: ${({ theme }) => theme.fontWeights.bold};
+  }
 `;
 
 const LoginMaintain = styled.input`
-  margin-left: 15px;
-`
-
+  margin-right: ${({ theme }) => theme.spacing[2]};
+`;
 
 const LoginButtonLine = styled.div`
-  margin-top: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: ${({ theme }) => theme.spacing[8]};
 `;
 
 const Button = styled.button`
-  width: 355px;
-  height: 50px;
+  width: 100%;
+  height: 44px;
   background-color: #bae8f5;
-  border-radius: 5px;
-  border: 0.8px solid black;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border: 1px solid ${({ theme }) => theme.colors.gray[500]};
   font-size: 18px;
   font-weight: bold;
 
   &:hover {
-    cursor: pointer;
+    scale: 0.98;
   }
 `;
 
 const EtcLine = styled.div`
   display: flex;
-  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const Etc = styled.div`
@@ -144,6 +192,7 @@ const Etc = styled.div`
 
   &:hover {
     cursor: pointer;
+    font-weight: ${({ theme }) => theme.fontWeights.bold};
   }
 `;
 
