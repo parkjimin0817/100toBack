@@ -90,6 +90,7 @@ public class Child {// 아동
 
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ChildActivityLog> childActivityLogs = new ArrayList<>();
+    //아동 생활 기록
 
 
     //---------------------------------------------------------------------------------------------
@@ -97,7 +98,7 @@ public class Child {// 아동
     protected void onCreate() {
         this.createDate = LocalDateTime.now();
         if(status == null){
-            this.status = CommonEnums.AdmissionStatus.REJECTED;
+            this.status = CommonEnums.AdmissionStatus.PENDING;
         }
     }
 

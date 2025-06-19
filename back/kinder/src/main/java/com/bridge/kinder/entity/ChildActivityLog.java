@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,11 +29,11 @@ public class ChildActivityLog {// 아동 생활 기록
     //금일 식사량
 
     @Column(name = "NAP_START_TIME")
-    private LocalDateTime napStartTime;
+    private LocalTime napStartTime;
     //낮잠 시작 시간
 
     @Column(name = "NAP_END_TIME")
-    private LocalDateTime napEndTime;
+    private LocalTime napEndTime;
     //낮잠 종료 시간
 
     @Column(name = "PLAY_PARTICIPATION", length = 100)

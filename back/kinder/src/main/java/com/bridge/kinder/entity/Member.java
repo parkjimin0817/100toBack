@@ -126,7 +126,7 @@ public class Member {// 멤버
     protected void onCreate() {
         this.createDate = LocalDateTime.now();
         if(this.status == null) {
-            this.status = CommonEnums.AdmissionStatus.REJECTED;
+            this.status = CommonEnums.AdmissionStatus.PENDING;
         }
     }
 }

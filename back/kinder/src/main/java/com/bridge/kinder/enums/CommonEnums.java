@@ -45,7 +45,7 @@ public class CommonEnums {
 
     public enum BoardType {
         NOTICE,         //공지사항
-        LETTER_HOME,    //가정통신문
+        FAMILY_NOTICE,    //가정통신문
         NOTE,           //알림장
         PHOTO,          //사진
         PRIVATE_DOC,    //개인서류

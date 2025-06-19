@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,11 +34,11 @@ public class Schedule {// 일정
     //생성일
 
     @Column(name = "START_TIME")
-    private LocalDateTime startTime;
+    private LocalTime startTime;
     //시작시간
 
     @Column(name = "END_TIME")
-    private LocalDateTime endTime;
+    private LocalTime endTime;
     //종료시간
 
     @Column(name = "TYPE", length = 20)
