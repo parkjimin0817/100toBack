@@ -60,14 +60,14 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData }) => {
               </ModalInfoTime>
             </ModalInfo>
             <ModalContentMain>
-              <ModalContentDESCRIPTION>
-                <ModalContentDESCRIPTIONLeft>내용 :</ModalContentDESCRIPTIONLeft>
-                <ModalContentDESCRIPTIONRight
+              <ModalContentDescription>
+                <ModalContentDescriptionLeft>내용 :</ModalContentDescriptionLeft>
+                <ModalContentDescriptionRight
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="내용을 입력해주세요."
                 />
-              </ModalContentDESCRIPTION>
+              </ModalContentDescription>
             </ModalContentMain>
           </ModalMain>
         </ModalContent>
@@ -255,14 +255,14 @@ const ModalContentMain = styled.div`
   height: 80%;
 `;
 
-const ModalContentDESCRIPTION = styled.div`
+const ModalContentDescription = styled.div`
   width: 100%;
   height: 90%;
   display: flex;
   margin: ${({ theme }) => theme.spacing[2]} 0;
 `;
 
-const ModalContentDESCRIPTIONLeft = styled.div`
+const ModalContentDescriptionLeft = styled.div`
   width: 10%;
   height: 100%;
   display: flex;
@@ -271,7 +271,7 @@ const ModalContentDESCRIPTIONLeft = styled.div`
   font-weight: ${({ theme }) => theme.fontWeights.bold};
 `;
 
-const ModalContentDESCRIPTIONRight = styled.textarea`
+const ModalContentDescriptionRight = styled.textarea`
   width: 90%;
   height: 100%;
   display: flex;

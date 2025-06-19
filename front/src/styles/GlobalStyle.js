@@ -95,6 +95,10 @@ const GlobalStyle = createGlobalStyle`
   * {
     transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   }
+
+  button:hover {
+    scale: 0.98;
+  }
 `;
 
 export default GlobalStyle;
