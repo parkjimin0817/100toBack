@@ -1,5 +1,6 @@
 package com.bridge.kinder.dto;
 
+import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.enums.CommonEnums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +27,17 @@ public class MemberDto {
         private String member_profile;
         private String address;
 
-
+        public Member toEntity() {
+            return Member.builder()
+                    .memberName(member_name)
+                    .memberBirth(member_birth)
+                    .memberId(member_id)
+                    .memberPwd(member_pwd)
+                    .memberPhone(member_phone)
+                    .memberType(member_type)
+                    .memberProfile(member_profile)
+                    .address(address)
+                    .build();
+        }
     }
 }
