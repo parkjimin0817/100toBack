@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import TeacherImage from '../../../assets/img/teacherpicture.png';
 import Progressbar1 from '../../../assets/img/progressbar1.png';
 import Progressbar2 from '../../../assets/img/progressbar2.png';
+import YellowFace from '../../../assets/img/yellowface.png';
+import Go from '../../../assets/img/go.png';
 
 const TeacherMainHealth = () => {
   return (
@@ -15,7 +17,7 @@ const TeacherMainHealth = () => {
           <TeacherPic src={TeacherImage}></TeacherPic>
         </FirstSecondLine>
         <SecondLine>
-          <SecondLineHeader>주간 건강 정보</SecondLineHeader>
+          <LineHeader>주간 건강 정보</LineHeader>
           <SecondStressLine>
             <SecondLineTitle>스트레스 지수</SecondLineTitle>
             <ProgressBar src={Progressbar1}></ProgressBar>
@@ -34,10 +36,21 @@ const TeacherMainHealth = () => {
           </SecondLineFooter>
         </SecondLine>
         <ThirdLine>
-          <FeedbackBox>
-            <SecondLineHeader>주간 건강 정보</SecondLineHeader>
-          </FeedbackBox>
-          <SelfDiagnosisBox></SelfDiagnosisBox>
+          <FeedbackLine>
+            <LineHeader>주간 건강 피드백</LineHeader>
+            <FaceImage src={YellowFace} alt="노란 얼굴" />
+            <Feedback>
+              스트레스 지수는 낮아졌는데,수면시간도 낮아졌어요. 짧은 수면은 집중력을 저하시켜요. 충분한 수면을
+              취하시는걸 권장드려요!
+            </Feedback>
+          </FeedbackLine>
+          <SelfDiagnosisLine>
+            <LineHeader>자가진단</LineHeader>
+            <SelfDiagnosisBox>
+              이번주 자가진단 하기
+              <img src={Go} alt="" />
+            </SelfDiagnosisBox>
+          </SelfDiagnosisLine>
         </ThirdLine>
       </HealthContainer>
     </>
@@ -92,7 +105,10 @@ const SecondLine = styled.div`
   border: solid 2px ${({ theme }) => theme.colors.lightblue};
 `;
 
-const SecondLineHeader = styled.div`
+const LineHeader = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 160px;
   height: 30px;
   color: ${({ theme }) => theme.colors.white};
@@ -137,19 +153,59 @@ const Rectangle2 = styled.div`
   background-color: ${({ theme }) => theme.colors.blue};
 `;
 
-const ThirdLine = styled.div`
+const ThirdLine = styled.div``;
+
+const FeedbackLine = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
   width: 200px;
   height: 287px;
-  margin-right: ${({ theme }) => theme.spacing[5]};
   background: ${({ theme }) => theme.colors.white};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   border: solid 2px ${({ theme }) => theme.colors.lightblue};
 `;
 
-const FeedbackBox = styled.div``;
+const FaceImage = styled.img`
+  display: flex;
+  justify-content: flex-start;
+  margin: 10px 0px 0px 20px;
+`;
 
-const SelfDiagnosisBox = styled.div``;
+const Feedback = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 80%;
+  margin: 15px 0px 0px 20px;
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+`;
+
+const SelfDiagnosisLine = styled.div`
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 200px;
+  height: 117px;
+  background: ${({ theme }) => theme.colors.white};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  border: solid 2px ${({ theme }) => theme.colors.lightblue};
+`;
+
+const SelfDiagnosisBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 157px;
+  height: 44px;
+  background: #8fd7eb40;
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+  margin: 20px;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+
+  &:hover {
+    cursor: pointer;
+  }
+`;

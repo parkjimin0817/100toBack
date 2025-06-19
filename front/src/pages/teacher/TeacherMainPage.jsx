@@ -6,6 +6,8 @@ import ScrollWrapper from '../common/ParentMain/components/ScrollWrapper';
 import TeacherMainAttendance from './components/TeacherMainAttendance';
 import TeacherMainChild from './components/TeacherMainChild';
 import TeacherMainHealth from './components/TeacherMainHealth';
+import RecentBoard from '../common/ParentMain/components/RecentBoard';
+import MainSchedule from '../common/ParentMain/components/MainSchedule';
 
 const data = [
   { name: '박지민', age: '5', time: '10:00~12:00', type: '채팅' },
@@ -107,6 +109,7 @@ const TeacherMainPage = () => {
 
         <ScheduleContent>
           <ContentHeader Title={'일정 & 스케줄'} Color={'orange'} />
+          <MainSchedule></MainSchedule>
         </ScheduleContent>
       </TopContent>
 
@@ -118,7 +121,9 @@ const TeacherMainPage = () => {
           Color={'yellow'}
           ButtonProps={[{ Title: '더보기', func: () => alert('게시판가야함') }]}
         />
-        <RecentBoards />
+        <RecentBoards>
+          <RecentBoard />
+        </RecentBoards>
       </BoardContent>
     </Wrapper>
   );
@@ -253,13 +258,20 @@ const ScheduleContent = styled.div`
 
 const BoardContent = styled.div`
   width: 100%;
+  height: 340px;
   background-color: #ffffff;
-  border-radius: 20px;
+  border-radius: ${({ theme }) => theme.borderRadius['2xl']};
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 `;
 
 const RecentBoards = styled.div`
-  width: 90%;
+  width: 95%;
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin: 0 auto;
+  margin-top: ${({ theme }) => theme.spacing[4]};
 `;
 
 const AttendanceBox = styled.div`
