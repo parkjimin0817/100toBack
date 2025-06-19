@@ -32,14 +32,14 @@ public class ChildAttendance {// 아동 출석체크
 
     //---------------------------------------------------------------------------------------------
     @ManyToOne
-    @JoinColumn(name = "CHILD_NO")
-    private Child child;
-    //아동
-
-    @ManyToOne
     @JoinColumn(name = "CLASS_NO")
     private ClassRoom classRoom;
     //반
+
+    @ManyToOne
+    @JoinColumn(name = "CHILD_NO")
+    private Child child;
+    //아동
 
 
     //---------------------------------------------------------------------------------------------

@@ -1,15 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-const InsertSchedule = ({ isOpen, onClose, selectedDate }) => {
-  // if (!isOpen || !data) return null;
+const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData }) => {
+  const [title, setTitle] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [description, setDescription] = useState('');
+
+  useEffect(() => {
+    if (initialData) {
+      setTitle(initialData.title || '');
+      setStartTime(initialData.start_time || '');
+      setEndTime(initialData.end_time || '');
+      setDescription(initialData.description || '');
+    } else {
+      setTitle('');
+      setStartTime('');
+      setEndTime('');
+      setDescription('');
+    }
+  }, [initialData]);
+
+  const handleSubmit = () => {
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
     <Backdrop onClick={onClose}>
       <ModalContainer onClick={(e) => e.stopPropagation()}>
         <ModalHeader>
-          <Span>일정 추가</Span>
+          <Span>{initialData ? '일정 수정' : '일정 추가'}</Span>
         </ModalHeader>
         <ModalContent>
           <ModalDate>
@@ -23,7 +45,7 @@ const InsertSchedule = ({ isOpen, onClose, selectedDate }) => {
                   <Span>제목 :</Span>
                 </TitleLeft>
                 <TitleRight>
-                  <TextInput type="text"></TextInput>
+                  <TextInput value={title} onChange={(e) => setTitle(e.target.value)} />
                 </TitleRight>
               </ModalTitle>
               <ModalInfoTime>
@@ -31,21 +53,34 @@ const InsertSchedule = ({ isOpen, onClose, selectedDate }) => {
                   <Span>시간 :</Span>
                 </InfoTimeLeft>
                 <InfoTimeRight>
-                  <TimeInput type="time" />
+                  <TimeInput value={startTime} onChange={(e) => setStartTime(e.target.value)} />
                   <Span>-</Span>
-                  <TimeInput type="time" />
+                  <TimeInput value={endTime} onChange={(e) => setEndTime(e.target.value)} />
                 </InfoTimeRight>
               </ModalInfoTime>
             </ModalInfo>
             <ModalContentMain>
               <ModalContentDESCRIPTION>
                 <ModalContentDESCRIPTIONLeft>내용 :</ModalContentDESCRIPTIONLeft>
-                <ModalContentDESCRIPTIONRight placeholder="내용을 입력해주세요."></ModalContentDESCRIPTIONRight>
+                <ModalContentDESCRIPTIONRight
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="내용을 입력해주세요."
+                />
               </ModalContentDESCRIPTION>
             </ModalContentMain>
           </ModalMain>
         </ModalContent>
         <ModalFooter>
+          {initialData ? (
+            <Button className="edit" onClick={handleSubmit}>
+              수정
+            </Button>
+          ) : (
+            <Button className="add" onClick={handleSubmit}>
+              등록
+            </Button>
+          )}
           <Button onClick={onClose}>닫기</Button>
         </ModalFooter>
       </ModalContainer>
@@ -125,13 +160,6 @@ const ModalDate = styled.div`
   width: 100%;
   height: 10%;
   gap: ${({ theme }) => theme.spacing[2]};
-  span {
-    margin: 0;
-    font-size: ${({ theme }) => theme.fontSizes.base};
-    strong {
-      font-weight: 600;
-    }
-  }
 `;
 
 const ModalMain = styled.div`
@@ -262,6 +290,7 @@ const ModalFooter = styled.div`
   padding: ${({ theme }) => theme.spacing[2]};
   background-color: ${({ theme }) => theme.colors.gray[100]};
   border-top: 1px solid ${({ theme }) => theme.colors.gray[300]};
+  gap: ${({ theme }) => theme.spacing[4]};
 `;
 
 const Button = styled.button`
@@ -271,6 +300,13 @@ const Button = styled.button`
   cursor: pointer;
   color: ${({ theme }) => theme.colors.white};
   background: ${({ theme }) => theme.colors.gray[400]};
+  &.add {
+    background: ${({ theme }) => theme.colors.green};
+  }
+
+  &.edit {
+    background: ${({ theme }) => theme.colors.orange};
+  }
 `;
 
-export default InsertSchedule;
+export default ScheduleModal;

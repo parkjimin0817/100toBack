@@ -7,7 +7,7 @@ import ScheduleList from './components/ScheduleList';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 
-import Modal from '../common/InsertSchedule';
+import ScheduleModal from '../common/ScheduleModal';
 
 dayjs.locale('ko');
 
@@ -124,14 +124,22 @@ const ScheduleTeacher = () => {
   //modal
   const [openModal, setOpenModal] = useState(false);
 
+  const [editSchedule, setEditSchedule] = useState(null);
+
   const handleDateClick = (date) => {
     const dateStr = dayjs(date).format('YYYY-MM-DD');
+    console.log(dateStr);
 
     const selectDay = dayjs(date).format('YYYY-MM-DD (ddd)');
     setSelectedDate(selectDay);
 
     const matched = data.filter((item) => item.create_date === dateStr);
     setSelectedSchedules(matched);
+  };
+
+  const handleEditClick = (item) => {
+    setEditSchedule(item);
+    setOpenModal(true);
   };
 
   return (
@@ -148,12 +156,22 @@ const ScheduleTeacher = () => {
                 Title={'개인 일정'}
                 Color={'purple'}
                 FontSize={'xl'}
-                ButtonProps={[{ Title: '일정 추가', func: () => setOpenModal(true) }]}
+                ButtonProps={[
+                  {
+                    Title: '일정 추가',
+                    func: () => {
+                      setOpenModal(true), setEditSchedule(null);
+                    },
+                  },
+                ]}
               />
               <ContentSceduleArea>
                 <AreaDate>{selectedDate}</AreaDate>
                 <AreaList>
-                  <ScheduleList schedules={selectedSchedules.filter((item) => item.type === '멤버')} />
+                  <ScheduleList
+                    schedules={selectedSchedules.filter((item) => item.type === '멤버')}
+                    onEditClick={handleEditClick}
+                  />
                 </AreaList>
               </ContentSceduleArea>
             </ContentRightTop>
@@ -169,7 +187,12 @@ const ScheduleTeacher = () => {
           </ContentRight>
         </ContentWrapper>
       </Content>
-      <Modal isOpen={openModal} onClose={() => setOpenModal(false)} selectedDate={selectedDate} />
+      <ScheduleModal
+        isOpen={openModal}
+        onClose={() => setOpenModal(false)}
+        selectedDate={selectedDate.split(' ')[0]}
+        initialData={editSchedule}
+      />
     </>
   );
 };

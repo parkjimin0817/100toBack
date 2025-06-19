@@ -34,7 +34,7 @@ public class Center {// 시설
     private CommonEnums.CenterType centerType;
     //시설 유형
 
-    @Column(name = "CENTER_TEL", length = 40)
+    @Column(name = "CENTER_TEL", length = 20)
     private String centerTel;
     //시설 연락처
 
@@ -64,6 +64,16 @@ public class Center {// 시설
     @Builder.Default
     List<Schedule> schedules = new ArrayList<>();
     //일정
+
+    @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
+    @Builder.Default
+    List<Board> boards = new ArrayList<>();
+    //게시판
+
+    @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
+    @Builder.Default
+    List<ClassRoom> classRooms = new ArrayList<>();
+    //반
 
 
 
