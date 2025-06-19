@@ -3,6 +3,18 @@ import styled from 'styled-components';
 import ContentHeader from '../../../components/Common/ContentHeader';
 import ChildCard from './components/ChildCard';
 import RecentBoard from './components/RecentBoard';
+import boy1 from '../../../assets/boy1.png';
+import girl1 from '../../../assets/girl1.png';
+import boy2 from '../../../assets/boy2.png';
+import ScrollWrapper from './components/ScrollWrapper';
+
+const data = [
+  { name: '박지민', age: '6', gender: '남', birthdate: '20.02.02', imgurl: boy1 },
+  { name: '양동민', age: '7', gender: '남', birthdate: '20.03.02', imgurl: girl1 },
+  { name: '정의철', age: '8', gender: '여', birthdate: '20.04.02', imgurl: girl1 },
+  { name: '정형일', age: '9', gender: '남', birthdate: '20.05.02', imgurl: boy2 },
+  { name: '김승기', age: '10', gender: '남', birthdate: '20.06.02', imgurl: boy2 },
+];
 
 const ParentMainPage = () => {
   return (
@@ -11,7 +23,9 @@ const ParentMainPage = () => {
         <FirstContent>
           <ContentHeader Title={'우리 아이'} Color={'lightblue'} />
           <ChildCards>
-            <ChildCard />
+            <ScrollWrapper>
+              <ChildCard data={data} />
+            </ScrollWrapper>
           </ChildCards>
         </FirstContent>
         <ScheduleContent>
@@ -67,20 +81,21 @@ const BoardContent = styled.div`
 `;
 
 const ChildCards = styled.div`
-  width: 90%;
+  width: 95%;
   height: 70%;
   display: flex;
   margin: 0 auto;
 
   gap: ${({ theme }) => theme.spacing[6]};
   margin-top: ${({ theme }) => theme.spacing[16]};
-  overflow-x: auto;
 `;
 
 const RecentBoards = styled.div`
   width: 95%;
   height: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
   margin: 0 auto;
-  border: 1px solid black;
   margin-top: ${({ theme }) => theme.spacing[4]};
 `;
