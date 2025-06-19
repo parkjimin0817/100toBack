@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 
-const SideBar = () => {
+const SideBar = ({ role }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [openMenus, setOpenMenus] = useState({});
   const sidebarRef = useRef(null);
@@ -9,6 +9,14 @@ const SideBar = () => {
   const handleMenuToggle = (menuId) => {
     setOpenMenus((prev) => ({ ...prev, [menuId]: !prev[menuId] }));
   };
+
+  const sidebarByRole = {
+    teacher: teacherSidebar,
+    manager: managerSidebar,
+    parent: parentSidebar,
+  };
+
+  const sidebarMenus = sidebarByRole[role] || [];
 
   return (
     <SidebarContainer
@@ -39,7 +47,7 @@ const SideBar = () => {
             {openMenus[menu.id] && isExpanded && (
               <SidebarSublist $SidebarColor={menu.color}>
                 {menu.subItems.map((item, idx) => (
-                  <NavLink to={item.link}>
+                  <NavLink to={item.link} key={idx}>
                     <SidebarSubItem key={idx} $SidebarColor={menu.color}>
                       {item.label}
                     </SidebarSubItem>
@@ -62,8 +70,9 @@ import { MdFilterFrames } from 'react-icons/md';
 import { RiHealthBookLine } from 'react-icons/ri';
 import { NavLink } from 'react-router-dom';
 import { IoPeopleOutline } from 'react-icons/io5';
+import { FaSchoolFlag } from 'react-icons/fa6';
 
-const sidebarMenus = [
+const teacherSidebar = [
   {
     id: 'menu1',
     label: '아동 관리',
@@ -121,8 +130,47 @@ const sidebarMenus = [
       { label: '건강 관리', link: '' },
     ],
   },
+];
+
+const managerSidebar = [
   {
-    id: 'menu6',
+    id: 'menu1',
+    label: '아동 관리',
+    icon: <LuBaby />,
+    color: 'orange',
+    subItems: [
+      { label: '아동 목록', link: '/childlist' },
+      { label: '아동 출결', link: '/classlist' },
+      { label: '아동 건강', link: '/childhealthcheck' },
+      { label: '아동 생활', link: '/childlifecheck' },
+    ],
+  },
+  {
+    id: 'menu2',
+    label: '일정 관리',
+    icon: <FaRegCalendarAlt />,
+    color: 'purple',
+    subItems: [
+      { label: '유치원 일정', link: '' },
+      { label: '반 별 일과표', link: '/daily' },
+      { label: '학부모 상담 일정', link: '' },
+    ],
+  },
+  {
+    id: 'menu3',
+    label: '유치원 게시판',
+    icon: <MdFilterFrames />,
+    color: 'green',
+    subItems: [
+      { label: '공지사항', link: '' },
+      { label: '가정통신문', link: '/familycommunity/list' },
+      { label: '식단표', link: '' },
+      { label: '알림장', link: '' },
+      { label: '사진 게시판', link: '' },
+    ],
+  },
+  {
+    id: 'menu4',
     label: '사용자 관리',
     icon: <IoPeopleOutline />,
     color: 'blue',
@@ -133,6 +181,60 @@ const sidebarMenus = [
       { label: '교사 소개', link: '' },
       { label: '반 배정', link: '/manager/classplacement' },
     ],
+  },
+  {
+    id: 'menu5',
+    label: '내 건강 관리',
+    icon: <RiHealthBookLine />,
+    color: 'yellow',
+    subItems: [
+      { label: '나의 건강 데이터', link: '/teacherhealth' },
+      { label: '건강 관리', link: '' },
+    ],
+  },
+];
+
+const parentSidebar = [
+  {
+    id: 'menu1',
+    label: '나의 아동',
+    icon: <LuBaby />,
+    color: 'orange',
+    subItems: [
+      { label: '아동 출결', link: '/classlist' },
+      { label: '아동 건강', link: '/childhealthcheck' },
+      { label: '아동 생활', link: '/childlifecheck' },
+    ],
+  },
+  {
+    id: 'menu2',
+    label: '우리 유치원',
+    icon: <FaSchoolFlag />,
+    color: 'green',
+    subItems: [
+      { label: '유치원 일정', link: '' },
+      { label: '일과표', link: '/daily' },
+      { label: '사진 게시판', link: '' },
+    ],
+  },
+  {
+    id: 'menu3',
+    label: '공지사항',
+    icon: <MdFilterFrames />,
+    color: 'purple',
+    subItems: [
+      { label: '공지사항', link: '' },
+      { label: '가정통신문', link: '/familycommunity/list' },
+      { label: '식단표', link: '' },
+      { label: '알림장', link: '' },
+    ],
+  },
+  {
+    id: 'menu4',
+    label: '상담일정',
+    icon: <FaRegClock />,
+    color: 'blue',
+    subItems: [{ label: '상담일정', link: '' }],
   },
 ];
 
