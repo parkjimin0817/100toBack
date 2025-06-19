@@ -10,7 +10,8 @@ const Header = () => {
   return (
     <HeaderContainer>
       <HeaderLeftBox>
-        <Logo src={logo} alt="KinderBridge" />
+        {/* 로그인한 사람 role 기준으로 url 바뀌기 */}
+        <Logo src={logo} alt="KinderBridge" onClick={() => navigate('/parent/main')} />
         <LinearBar></LinearBar>
         <IoCallOutline />
         <p>1544-9970</p>
