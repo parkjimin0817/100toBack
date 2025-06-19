@@ -44,6 +44,7 @@ public class Member {// 멤버
     //전화번호
 
     @Column(name = "MEMBER_TYPE", length = 20, nullable = false)
+    @Enumerated(EnumType.STRING)
     private CommonEnums.MemberType memberType;
     //분류(시설장,교사,학부모)
 
