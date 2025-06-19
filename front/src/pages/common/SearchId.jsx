@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import CommonFind from '../../components/Common/CommonFind';
-import { SearchIdForm } from '../../styles/Common/Container';
+import { ContentArea, SearchIdForm } from '../../styles/Common/Container';
 import SearchFormNav from '../../components/Common/SearchFormNav';
 import { Button } from '../../styles/Common/Button';
 import { useNavigate } from 'react-router-dom';
@@ -71,12 +71,6 @@ const SearchId = () => {
     </>
   );
 };
-
-const ContentArea = styled.div`
-  padding: ${({ theme }) => theme.spacing[12]};
-  padding-bottom: ${({ theme }) => theme.spacing[2]};
-  text-align: left;
-`;
 
 const Content = styled.div`
   padding: ${({ theme }) => theme.spacing[8]} 0;

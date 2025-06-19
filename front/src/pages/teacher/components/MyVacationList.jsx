@@ -1,27 +1,37 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const MyVacationList = () => {
-  const data = [
-    {
-      id: 1,
-      type: '휴가-연차',
-      startDate: '2025.06.23',
-      endDate: '2025.06.25',
-      reason: '하와이 갔다오려구요 길게 쓰면 ㅇㄹㅇㄹㅇㄹㅇㄹ어떻게 돼지',
-      file: 'hawai.docx',
-      status: '승인',
-    },
-    {
-      id: 2,
-      type: '병가',
-      startDate: '2025.06.23',
-      endDate: '2025.06.25',
-      reason: '감기몸살',
-      file: '',
-    },
-  ];
+const data = [
+  {
+    id: 1,
+    type: '휴가-연차',
+    startDate: '2025.06.23',
+    endDate: '2025.06.25',
+    reason: '하와이 갔다오려구요 길게 쓰면 ㅇㄹㅇㄹㅇㄹㅇㄹ어떻게 돼지',
+    file: 'hawai.docx',
+    status: '승인',
+  },
+  {
+    id: 2,
+    type: '병가',
+    startDate: '2025.06.23',
+    endDate: '2025.06.25',
+    reason: '감기몸살',
+    file: '',
+    status: '거절',
+  },
+  {
+    id: 3,
+    type: '병가',
+    startDate: '2025.06.23',
+    endDate: '2025.06.25',
+    reason: '웱',
+    file: '',
+    status: '대기',
+  },
+];
 
+const MyVacationList = () => {
   return (
     <Wrapper>
       <VacationTable>
@@ -46,7 +56,9 @@ const MyVacationList = () => {
               <td>{vacation.reason}</td>
               <td>{vacation.file || ''}</td>
               <td>
-                <button>{vacation.status}</button>
+                <Status disabled $status={vacation.status}>
+                  {vacation.status}
+                </Status>
               </td>
             </tr>
           ))}
@@ -107,4 +119,16 @@ const VacationTable = styled.table`
   td:nth-child(6) {
     width: 12%;
   }
+`;
+
+const Status = styled.button`
+  width: 50px;
+  background-color: ${({ theme, $status }) => {
+    if ($status === '승인') return theme.colors.green; // 초록
+    if ($status === '대기') return theme.colors.gray[500]; // 회색
+    if ($status === '거절') return theme.colors.orange; // 회색
+  }};
+  color: ${({ theme }) => theme.colors.white};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  cursor: default;
 `;

@@ -1,5 +1,7 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
+import { IoIosArrowDropleft } from 'react-icons/io';
+import { IoIosArrowDropright } from 'react-icons/io';
 
 const ScrollWrapper = ({ children }) => {
   const scrollRef = useRef();
@@ -11,9 +13,13 @@ const ScrollWrapper = ({ children }) => {
   };
   return (
     <Wrapper>
-      <Arrow onClick={() => scroll('left')}>◀</Arrow>
+      <Arrow onClick={() => scroll('left')}>
+        <IoIosArrowDropleft size={25} />
+      </Arrow>
       <ScrollArea ref={scrollRef}>{children}</ScrollArea>
-      <Arrow onClick={() => scroll('right')}>▶</Arrow>
+      <Arrow onClick={() => scroll('right')}>
+        <IoIosArrowDropright size={25} />
+      </Arrow>
     </Wrapper>
   );
 };
@@ -41,12 +47,8 @@ const ScrollArea = styled.div`
 `;
 
 const Arrow = styled.button`
-  width: 25px;
-  height: 25px;
   background: none;
-  border: 1px solid ${({ theme }) => theme.colors.gray[300]};
-  border-radius: ${({ theme }) => theme.borderRadius.full};
-  font-size: ${({ theme }) => theme.fontSizes.sm};
+  border: none;
   color: ${({ theme }) => theme.colors.gray[500]};
   cursor: pointer;
 `;
