@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { TbEdit } from 'react-icons/tb';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 
-const ScheduleList = ({ schedules, emptyMessage = '일정이 없습니다.' }) => {
+const ScheduleList = ({ schedules, emptyMessage = '일정이 없습니다.', onEditClick }) => {
   if (!schedules || schedules.length === 0) {
     return <Message>{emptyMessage}</Message>;
   }
@@ -21,7 +21,7 @@ const ScheduleList = ({ schedules, emptyMessage = '일정이 없습니다.' }) =
           </BoxLeft>
           <BoxRight>
             <BoxButton>
-              <EditButton />
+              <EditButton onClick={() => onEditClick(item)} />
             </BoxButton>
             <BoxButton>
               <DeleteButton />
