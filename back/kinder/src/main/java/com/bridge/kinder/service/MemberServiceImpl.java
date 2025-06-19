@@ -20,4 +20,12 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
         return member.getMemberId();
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public MemberDto.Response findMEmber(int memberNo) {
+        return memberRepository.findOne(memberNo)
+                .map(MemberDto.Response::toDto)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
+    }
 }

@@ -22,5 +22,10 @@ public class MemberController {
         return ResponseEntity.ok(memberId);
     }
 
+    @GetMapping("/{memberNo}")
+    public ResponseEntity<MemberDto.Response> getMember(@PathVariable int memberNo){
+        return ResponseEntity.ok(memberService.findMEmber(memberNo));
+    }
+
 
 }
