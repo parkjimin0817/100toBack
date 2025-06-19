@@ -4,8 +4,10 @@ import Header from './Header';
 import Footer from './Footer';
 import SideBar from './Sidebar';
 import { Outlet } from 'react-router-dom';
+import { useState } from 'react';
 
 const Layout = () => {
+  const [role, setRole] = useState('teacher');
   return (
     <>
       <HeaderWrapper>
@@ -14,7 +16,12 @@ const Layout = () => {
 
       <MainWrapper>
         <SideBarWrapper>
-          <SideBar />
+          <RoleButtons>
+            <button onClick={() => setRole('teacher')}>교사</button>
+            <button onClick={() => setRole('manager')}>시설장</button>
+            <button onClick={() => setRole('parent')}>학부모</button>
+          </RoleButtons>
+          <SideBar role={role} />
         </SideBarWrapper>
 
         <ContentWrapper>
@@ -92,3 +99,22 @@ const ContentInner = styled.div`
 `;
 
 export default Layout;
+
+const RoleButtons = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+
+  button {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: white;
+    cursor: pointer;
+    font-size: 12px;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+`;
