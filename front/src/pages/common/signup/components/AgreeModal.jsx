@@ -23,7 +23,7 @@ export default AgreeModal;
 
 const Overlay = styled.div`
   position: fixed;
-  z-index: 1000;
+  z-index: ${({ theme }) => theme.zIndices.dropdown};
   top: 0;
   left: 0;
   width: 100vw;
@@ -38,43 +38,43 @@ const Card = styled.div`
   background: white;
   width: 400px;
   max-height: 600px;
-  border-radius: 12px;
-  padding: 25px 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  padding: ${({ theme }) => `${theme.spacing[6]} ${theme.spacing[5]}`};
   display: flex;
   flex-direction: column;
 `;
 
 const Title = styled.h2`
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 15px;
+  font-size: ${({ theme }) => theme.fontSizes.lg};
+  font-weight: ${({ theme }) => theme.fontWeights.semibold};
+  margin-bottom: ${({ theme }) => theme.spacing[4]};
 `;
 
 const ScrollArea = styled.div`
   flex: 1;
   overflow-y: auto;
-  padding: 10px;
+  padding: ${({ theme }) => theme.spacing[3]};
   border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  font-size: ${({ theme }) => theme.fontSizes.sm};
   line-height: 1.6;
   white-space: pre-wrap;
+  text-align: left;
 `;
 
 const ButtonGroup = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top: ${({ theme }) => theme.spacing[5]};
 `;
 
 const Button = styled.button`
   flex: 1;
-  padding: 12px;
-  font-size: 15px;
-  font-weight: 500;
+  padding: ${({ theme }) => theme.spacing[3]};
+  font-size: ${({ theme }) => theme.fontSizes.base};
+  font-weight: ${({ theme }) => theme.fontWeights.medium};
   border: none;
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   cursor: pointer;
   margin-left: ${({ type }) => (type === 'agree' ? '10px' : '0')};
   background-color: ${({ type }) => (type === 'agree' ? '#F36B4D' : '#E0E0E0')};

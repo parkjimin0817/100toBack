@@ -22,7 +22,7 @@ const InputWrapper = styled.div`
 const Label = styled.label`
   text-align: left;
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: ${({ theme }) => theme.spacing[1]};
   font-size: ${({ theme }) => theme.fontSizes.base};
   color: ${({ theme }) => theme.colors.gray[400]};
 `;
@@ -31,10 +31,10 @@ const Input = styled.input`
   width: 400px;
   height: 40px;
   border: 1px solid ${({ theme }) => theme.colors.gray[300]};
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   outline: none;
   font-size: ${({ theme }) => theme.fontSizes.sm};
-  padding: 10px;
+  padding: ${({ theme }) => theme.spacing[3]};
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.gray[300]};

@@ -27,7 +27,7 @@ const InputWrapper = styled.div`
 const Label = styled.label`
   display: block;
   text-align: left;
-  margin-bottom: 4px;
+  margin-bottom: ${({ theme }) => theme.spacing[1]};
   font-size: ${({ theme }) => theme.fontSizes.base};
   color: ${({ theme }) => theme.colors.gray[400]};
 `;
@@ -42,11 +42,11 @@ const Input = styled.input`
   flex: 1;
   height: 40px;
   border: 1px solid ${({ theme }) => theme.colors.gray[300]};
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   outline: none;
   font-size: ${({ theme }) => theme.fontSizes.sm};
-  padding: 10px;
-  padding-right: 100px;
+  padding: ${({ theme }) => theme.spacing[3]};
+  padding-right: ${({ theme }) => theme.spacing[24]};
   box-sizing: border-box;
 
   &::placeholder {
@@ -58,13 +58,13 @@ const Button = styled.button`
   position: absolute;
   right: 8px;
   height: 30px;
-  padding: 0 12px;
+  padding: 0 ${({ theme }) => theme.spacing[3]};
   outline: none;
   background-color: ${({ theme }) => theme.colors.lightblue};
   color: ${({ theme }) => theme.colors.gray[800]};
   font-size: ${({ theme }) => theme.fontSizes.sm};
   border: none;
-  border-radius: 6px;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
   cursor: pointer;
 
   &:hover {
