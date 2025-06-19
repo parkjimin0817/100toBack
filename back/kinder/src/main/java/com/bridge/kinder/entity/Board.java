@@ -39,12 +39,17 @@ public class Board {// 게시판
     private LocalDateTime createDate;
     //생성일
 
-    @Column(name = "ATTACHMENT")
+    @Column(name = "ATTACHMENT", length = 100)
     private String attachment;
     //첨부파일
 
 
     //---------------------------------------------------------------------------------------------
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CENTER_NO")
+    private Center center;
+    //시설
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CLASS_NO")
     private ClassRoom classRoom;

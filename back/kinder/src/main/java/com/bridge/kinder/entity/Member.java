@@ -43,7 +43,7 @@ public class Member {// 멤버
     private String memberPhone;
     //전화번호
 
-    @Column(name = "MEMBER_TYPE", length = 10, nullable = false)
+    @Column(name = "MEMBER_TYPE", length = 20, nullable = false)
     private CommonEnums.MemberType memberType;
     //분류(시설장,교사,학부모)
 
@@ -62,7 +62,7 @@ public class Member {// 멤버
     @Column(name = "STATUS", length = 20, nullable = false)
     @Enumerated(EnumType.STRING)
     private CommonEnums.AdmissionStatus status;
-    //상태(승인, 거절)
+    //상태(승인, 거절, 대기)
 
 
     //---------------------------------------------------------------------------------------------
@@ -126,7 +126,7 @@ public class Member {// 멤버
     protected void onCreate() {
         this.createDate = LocalDateTime.now();
         if(this.status == null) {
-            this.status = CommonEnums.AdmissionStatus.REJECTED;
+            this.status = CommonEnums.AdmissionStatus.PENDING;
         }
     }
 }
