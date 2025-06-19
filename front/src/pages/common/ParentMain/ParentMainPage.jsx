@@ -7,6 +7,8 @@ import boy1 from '../../../assets/boy1.png';
 import girl1 from '../../../assets/girl1.png';
 import boy2 from '../../../assets/boy2.png';
 import ScrollWrapper from './components/ScrollWrapper';
+import MainSchedule from './components/MainSchedule';
+import { useNavigate } from 'react-router-dom';
 
 const data = [
   { name: '박지민', age: '6', gender: '남', birthdate: '20.02.02', imgurl: boy1 },
@@ -21,7 +23,9 @@ const ParentMainPage = () => {
     <Wrapper>
       <TopContent>
         <FirstContent>
-          <ContentHeader Title={'우리 아이'} Color={'lightblue'} />
+          <ChildContentHeader>
+            <Title>우리아이</Title>
+          </ChildContentHeader>
           <ChildCards>
             <ScrollWrapper>
               <ChildCard data={data} />
@@ -30,6 +34,7 @@ const ParentMainPage = () => {
         </FirstContent>
         <ScheduleContent>
           <ContentHeader Title={'일정 & 스케줄'} Color={'orange'} />
+          <MainSchedule></MainSchedule>
         </ScheduleContent>
       </TopContent>
       <BoardContent>
@@ -65,10 +70,34 @@ const FirstContent = styled.div`
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 `;
 
+const ChildContentHeader = styled.div`
+  width: 95%;
+  margin: 20px auto;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.lightblue};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+`;
+
+const Title = styled.div`
+  background-color: ${({ theme }) => theme.colors.white};
+  width: 90px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${({ theme }) => theme.colors.lightblue};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  font-size: ${({ theme }) => theme.fontSizes[5]};
+  margin-left: 10px;
+`;
+
 const ScheduleContent = styled.div`
   width: 30%;
   background-color: #ffffff;
-  border-radius: 20px;
+  border-radius: ${({ theme }) => theme.borderRadius['2xl']};
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 `;
 
@@ -76,7 +105,7 @@ const BoardContent = styled.div`
   width: 100%;
   height: 340px;
   background-color: #ffffff;
-  border-radius: 20px;
+  border-radius: ${({ theme }) => theme.borderRadius['2xl']};
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 `;
 
