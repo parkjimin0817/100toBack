@@ -5,8 +5,31 @@ import ChildImg from '../../assets/Child.png';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { List } from '../../components/ChildDummyData';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
+import AttendanceChildSchedule from '../../components/AttendanceChildSchedule';
+
+const attendanceData = [
+  {
+    child_attendance_no: 1,
+    child_no: 101,
+    class_no: 201,
+    create_date: '2025-06-17T08:30:00Z',
+    status: 'present',
+  },
+  {
+    child_attendance_no: 1,
+    child_no: 101,
+    class_no: 201,
+    create_date: '2025-06-16T08:30:00Z',
+    status: 'absent',
+  },
+  {
+    child_attendance_no: 1,
+    child_no: 101,
+    class_no: 201,
+    create_date: '2025-06-15T08:30:00Z',
+    status: 'half',
+  },
+];
 
 const ChildDetail = () => {
   const navigate = useNavigate();
@@ -33,34 +56,6 @@ const ChildDetail = () => {
       life: tab === 'life',
       attendance: tab === 'attendance',
     }); // true 또는 false로 설정
-  };
-
-  const attendanceData = [
-    {
-      child_attendance_no: 1,
-      child_no: 101,
-      class_no: 201,
-      create_date: '2025-06-17T08:30:00Z',
-      status: 'present',
-    },
-    {
-      child_attendance_no: 1,
-      child_no: 101,
-      class_no: 201,
-      create_date: '2025-06-16T08:30:00Z',
-      status: 'absent',
-    },
-    {
-      child_attendance_no: 1,
-      child_no: 101,
-      class_no: 201,
-      create_date: '2025-06-15T08:30:00Z',
-      status: 'half',
-    },
-  ];
-
-  const attendanceCall = () => {
-    const dateKey = new Date(item.create_date).toISOString().split('T')[0];
   };
 
   return (
@@ -333,21 +328,31 @@ const ChildDetail = () => {
           )}
           {select.attendance ? (
             <>
-              <StyledCalendar
-                calendarType="gregory"
-                formatDay={(locale, date) => date.toLocaleString('en', { day: 'numeric' })}
-                prev2Label={null}
-                next2Label={null}
-                minDetail="year"
-                maxDetail="month"
-                tileClassName={({ date, view }) => {
-                  if (view === 'month' && date.getDay() === 0) {
-                    return 'sunday';
-                  } else if (view === 'month' && date.getDay() === 6) {
-                    return 'saturday';
-                  }
-                }}
-              />
+              <AttendanceOutline>
+                <CalendarHeader>
+                  <h2>출석표</h2>
+                  <div>
+                    <InfoTable>
+                      <tr>
+                        <Point1></Point1>
+                        <td>출석</td>
+                      </tr>
+                      <tr>
+                        <Point2></Point2>
+                        <td>지각</td>
+                      </tr>
+                      <tr>
+                        <Point3></Point3>
+                        <td>결석</td>
+                      </tr>
+                    </InfoTable>
+                  </div>
+                </CalendarHeader>
+
+                <CalendarOutline>
+                  <AttendanceChildSchedule data={attendanceData} />
+                </CalendarOutline>
+              </AttendanceOutline>
             </>
           ) : (
             ''
@@ -360,115 +365,52 @@ const ChildDetail = () => {
 
 export default ChildDetail;
 
-const StyledCalendar = styled(Calendar)`
-  width: 90%;
-  height: 90%;
-  border: none;
+const InfoTable = styled.table`
+  border-collapse: separate;
+  border-spacing: 6px;
+`;
 
-  .react-calendar {
-    width: 100%;
+const Point1 = styled.td`
+  border-radius: ${({ theme }) => theme.borderRadius.full};
+  background-color: ${({ theme }) => theme.colors.green};
+  width: 20px;
+  height: 20px;
+`;
+const Point3 = styled.td`
+  border-radius: ${({ theme }) => theme.borderRadius.full};
+  background-color: ${({ theme }) => theme.colors.orange};
+  width: 20px;
+  height: 20px;
+`;
+const Point2 = styled.td`
+  border-radius: ${({ theme }) => theme.borderRadius.full};
+  background-color: ${({ theme }) => theme.colors.yellow};
+  width: 20px;
+  height: 20px;
+`;
 
-    background: ${({ theme }) => theme.colors.white};
-    border-radius: ${({ theme }) => theme.borderRadius.xl};
-    box-shadow: ${({ theme }) => theme.shadows.xl};
-  }
+const AttendanceOutline = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+`;
 
-  /* 요일 밑줄 제거 */
-  .react-calendar__month-view__weekdays abbr {
-    text-decoration: none;
-  }
+const CalendarHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray[300]};
+`;
 
-  /* 날짜 셀 영역을 grid로 6행 고정 */
-  .react-calendar__month-view__days {
-    display: grid !important;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(6, 1fr); /* 항상 6행 */
-    height: 90%; /* 캘린더 전체 높이 고정 */
-  }
-
-  /* 주말 색상 */
-  .sunday {
-    color: ${({ theme }) => theme.colors.lightorange};
-  }
-
-  .saturday {
-    color: ${({ theme }) => theme.colors.lightblue};
-  }
-
-  /* 네비게이션 버튼 스타일 */
-  .react-calendar__navigation__prev-button,
-  .react-calendar__navigation__next-button {
-    border: none;
-    background: transparent !important;
-    font-size: 16px;
-    width: 36px;
-    height: 36px;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background-color 0.2s ease;
-  }
-
-  .react-calendar__navigation__prev-button:hover,
-  .react-calendar__navigation__next-button:hover {
-    background-color: ${({ theme }) => theme.colors.black};
-  }
-
-  /* 현재 달/년 표시 부분 */
-  .react-calendar__navigation__label {
-    background: transparent !important;
-    font-weight: bold;
-  }
-
-  .react-calendar__navigation__label span {
-    font-size: ${({ theme }) => theme.fontSizes.xl};
-  }
-
-  .react-calendar__month-view__weekdays__weekday abbr {
-    font-size: ${({ theme }) => theme.fontSizes.base};
-  }
-
-  /* 날짜 셀 크기 축소 및 정사각형 비율 */
-  .react-calendar__tile {
-    padding: ${({ theme }) => theme.spacing[1]} !important;
-    aspect-ratio: 16 / 9;
-    height: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-    position: relative;
-
-    background: transparent !important;
-  }
-
-  .react-calendar__tile abbr {
-    font-size: ${({ theme }) => theme.fontSizes.base};
-    width: 28px;
-    height: 28px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: ${({ theme }) => theme.borderRadius.base};
-  }
-
-  /* 선택한 날짜 스타일 */
-  .react-calendar__tile--active abbr {
-    color: ${({ theme }) => theme.colors.black};
-  }
-
-  /* 오늘 날짜 (배경색 제거 + 테두리만) */
-  .react-calendar__tile--now {
-    background: transparent !important;
-  }
-
-  /* 오늘 날짜 스타일: 작고 테두리만 */
-  .react-calendar__tile--now abbr {
-    background: transparent;
-    border: 1px solid ${({ theme }) => theme.colors.black};
-  }
+const CalendarOutline = styled.div`
+  width: 100%;
+  height: 100%;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray[300]};
 `;
 
 const FooterTable = styled.table`
@@ -644,6 +586,7 @@ const DetailInfoContainer = styled.div`
   border-radius: 20px;
   background-color: white;
   padding: ${({ theme }) => theme.spacing[16]};
+  padding-top: ${({ theme }) => theme.spacing[8]};
 `;
 
 const Title = styled.h2`
