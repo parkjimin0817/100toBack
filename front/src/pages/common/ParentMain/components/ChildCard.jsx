@@ -1,14 +1,13 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import boy1 from '../../../../assets/boy1.png';
-import girl1 from '../../../../assets/girl1.png';
-import boy2 from '../../../../assets/boy2.png';
 
 const ChildCard = ({ data }) => {
+  const navigate = useNavigate();
   return (
     <>
       {data.map((item, index) => (
-        <Card key={index}>
+        <Card key={index} onClick={() => navigate('/child/detail?id=1')}>
           <ProfileDiv>
             <NameDiv> 씩씩한 {item.name} </NameDiv>
             <AgeDiv>
@@ -32,6 +31,10 @@ const Card = styled.div`
   background-color: ${({ theme }) => theme.colors.lightblue};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   flex-shrink: 0;
+
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 const ProfileDiv = styled.div`
