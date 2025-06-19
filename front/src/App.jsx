@@ -59,6 +59,7 @@ import PersonalLife from './pages/parent/PersonalLife';
 import TeacherMainPage from './pages/teacher/TeacherMainPage';
 import MyAttendance from './pages/teacher/MyAttendance';
 import ParentMainPage from './pages/common/ParentMain/ParentMainPage';
+import TeacherMainAttendance from './pages/teacher/components/TeacherMainAttendance';
 
 function App() {
   return (
