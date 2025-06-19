@@ -54,6 +54,11 @@ public class Schedule {// 일정
     //시설
 
     @ManyToOne
+    @JoinColumn(name = "CLASS_NO")
+    private ClassRoom classRoom;
+    //반
+
+    @ManyToOne
     @JoinColumn(name = "MEMBER_NO")
     private Member member;
     //멤버

@@ -55,6 +55,7 @@ public class ChildActivityLog {// 아동 생활 기록
     private Child child;
     //아동
 
+
     //---------------------------------------------------------------------------------------------
     @PrePersist
     protected void onCreate() {

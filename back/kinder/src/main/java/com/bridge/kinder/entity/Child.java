@@ -30,20 +30,20 @@ public class Child {// 아동
     private String childResidentNo;
     //아동 주민번호
 
-    @Column(name = "M_PARENTS_NAME", length = 20)
-    private String mParentsName;
-    //부 이름
-
     @Column(name = "F_PARENTS_NAME", length = 20)
     private String fParentsName;
-    //모 이름
-
-    @Column(name = "M_PARENTS_PHONE", length = 20)
-    private String mParentsPhone;
-    //부 전화번호
+    //부 이름(Father)
 
     @Column(name = "F_PARENTS_PHONE", length = 20)
     private String fParentsPhone;
+    //부 전화번호
+
+    @Column(name = "M_PARENTS_NAME", length = 20)
+    private String mParentsName;
+    //모 이름(Mother)
+
+    @Column(name = "M_PARENTS_PHONE", length = 20)
+    private String mParentsPhone;
     //모 전화번호
 
     @Column(name = "CHILD_PROFILE", length = 100)
@@ -54,10 +54,10 @@ public class Child {// 아동
     private LocalDateTime createDate;
     //생성일
 
-    @Column(name = "STATUS")
+    @Column(name = "STATUS", nullable = false)
     @Enumerated(EnumType.STRING)
     private CommonEnums.AdmissionStatus status;
-    //상태(승인, 거절)
+    //상태(승인, 거절, 대기)
 
 
     //---------------------------------------------------------------------------------------------
@@ -65,6 +65,11 @@ public class Child {// 아동
     @JoinColumn(name = "CLASS_NO")
     private ClassRoom classRoom;
     //반
+
+    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
+    @Builder.Default
+    List<Approval> approvals = new ArrayList<>();
+    //승인, 거부
 
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
     @Builder.Default

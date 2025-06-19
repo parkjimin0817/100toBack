@@ -45,6 +45,16 @@ public class ClassRoom {// 반
 
     @OneToMany(mappedBy = "classRoom", cascade = CascadeType.ALL)
     @Builder.Default
+    List<Member> members = new ArrayList<>();
+    //멤버
+
+    @OneToMany(mappedBy = "classRoom", cascade = CascadeType.ALL)
+    @Builder.Default
+    List<Child> childs= new ArrayList<>();
+    //아동
+
+    @OneToMany(mappedBy = "classRoom", cascade = CascadeType.ALL)
+    @Builder.Default
     List<ChildAttendance> childAttendances = new ArrayList<>();
     //출석
 

@@ -128,6 +128,7 @@ const ScheduleTeacher = () => {
 
   const handleDateClick = (date) => {
     const dateStr = dayjs(date).format('YYYY-MM-DD');
+    console.log(dateStr);
 
     const selectDay = dayjs(date).format('YYYY-MM-DD (ddd)');
     setSelectedDate(selectDay);
@@ -137,8 +138,8 @@ const ScheduleTeacher = () => {
   };
 
   const handleEditClick = (item) => {
-    setEditSchedule(item); // 수정할 일정 설정
-    setOpenModal(true); // 모달 열기
+    setEditSchedule(item);
+    setOpenModal(true);
   };
 
   return (

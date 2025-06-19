@@ -25,7 +25,6 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData }) => {
     onClose();
   };
 
-  // 🔧 조건부 렌더링
   if (!isOpen) return null;
 
   return (
@@ -291,7 +290,7 @@ const ModalFooter = styled.div`
   padding: ${({ theme }) => theme.spacing[2]};
   background-color: ${({ theme }) => theme.colors.gray[100]};
   border-top: 1px solid ${({ theme }) => theme.colors.gray[300]};
-  gap: ${({ theme }) => theme.spacing[6]};
+  gap: ${({ theme }) => theme.spacing[4]};
 `;
 
 const Button = styled.button`
