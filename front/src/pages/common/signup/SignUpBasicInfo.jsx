@@ -8,7 +8,7 @@ import ProfileImageUpload from './components/ProfileImageUpload';
 import PhoneInput from './components/PhoneInput';
 import NextButton from './components/NextButton';
 import { useBasicInfoForm } from '../../../hook/signup/useBasicInfoForm';
-import { useSignUpStore } from '../../../../store/signupStore';
+import { useSignUpStore } from '../../../store/signupStore';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { memberService } from '../../../api/member';

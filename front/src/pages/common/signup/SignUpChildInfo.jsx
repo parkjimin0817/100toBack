@@ -8,7 +8,7 @@ import ProfileImageUpload from './components/ProfileImageUpload';
 import ParentInfoInput from './components/ParentInfoInput';
 import CenterSearchInput from './components/CenterSearchInput';
 import NextButton from './components/NextButton';
-import { useSignUpStore } from '../../../../store/signupStore';
+import { useSignUpStore } from '../../../store/signupStore';
 
 const getStepsByType = (type) => {
   switch (type) {

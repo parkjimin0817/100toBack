@@ -17,7 +17,11 @@ export const API_ENDPOINTS = {
       `/schedule?center_no=${center_no}&class_no=${class_no}&member_no=${member_no}&create_date=${create_date}&type=${type}`,
   },
   MEMBERS: {
-    BASE: '/members',
+    BASE: '/api/members',
     CHECKID: (memberId) => `/api/members/checkId?memberId=${memberId}`,
+  },
+  APPLOVALLIST: {
+    BASE: '/approvalList',
+    BASR: 'api/',
   },
 };
