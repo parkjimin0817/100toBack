@@ -1,24 +1,13 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-const ProfileImageUpload = ({ label }) => {
+const ProfileImageUpload = ({ label, error, register }) => {
   const fileInputRef = useRef();
   const [preview, setPreview] = useState(null);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
-    const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-    if (!validTypes.includes(file.type)) {
-      alert('JPG, JPEG, PNG 파일만 업로드 가능합니다.');
-      return;
-    }
-
-    if (file.size > 200 * 1024) {
-      alert('파일 크기는 200KB 이하만 가능합니다.');
-      return;
-    }
 
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -38,11 +27,19 @@ const ProfileImageUpload = ({ label }) => {
         <HiddenInput
           type="file"
           accept="image/jpeg, image/png, image/jpg"
-          onChange={handleImageChange}
-          ref={fileInputRef}
+          {...register}
+          onChange={(e) => {
+            register.onChange(e); // yup 유효성 검사
+            handleImageChange(e); // 미리보기
+          }}
+          ref={(el) => {
+            fileInputRef.current = el; // 버튼 클릭용
+            register.ref(el); // yup 연결용
+          }}
         />
       </PreviewRow>
       <InfoText>사이즈: 150 x 150 픽셀, 파일 형식: JPG, JPEG, PNG, 용량: 200KB 이하</InfoText>
+      {error && <Message>{error}</Message>}
     </ImageUploadWrapper>
   );
 };
@@ -106,7 +103,7 @@ const InfoText = styled.div`
   line-height: 1.4;
 `;
 
-const ErrorMessage = styled.p`
+const Message = styled.p`
   color: ${({ theme }) => theme.colors.orange};
   font-size: 12px;
   margin-top: 4px;

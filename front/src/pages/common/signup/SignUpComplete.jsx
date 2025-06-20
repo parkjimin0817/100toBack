@@ -5,8 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useSignUpStore } from '../../../../store/signupStore';
 
-const getStepsByRole = (role) => {
-  switch (role) {
+const getStepsByType = (type) => {
+  switch (type) {
     case 'teacher':
       return ['약관 동의', '기본 정보 입력', '근무 정보 입력', '가입 완료'];
     case 'parent':
@@ -19,10 +19,10 @@ const getStepsByRole = (role) => {
 const SignUpComplete = () => {
   const navigate = useNavigate();
   const currentStep = 3;
-  const role = useSignUpStore((state) => state.role);
+  const type = useSignUpStore((state) => state.type);
   return (
     <CommonFind>
-      <SignUpProgressBar steps={getStepsByRole(role)} currentStep={currentStep} />
+      <SignUpProgressBar steps={getStepsByType(type)} currentStep={currentStep} />
       <Wrapper>
         <Card>
           <Icon>✔</Icon>

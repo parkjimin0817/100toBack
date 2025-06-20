@@ -11,10 +11,10 @@ import { useBasicInfoForm } from '../../../hook/signup/useBasicInfoForm';
 import { useSignUpStore } from '../../../../store/signupStore';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import axios from 'axios';
+import { memberService } from '../../../api/member';
 
-const getStepsByRole = (role) => {
-  switch (role) {
+const getStepsByType = (type) => {
+  switch (type) {
     case 'teacher':
       return ['약관 동의', '기본 정보 입력', '근무 정보 입력', '가입 완료'];
     case 'parent':
@@ -29,7 +29,7 @@ const SignUpBasicInfo = () => {
   const { register, handleSubmit, setValue, getValues, setError, clearErrors, errors, isSubmitting } =
     useBasicInfoForm();
   const setBasicInfo = useSignUpStore((state) => state.setBasicInfo);
-  const role = useSignUpStore((state) => state.role);
+  const type = useSignUpStore((state) => state.type);
 
   const [birthdate, setBirthdate] = useState({
     year: '',
@@ -39,6 +39,7 @@ const SignUpBasicInfo = () => {
   const [phone, setPhone] = useState('');
 
   const [isChecked, setIsChecked] = useState(false);
+
   const checkId = async () => {
     const id = getValues('memberId');
     if (!id) {
@@ -50,8 +51,9 @@ const SignUpBasicInfo = () => {
     }
 
     try {
-      const res = await axios.get(`/api/member/checkId?memberId=${id}`);
-      if (res.data.exists) {
+      const isDuplicate = await memberService.checkId(id);
+      if (isDuplicate) {
+        //true이미 사용중인 아이디
         setError('memberId', {
           type: 'manual',
           message: '이미 사용 중인 아이디입니다.',
@@ -60,6 +62,10 @@ const SignUpBasicInfo = () => {
       } else {
         clearErrors('memberId');
         setIsChecked(true);
+        setError('memberId', {
+          type: 'manual',
+          message: '사용 가능한 아이디입니다.',
+        });
       }
     } catch (err) {
       toast.error('중복 확인 중 오류가 발생했습니다.');
@@ -86,12 +92,12 @@ const SignUpBasicInfo = () => {
       return;
     }
     setBasicInfo(data);
-    navigate(`/signup/${role}`);
+    navigate(`/signup/${type}`);
   };
 
   return (
     <CommonFind>
-      <SignUpProgressBar steps={getStepsByRole(role)} currentStep={currentStep} />
+      <SignUpProgressBar steps={getStepsByType(type)} currentStep={currentStep} />
       <Form onSubmit={handleSubmit(onSubmit)}>
         <SignUpInput
           type="text"
@@ -99,7 +105,12 @@ const SignUpBasicInfo = () => {
           description="영문 소문자, 숫자를 포함해 6~15문자로 입력해주세요."
           showCheckButton
           onClickCheck={checkId}
-          {...register('memberId')}
+          {...register('memberId', {
+            onChange: () => {
+              setIsChecked(false);
+              clearErrors('memberId');
+            },
+          })}
           error={errors.memberId?.message}
         />
         <SignUpInput
@@ -158,7 +169,11 @@ const SignUpBasicInfo = () => {
           </SelectWrapper>
           {errors.birthdate && <ErrorMessage>{errors.birthdate.message}</ErrorMessage>}
         </BirthWrapper>
-        <ProfileImageUpload label="본인 사진 등록" />
+        <ProfileImageUpload
+          label="본인 사진 등록"
+          register={register('profileImg')}
+          error={errors.profileImg?.message}
+        />
         <PhoneInput
           label="전화번호"
           value={phone}

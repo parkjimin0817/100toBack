@@ -19,6 +19,11 @@ public class MemberServiceImpl implements MemberService {
     private final CenterRepository centerRepository;
 
     @Override
+    public boolean checkIdDuplicate(String memberId) {
+        return memberRepository.existsByMemberId(memberId);
+    }
+
+    @Override
     public String CreateManager(CreateManagerDto dto) {
         // 1. Center 저장
         Center center = dto.getCenter().toEntity();

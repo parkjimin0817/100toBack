@@ -9,8 +9,8 @@ import NextButton from './components/NextButton';
 import { useSignUpStore } from '../../../../store/signupStore';
 import { toast } from 'react-toastify';
 
-const getStepsByRole = (role) => {
-  switch (role) {
+const getStepsByType = (type) => {
+  switch (type) {
     case 'teacher':
       return ['약관 동의', '기본 정보 입력', '근무 정보 입력', '가입 완료'];
     case 'parent':
@@ -22,7 +22,7 @@ const getStepsByRole = (role) => {
 
 const TermsAgreement = () => {
   //선택 권한
-  const role = useSignUpStore((state) => state.role);
+  const type = useSignUpStore((state) => state.type);
   const currentStep = 0;
   //열려있는 모달 항목
   const [openModalKey, setOpenModalKey] = useState(null);
@@ -53,7 +53,7 @@ const TermsAgreement = () => {
   return (
     <CommonFind>
       <Container>
-        <SignUpProgressBar steps={getStepsByRole(role)} currentStep={currentStep} />
+        <SignUpProgressBar steps={getStepsByType(type)} currentStep={currentStep} />
         <Title>다음 내용에 동의해주세요</Title>
         <Wrapper>
           <AgreeAllBox>

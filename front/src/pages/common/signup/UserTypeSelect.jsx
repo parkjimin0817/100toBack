@@ -9,10 +9,10 @@ import { useSignUpStore } from '../../../../store/signupStore';
 
 const UserTypeSelect = () => {
   const navigate = useNavigate();
-  const { setRole } = useSignUpStore();
+  const { setType } = useSignUpStore();
 
-  const handleClick = (role) => {
-    setRole(role);
+  const handleClick = (type) => {
+    setType(type);
     navigate('/signup/terms');
   };
 

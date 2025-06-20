@@ -10,8 +10,8 @@ import CenterSearchInput from './components/CenterSearchInput';
 import NextButton from './components/NextButton';
 import { useSignUpStore } from '../../../../store/signupStore';
 
-const getStepsByRole = (role) => {
-  switch (role) {
+const getStepsByType = (type) => {
+  switch (type) {
     case 'teacher':
       return ['약관 동의', '기본 정보 입력', '근무 정보 입력', '가입 완료'];
     case 'parent':
@@ -23,11 +23,11 @@ const getStepsByRole = (role) => {
 
 const SignUpChildInfo = () => {
   const currentStep = 2;
-  const role = useSignUpStore((state) => state.role);
+  const type = useSignUpStore((state) => state.type);
   return (
     <CommonFind>
       <Form>
-        <SignUpProgressBar steps={getStepsByRole(role)} currentStep={currentStep} />
+        <SignUpProgressBar steps={getStepsByType(type)} currentStep={currentStep} />
         <CenterSearchInput label="아동 시설 검색" />
         <SignUpInput type="text" description="아동명을 정확하게 입력해주세요." label="아동 이름" />
         <ChildRRNInput label="아동 주민등록번호" />

@@ -9,8 +9,8 @@ import AddressInput from './components/AddressInput';
 import CenterTypeSelect from './components/CenterTypeSelect';
 import { useSignUpStore } from '../../../../store/signupStore';
 
-const getStepsByRole = (role) => {
-  switch (role) {
+const getStepsByType = (type) => {
+  switch (type) {
     case 'teacher':
       return ['약관 동의', '기본 정보 입력', '근무 정보 입력', '가입 완료'];
     case 'parent':
@@ -22,10 +22,10 @@ const getStepsByRole = (role) => {
 
 const SignUpCenterInfo = () => {
   const currentStep = 2;
-  const role = useSignUpStore((state) => state.role);
+  const type = useSignUpStore((state) => state.type);
   return (
     <CommonFind>
-      <SignUpProgressBar steps={getStepsByRole(role)} currentStep={currentStep} />
+      <SignUpProgressBar steps={getStepsByType(type)} currentStep={currentStep} />
       <Form>
         <SignUpInput type="text" label="시설명" description="시설명을 정확하게 입력해주세요" />
         <AddressInput />

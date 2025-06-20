@@ -13,7 +13,11 @@ const SignUpInput = ({ type, label, description, showCheckButton, onClickCheck, 
           </CheckButton>
         )}
       </InputBox>
-      {error && <ErrorMessage>{error}</ErrorMessage>}
+      {error && (
+        <Message $isError={error !== '사용 가능한 아이디입니다.' && error !== '비밀번호가 일치합니다.'}>
+          {error}
+        </Message>
+      )}
     </InputWrapper>
   );
 };
@@ -69,9 +73,9 @@ const CheckButton = styled.button`
   cursor: pointer;
 `;
 
-const ErrorMessage = styled.p`
-  color: ${({ theme }) => theme.colors.orange};
-  font-size: 12px;
+const Message = styled.p`
+  color: ${({ $isError, theme }) => ($isError ? theme.colors.orange : theme.colors.green)};
+  font-size: ${({ theme }) => theme.fontSizes.sm};
   margin-top: 4px;
   margin-left: 4px;
   text-align: left;

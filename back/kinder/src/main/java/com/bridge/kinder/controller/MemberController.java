@@ -15,6 +15,13 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    //아이디 중복체크
+    @GetMapping("/checkId")
+    public ResponseEntity<Boolean> checkId(@RequestParam String memberId){
+        boolean exists = memberService.checkIdDuplicate(memberId); //true : 이미 사용중인 아이디, false :  사용가능한 아이디
+        return ResponseEntity.ok(exists);
+    }
+
     //시설장(시설) 생성
     @PostMapping("/manager")
     public ResponseEntity<String> registerManager(@RequestBody CreateManagerDto dto) {
