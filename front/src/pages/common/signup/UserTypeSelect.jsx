@@ -5,12 +5,15 @@ import teacherImg from '../../../assets/teacher.png';
 import centerImg from '../../../assets/center.png';
 import CommonFind from '../../../components/Common/CommonFind';
 import { useNavigate } from 'react-router-dom';
+import { useSignUpStore } from '../../../../store/signupStore';
 
 const UserTypeSelect = () => {
   const navigate = useNavigate();
+  const { setType } = useSignUpStore();
 
-  const handleClick = (userType) => {
-    navigate('/signup/terms', { state: { userType } });
+  const handleClick = (type) => {
+    setType(type);
+    navigate('/signup/terms');
   };
 
   return (
@@ -30,7 +33,7 @@ const UserTypeSelect = () => {
             description="교사는 본인의 스케줄 관리 및 행정 업무 처리 등 다양한 기능을 편리하게 이용하실 수 있습니다. "
           />
           <UserTypeSelectCard
-            onClick={() => handleClick('center')}
+            onClick={() => handleClick('manager')}
             title="시설장 회원가입"
             imgSrc={centerImg}
             description="시설장은 시설을 등록하고 운영 관리 및 행정 업무 처리 등 다양한 기능을 편리하게 이용하실 수 있습니다."

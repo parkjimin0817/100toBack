@@ -18,6 +18,12 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final CenterRepository centerRepository;
 
+    //회원가입 시 아이디 중복 체크
+    @Override
+    public boolean checkIdDuplicate(String memberId) {
+        return memberRepository.existsByMemberId(memberId);
+    }
+
     //시설장(센터) 생성
     @Override
     public String createManager(CreateManagerDto dto) {

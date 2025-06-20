@@ -13,6 +13,16 @@ public class MemberRepositoryImpl implements MemberRepository {
     @PersistenceContext
     private EntityManager em;
 
+    //아이디 중복체크
+    @Override
+    public boolean existsByMemberId(String memberId) {
+        String query = "SELECT COUNT(m) FROM Member m WHERE m.memberId = :memberId";
+        Long count = em.createQuery(query, Long.class)
+                .setParameter("memberId", memberId)
+                .getSingleResult();
+        return count > 0;
+    }
+
     //멤버 생성
     @Override
     public void save(Member member) {
