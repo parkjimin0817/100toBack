@@ -19,7 +19,7 @@ public class CenterController {
     //시설 목록 가져오기
     @GetMapping("/centers")
     public ResponseEntity<List<CenterDto.Response>> getCenters(){
-
+        return null;
     }
 
 
