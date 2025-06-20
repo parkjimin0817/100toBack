@@ -56,8 +56,10 @@ import TeacherIntroList from './pages/manager/TeacherIntroList';
 import ScheduleTeacher from './pages/teacher/ScheduleTeacher';
 import PersonalHealth from './pages/parent/PersonalHealth';
 import PersonalLife from './pages/parent/PersonalLife';
+import TeacherMainPage from './pages/teacher/TeacherMainPage';
 import MyAttendance from './pages/teacher/MyAttendance';
 import ParentMainPage from './pages/common/ParentMain/ParentMainPage';
+import TeacherMainAttendance from './pages/teacher/components/TeacherMainAttendance';
 
 function App() {
   return (
@@ -130,6 +132,8 @@ function App() {
             <Route path="/child/healthlist" element={<PersonalHealth />} />
             {/* 개인 건강체크리스트 */}
             <Route path="/child/lifelist" element={<PersonalLife />} />
+            {/* 교사 메인페이지 */}
+            <Route path="/teacher/main" element={<TeacherMainPage />} />
             {/* 교사 근태 관리 */}
             <Route path="/teacher/myattendance" element={<MyAttendance />} />
           </Route>
