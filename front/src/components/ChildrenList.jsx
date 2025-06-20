@@ -1,13 +1,24 @@
-import React from 'react';
 import styled from 'styled-components';
+import { css } from 'styled-components';
 import ChildImg from '../assets/Child.png';
 import { useNavigate } from 'react-router-dom';
 import { List } from './ChildDummyData';
+import { useState } from 'react';
 
 // 하드코딩된 예시 데이터
 
 // ChildrenList.jsx 내부
-const ChildrenList = ({ showAll, sortBy, roleBy, classFilter, Color, nameFilter }) => {
+const ChildrenList = ({
+  showAll,
+  sortBy,
+  roleBy,
+  classFilter,
+  Color,
+  nameFilter,
+  classPlacement,
+  selectedId,
+  setSelectedId,
+}) => {
   const navigate = useNavigate();
   let list = [...List];
 
@@ -42,11 +53,16 @@ const ChildrenList = ({ showAll, sortBy, roleBy, classFilter, Color, nameFilter 
         {list.map((child) => (
           <Card
             key={child.id}
+            className={classPlacement && selectedId === child.id ? 'selected' : ''}
             onClick={() => {
-              if (child.role === 'child') {
-                navigate(`/child/detail?id=${child.id}`);
-              } else if (child.role === 'teacher') {
-                navigate(`/teacherattendance?id=${child.id}`);
+              if (classPlacement) {
+                setSelectedId(child.id);
+              } else {
+                if (child.role === 'child') {
+                  navigate(`/child/detail?id=${child.id}`);
+                } else if (child.role === 'teacher') {
+                  navigate(`/teacherattendance?id=${child.id}`);
+                }
               }
             }}
           >
@@ -91,6 +107,13 @@ const Card = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &.selected {
+    transform: translateY(-15px);
+  }
 `;
 
 const PictureBox = styled.div`
@@ -101,9 +124,10 @@ const PictureBox = styled.div`
   height: 160px;
   box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.25);
   border-radius: 5px;
+  transition: border 0.2s ease;
   &:hover {
-    border: solid 5px ${({ theme, color }) => theme.colors[color]};
     cursor: pointer;
+    border: solid 5px ${({ theme }) => theme.colors.blue};
   }
 `;
 
