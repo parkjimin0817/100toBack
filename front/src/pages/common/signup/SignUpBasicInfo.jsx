@@ -169,11 +169,7 @@ const SignUpBasicInfo = () => {
           </SelectWrapper>
           {errors.birthdate && <ErrorMessage>{errors.birthdate.message}</ErrorMessage>}
         </BirthWrapper>
-        <ProfileImageUpload
-          label="본인 사진 등록"
-          register={register('profileImg')}
-          error={errors.profileImg?.message}
-        />
+        <ProfileImageUpload label="본인 사진 등록" {...register('profileImg')} error={errors.profileImg?.message} />
         <PhoneInput
           label="전화번호"
           value={phone}

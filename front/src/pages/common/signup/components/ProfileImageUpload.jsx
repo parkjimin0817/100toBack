@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-const ProfileImageUpload = ({ label, error, register }) => {
+const ProfileImageUpload = ({ label, error, onChange, ref, name }) => {
   const fileInputRef = useRef();
   const [preview, setPreview] = useState(null);
 
@@ -27,14 +27,14 @@ const ProfileImageUpload = ({ label, error, register }) => {
         <HiddenInput
           type="file"
           accept="image/jpeg, image/png, image/jpg"
-          {...register}
+          name={name}
           onChange={(e) => {
-            register.onChange(e); // yup 유효성 검사
-            handleImageChange(e); // 미리보기
+            onChange(e);
+            handleImageChange(e);
           }}
           ref={(el) => {
-            fileInputRef.current = el; // 버튼 클릭용
-            register.ref(el); // yup 연결용
+            fileInputRef.current = el;
+            if (ref) ref(el);
           }}
         />
       </PreviewRow>

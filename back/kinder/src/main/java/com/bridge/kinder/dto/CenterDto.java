@@ -45,7 +45,5 @@ public class CenterDto {
                     .status(center.getStatus())
                     .build();
         }
-
     }
-
 }
