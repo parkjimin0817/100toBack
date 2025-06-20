@@ -50,10 +50,10 @@ const ChildrenList = ({ showAll, sortBy, roleBy, classFilter, Color, nameFilter 
               }
             }}
           >
-            <PictureBox Color={Color}>
+            <PictureBox color={Color}>
               <ChildPic src={ChildImg} alt="아이사진" />
             </PictureBox>
-            <NameBox Color={Color}>
+            <NameBox color={Color}>
               <NameLine>{child.name}</NameLine>
               <ClassLine>{child.className || '미배정'}</ClassLine>
             </NameBox>
@@ -102,7 +102,7 @@ const PictureBox = styled.div`
   box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.25);
   border-radius: 5px;
   &:hover {
-    border: solid 5px ${({ theme, Color }) => theme.colors[Color]};
+    border: solid 5px ${({ theme, color }) => theme.colors[color]};
     cursor: pointer;
   }
 `;
@@ -118,7 +118,7 @@ const NameBox = styled.div`
   transform: translateX(-50%);
   width: 100px;
   height: 50px;
-  background-color: ${({ theme, Color }) => theme.colors[Color]};
+  background-color: ${({ theme, color }) => theme.colors[color]};
   border-radius: 5px;
   display: flex;
   flex-direction: column;
