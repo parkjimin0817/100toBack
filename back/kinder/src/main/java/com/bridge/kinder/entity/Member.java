@@ -4,6 +4,7 @@ import com.bridge.kinder.enums.CommonEnums;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,7 +29,7 @@ public class Member {// 멤버
     //이름
 
     @Column(name = "MEBER_BIRTH", nullable = false)
-    private Date memberBirth;
+    private LocalDate memberBirth;
     //생년월일
 
     @Column(name = "MEMBER_ID", length = 30, nullable = false)

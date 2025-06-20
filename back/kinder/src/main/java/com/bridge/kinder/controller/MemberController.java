@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @CrossOrigin("http://localhost:5173")
 @RestController
 @RequestMapping("/api/members")
@@ -29,17 +31,10 @@ public class MemberController {
         return ResponseEntity.ok(memberNo);
     }
 
-    //교사 생성
-    @PostMapping("/teacher")
-    public ResponseEntity<String> createTeacher(@RequestBody MemberDto.CreateMember dto) {
-        String memberNo = memberService.createTeacher(dto);
-        return ResponseEntity.ok(memberNo);
-    }
-
-    //학부모 생성
-    @PostMapping("/parent")
-    public ResponseEntity<String> createParent(@RequestBody MemberDto.CreateMember dto) {
-        String memberNo = memberService.createParent(dto);
+    //교사/학부모 생성
+    @PostMapping("/member")
+    public ResponseEntity<String> createMember(@ModelAttribute MemberDto.CreateMember dto) throws IOException {
+        String memberNo = memberService.createMember(dto);
         return ResponseEntity.ok(memberNo);
     }
 
