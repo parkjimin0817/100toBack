@@ -6,18 +6,16 @@ export const useSignUpStore = create(
     (set, get) => ({
       type: '', //userSelect
       basicInfo: {}, //기본정보
-      extraInfo: {}, // 근무지, 아동, 시설 정보 입력
 
       setType: (type) => set({ type }),
       setBasicInfo: (data) => set({ basicInfo: data }),
-      setExtraInfo: (data) => set({ extraInfo: data }),
 
       getAll: () => {
-        const { type, basicInfo, extraInfo } = get();
-        return { type, ...basicInfo, ...extraInfo };
+        const { type, basicInfo } = get();
+        return { type, ...basicInfo };
       },
 
-      resetSignUp: () => set({ type: '', basicInfo: {}, extraInfo: {} }),
+      resetSignUp: () => set({ type: '', basicInfo: {} }),
     }),
 
     {

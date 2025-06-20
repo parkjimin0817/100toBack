@@ -28,8 +28,8 @@ const SignUpBasicInfo = () => {
   const navigate = useNavigate();
   const { register, handleSubmit, setValue, getValues, setError, clearErrors, errors, isSubmitting } =
     useBasicInfoForm();
-  const setBasicInfo = useSignUpStore((state) => state.setBasicInfo);
   const type = useSignUpStore((state) => state.type);
+  const setBasicInfo = useSignUpStore((state) => state.setBasicInfo);
 
   const [birthdate, setBirthdate] = useState({
     year: '',
@@ -91,7 +91,8 @@ const SignUpBasicInfo = () => {
       });
       return;
     }
-    setBasicInfo(data);
+    const { confirmPassword, ...rest } = data;
+    setBasicInfo(rest);
     navigate(`/signup/${type}`);
   };
 

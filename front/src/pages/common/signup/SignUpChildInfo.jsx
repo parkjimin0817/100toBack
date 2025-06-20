@@ -9,6 +9,7 @@ import ParentInfoInput from './components/ParentInfoInput';
 import CenterSearchInput from './components/CenterSearchInput';
 import NextButton from './components/NextButton';
 import { useSignUpStore } from '../../../store/signupStore';
+import { useCenterList } from '../../../hook/useCenterList';
 
 const getStepsByType = (type) => {
   switch (type) {
@@ -24,11 +25,12 @@ const getStepsByType = (type) => {
 const SignUpChildInfo = () => {
   const currentStep = 2;
   const type = useSignUpStore((state) => state.type);
+  const { centers, loading } = useCenterList();
   return (
     <CommonFind>
       <Form>
         <SignUpProgressBar steps={getStepsByType(type)} currentStep={currentStep} />
-        <CenterSearchInput label="아동 시설 검색" />
+        <CenterSearchInput label="아동 시설 검색" data={centers} loading={loading} />
         <SignUpInput type="text" description="아동명을 정확하게 입력해주세요." label="아동 이름" />
         <ChildRRNInput label="아동 주민등록번호" />
         <ProfileImageUpload label="아동 사진 등록" />
