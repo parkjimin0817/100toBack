@@ -4,7 +4,9 @@ import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.enums.CommonEnums;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -17,7 +19,7 @@ public class MemberDto {
     public static class CreateManager {
 
         private String member_name;
-        private Date member_birth;
+        private LocalDate member_birth;
         private String member_id;
         private String member_pwd;
         private String member_phone;
@@ -46,17 +48,17 @@ public class MemberDto {
     @NoArgsConstructor
     public static class CreateMember {
         private String member_name;
-        private Date member_birth;
+        private LocalDate member_birth;
         private String member_id;
         private String member_pwd;
         private String member_phone;
         private CommonEnums.MemberType member_type;
-        private String member_profile;
+        private MultipartFile member_profile;
         private String address;
 
         private int center_no;
 
-        public Member toEntity(Center center) {
+        public Member toEntity(Center center, String profilePath) {
             return Member.builder()
                     .memberName(member_name)
                     .memberBirth(member_birth)
@@ -64,7 +66,7 @@ public class MemberDto {
                     .memberPwd(member_pwd)
                     .memberPhone(member_phone)
                     .memberType(member_type)
-                    .memberProfile(member_profile)
+                    .memberProfile(profilePath)
                     .address(address)
                     .center(center)
                     .build();
@@ -80,7 +82,7 @@ public class MemberDto {
     public static class Response {
         private int member_no;
         private String member_name;
-        private Date member_birth;
+        private LocalDate member_birth;
         private String member_id;
         private String member_pwd;
         private String member_phone;

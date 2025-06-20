@@ -22,6 +22,5 @@ export const API_ENDPOINTS = {
   },
   APPLOVALLIST: {
     BASE: '/approvalList',
-    BASR: 'api/',
   },
 };
