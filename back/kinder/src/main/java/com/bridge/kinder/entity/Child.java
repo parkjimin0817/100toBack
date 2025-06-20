@@ -86,6 +86,7 @@ public class Child {// 아동
     //아동 건강 정보
 
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     List<ChildHealthLog> childHealthLogs = new ArrayList<>();
     //아동 건강 기록
 
@@ -94,6 +95,7 @@ public class Child {// 아동
     //아동 생활 정보
 
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     List<ChildActivityLog> childActivityLogs = new ArrayList<>();
     //아동 생활 기록
 

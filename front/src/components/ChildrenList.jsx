@@ -66,10 +66,10 @@ const ChildrenList = ({
               }
             }}
           >
-            <PictureBox className={classPlacement && selectedId === child.id ? 'selected' : ''} Color={Color}>
+            <PictureBox color={Color}>
               <ChildPic src={ChildImg} alt="아이사진" />
             </PictureBox>
-            <NameBox Color={Color}>
+            <NameBox color={Color}>
               <NameLine>{child.name}</NameLine>
               <ClassLine>{child.className || '미배정'}</ClassLine>
             </NameBox>
@@ -112,7 +112,7 @@ const Card = styled.div`
     box-shadow 0.2s ease;
 
   &.selected {
-    transform: translateY(-10px);
+    transform: translateY(-15px);
   }
 `;
 
@@ -127,9 +127,6 @@ const PictureBox = styled.div`
   transition: border 0.2s ease;
   &:hover {
     cursor: pointer;
-  }
-
-  &.selected {
     border: solid 5px ${({ theme }) => theme.colors.blue};
   }
 `;
@@ -145,7 +142,7 @@ const NameBox = styled.div`
   transform: translateX(-50%);
   width: 100px;
   height: 50px;
-  background-color: ${({ theme, Color }) => theme.colors[Color]};
+  background-color: ${({ theme, color }) => theme.colors[color]};
   border-radius: 5px;
   display: flex;
   flex-direction: column;

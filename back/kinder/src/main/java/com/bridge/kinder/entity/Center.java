@@ -38,6 +38,11 @@ public class Center {// 시설
     private String centerTel;
     //시설 연락처
 
+    @Column(name = "STATUS", length = 20)
+    @Enumerated(EnumType.STRING)
+    private CommonEnums.AdmissionStatus status;
+    //상태(승인, 거절, 대기)
+
 
     //---------------------------------------------------------------------------------------------
     @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
@@ -76,5 +81,12 @@ public class Center {// 시설
     //반
 
 
+    //---------------------------------------------------------------------------------------------
+    @PrePersist
+    protected void onCreate() {
+        if(this.status == null) {
+            this.status = CommonEnums.AdmissionStatus.PENDING;
+        }
+    }
 
 }

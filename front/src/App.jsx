@@ -63,6 +63,7 @@ import TeacherMainAttendance from './pages/teacher/components/TeacherMainAttenda
 import ParentMyPage from './pages/parent/ParentMyPage';
 import AddChild from './pages/parent/AddChild';
 import SearchChild from './pages/parent/SearchChild';
+import ErrorPage from './pages/ErrorPage';
 
 function App() {
   return (
@@ -106,48 +107,108 @@ function App() {
             {/* 회원가입 승인 리스트(시설장) */}
             <Route path="/approvalList" element={<ApprovalList />}></Route>
             {/* 시설장 승인 리스트(관리자) */}
+            {/**
+             * 관리자
+             *
+             * 1. 관리자 시설장 회원가입 승인
+             *
+             * */}
             <Route path="/approvalListAdmin" element={<ApprovalListAdmin />} />
-            {/* 교사 휴가 워케이션 신청 페이지 */}
-            <Route path="/teacher/workcation" element={<MyVacation />} />
-            {/* 교사 아동 건강 체크리스트 페이지 */}
-            <Route path="/childhealthcheck" element={<ChildHealthCheck />} />
-            {/* 교사 아동 건강 체크리스트 페이지 */}
-            <Route path="/childlifecheck" element={<ChildLifeCheck />} />
-            {/* 시설장 휴가/워케이션 리스트 */}
-            <Route path="/vacationList" element={<VacationList />}></Route>
-            {/* 시설장 마이페이지  페이지 */}
-            <Route path="/manager/mypage" element={<ManagerMyPage />} />
-            {/* 교사 건강관리 목록 페이지 */}
-            <Route path="/teacherhealth" element={<MyHealth />} />
-            {/* 교사 건강관리 상세 페이지 */}
-            <Route path="/myhealth/:id" element={<MyHealthDetail />} />
-            {/* 교사 건강관리 작성 페이지 */}
-            <Route path="/teacherhealth/write" element={<MyHealthForm />} />
-            {/* 교사 건강관리 수정 페이지 */}
-            <Route path="/myhealth/edit/:id" element={<MyHealthForm />} />
-            {/* 교사 학부모 연락처 조회 페이지 */}
-            <Route path="/teacher/parentcontactinfo" element={<ParentContact />} />
-            {/* 유치원 일정관리(교사) */}
-            <Route path="/ScheduleTeacher" element={<ScheduleTeacher />} />
-            {/* 교사 마이페이지 */}
-            <Route path="/teacher/mypage" element={<TeacherMyPage />} />
-            {/* 아동 출결 페이지 */}
-            <Route path="/childattendance" element={<AttendancePage />} />
-            {/* 시설장 교사 근태 관리 */}
-            <Route path="/manager/teacherattendance" element={<TeacherAttendance />} />
-            {/* 시설장 교사 소개 및 조회 */}
-            <Route path="/manager/introteacher" element={<TeacherIntroList />} />
-            {/* 개인 건강체크리스트 */}
-            <Route path="/child/healthlist" element={<PersonalHealth />} />
-            {/* 개인 건강체크리스트 */}
-            <Route path="/child/lifelist" element={<PersonalLife />} />
-            {/* 교사 메인페이지 */}
+            {/**
+             * 학부모
+             *
+             * 1. 학부모 메인페이지
+             *
+             * */}
+            <Route path="/parent/main" element={<ParentMainPage />} />
+
+            {/**
+             * 교사
+             *
+             * 1. 교사 메인페이지
+             * 2. 교사 건강 관리 리스트 페이지
+             * 3. 교사 건강 상세보기 페이지
+             * 4. 교사 건강 작성 페이지
+             * 5. 교사 건강 수정 페이지
+             * 6. 학부모 연락처 페이지
+             * 7. 교사 개인, 유치원 일정 관리 페이지
+             * 8. 교사 근태 관리 페이지
+             * 9. 교사 마이페이지
+             *
+             * */}
             <Route path="/teacher/main" element={<TeacherMainPage />} />
-            {/* 교사 근태 관리 */}
+            <Route path="/teacherhealth" element={<MyHealth />} />
+            <Route path="/myhealth/:id" element={<MyHealthDetail />} />
+            <Route path="/teacherhealth/write" element={<MyHealthForm />} />
+            <Route path="/myhealth/edit/:id" element={<MyHealthForm />} />
+            <Route path="/teacher/parentcontactinfo" element={<ParentContact />} />
+            <Route path="/scheduleTeacher" element={<ScheduleTeacher />} />
             <Route path="/teacher/myattendance" element={<MyAttendance />} />
+            <Route path="/teacher/mypage" element={<TeacherMyPage />} />
+
+            {/**
+             * 시설장
+             *
+             * 1. 시설장 마이페이지
+             * 2. 시설장 반 배정 페이지
+             * 3. 시설장 교사 목록 리스트 페이지
+             * 4. 시설장 교사, 회원가입 승인 페이지
+             * 5. 시설장 교사 휴가 / 워케이션 관리 페이지
+             * 6. 시설장 교사 근태 관리 페이지
+             * 7. 시설장 교사 소개 및 조회 페이지
+             *
+             * 8. 시설장 교사 상세보기 페이지(만들어야함)
+             *
+             *  */}
+            <Route path="/manager/mypage" element={<ManagerMyPage />} />
+            <Route path="/manager/classplacement" element={<ClassPlacement />} />
+            <Route path="/manager/teacherlist" element={<TeacherList />} />
+            <Route path="/approvalList" element={<ApprovalList />} />
+            <Route path="/vacationList" element={<VacationList />} />
+            <Route path="/manager/teacherattendance" element={<TeacherAttendance />} />
+            <Route path="/manager/introteacher" element={<TeacherIntroList />} />
+
+            {/**
+             * 교사, 시설장 공용
+             *
+             * 1. 아동 목록 페이지
+             * 2. 유치원 반 리스트 페이지
+             * 3. 아동 건강 체크리스트 작성 및 수정 페이지
+             * 4. 아동 생활 체크리스트 작성 및 수정 페이지
+             * 5. 아동 일과표 반 리스트 페이지
+             * 6. 일과표 반 상세보기
+             * 7. 아동 상세보기
+             * 8. 교사 휴가 관리 페이지
+             *
+             *  */}
+            <Route path="/childlist" element={<ChildList />} />
+            <Route path="/classlist" element={<AttendanceClassList />} />
+            <Route path="/childhealthcheck" element={<ChildHealthCheck />} />
+            <Route path="/childlifecheck" element={<ChildLifeCheck />} />
+            <Route path="/daily" element={<DailySchedule />} />
+            <Route path="/dailyDetail/:SCHADULE_NO" element={<DailyScheduleDetail />} />
+            <Route path="/child/detail" element={<ChildDetail />} />
+            <Route path="/teacher/workcation" element={<MyVacation />} />
+
+            {/**
+             * 공용
+             *
+             * 1. 가정통신문 페이지
+             * 2. 아동 건강 리스트 페이지
+             * 3. 아동 생활 리스트 페이지
+             *
+             *  */}
+            <Route path="/familycommunity/list" element={<FamilyCommunityPage />} />
+            <Route path="/child/healthlist" element={<PersonalHealth />} />
+            <Route path="/child/lifelist" element={<PersonalLife />} />
+
+            {/* 수정필요(navigator) */}
+            <Route path="/childattendance" element={<AttendancePage />} />
           </Route>
+          {/* 공통 회원가입, 로그인, 아이디찾기, 비밀번호 찾기 */}
+
           {/* Login Page */}
-          <Route path="/login" element={<LoginPage />}></Route>
+          <Route path="/" element={<LoginPage />} />
           {/* 회원가입 권한 선택 */}
           <Route path="/signup/userselect" element={<UserTypeSelect />} />
           {/* 회원가입 약관 동의 */}
@@ -157,22 +218,31 @@ function App() {
           <Route path="/signup/teacher" element={<SignUpWorkSpaceInfo />} />
           <Route path="/signup/complete" element={<SignUpComplete />} />
           <Route path="/signup/parent" element={<SignUpChildInfo />} />
-          <Route path="/signup/center" element={<SignUpCenterInfo />} />
+
+          <Route path="/signup/manager" element={<SignUpCenterInfo />} />
           {/* Regist Page */}
           <Route path="/regist" element={<Home />}></Route>
+
+          <Route path="/signup/center" element={<SignUpCenterInfo />} />
+
           {/* Find ID Page */}
-          <Route path="/findid" element={<SearchId />}></Route>
+          <Route path="/findid" element={<SearchId />} />
           {/* Find ID Success Page */}
-          <Route path="/findidsuccess" element={<SeachIdSuccess />}></Route>
+          <Route path="/findidsuccess" element={<SeachIdSuccess />} />
           {/* Find Password Page */}
-          <Route path="/findpwd" element={<SearchPassword />}></Route>
+          <Route path="/findpwd" element={<SearchPassword />} />
           {/* Find Password Page -처음으로 나오는 비밀번호 찾기 페이지*/}
-          <Route path="/authenticationuser" element={<AuthenticationUser />}></Route>
           {/* authenticationuser -비밀번호 찾기 사용자인증 페이지  */}
-          <Route path="/changepwd" element={<ChangePassword />}></Route>
+          <Route path="/authenticationuser" element={<AuthenticationUser />} />
           {/* Change Password Page - 비밀번호 재설정 페이지 */}
+          <Route path="/changepwd" element={<ChangePassword />} />
+
           {/* 404 Not Found */}
-          <Route path="*" element={<Home />}></Route>
+          <Route path="*" element={<ErrorPage />} />
+
+          {/* Regist Page */}
+          <Route path="/regist" element={<Home />} />
+          <Route path="/home" element={<Home />} />
         </Routes>
       </Router>
       <ToastContainer

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import { useState } from 'react';
-import CustomCalendar from '../common/CustomCalendar';
+import CustomCalendar from '../../components/CustomCalendar';
 import ScheduleList from './components/ScheduleList';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';

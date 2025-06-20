@@ -43,11 +43,11 @@ const ClassPlacement = () => {
         <ContentHeader Title="반 배정" Color="blue" ButtonProps={headerButtons} />
 
         <ButtonLine>
-          <ToggleButton active={showAll} onClick={() => setShowAll(true)}>
+          <ToggleButton $active={showAll} onClick={() => setShowAll(true)}>
             전체
           </ToggleButton>
 
-          <ToggleButton active={!showAll} onClick={() => setShowAll(false)}>
+          <ToggleButton $active={!showAll} onClick={() => setShowAll(false)}>
             미배정
           </ToggleButton>
           <DropdownLine>
@@ -98,7 +98,8 @@ const ButtonLine = styled.div`
   gap: 25px;
 `;
 
-const ToggleButton = styled.button`
+const ToggleButton = styled.button.attrs({})`
+  background-color: ${({ $active }) => ($active ? '#1A748E40' : '#8FD7EB40')};
   width: 82px;
   height: 36px;
   margin-top: 30px;
@@ -107,8 +108,6 @@ const ToggleButton = styled.button`
   color: black;
   font-weight: bold;
   font-size: 16px;
-
-  background-color: ${(props) => (props.active ? '#1A748E40' /* 선택된 버튼 */ : '#8FD7EB40')}; /* 선택 안된 버튼 */
 `;
 
 const DropdownLine = styled.div`

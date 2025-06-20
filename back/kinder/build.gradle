@@ -36,6 +36,8 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 	runtimeOnly 'com.h2database:h2'
+
+	implementation 'net.nurigo:sdk:4.3.0'
 }
 
 tasks.named('test') {

@@ -3,7 +3,7 @@ import ContentHeader from '../components/Common/ContentHeader';
 import styled from 'styled-components';
 import AttendanceList from '../components/Common/AttendanceList';
 import { useNavigate } from 'react-router-dom';
-import CustomCalendar from './common/CustomCalendar';
+import CustomCalendar from '../components/CustomCalendar';
 import { useState } from 'react';
 
 const data = [

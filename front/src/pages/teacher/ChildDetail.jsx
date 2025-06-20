@@ -333,18 +333,20 @@ const ChildDetail = () => {
                   <h2>출석표</h2>
                   <div>
                     <InfoTable>
-                      <tr>
-                        <Point1></Point1>
-                        <td>출석</td>
-                      </tr>
-                      <tr>
-                        <Point2></Point2>
-                        <td>지각</td>
-                      </tr>
-                      <tr>
-                        <Point3></Point3>
-                        <td>결석</td>
-                      </tr>
+                      <tbody>
+                        <tr>
+                          <Point1></Point1>
+                          <td>출석</td>
+                        </tr>
+                        <tr>
+                          <Point2></Point2>
+                          <td>지각</td>
+                        </tr>
+                        <tr>
+                          <Point3></Point3>
+                          <td>결석</td>
+                        </tr>
+                      </tbody>
                     </InfoTable>
                   </div>
                 </CalendarHeader>

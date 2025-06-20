@@ -3,15 +3,26 @@ import CommonFind from '../../../components/Common/CommonFind';
 import SignUpProgressBar from './components/SignUpProgressBar';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useSignUpStore } from '../../../store/signupStore';
 
-const steps = ['약관 동의', '기본 정보 입력', '근무 정보 입력', '가입 완료'];
+const getStepsByType = (type) => {
+  switch (type) {
+    case 'teacher':
+      return ['약관 동의', '기본 정보 입력', '근무 정보 입력', '가입 완료'];
+    case 'parent':
+      return ['약관 동의', '기본 정보 입력', '아동 정보 입력', '가입 완료'];
+    case 'manager':
+      return ['약관 동의', '기본 정보 입력', '시설 정보 입력', '가입 완료'];
+  }
+};
 
 const SignUpComplete = () => {
   const navigate = useNavigate();
   const currentStep = 3;
+  const type = useSignUpStore((state) => state.type);
   return (
     <CommonFind>
-      <SignUpProgressBar steps={steps} currentStep={currentStep} />
+      <SignUpProgressBar steps={getStepsByType(type)} currentStep={currentStep} />
       <Wrapper>
         <Card>
           <Icon>✔</Icon>
