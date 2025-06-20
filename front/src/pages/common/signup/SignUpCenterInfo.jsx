@@ -7,7 +7,7 @@ import NextButton from './components/NextButton';
 import SignUpInput from './components/SignUpInput';
 import AddressInput from './components/AddressInput';
 import CenterTypeSelect from './components/CenterTypeSelect';
-import { useSignUpStore } from '../../../../store/signupStore';
+import { useSignUpStore } from '../../../store/signupStore';
 
 const getStepsByType = (type) => {
   switch (type) {
