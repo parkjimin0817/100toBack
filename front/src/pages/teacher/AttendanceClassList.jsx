@@ -55,7 +55,7 @@ const AttendanceClassList = () => {
         Color={'orange'}
         ButtonProps={[{ Title: '뒤로가기', func: () => navigate(-1) }]}
       />
-      <ClassRoomCard rooms={thermeData} address={'/childlist'} />
+      <ClassRoomCard rooms={thermeData} address={'/childattendance'} />
     </Content>
   );
 };
