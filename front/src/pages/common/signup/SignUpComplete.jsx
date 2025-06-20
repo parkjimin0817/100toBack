@@ -3,7 +3,7 @@ import CommonFind from '../../../components/Common/CommonFind';
 import SignUpProgressBar from './components/SignUpProgressBar';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useSignUpStore } from '../../../../store/signupStore';
+import { useSignUpStore } from '../../../store/signupStore';
 
 const getStepsByType = (type) => {
   switch (type) {

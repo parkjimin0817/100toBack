@@ -6,7 +6,7 @@ import AgreeModal from './components/AgreeModal';
 import modalContents from '../../../assets/agreement';
 import CommonFind from '../../../components/Common/CommonFind';
 import NextButton from './components/NextButton';
-import { useSignUpStore } from '../../../../store/signupStore';
+import { useSignUpStore } from '../../../store/signupStore';
 import { toast } from 'react-toastify';
 
 const getStepsByType = (type) => {

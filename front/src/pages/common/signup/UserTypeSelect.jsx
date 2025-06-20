@@ -5,7 +5,7 @@ import teacherImg from '../../../assets/teacher.png';
 import centerImg from '../../../assets/center.png';
 import CommonFind from '../../../components/Common/CommonFind';
 import { useNavigate } from 'react-router-dom';
-import { useSignUpStore } from '../../../../store/signupStore';
+import { useSignUpStore } from '../../../store/signupStore';
 
 const UserTypeSelect = () => {
   const navigate = useNavigate();

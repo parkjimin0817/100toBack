@@ -5,7 +5,7 @@ import SignUpInput from './components/SignUpInput';
 import CenterSearchInput from './components/CenterSearchInput';
 import NextButton from './components/NextButton';
 import styled from 'styled-components';
-import { useSignUpStore } from '../../../../store/signupStore';
+import { useSignUpStore } from '../../../store/signupStore';
 
 const getStepsByType = (type) => {
   switch (type) {
