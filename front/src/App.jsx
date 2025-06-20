@@ -60,6 +60,9 @@ import TeacherMainPage from './pages/teacher/TeacherMainPage';
 import MyAttendance from './pages/teacher/MyAttendance';
 import ParentMainPage from './pages/common/ParentMain/ParentMainPage';
 import TeacherMainAttendance from './pages/teacher/components/TeacherMainAttendance';
+import ParentMyPage from './pages/parent/ParentMyPage';
+import AddChild from './pages/parent/AddChild';
+import SearchChild from './pages/parent/SearchChild';
 import ErrorPage from './pages/ErrorPage';
 import ParentChildList from './pages/parent/ParentChildList';
 
@@ -70,6 +73,41 @@ function App() {
       <Router>
         <Routes>
           <Route element={<Layout />}>
+            {/* Main Page */}
+            <Route path="/home" element={<Home />} />
+            <Route path="/parent/main" element={<ParentMainPage />} />
+            {/* 학부모 마이페이지 */}
+            <Route path="/parent/mypage" element={<ParentMyPage />} />
+            {/* 학부모 아동 추가 페이지 */}
+            <Route path="/parent/addchild" element={<AddChild />} />
+            {/* 학부모 아동 검색 페이지 */}
+            <Route path="/parent/searchchild" element={<SearchChild />} />
+            {/* <Route path="/" element={<Home />} /> */}
+            {/* 아동 목록 페이지(교사) */}
+            <Route path="/childlist" element={<ChildList />} />
+            {/* 유치원 반 목록 페이지(교사 -> 아동 출결) */}
+            <Route path="/classlist" element={<AttendanceClassList />} />
+            {/* 반별 일과표 목록 페이지 */}
+            <Route path="/daily" element={<DailySchedule />} />
+            {/* 반별 일과표 목록  */}
+            <Route path="/dailyDetail/:SCHADULE_NO" element={<DailyScheduleDetail />} />
+            <Route path="/childlist" element={<ChildList />} />
+            {/* 아동목록 페이지(교사) */}
+            <Route path="/dailyDetail" element={<DailyScheduleDetail />} />
+            {/* 아동 반배치 페이지(시설장) */}
+            <Route path="/manager/classplacement" element={<ClassPlacement />} />
+            {/* 교사 목록 페이지(시설장) */}
+            <Route path="/manager/teacherlist" element={<TeacherList />} />
+            {/* 추가 페이지는 아래 붙이기. */}
+            {/* 교사 아동 상세보기 페이지 */}
+            <Route path="/child/detail" element={<ChildDetail />} />
+
+            {/* 교사 가정통신문 게시글 목록 페이지 */}
+            <Route path="/familycommunity/list" element={<FamilyCommunityPage />} />
+
+            {/* 회원가입 승인 리스트(시설장) */}
+            <Route path="/approvalList" element={<ApprovalList />}></Route>
+            {/* 시설장 승인 리스트(관리자) */}
             {/**
              * 관리자
              *
@@ -77,7 +115,6 @@ function App() {
              *
              * */}
             <Route path="/approvalListAdmin" element={<ApprovalListAdmin />} />
-
             {/**
              * 학부모
              *
@@ -181,7 +218,13 @@ function App() {
           <Route path="/signup/teacher" element={<SignUpWorkSpaceInfo />} />
           <Route path="/signup/complete" element={<SignUpComplete />} />
           <Route path="/signup/parent" element={<SignUpChildInfo />} />
+
+          <Route path="/signup/manager" element={<SignUpCenterInfo />} />
+          {/* Regist Page */}
+          <Route path="/regist" element={<Home />}></Route>
+
           <Route path="/signup/center" element={<SignUpCenterInfo />} />
+
           {/* Find ID Page */}
           <Route path="/findid" element={<SearchId />} />
           {/* Find ID Success Page */}

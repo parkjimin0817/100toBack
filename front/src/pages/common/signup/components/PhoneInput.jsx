@@ -1,16 +1,36 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const PhoneInputWithButton = ({ label, placeholder, onClick }) => {
+const formatPhoneNumber = (value = '') => {
+  const onlyNums = value.replace(/\D/g, '');
+  if (onlyNums.length <= 3) return onlyNums;
+  if (onlyNums.length <= 7) return onlyNums.replace(/(\d{3})(\d{1,4})/, '$1-$2');
+  return onlyNums.replace(/(\d{3})(\d{4})(\d{1,4})/, '$1-$2-$3');
+};
+
+const PhoneInputWithButton = ({ label, value, onClick, onChange, error }) => {
+  const handleChange = (e) => {
+    const formatted = formatPhoneNumber(e.target.value);
+    if (onChange) {
+      onChange(formatted);
+    }
+  };
   return (
     <InputWrapper>
       <Label>{label}</Label>
       <InputRow>
-        <Input type="text" placeholder={placeholder} />
+        <Input
+          type="text"
+          value={value}
+          onChange={handleChange}
+          maxLength={13}
+          placeholder="'-'제외 11자리를 입력해주세요"
+        />
         <Button type="button" onClick={onClick}>
           인증 요청
         </Button>
       </InputRow>
+      {error && <ErrorMessage>{error}</ErrorMessage>}
     </InputWrapper>
   );
 };
@@ -70,4 +90,12 @@ const Button = styled.button`
   &:hover {
     background-color: ${({ theme }) => theme.colors.lightblue};
   }
+`;
+
+const ErrorMessage = styled.p`
+  color: ${({ theme }) => theme.colors.orange};
+  font-size: 12px;
+  margin-top: 4px;
+  margin-left: 4px;
+  text-align: left;
 `;

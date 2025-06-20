@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @CrossOrigin("http://localhost:5173")
 @RestController
 @RequestMapping("/api/members")
@@ -15,6 +17,13 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    //아이디 중복체크
+    @GetMapping("/checkId")
+    public ResponseEntity<Boolean> checkId(@RequestParam String memberId){
+        boolean exists = memberService.checkIdDuplicate(memberId); //true : 이미 사용중인 아이디, false :  사용가능한 아이디
+        return ResponseEntity.ok(exists);
+    }
+
     //시설장(시설) 생성
     @PostMapping("/manager")
     public ResponseEntity<String> createManager(@RequestBody CreateManagerDto dto) {
@@ -22,17 +31,10 @@ public class MemberController {
         return ResponseEntity.ok(memberNo);
     }
 
-    //교사 생성
-    @PostMapping("/teacher")
-    public ResponseEntity<String> createTeacher(@RequestBody MemberDto.CreateMember dto) {
-        String memberNo = memberService.createTeacher(dto);
-        return ResponseEntity.ok(memberNo);
-    }
-
-    //학부모 생성
-    @PostMapping("/parent")
-    public ResponseEntity<String> createParent(@RequestBody MemberDto.CreateMember dto) {
-        String memberNo = memberService.createParent(dto);
+    //교사/학부모 생성
+    @PostMapping("/member")
+    public ResponseEntity<String> createMember(@ModelAttribute MemberDto.CreateMember dto) throws IOException {
+        String memberNo = memberService.createMember(dto);
         return ResponseEntity.ok(memberNo);
     }
 

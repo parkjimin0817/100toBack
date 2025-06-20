@@ -16,9 +16,17 @@ export const API_ENDPOINTS = {
     FORDATE: (center_no, class_no, member_no, create_date, type) =>
       `/schedule?center_no=${center_no}&class_no=${class_no}&member_no=${member_no}&create_date=${create_date}&type=${type}`,
   },
-  USERS: {
-    BASE: '/users',
-    //LOGIN: '/users/login'
-    LOGIN: (email, password) => `/users?email=${email}&password=${password}`,
+  MEMBERS: {
+    BASE: '/api/members',
+    CHECKID: (memberId) => `/api/members/checkId?memberId=${memberId}`,
+    TEACHERSIGNUP: '/api/members/member',
+    PARENTSIGNUP: '/api/members/parent',
+    MANAGERSIGNUP: '/api/members/manager',
+  },
+  APPLOVALLIST: {
+    BASE: '/approvalList',
+  },
+  CENTERS: {
+    BASE: '/api/center',
   },
 };

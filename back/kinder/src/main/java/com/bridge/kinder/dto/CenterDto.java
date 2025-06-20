@@ -2,10 +2,7 @@ package com.bridge.kinder.dto;
 
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.enums.CommonEnums;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 public class CenterDto {
 
@@ -26,6 +23,28 @@ public class CenterDto {
                     .centerAddress(center_address)
                     .centerType(center_type)
                     .centerTel(center_tel)
+                    .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class Response{
+
+        private int center_no;
+        private String center_name;
+        private String center_address;
+        private CommonEnums.AdmissionStatus status;
+
+        public static Response toDto(Center center) {
+            return Response.builder()
+                    .center_no(center.getCenterNo())
+                    .center_name(center.getCenterName())
+                    .center_address(center.getCenterAddress())
+                    .status(center.getStatus())
                     .build();
         }
     }
