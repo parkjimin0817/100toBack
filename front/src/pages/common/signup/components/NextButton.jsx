@@ -2,10 +2,13 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-const NextButton = ({ to, children }) => {
+const NextButton = ({ to, children, onClick }) => {
   const navigate = useNavigate();
-  const handleClick = () => {
-    if (to) navigate(to);
+  const handleClick = (e) => {
+    if (onClick) onClick(e);
+    if (to && !e?.defaultPrevented) {
+      navigate(to);
+    }
   };
   return <Button onClick={handleClick}>{children}</Button>;
 };
