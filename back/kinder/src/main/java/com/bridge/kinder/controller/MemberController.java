@@ -1,7 +1,7 @@
 package com.bridge.kinder.controller;
 
+import com.bridge.kinder.dto.CreateManagerDto;
 import com.bridge.kinder.dto.MemberDto;
-import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +15,21 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    //멤버생성
-    @PostMapping
-    public ResponseEntity<String> create(@RequestBody MemberDto.Create createDto) {
-        String memberId = memberService.createMember(createDto);
-        return ResponseEntity.ok(memberId);
+    //시설장(시설) 생성
+    @PostMapping("/manager")
+    public ResponseEntity<String> registerManager(@RequestBody CreateManagerDto dto) {
+        String memberNo = memberService.CreateManager(dto);
+        return ResponseEntity.ok(memberNo);
     }
 
+    //교사 생성
+//    @PostMapping("/teacher")
 
+
+    //멤버 조회(임시)
+    //서비스에서 처리해야할 로직 미완
+    @GetMapping("/{memberNo}")
+    public ResponseEntity<MemberDto.Response> getMember(@PathVariable int memberNo){
+        return ResponseEntity.ok(memberService.findMEmber(memberNo));
+    }
 }
