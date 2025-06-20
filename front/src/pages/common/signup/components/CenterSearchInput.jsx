@@ -1,51 +1,44 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-const mockCenters = [
-  { id: 1, name: '서울1유치원' },
-  { id: 2, name: '서울2유치원' },
-  { id: 3, name: '서울3유치원' },
-  { id: 4, name: '서울4유치원' },
-  { id: 5, name: '서울4유치원' },
-  { id: 6, name: '서울4유치원' },
-  { id: 7, name: '서울4유치원' },
-];
-
-const CenterSearchInput = ({ onSelect, label }) => {
+const CenterSearchInput = ({ onSelect, label, data = [], loading = false, error }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [showDropDown, setShowDropDown] = useState(false);
-  const [isSelecting, setIsSelecting] = useState(false);
+
+  //center data 예시
+  // [
+  // {center_name : '땡땡유치원',
+  //   center_no: 1,
+  //   center_address: '주소주소'
+  //   status: "APPROVED"
+  // },
+  // ]
 
   useEffect(() => {
-    if (isSelecting) {
-      setIsSelecting(false); // 선택 후에는 자동검색 안 함
+    if (!query.trim()) {
+      setResults([]);
+      setShowDropDown(false);
       return;
     }
 
-    if (!query.trim()) {
-      setShowDropDown(false);
-      setResults([]);
-      return;
-    }
-    const filtered = mockCenters.filter((center) => center.name.includes(query));
+    const filtered = data.filter((center) => center.center_name.includes(query));
     setResults(filtered);
     setShowDropDown(true);
-  }, [query]);
+  }, [data]);
 
-  //검색기능 (일단x)
-  //   const handleSearch = () => {
-  //     if (!query.trim()) return;
-  //     const filtered = mockCenters.filter((center) => center.name.includes(query));
-  //     setResults(filtered);
-  //     setShowDropDown(true);
-  //   };
+  const handleInputChange = (e) => {
+    setQuery(e.target.value);
+    const filtered = data.filter((center) => center.center_name.includes(e.target.value));
+    setResults(filtered);
+    setShowDropDown(true);
+  };
 
   const handleSelect = (center) => {
-    setIsSelecting(true);
+    setQuery(center.center_name);
+    setResults([]);
     setShowDropDown(false);
-    setQuery(center.name);
-    onSelect && onSelect(center);
+    onSelect && onSelect(center.center_no);
   };
 
   return (
@@ -54,31 +47,33 @@ const CenterSearchInput = ({ onSelect, label }) => {
       <InputRow>
         <Input
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={handleInputChange}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               e.preventDefault();
-              //   handleSearch();
             }
           }}
-          placeholder="시설명을 검색해주세요."
+          placeholder="시설명 입력 후 선택해주세요"
         />
-        <Button>검색</Button>
       </InputRow>
-
-      {showDropDown && (
-        <Dropdown>
-          {results.length > 0 ? (
-            results.map((center) => (
-              <DropdownItem key={center.id} onClick={() => handleSelect(center)}>
-                {center.name}
-              </DropdownItem>
-            ))
-          ) : (
-            <NoResult>검색 결과가 없습니다.</NoResult>
-          )}
-        </Dropdown>
+      {loading ? (
+        <p>로딩중 ...</p>
+      ) : (
+        showDropDown && (
+          <Dropdown>
+            {results.length > 0 ? (
+              results.map((center) => (
+                <DropdownItem key={center.center_no} onClick={() => handleSelect(center)}>
+                  {center.center_name}({center.center_address})
+                </DropdownItem>
+              ))
+            ) : (
+              <NoResult>검색 결과가 없습니다.</NoResult>
+            )}
+          </Dropdown>
+        )
       )}
+      {error && <Message>{error}</Message>}
     </Wrapper>
   );
 };
@@ -87,6 +82,7 @@ export default CenterSearchInput;
 
 const Wrapper = styled.div`
   width: 400px;
+  height: 130px;
   margin: 0 auto;
   margin-top: ${({ theme }) => theme.spacing[3]};
   position: relative;
@@ -145,6 +141,7 @@ const Dropdown = styled.ul`
   width: 100%;
   max-height: 200px;
   overflow-y: auto;
+  text-align: left;
   background-color: ${({ theme }) => theme.colors.white};
   border: 1px solid ${({ theme }) => theme.colors.gray[300]};
   border-top: none;
@@ -162,4 +159,12 @@ const DropdownItem = styled.li`
 const NoResult = styled.li`
   padding: ${({ theme }) => theme.spacing[3]};
   color: ${({ theme }) => theme.colors.gray[500]};
+`;
+
+const Message = styled.p`
+  color: ${({ theme }) => theme.colors.orange};
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+  margin-top: 4px;
+  margin-left: 4px;
+  text-align: left;
 `;

@@ -28,8 +28,8 @@ const SignUpBasicInfo = () => {
   const navigate = useNavigate();
   const { register, handleSubmit, setValue, getValues, setError, clearErrors, errors, isSubmitting } =
     useBasicInfoForm();
-  const setBasicInfo = useSignUpStore((state) => state.setBasicInfo);
   const type = useSignUpStore((state) => state.type);
+  const setBasicInfo = useSignUpStore((state) => state.setBasicInfo);
 
   const [birthdate, setBirthdate] = useState({
     year: '',
@@ -91,7 +91,8 @@ const SignUpBasicInfo = () => {
       });
       return;
     }
-    setBasicInfo(data);
+    const { confirmPassword, ...rest } = data;
+    setBasicInfo(rest);
     navigate(`/signup/${type}`);
   };
 
@@ -169,11 +170,7 @@ const SignUpBasicInfo = () => {
           </SelectWrapper>
           {errors.birthdate && <ErrorMessage>{errors.birthdate.message}</ErrorMessage>}
         </BirthWrapper>
-        <ProfileImageUpload
-          label="본인 사진 등록"
-          register={register('profileImg')}
-          error={errors.profileImg?.message}
-        />
+        <ProfileImageUpload label="본인 사진 등록" {...register('profileImg')} error={errors.profileImg?.message} />
         <PhoneInput
           label="전화번호"
           value={phone}

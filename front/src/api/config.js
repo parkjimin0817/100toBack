@@ -19,8 +19,14 @@ export const API_ENDPOINTS = {
   MEMBERS: {
     BASE: '/api/members',
     CHECKID: (memberId) => `/api/members/checkId?memberId=${memberId}`,
+    TEACHERSIGNUP: '/api/members/member',
+    PARENTSIGNUP: '/api/members/parent',
+    MANAGERSIGNUP: '/api/members/manager',
   },
   APPLOVALLIST: {
     BASE: '/approvalList',
+  },
+  CENTERS: {
+    BASE: '/api/center',
   },
 };

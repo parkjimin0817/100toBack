@@ -18,13 +18,13 @@ const basicInfoSchema = yup.object().shape({
   profileImg: yup
     .mixed()
     .nullable()
-    .test('fileSize', '200KB 이하 이미지만 업로드 가능합니다.', (file) => {
-      if (!file) return true;
-      return file.size <= FILE_SIZE;
+    .test('fileSize', '200KB 이하 이미지만 업로드 가능합니다.', (fileList) => {
+      if (!fileList || fileList.length === 0) return true;
+      return fileList[0].size <= FILE_SIZE;
     })
-    .test('file-type', 'JPG, JPEG, PNG 형식만 업로드 가능합니다.', (file) => {
-      if (!file) return true;
-      return SUPPORTED_FORMATS.includes(file.type);
+    .test('file-type', 'JPG, JPEG, PNG 형식만 업로드 가능합니다.', (fileList) => {
+      if (!fileList || fileList.length === 0) return true;
+      return SUPPORTED_FORMATS.includes(fileList[0].type);
     }),
   phone: yup
     .string()
