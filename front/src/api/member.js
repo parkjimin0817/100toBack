@@ -30,11 +30,29 @@ export const memberService = {
           throw new Error('알 수 없는 사용자 유형입니다.');
       }
 
-      const { data } = await api.post(endpoint, mergedData);
-      return data; //memberNo
+      const formData = new FormData();
+      formData.append('member_name', mergedData.member_name);
+      formData.append('member_id', mergedData.member_id);
+      formData.append('member_pwd', mergedData.member_pwd);
+      formData.append('member_phone', mergedData.member_phone);
+      formData.append('member_birth', mergedData.member_birth); // yyyy-MM-dd
+      formData.append('member_type', mergedData.member_type);
+      formData.append('address', mergedData.address); // 빠져있다면 추가 필요
+      formData.append('center_no', mergedData.center_no);
+
+      if (mergedData.member_profile instanceof File) {
+        formData.append('member_profile', mergedData.member_profile);
+      }
+
+      const { data } = await api.post(endpoint, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      return data;
     } catch (error) {
-      console.error('❌ 회원가입 요청 실패:', error); // 추가!
-      console.error('❌ 응답 내용:', error.response);
+      console.error('회원가입 요청 실패:', error);
       throw new Error('서버 통신 불량');
     }
   },
