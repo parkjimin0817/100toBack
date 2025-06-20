@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import MyAttendaceCard from './components/MyAttendaceCard';
 
-import CustomCalendar from '../common/CustomCalendar';
+import CustomCalendar from '../../components/CustomCalendar';
 
 const MyAttendance = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());

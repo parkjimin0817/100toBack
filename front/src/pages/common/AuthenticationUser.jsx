@@ -11,22 +11,24 @@ const AuthenticationUser = () => {
     <Container>
       <CommonFind></CommonFind>
       <Contents>
-        <Form></Form>
         <Title>사용자 인증</Title>
         <Info>비밀번호 재설정을 위해 사용자 확인을 진행합니다.</Info>
-        <NameLine>
-          <Column>이름</Column>
-          <Input placeholder="이름을 입력해주세요." />
-        </NameLine>
-        <PhoneLine>
-          <Column>전화번호</Column>
-          <PhoneRow>
-            <Input placeholder="전화번호를 입력해주세요." />
-            <VerifyButton>인증요청</VerifyButton>
-          </PhoneRow>
-          <Input style={{ marginTop: '10px' }} placeholder="인증번호를 입력해주세요." />
-        </PhoneLine>
-        <Button onClick={() => navigator('/changepwd')}>다음</Button>
+        <form>
+          <NameLine>
+            <Column>이름</Column>
+            <Input placeholder="이름을 입력해주세요." />
+          </NameLine>
+          <PhoneLine>
+            <Column>전화번호</Column>
+            <PhoneRow>
+              <Input placeholder="전화번호를 입력해주세요." />
+              <VerifyButton type="submit">인증요청</VerifyButton>
+            </PhoneRow>
+            <Input style={{ marginTop: '10px' }} placeholder="인증번호를 입력해주세요." />
+          </PhoneLine>
+          <Button onClick={() => navigator('/changepwd')}>다음</Button>
+        </form>
+
         <FooterLine>
           <Foot style={{ marginLeft: '410px' }}>고객센터</Foot>
           <Foot>1:1문의</Foot>
@@ -96,21 +98,20 @@ const PhoneRow = styled.div`
   width: 450px; /* Input과 동일한 너비 */
 `;
 
- const VerifyButton = styled.button`
-   position: absolute;
-   top: 50%;
-   right: 10px;
-   transform: translateY(-50%);
-   background-color: white;
-   border: #BDBCBC solid 1px;
-   border-radius: 20px;
-   padding: 0 12px;
-   height: 30px;
-   font-size: 12px;
-   font-weight: normal;
-   cursor: pointer;
- `;
-
+const VerifyButton = styled.button`
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background-color: white;
+  border: #bdbcbc solid 1px;
+  border-radius: 20px;
+  padding: 0 12px;
+  height: 30px;
+  font-size: 12px;
+  font-weight: normal;
+  cursor: pointer;
+`;
 
 const PhoneLine = styled.div`
   display: flex;
