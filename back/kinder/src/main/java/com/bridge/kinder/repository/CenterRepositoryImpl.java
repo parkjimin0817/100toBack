@@ -5,6 +5,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public class CenterRepositoryImpl implements CenterRepository {
 
@@ -16,5 +18,11 @@ public class CenterRepositoryImpl implements CenterRepository {
     public Center save(Center center) {
         em.persist(center);
         return center;
+    }
+
+    @Override
+    public Optional<Center> findById(Integer centerNo) {
+        if(centerNo == null) return Optional.empty();
+        return Optional.ofNullable(em.find(Center.class, centerNo));
     }
 }

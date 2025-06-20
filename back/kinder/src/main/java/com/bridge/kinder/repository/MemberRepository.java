@@ -8,5 +8,5 @@ public interface MemberRepository {
     //멤버 생성
     void save(Member member);
     //멤버 조회(임시)
-    Optional<Member> findOne(int memberNo);
+    Optional<Member> findById(int memberNo);
 }

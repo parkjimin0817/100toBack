@@ -21,7 +21,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     //멤버 조회(임시)
     @Override
-    public Optional<Member> findOne(int memberNo) {
+    public Optional<Member> findById(int memberNo) {
         return Optional.ofNullable(em.find(Member.class, memberNo));
     }
 }

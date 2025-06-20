@@ -17,14 +17,24 @@ public class MemberController {
 
     //시설장(시설) 생성
     @PostMapping("/manager")
-    public ResponseEntity<String> registerManager(@RequestBody CreateManagerDto dto) {
-        String memberNo = memberService.CreateManager(dto);
+    public ResponseEntity<String> createManager(@RequestBody CreateManagerDto dto) {
+        String memberNo = memberService.createManager(dto);
         return ResponseEntity.ok(memberNo);
     }
 
     //교사 생성
-//    @PostMapping("/teacher")
+    @PostMapping("/teacher")
+    public ResponseEntity<String> createTeacher(@RequestBody MemberDto.CreateMember dto) {
+        String memberNo = memberService.createTeacher(dto);
+        return ResponseEntity.ok(memberNo);
+    }
 
+    //학부모 생성
+    @PostMapping("/parent")
+    public ResponseEntity<String> createParent(@RequestBody MemberDto.CreateMember dto) {
+        String memberNo = memberService.createParent(dto);
+        return ResponseEntity.ok(memberNo);
+    }
 
     //멤버 조회(임시)
     //서비스에서 처리해야할 로직 미완

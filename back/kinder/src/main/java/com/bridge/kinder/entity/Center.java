@@ -41,6 +41,7 @@ public class Center {// 시설
     @Column(name = "STATUS", length = 20)
     @Enumerated(EnumType.STRING)
     private CommonEnums.AdmissionStatus status;
+    //상태(승인, 거절, 대기)
 
 
     //---------------------------------------------------------------------------------------------
