@@ -105,3 +105,11 @@ const InfoText = styled.div`
   color: ${({ theme }) => theme.colors.gray[500]};
   line-height: 1.4;
 `;
+
+const ErrorMessage = styled.p`
+  color: ${({ theme }) => theme.colors.orange};
+  font-size: 12px;
+  margin-top: 4px;
+  margin-left: 4px;
+  text-align: left;
+`;

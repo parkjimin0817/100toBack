@@ -144,7 +144,7 @@ function App() {
           <Route path="/signup/teacher" element={<SignUpWorkSpaceInfo />} />
           <Route path="/signup/complete" element={<SignUpComplete />} />
           <Route path="/signup/parent" element={<SignUpChildInfo />} />
-          <Route path="/signup/center" element={<SignUpCenterInfo />} />
+          <Route path="/signup/manager" element={<SignUpCenterInfo />} />
           {/* Regist Page */}
           <Route path="/regist" element={<Home />}></Route>
           {/* Find ID Page */}
