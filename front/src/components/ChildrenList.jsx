@@ -44,9 +44,9 @@ const ChildrenList = ({ showAll, sortBy, roleBy, classFilter, Color, nameFilter 
             key={child.id}
             onClick={() => {
               if (child.role === 'child') {
-                navigate(`/child/detail?id=${child.id}`);
+                navigate(`/child/detail/${child.id}`);
               } else if (child.role === 'teacher') {
-                navigate(`/teacherattendance?id=${child.id}`);
+                navigate(`/manager/teacherattendance/${child.id}`);
               }
             }}
           >
@@ -67,20 +67,13 @@ const ChildrenList = ({ showAll, sortBy, roleBy, classFilter, Color, nameFilter 
 export default ChildrenList;
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 1026px;
-  height: 740px;
-  overflow-y: auto;
-  margin: 0 auto;
-  padding: 0 0 80px;
+  padding: ${({ theme }) => theme.spacing[6]};
 `;
 
 const CardLine = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  margin: 20px 0 0 60px;
+  place-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 `;
 
 const Card = styled.div`
