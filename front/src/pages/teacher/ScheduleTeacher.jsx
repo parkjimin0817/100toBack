@@ -7,7 +7,7 @@ import ScheduleList from './components/ScheduleList';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 
-import ScheduleModal from '../common/ScheduleModal';
+import ScheduleModal from '../../components/ScheduleModal';
 
 dayjs.locale('ko');
 

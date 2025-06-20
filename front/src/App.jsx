@@ -60,6 +60,9 @@ import TeacherMainPage from './pages/teacher/TeacherMainPage';
 import MyAttendance from './pages/teacher/MyAttendance';
 import ParentMainPage from './pages/common/ParentMain/ParentMainPage';
 import TeacherMainAttendance from './pages/teacher/components/TeacherMainAttendance';
+import ParentMyPage from './pages/parent/ParentMyPage';
+import AddChild from './pages/parent/AddChild';
+import SearchChild from './pages/parent/SearchChild';
 
 function App() {
   return (
@@ -71,6 +74,12 @@ function App() {
             {/* Main Page */}
             <Route path="/home" element={<Home />} />
             <Route path="/parent/main" element={<ParentMainPage />} />
+            {/* 학부모 마이페이지 */}
+            <Route path="/parent/mypage" element={<ParentMyPage />} />
+            {/* 학부모 아동 추가 페이지 */}
+            <Route path="/parent/addchild" element={<AddChild />} />
+            {/* 학부모 아동 검색 페이지 */}
+            <Route path="/parent/searchchild" element={<SearchChild />} />
             {/* <Route path="/" element={<Home />} /> */}
             {/* 아동 목록 페이지(교사) */}
             <Route path="/childlist" element={<ChildList />} />
