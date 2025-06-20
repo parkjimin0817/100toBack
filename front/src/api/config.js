@@ -21,4 +21,7 @@ export const API_ENDPOINTS = {
     //LOGIN: '/users/login'
     LOGIN: (email, password) => `/users?email=${email}&password=${password}`,
   },
+  APPLOVALLIST: {
+    BASE: '/approvalList',
+  },
 };
