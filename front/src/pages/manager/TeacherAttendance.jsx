@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import TeacherAttendanceCard from './components/TeacherAttendanceCard';
-import CustomCalendar from '../common/CustomCalendar';
+import CustomCalendar from '../../components/CustomCalendar';
 
 const TeacherAttendance = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());

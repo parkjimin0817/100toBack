@@ -151,9 +151,8 @@ const StyledCalendar = styled(Calendar)`
     border-radius: ${({ theme }) => theme.borderRadius['2xl']};
   }
 
-  /* 선택한 날짜 스타일 */
-  .react-calendar__tile--active abbr {
-    color: ${({ theme }) => theme.colors.black};
+  .react-calendar__tile--active {
+    color: white !important; /* ✅ 선택된 날짜 글자색 */
   }
 
   /* 오늘 날짜 (배경색 제거 + 테두리만) */
