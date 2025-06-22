@@ -7,6 +7,9 @@ import { ContentArea, SearchIdForm } from '../../styles/Common/Container';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
+import { memberService } from '../../api/member';
+import { useLoginStore } from '../../store/loginStore';
+import { toast } from 'react-toastify';
 
 const loginSchema = yup.object().shape({
   memberId: yup
@@ -24,6 +27,7 @@ const loginSchema = yup.object().shape({
 const LoginPage = () => {
   const [checked, setChecked] = useState(false);
   const navigator = useNavigate();
+  const { login } = useLoginStore();
 
   const {
     register,
@@ -33,7 +37,32 @@ const LoginPage = () => {
     resolver: yupResolver(loginSchema),
   });
 
-  const onSubmit = async () => {};
+  const onSubmit = async (formData) => {
+    console.log('a - onSubmit 시작'); // 제일 처음
+
+    try {
+      const { memberId, memberPwd } = formData;
+      console.log('b - 전송 데이터:', memberId, memberPwd);
+
+      const memberData = await memberService.login(memberId, memberPwd);
+      console.log('c - 로그인 응답 데이터:', memberData);
+
+      login(memberData);
+      console.log('d - 상태 저장 완료');
+
+      // 네비게이트 분기 예시
+      if (memberData.memberType === 'MANAGER') {
+        navigator('/manager/mypage');
+      } else if (memberData.memberType === 'TEACHER') {
+        navigator('/teacher/main');
+      } else if (memberData.memberType === 'PARENT') {
+        navigator('/parent/main');
+      }
+      console.log('e - 네비게이트 완료');
+    } catch (err) {
+      console.error('로그인 에러:', err.message);
+    }
+  };
 
   return (
     <CommonFind>

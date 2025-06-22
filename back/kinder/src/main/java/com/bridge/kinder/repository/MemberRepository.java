@@ -11,6 +11,9 @@ public interface MemberRepository  {
     boolean existsByMemberId(String memberId);
     //멤버 생성
     void save(Member member);
+    //멤버 로그인
+    Optional<Member> findByMemberId(String memberId);
+
     //멤버 조회(임시)
-    Optional<Member> findById(int memberNo);
+    Optional<Member> findByMemberNo(int memberNo);
 }
