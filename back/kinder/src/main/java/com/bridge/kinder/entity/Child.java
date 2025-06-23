@@ -62,6 +62,11 @@ public class Child {// 아동
 
     //---------------------------------------------------------------------------------------------
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CENTER_NO")
+    private Center center;
+    //시설
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CLASS_NO")
     private ClassRoom classRoom;
     //반

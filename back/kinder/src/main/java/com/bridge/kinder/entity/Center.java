@@ -62,6 +62,11 @@ public class Center {// 시설
 
     @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
     @Builder.Default
+    List<Child> childs = new ArrayList<>();
+    //아동
+
+    @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
+    @Builder.Default
     List<Attendance> attendances = new ArrayList<>();
     //근태
 

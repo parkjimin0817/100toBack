@@ -5,6 +5,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public class ChildRepositoryImpl implements ChildRepository {
 
@@ -15,5 +18,14 @@ public class ChildRepositoryImpl implements ChildRepository {
     @Override
     public void save(Child child) {
         em.persist(child);
+    }
+
+    @Override
+    public Optional<Child> findByResidentNo(String residentNo) {
+        List<Child> result = em.createQuery("select c from Child c where c.childResidentNo = :residentNo", Child.class)
+                .setParameter("residentNo", residentNo)
+                .getResultList();
+
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 }
