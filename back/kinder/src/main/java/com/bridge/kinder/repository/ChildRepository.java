@@ -7,6 +7,6 @@ import java.util.Optional;
 public interface ChildRepository {
     //아동 생성
     void save(Child child);
-    //아동 찾기
+    //주민번호로 아동 찾기
     Optional<Child> findByResidentNo(String residentNo);
 }
