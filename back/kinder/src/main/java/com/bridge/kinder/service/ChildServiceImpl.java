@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -19,6 +22,7 @@ public class ChildServiceImpl implements ChildService {
     private final ChildRepository childRepository;
     private final MemberRepository memberRepository;
     private final MemberChildRepository memberChildRepository;
+
 
     //아동 생성
 //    @Override
@@ -39,4 +43,11 @@ public class ChildServiceImpl implements ChildService {
 //    }
 
     //아동 연결
+
+    @Override
+    public List<ChildDto.Response> findChildrenByClassNo(int class_no) {
+        return childRepository.findByClassNo(class_no).stream()
+                .map(ChildDto.Response::toDto)
+                .collect(Collectors.toList());
+    }
 }

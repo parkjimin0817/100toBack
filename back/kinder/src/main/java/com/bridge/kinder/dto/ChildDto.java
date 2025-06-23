@@ -2,10 +2,7 @@ package com.bridge.kinder.dto;
 
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Child;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 public class ChildDto {
@@ -37,6 +34,26 @@ public class ChildDto {
                     .mParentsPhone(m_parents_phone)
                     .childProfile(profilePath)
                     .center(center)
+                    .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class Response{
+        private int child_no;
+        private String child_name;
+
+        private int class_no;
+
+        public static Response toDto(Child child){
+            return Response.builder()
+                    .child_no(child.getChildNo())
+                    .child_name(child.getChildName())
+                    .class_no(child.getClassRoom().getClassNo())
                     .build();
         }
     }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-const CenterSearchInput = ({ onSelect, label, data = [], loading = false, error, disabled }) => {
+const CenterSearchInput = ({ onSelect, label, data = [], loading = false, error }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [showDropDown, setShowDropDown] = useState(false);
@@ -54,7 +54,6 @@ const CenterSearchInput = ({ onSelect, label, data = [], loading = false, error,
             }
           }}
           placeholder="시설명 입력 후 선택해주세요"
-          disabled={disabled}
         />
       </InputRow>
       {loading ? (
