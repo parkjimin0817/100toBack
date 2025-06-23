@@ -24,7 +24,6 @@ public class MemberDto {
         private String member_phone;
         private CommonEnums.MemberType member_type;
         private MultipartFile member_profile;
-        private String address;
 
         private int center_no;
 
@@ -37,7 +36,6 @@ public class MemberDto {
                     .memberPhone(member_phone)
                     .memberType(member_type)
                     .memberProfile(profilePath)
-                    .address(address)
                     .center(center)
                     .build();
         }

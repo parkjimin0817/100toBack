@@ -58,7 +58,7 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(manager);
 
         Approval approval = Approval.builder()
-                .center(center)
+                .center(savedCenter)
                 .member(manager)
                 .build();
 
