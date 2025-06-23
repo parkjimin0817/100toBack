@@ -52,7 +52,7 @@ const LoginPage = () => {
                 <Button type="submit">로그인하기</Button>
               </LoginButtonLine>
               <EtcLine>
-                <Etc onClick={() => navigator('/signup/terms')}>회원가입</Etc>
+                <Etc onClick={() => navigator('/signup/userselect')}>회원가입</Etc>
                 <SearchArea>
                   <Etc onClick={() => navigator('/findid')}>아이디찾기</Etc>
                   <Etc onClick={() => navigator('/findpwd')}>비밀번호찾기</Etc>
