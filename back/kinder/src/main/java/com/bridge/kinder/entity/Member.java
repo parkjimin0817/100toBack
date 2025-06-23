@@ -53,10 +53,6 @@ public class Member {// 멤버
     private String memberProfile;
     //프로필 이미지
 
-    @Column(name = "ADDRESS", length = 254)
-    private String address;
-    //주소
-
     @Column(name = "CREATE_DATE", nullable = false)
     private LocalDateTime createDate;
     //생성일
