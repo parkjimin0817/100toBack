@@ -1,7 +1,9 @@
 package com.bridge.kinder.controller;
 
 import com.bridge.kinder.dto.CreateManagerDto;
+import com.bridge.kinder.dto.MemberChildDto;
 import com.bridge.kinder.dto.MemberDto;
+import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,17 +33,27 @@ public class MemberController {
         return ResponseEntity.ok(memberNo);
     }
 
-    //교사/학부모 생성
-    @PostMapping("/member")
-    public ResponseEntity<String> createMember(@ModelAttribute MemberDto.CreateMember dto) throws IOException {
-        String memberNo = memberService.createMember(dto);
+    //교사 생성
+    @PostMapping("/teacher")
+    public ResponseEntity<String> createTeacher(@ModelAttribute MemberDto.CreateMember dto) throws IOException {
+        String memberNo = memberService.createTeacher(dto);
         return ResponseEntity.ok(memberNo);
     }
 
-    //멤버 조회(임시)
-    //서비스에서 처리해야할 로직 미완
-    @GetMapping("/{memberNo}")
-    public ResponseEntity<MemberDto.Response> getMember(@PathVariable int memberNo){
-        return ResponseEntity.ok(memberService.findMEmber(memberNo));
+    //학부모 생성, 아동 등록
+    @PostMapping("/parent")
+    public ResponseEntity<String> createParentChild(@ModelAttribute MemberChildDto dto) throws IOException {
+        String memberNo = memberService.createParentChild(dto);
+        return ResponseEntity.ok(memberNo);
     }
+
+
+    //로그인
+    @PostMapping("/login")
+    public ResponseEntity<MemberDto.LoginResponse> loginMember(@RequestBody MemberDto.LoginRequest dto) throws IOException {
+        MemberDto.LoginResponse response = memberService.getLoginMember(dto.getMemberId(), dto.getMemberPwd());
+        return ResponseEntity.ok(response);
+    }
+
+
 }

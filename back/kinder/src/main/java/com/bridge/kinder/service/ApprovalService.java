@@ -9,5 +9,5 @@ public interface ApprovalService {
     //승인 대기 리스트
     List<ApprovalDto.MemberApprovalResponse> findAllApprovals(int centerNo);
     //승인 요청 생성
-    String createApproval(ApprovalDto.MemberApprovalCreate dto);
+//    String createApproval(ApprovalDto.MemberApprovalCreate dto);
 }

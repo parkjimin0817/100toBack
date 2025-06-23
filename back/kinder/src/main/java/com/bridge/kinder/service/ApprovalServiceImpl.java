@@ -33,18 +33,18 @@ public class ApprovalServiceImpl implements ApprovalService {
     }
 
     //승인 요청 생성
-    @Override
-    public String createApproval(ApprovalDto.MemberApprovalCreate dto) {
-        Center center = centerRepository.findById(dto.getCenter_no())
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
-        
-        Member member = memberRepository.findById(dto.getMember_no())
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
-
-        Approval approval = dto.toEntity(center, member);
-
-        approvalRepository.save(approval);
-
-        return String.valueOf(approval.getApprovalNo());
-    }
+//    @Override
+//    public String createApproval(ApprovalDto.MemberApprovalCreate dto) {
+//        Center center = centerRepository.findById(dto.getCenter_no())
+//                .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
+//
+//        Member member = memberRepository.findByMemberId(dto.getMember_No())
+//                .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
+//
+//        Approval approval = dto.toEntity(center, member);
+//
+//        approvalRepository.save(approval);
+//
+//        return String.valueOf(approval.getApprovalNo());
+//    }
 }

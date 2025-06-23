@@ -1,10 +1,12 @@
 package com.bridge.kinder.dto;
 
+import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Child;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 public class ChildDto {
 
@@ -19,11 +21,13 @@ public class ChildDto {
         private String f_parents_phone;
         private String m_parents_name;
         private String m_parents_phone;
-        private String child_profile;
+        private MultipartFile child_profile; //현재 스트링으로 저장, Multiple로 바꿔야함
+        
 
-        private int member_no;
+        private int member_id;
+        private int center_no;
 
-        public Child toEntity() {
+        public Child toEntity(Center center, String profilePath) {
             return Child.builder()
                     .childName(child_name)
                     .childResidentNo(child_resident_no)
@@ -31,7 +35,8 @@ public class ChildDto {
                     .fParentsPhone(f_parents_phone)
                     .mParentsName(m_parents_name)
                     .mParentsPhone(m_parents_phone)
-                    .childProfile(child_profile)
+                    .childProfile(profilePath)
+                    .center(center)
                     .build();
         }
     }

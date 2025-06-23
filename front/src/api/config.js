@@ -22,9 +22,11 @@ export const API_ENDPOINTS = {
     TEACHERSIGNUP: '/api/members/teacher',
     PARENTSIGNUP: '/api/members/parent',
     MANAGERSIGNUP: '/api/members/manager',
+    LOGIN: `/api/members/login`,
   },
   APPLOVALLIST: {
-    BASE: '/approvalList',
+    BASE: 'api/approvalList',
+    PENDINGLIST: (centerNo) => `api/approvalList/centerNo=${centerNo}`,
   },
   CENTERS: {
     BASE: '/api/center',
