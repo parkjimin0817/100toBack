@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const HealthCheckListTable = ({ data }) => {
+const HealthCheckListTable = ({ data, onEdit, onChange }) => {
   return (
-    <Wrapper>
+    <TableWrapper>
       <VacationTable>
         <thead>
           <tr>
@@ -20,23 +20,87 @@ const HealthCheckListTable = ({ data }) => {
           {data.map((child, index) => (
             <tr key={index}>
               <td>{child.name}</td>
-              <td>{child.temp}℃</td>
-              <td>{child.height}cm</td>
-              <td>{child.weight}kg</td>
-              <td>{child.symptom}</td>
-              <td>{child.memo}</td>
-              <td>버튼</td>
+              <td>
+                {child.editable ? (
+                  <input
+                    type="text"
+                    value={child.temp}
+                    onChange={(e) => onChange(index, 'temp', e.target.value)}
+                    style={{ width: '80%', border: '1px solid black', textAlign: 'center' }}
+                  />
+                ) : child.temp ? (
+                  `${child.temp}℃`
+                ) : (
+                  ''
+                )}
+              </td>
+              <td>
+                {child.editable ? (
+                  <input
+                    type="text"
+                    value={child.height}
+                    onChange={(e) => onChange(index, 'height', e.target.value)}
+                    style={{ width: '80%', border: '1px solid black', textAlign: 'center' }}
+                  />
+                ) : child.height ? (
+                  `${child.height}cm`
+                ) : (
+                  ''
+                )}
+              </td>
+              <td>
+                {child.editable ? (
+                  <input
+                    type="text"
+                    value={child.weight}
+                    onChange={(e) => onChange(index, 'weight', e.target.value)}
+                    style={{ width: '80%', border: '1px solid black', textAlign: 'center' }}
+                    border={'1px solid black'}
+                  />
+                ) : child.weight ? (
+                  `${child.weight}kg`
+                ) : (
+                  ''
+                )}
+              </td>
+              <td>
+                {child.editable ? (
+                  <input
+                    type="text"
+                    value={child.symptom}
+                    onChange={(e) => onChange(index, 'symptom', e.target.value)}
+                    style={{ width: '90%', border: '1px solid black', textAlign: 'center' }}
+                  />
+                ) : (
+                  child.symptom
+                )}
+              </td>
+              <td>
+                {child.editable ? (
+                  <input
+                    type="text"
+                    value={child.memo}
+                    onChange={(e) => onChange(index, 'memo', e.target.value)}
+                    style={{ width: '90%', border: '1px solid black', textAlign: 'center' }}
+                  />
+                ) : (
+                  child.memo
+                )}
+              </td>
+              <td>
+                <EditButton onClick={() => onEdit(index)}>{child.editable ? '저장' : '수정'}</EditButton>
+              </td>
             </tr>
           ))}
         </tbody>
       </VacationTable>
-    </Wrapper>
+    </TableWrapper>
   );
 };
 
 export default HealthCheckListTable;
 
-const Wrapper = styled.div`
+const TableWrapper = styled.div`
   width: 100%;
   padding: 10px;
 `;
@@ -82,5 +146,19 @@ const VacationTable = styled.table`
   th:nth-child(7),
   td:nth-child(7) {
     width: 10%;
+  }
+`;
+
+const EditButton = styled.button`
+  padding: 5px 10px;
+  background-color: ${({ theme }) => theme.colors.orange};
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 13px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.lightorange};
   }
 `;

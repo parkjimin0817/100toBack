@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import ContentHeader from '../../components/Common/ContentHeader';
 import styled from 'styled-components';
 import MyPageProfileImage from './components/MyPageProfileImage';
@@ -14,7 +14,7 @@ const ManagerMyPage = () => {
     setIsEditMode((prev) => !prev);
   };
   return (
-    <>
+    <Content>
       <ContentHeader
         Title={'마이페이지'}
         Color={'blue'}
@@ -35,20 +35,27 @@ const ManagerMyPage = () => {
         </InfoBox>
         <MenuBox>
           <MyPageMenuBox menuName="근태관리" icon={<FaRegClock size={60} />} url="/근태관리" color="blue" />
-          <MyPageMenuBox menuName="나의 건강" icon={<RiHealthBookLine size={60} />} url="/나의건강" color="yellow" />
+          <MyPageMenuBox menuName="나의 건강" icon={<RiHealthBookLine size={60} />} url="/myhealth" color="yellow" />
           <MyPageMenuBox
             menuName="휴가 및 워케이션 관리"
             icon={<FaUmbrellaBeach size={60} />}
-            url="/myvacation"
+            url="/teacher/workcation"
             color="blue"
           />
         </MenuBox>
       </Wrapper>
-    </>
+    </Content>
   );
 };
 
 export default ManagerMyPage;
+
+const Content = styled.div`
+  min-height: 600px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+`;
 
 const Wrapper = styled.div`
   width: 100%;

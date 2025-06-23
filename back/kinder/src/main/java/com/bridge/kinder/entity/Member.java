@@ -4,6 +4,7 @@ import com.bridge.kinder.enums.CommonEnums;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,8 +28,8 @@ public class Member {// 멤버
     private String memberName;
     //이름
 
-    @Column(name = "MEBER_BIRTH", nullable = false)
-    private Date memberBirth;
+    @Column(name = "MEMBER_BIRTH", nullable = false)
+    private LocalDate memberBirth;
     //생년월일
 
     @Column(name = "MEMBER_ID", length = 30, nullable = false)
@@ -43,7 +44,8 @@ public class Member {// 멤버
     private String memberPhone;
     //전화번호
 
-    @Column(name = "MEMBER_TYPE", length = 10, nullable = false)
+    @Column(name = "MEMBER_TYPE", length = 20, nullable = false)
+    @Enumerated(EnumType.STRING)
     private CommonEnums.MemberType memberType;
     //분류(시설장,교사,학부모)
 
@@ -62,7 +64,7 @@ public class Member {// 멤버
     @Column(name = "STATUS", length = 20, nullable = false)
     @Enumerated(EnumType.STRING)
     private CommonEnums.AdmissionStatus status;
-    //상태(승인, 거절)
+    //상태(승인, 거절, 대기)
 
 
     //---------------------------------------------------------------------------------------------
@@ -126,7 +128,13 @@ public class Member {// 멤버
     protected void onCreate() {
         this.createDate = LocalDateTime.now();
         if(this.status == null) {
-            this.status = CommonEnums.AdmissionStatus.REJECTED;
+            this.status = CommonEnums.AdmissionStatus.PENDING;
         }
+    }
+
+
+    //---------------------------------------------------------------------------------------------
+    public void changeMemberStatus(CommonEnums.AdmissionStatus newStatus) {
+        this.status = newStatus;
     }
 }

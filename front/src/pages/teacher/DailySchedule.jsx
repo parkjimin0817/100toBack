@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import ClassRoomCard from '../components/ClassRoomCard';
-import ContentHeader from '../components/Common/ContentHeader';
-import sun from '../assets/img/sun.png';
+
+import sun from '../../assets/img/sun.png';
+import ContentHeader from '../../components/Common/ContentHeader';
+import ClassRoomCard from '../../components/ClassRoomCard';
 import styled from 'styled-components';
 
-//출석 체크 시 반별 페이지(모든 반이 나옴)
-const AttendanceClassList = () => {
+//일과표 반별 리스트 페이지(모든 반이 나옴)
+const DailySchedule = () => {
   const thermeData = [
     {
       id: 1,
@@ -32,7 +33,7 @@ const AttendanceClassList = () => {
       capacity: 20,
       teacher: '박지민',
       class_color: 'yellow',
-      class_image: null,
+      class_image: sun,
     },
     {
       id: 4,
@@ -47,8 +48,8 @@ const AttendanceClassList = () => {
 
   return (
     <Content>
-      <ContentHeader Title={'유치원 출결 반 선택'} Color={'orange'} />
-      <ClassRoomCard rooms={thermeData} address={'/classDetail'} />
+      <ContentHeader Title={'일과표'} Color={'purple'} />
+      <ClassRoomCard rooms={thermeData} address={`/dailyDetail`} />
     </Content>
   );
 };
@@ -61,5 +62,4 @@ const Content = styled.div`
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 `;
 
-
-export default AttendanceClassList;
+export default DailySchedule;

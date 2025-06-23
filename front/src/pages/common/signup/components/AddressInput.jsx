@@ -1,8 +1,8 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-const AddressInput = () => {
+const AddressInput = ({ onAddressChange, error }) => {
   const [zonecode, setZonecode] = useState('');
   const [address, setAddress] = useState('');
   const [detail, setDetail] = useState('');
@@ -17,9 +17,20 @@ const AddressInput = () => {
       oncomplete: (data) => {
         setZonecode(data.zonecode);
         setAddress(data.address);
+        setDetail('');
       },
     }).open();
   };
+
+  useEffect(() => {
+    const full = `${address}, ${detail}`.trim();
+    onAddressChange?.(full);
+  }, [address, detail, onAddressChange]);
+
+  const handleDetailChange = (e) => {
+    setDetail(e.target.value);
+  };
+
   return (
     <Wrapper>
       <Label>주소</Label>
@@ -33,7 +44,8 @@ const AddressInput = () => {
 
       <LongInput type="text" placeholder="기본주소" value={address} readOnly />
 
-      <LongInput type="text" placeholder="상세주소" value={detail} onChange={(e) => setDetail(e.target.value)} />
+      <LongInput type="text" placeholder="상세주소" value={detail} onChange={handleDetailChange} />
+      {error && <ErrorMessage>{error}</ErrorMessage>}
     </Wrapper>
   );
 };
@@ -45,30 +57,30 @@ const Wrapper = styled.div`
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: ${({ theme }) => theme.spacing[1]};
 `;
 
 const Label = styled.label`
   display: block;
   text-align: left;
-  margin-top: 8px;
+  margin-top: ${({ theme }) => theme.spacing[2]};
   font-size: ${({ theme }) => theme.fontSizes.base};
   color: ${({ theme }) => theme.colors.gray[400]};
 `;
 
 const Row = styled.div`
   display: flex;
-  gap: 10px;
+  gap: ${({ theme }) => theme.spacing[3]};
 `;
 
 const ShortInput = styled.input`
   flex: 1;
   height: 40px;
-  padding: 10px;
+  padding: ${({ theme }) => theme.spacing[2]};
   outline: none;
   font-size: ${({ theme }) => theme.fontSizes.sm};
   border: 1px solid ${({ theme }) => theme.colors.gray[300]};
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   &::placeholder {
     color: ${({ theme }) => theme.colors.gray[300]};
   }
@@ -77,11 +89,11 @@ const ShortInput = styled.input`
 const LongInput = styled.input`
   width: 100%;
   height: 40px;
-  padding: 10px;
+  padding: ${({ theme }) => theme.spacing[2]};
   outline: none;
   font-size: ${({ theme }) => theme.fontSizes.sm};
   border: 1px solid ${({ theme }) => theme.colors.gray[300]};
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   &::placeholder {
     color: ${({ theme }) => theme.colors.gray[300]};
   }
@@ -95,10 +107,18 @@ const SearchButton = styled.button`
   color: ${({ theme }) => theme.colors.gray[900]};
   font-size: ${({ theme }) => theme.fontSizes.sm};
   border: none;
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   cursor: pointer;
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.lightblue};
   }
+`;
+
+const ErrorMessage = styled.p`
+  color: ${({ theme }) => theme.colors.orange};
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  margin-top: ${({ theme }) => theme.spacing[1]};
+  margin-left: ${({ theme }) => theme.spacing[1]};
+  text-align: left;
 `;

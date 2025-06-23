@@ -34,9 +34,14 @@ public class Center {// 시설
     private CommonEnums.CenterType centerType;
     //시설 유형
 
-    @Column(name = "CENTER_TEL", length = 40)
+    @Column(name = "CENTER_TEL", length = 20)
     private String centerTel;
     //시설 연락처
+
+    @Column(name = "STATUS", length = 20)
+    @Enumerated(EnumType.STRING)
+    private CommonEnums.AdmissionStatus status;
+    //상태(승인, 거절, 대기)
 
 
     //---------------------------------------------------------------------------------------------
@@ -57,6 +62,11 @@ public class Center {// 시설
 
     @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
     @Builder.Default
+    List<Child> childs = new ArrayList<>();
+    //아동
+
+    @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
+    @Builder.Default
     List<Attendance> attendances = new ArrayList<>();
     //근태
 
@@ -65,6 +75,23 @@ public class Center {// 시설
     List<Schedule> schedules = new ArrayList<>();
     //일정
 
+    @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
+    @Builder.Default
+    List<Board> boards = new ArrayList<>();
+    //게시판
 
+    @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
+    @Builder.Default
+    List<ClassRoom> classRooms = new ArrayList<>();
+    //반
+
+
+    //---------------------------------------------------------------------------------------------
+    @PrePersist
+    protected void onCreate() {
+        if(this.status == null) {
+            this.status = CommonEnums.AdmissionStatus.PENDING;
+        }
+    }
 
 }

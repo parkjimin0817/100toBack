@@ -1,19 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const CenterTypeSelect = () => {
+const CenterTypeSelect = ({ error, ...rest }) => {
   return (
     <Wrapper>
       <Label>시설유형</Label>
-      <SelectCenter>
+      <SelectCenter {...rest}>
         <option value="">선택해주세요</option>
-        <option value="">어린이집</option>
-        <option value="">유치원</option>
-        <option value="">지역아동센터</option>
-        <option value="">돌봄교실</option>
-        <option value="">놀이방</option>
-        <option value="">기타</option>
+        <option value="DAYCARE">어린이집</option>
+        <option value="KINDERGARTEN">유치원</option>
+        <option value="CHILD_CENTERE">지역아동센터</option>
+        <option value="ETC">기타</option>
       </SelectCenter>
+      {error && <ErrorMessage>{error}</ErrorMessage>}
     </Wrapper>
   );
 };
@@ -30,7 +29,7 @@ const Wrapper = styled.div`
 const Label = styled.label`
   text-align: left;
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: ${({ theme }) => theme.spacing[1]};
   font-size: ${({ theme }) => theme.fontSizes.base};
   color: ${({ theme }) => theme.colors.gray[400]};
 `;
@@ -38,8 +37,16 @@ const Label = styled.label`
 const SelectCenter = styled.select`
   width: 400px;
   height: 40px;
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   border: 1px solid ${({ theme }) => theme.colors.gray[300]};
-  padding: 10px;
+  padding: ${({ theme }) => theme.spacing[3]};
   font-size: ${({ theme }) => theme.fontSizes.sm};
+`;
+
+const ErrorMessage = styled.p`
+  color: ${({ theme }) => theme.colors.orange};
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  margin-top: ${({ theme }) => theme.spacing[1]};
+  margin-left: ${({ theme }) => theme.spacing[1]};
+  text-align: left;
 `;

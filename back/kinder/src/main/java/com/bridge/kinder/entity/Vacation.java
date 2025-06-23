@@ -46,14 +46,17 @@ public class Vacation { //휴가, 워케이션
     private String attachment;
     //첨부파일
 
+    @Column(name = "CREATE_DATE")
+    private LocalDateTime createDate;
+    //생성일
+
     @Column(name = "STATUS", length = 20)
     @Enumerated(EnumType.STRING)
     private CommonEnums.AdmissionStatus status;
     //상태(승인, 거절, 대기)
 
-    @Column(name = "CREATE_DATE")
-    private LocalDateTime createDate;
-    //생성일
+    @Column(name = "DECISION_DATE")
+    private LocalDateTime decisionDate;
 
 
     //---------------------------------------------------------------------------------------------
@@ -75,6 +78,11 @@ public class Vacation { //휴가, 워케이션
         if(this.status == null) {
             this.status = CommonEnums.AdmissionStatus.PENDING;
         }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.decisionDate = LocalDateTime.now();
     }
 
 }

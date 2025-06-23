@@ -1,22 +1,39 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import ContentHeader from '../components/Common/ContentHeader';
-import App from '../App';
+import ContentHeader from '../../components/Common/ContentHeader';
+import App from '../../App';
 import { LuSearch } from 'react-icons/lu';
 
 const ApprovalListAdmin = () => {
-  const [selectedType, setSelectedType] = useState('시설장');
+  const data = [
+    {
+      center_name: '어린이집 A',
+      name: '막시무스',
+      center_type: '어린이집',
+      center_tel: '010-1234-5678',
+      create_date: '2023-10-01',
+    },
+    {
+      center_name: '아동센터 B',
+      name: '이철수',
+      center_type: '지역아동센터',
+      center_tel: '010-9876-5432',
+      create_date: '2023-10-02',
+    },
+    {
+      center_name: '유치원 A',
+      name: '박지민',
+      center_type: '유치원',
+      center_tel: '010-1111-2222',
+      create_date: '2023-10-03',
+    },
+  ];
 
   return (
     <Content>
-      <ContentHeader Title={'회원가입 관리'} Color={'blue'}></ContentHeader>
+      <ContentHeader Title={'시설장 회원가입 관리'} Color={'blue'}></ContentHeader>
       <Navigation>
-        <NavigationLeft>
-          <MemberType isActive={selectedType === '시설장'} onClick={() => setSelectedType('교사')}>
-            시설장
-          </MemberType>
-        </NavigationLeft>
-
+        <NavigationLeft></NavigationLeft>
         <NavigationRight>
           <SearchInput type="text" placeholder="검색어를 입력해주세요" />
           <SearchButton>
@@ -27,47 +44,35 @@ const ApprovalListAdmin = () => {
 
       <ApprovalLists>
         <TableWrapper>
-          {selectedType === '시설장' && (
-            <Table>
-              <thead>
-                <tr>
-                  <th>번호</th>
-                  <th>시설명</th>
-                  <th>시설장명</th>
-                  <th>시설유형</th>
-                  <th>전화번호</th>
-                  <th>가입일</th>
-                  <th>승인여부</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>어린이집1</td>
-                  <td>김원장</td>
-                  <td>어린이집</td>
-                  <td>010-1234-5678</td>
-                  <td>2023-10-02</td>
+          <Table>
+            <thead>
+              <tr>
+                <th>번호</th>
+                <th>시설명</th>
+                <th>시설장명</th>
+                <th>시설유형</th>
+                <th>전화번호</th>
+                <th>가입일</th>
+                <th>승인여부</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((item, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{item.center_name}</td>
+                  <td>{item.name}</td>
+                  <td>{item.center_type}</td>
+                  <td>{item.center_tel}</td>
+                  <td>{item.create_date}</td>
                   <td>
                     <button>승인</button>
                     <button>거절</button>
                   </td>
                 </tr>
-                <tr>
-                  <td>2</td>
-                  <td>강남아동보호센터</td>
-                  <td>박원장</td>
-                  <td>아동보호센터</td>
-                  <td>010-1234-5678</td>
-                  <td>2023-10-02</td>
-                  <td>
-                    <button>승인</button>
-                    <button>거절</button>
-                  </td>
-                </tr>
-              </tbody>
-            </Table>
-          )}
+              ))}
+            </tbody>
+          </Table>
         </TableWrapper>
       </ApprovalLists>
     </Content>
@@ -152,7 +157,8 @@ const ApprovalLists = styled.div`
 
 const TableWrapper = styled.div`
   width: 100%;
-  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  border-top-left-radius: ${({ theme }) => theme.borderRadius.xl};
+  border-top-right-radius: ${({ theme }) => theme.borderRadius.xl};
   overflow: hidden;
 `;
 
@@ -211,7 +217,7 @@ const Table = styled.table`
 
   button {
     border: none;
-    padding: 0 ${({ theme }) => theme.spacing[2]};
+    padding: 0 ${({ theme }) => theme.spacing[6]};
     border-radius: ${({ theme }) => theme.borderRadius.md};
     cursor: pointer;
     font-size: ${({ theme }) => theme.fontSizes.xs};

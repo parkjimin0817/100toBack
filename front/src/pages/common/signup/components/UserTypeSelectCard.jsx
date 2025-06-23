@@ -17,23 +17,23 @@ const Card = styled.div`
   height: 600px;
   margin: 30px;
   border: 1px solid rgb(150, 150, 150);
-  border-radius: 20px;
+  border-radius: ${({ theme }) => theme.borderRadius['2xl']};
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: 4px 4px 0px rgba(150, 150, 150, 0.2);
+  box-shadow: ${({ theme }) => theme.shadows.md};
 
   &:hover {
     transform: translateY(2px);
     transition: all 0.2s ease;
-    box-shadow: 2px 2px 0px rgba(180, 180, 180, 0.2);
+    box-shadow: ${({ theme }) => theme.shadows.md};
     cursor: pointer;
   }
 `;
 
 const Title = styled.h2`
-  font-weight: 800;
+  font-weight: ${({ theme }) => theme.fontWeights.extrabold};
 `;
 
 const Img = styled.img`
@@ -47,5 +47,5 @@ const Description = styled.p`
   display: block;
   width: 230px;
   min-height: 100px;
-  font-weight: 600;
+  font-weight: ${({ theme }) => theme.fontWeights.semibold};
 `;

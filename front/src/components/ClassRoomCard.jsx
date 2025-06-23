@@ -27,7 +27,7 @@ const ClassRoomCard = ({ rooms, address }) => {
             capacity={room.capacity}
             teacher={room.teacher}
             classColor={room.class_color}
-            address={address}
+            address={address + `/${room.id}`}
           />
         ))}
       </FlexContainer>

@@ -6,10 +6,23 @@ import AgreeModal from './components/AgreeModal';
 import modalContents from '../../../assets/agreement';
 import CommonFind from '../../../components/Common/CommonFind';
 import NextButton from './components/NextButton';
+import { useSignUpStore } from '../../../store/signupStore';
+import { toast } from 'react-toastify';
 
-const steps = ['약관 동의', '기본 정보 입력', '근무 정보 입력', '가입 완료'];
+const getStepsByType = (type) => {
+  switch (type) {
+    case 'teacher':
+      return ['약관 동의', '기본 정보 입력', '근무 정보 입력', '가입 완료'];
+    case 'parent':
+      return ['약관 동의', '기본 정보 입력', '아동 정보 입력', '가입 완료'];
+    case 'manager':
+      return ['약관 동의', '기본 정보 입력', '시설 정보 입력', '가입 완료'];
+  }
+};
 
 const TermsAgreement = () => {
+  //선택 권한
+  const type = useSignUpStore((state) => state.type);
   const currentStep = 0;
   //열려있는 모달 항목
   const [openModalKey, setOpenModalKey] = useState(null);
@@ -40,7 +53,7 @@ const TermsAgreement = () => {
   return (
     <CommonFind>
       <Container>
-        <SignUpProgressBar steps={steps} currentStep={currentStep} />
+        <SignUpProgressBar steps={getStepsByType(type)} currentStep={currentStep} />
         <Title>다음 내용에 동의해주세요</Title>
         <Wrapper>
           <AgreeAllBox>
@@ -81,7 +94,18 @@ const TermsAgreement = () => {
               <IoIosArrowForward size={20} onClick={() => setOpenModalKey('sensitive')} />
             </TextWrapper>
           </AgreeBox>
-          <NextButton to="/signup/info">다음 단계</NextButton>
+          <NextButton
+            to={isAllAgreed ? '/signup/info' : '#'}
+            onClick={(e) => {
+              if (!isAllAgreed) {
+                e.preventDefault();
+                console.log('❌ 동의 안됨');
+                toast.error('모든 항목에 동의해주세요.');
+              }
+            }}
+          >
+            다음 단계
+          </NextButton>
         </Wrapper>
         {openModalKey && (
           <AgreeModal
@@ -115,24 +139,24 @@ const Wrapper = styled.div`
 
 const Title = styled.span`
   display: block;
-  margin: 30px 0;
+  margin: ${({ theme }) => theme.spacing[8]} 0;
   font-size: ${({ theme }) => theme.fontSizes.lg};
-  font-weight: 500;
+  font-weight: ${({ theme }) => theme.fontWeights.medium};
 `;
 
 const Checkbox = styled.input`
   width: 25px;
   height: 25px;
-  margin: 15px;
+  margin: ${({ theme }) => theme.spacing[4]};
   border: 1px solid black;
-  border-radius: 0;
+  border-radius: ${({ theme }) => theme.borderRadius.none};
   appearance: none;
   outline: none;
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.white};
   cursor: pointer;
 
   &:checked {
-    background-color: #ff8267;
+    background-color: ${({ theme }) => theme.colors.orange};
   }
 `;
 
@@ -148,7 +172,7 @@ const AgreeAllBox = styled.div`
 const Text = styled.span`
   display: block;
   font-size: ${({ theme }) => theme.fontSizes.base};
-  font-weight: 500;
+  font-weight: ${({ theme }) => theme.fontWeights.medium};
 `;
 
 const Info = styled.span`

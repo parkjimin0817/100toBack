@@ -23,7 +23,7 @@ public class BoardContent {// 게시판 내용
     @Column(name = "TYPE", length = 20, nullable = false)
     @Enumerated(EnumType.STRING)
     private CommonEnums.BoardContentType type;
-    //내용 타입
+    //내용 타입(TEXT, IMG)
 
     @Column(name = "CONTENT_TEXT", columnDefinition = "TEXT")
     private String contentText;

@@ -1,15 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const ChildRRNInput = ({ label }) => {
+const ChildRRNInput = ({ label, register, errors }) => {
   return (
     <InputWrapper>
       <Label>{label}</Label>
       <InputRow>
-        <Input type="text" placeholder="200101" />
+        <Input type="text" inputMode="numeric" maxLength={6} placeholder="200101" {...register('childRRNFront')} />
         <Text>-</Text>
-        <Input type="password" placeholder="•••••••" />
+        <Input type="password" inputMode="numeric" maxLength={7} placeholder="•••••••" {...register('childRRNBack')} />
       </InputRow>
+      {(errors.childRRNFront || errors.childRRNBack) && (
+        <ErrorMessage>
+          {errors.childRRNFront?.message} <br /> {errors.childRRNBack?.message}
+        </ErrorMessage>
+      )}
     </InputWrapper>
   );
 };
@@ -36,7 +41,7 @@ const Text = styled.span`
 const Label = styled.label`
   text-align: left;
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: ${({ theme }) => theme.spacing[1]};
   font-size: ${({ theme }) => theme.fontSizes.base};
   color: ${({ theme }) => theme.colors.gray[400]};
 `;
@@ -45,12 +50,20 @@ const Input = styled.input`
   width: 180px;
   height: 40px;
   border: 1px solid ${({ theme }) => theme.colors.gray[300]};
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   outline: none;
   font-size: ${({ theme }) => theme.fontSizes.sm};
-  padding: 10px;
+  padding: ${({ theme }) => theme.spacing[3]};
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.gray[300]};
   }
+`;
+
+const ErrorMessage = styled.p`
+  color: ${({ theme }) => theme.colors.orange};
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  margin-top: ${({ theme }) => theme.spacing[1]};
+  margin-left: ${({ theme }) => theme.spacing[1]};
+  text-align: left;
 `;

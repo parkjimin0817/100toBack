@@ -2,14 +2,61 @@
 import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import ChildImg from '../../assets/Child.png';
-import theme from '../../styles/theme';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { List } from '../../components/ChildDummyData';
+import AttendanceChildSchedule from '../../components/AttendanceChildSchedule';
+
+const attendanceData = [
+  {
+    child_attendance_no: 1,
+    child_no: 101,
+    class_no: 201,
+    create_date: '2025-06-17T08:30:00Z',
+    status: 'present',
+  },
+  {
+    child_attendance_no: 1,
+    child_no: 101,
+    class_no: 201,
+    create_date: '2025-06-16T08:30:00Z',
+    status: 'absent',
+  },
+  {
+    child_attendance_no: 1,
+    child_no: 101,
+    class_no: 201,
+    create_date: '2025-06-15T08:30:00Z',
+    status: 'half',
+  },
+];
 
 const ChildDetail = () => {
-  const [select, setSelect] = useState(true);
+  const navigate = useNavigate();
+  const { id } = useParams();
+  // const [searchParams] = useSearchParams();
+  // const id = searchParams.get('id'); // URL에서 ?id= 추출
 
-  const handleSelect = (value) => {
-    setSelect(value); // true 또는 false로 설정
+  const [select, setSelect] = useState({
+    health: true,
+    life: false,
+    attendance: false,
+  });
+  const [child, setChild] = useState(null);
+
+  useEffect(() => {
+    const found = List.find((item) => item.id === parseInt(id));
+    if (found) setChild(found);
+  }, [id]);
+
+  if (!child) return <div>로딩중...</div>;
+
+  const handleSelect = (tab) => {
+    setSelect({
+      health: tab === 'health',
+      life: tab === 'life',
+      attendance: tab === 'attendance',
+    }); // true 또는 false로 설정
   };
 
   return (
@@ -18,129 +65,301 @@ const ChildDetail = () => {
         <ContentHeader
           Title={'아동 상세보기'}
           Color={'orange'}
-          FontSize="xl"
-          ButtonProps={[{ Title: '뒤로가기', func: () => alert('뒤로가기~') }, { Title: '아동정보 삭제' }]}
+          ButtonProps={[{ Title: '뒤로가기', func: () => navigate(-1) }, { Title: '아동정보 삭제' }]}
         />
         <BasicInfo>
           <PictureLine>
             <Picture src={ChildImg} alt="아이사진" />
           </PictureLine>
           <FirstInfo>
-            <Name>김동글</Name>
-            <Info>
-              <InfoColumn>생년월일 </InfoColumn>
-              <InfoResult>2022.06.14</InfoResult>
-            </Info>
-            <Info>
-              <InfoColumn>키 </InfoColumn>
-              <InfoResult>63cm</InfoResult>
-            </Info>
-            <Info>
-              <InfoColumn>몸무게 </InfoColumn>
-              <InfoResult>12kg</InfoResult>
-            </Info>
-            <Info style={{ marginBottom: '45px' }}>
-              <InfoColumn>주소</InfoColumn>
-              <InfoResult>경기도 용인시 기흥구 어정로 12-34, 405동 1402호</InfoResult>
-            </Info>
+            <thead>
+              <NameTr>
+                <td>{child.name}</td>
+              </NameTr>
+            </thead>
+            <tbody>
+              <Info>
+                <InfoColumn>생년월일</InfoColumn>
+                <InfoResult>{child.birth}</InfoResult>
+              </Info>
+              <Info>
+                <InfoColumn>키</InfoColumn>
+                <InfoResult>{child.height}</InfoResult>
+              </Info>
+              <Info>
+                <InfoColumn>몸무게</InfoColumn>
+                <InfoResult>{child.weight}</InfoResult>
+              </Info>
+              <Info>
+                <InfoColumn>주소</InfoColumn>
+                <InfoResult>{child.address}</InfoResult>
+              </Info>
+            </tbody>
           </FirstInfo>
-          <FirstInfo style={{ marginLeft: '45px' }}>
-            <Class>햇님반</Class>
-            <Info>
-              <InfoColumn>생년월일 </InfoColumn>
-              <InfoResult>2022.06.14</InfoResult>
-            </Info>
-            <Info>
-              <InfoColumn>학부모 </InfoColumn>
-              <InfoResult>부:김동길, 모:최동순</InfoResult>
-            </Info>
-            <Info>
-              <InfoColumn>비상연락처 </InfoColumn>
-              <Phone>
-                <InfoResult>부:010-1234-5678</InfoResult>
-                <InfoResult>모:010-9876-5432</InfoResult>
-              </Phone>
-            </Info>
+          <FirstInfo>
+            <thead>
+              <Class>
+                <td>{child.className}</td>
+              </Class>
+            </thead>
+
+            <tbody>
+              <Info>
+                <InfoColumn>학부모</InfoColumn>
+                <InfoResult>
+                  부:{child.parents.father}, 모:{child.parents.mother}
+                </InfoResult>
+              </Info>
+              <Info>
+                <InfoColumn>비상연락처</InfoColumn>
+                <InfoResult1>
+                  <SpanWrapper>
+                    <span>부:{child.phone.father}</span>
+                    <span>모:{child.phone.mother}</span>
+                  </SpanWrapper>
+                </InfoResult1>
+              </Info>
+            </tbody>
           </FirstInfo>
         </BasicInfo>
       </BasicInfoContainer>
       <HealthInfoContainer>
         <SelectHeader>
-          <HealthStyle select={select} onClick={() => handleSelect(true)}>
+          <HealthStyle select={select} onClick={() => handleSelect('health')}>
             건강
           </HealthStyle>
-          <LifeStyle select={select} onClick={() => handleSelect(false)}>
+          <LifeStyle select={select} onClick={() => handleSelect('life')}>
             생활
           </LifeStyle>
+          <Attendance select={select} onClick={() => handleSelect('attendance')}>
+            출석
+          </Attendance>
         </SelectHeader>
         <DetailInfoContainer>
-          <Title>하루 건강</Title>
-          <HeaderColumn>
-            <DateColumn>날짜</DateColumn>
-            <TempColumn>체온</TempColumn>
-            <HeightColumn>키</HeightColumn>
-            <WeightColumn>몸무게</WeightColumn>
-            <SymptomColumn>증상</SymptomColumn>
-            <MemoColumn>메모</MemoColumn>
-          </HeaderColumn>
-          <ContentColumn>
-            <DateColumn>2025.06.05</DateColumn>
-            <TempColumn>37.5°C</TempColumn>
-            <HeightColumn>100cm</HeightColumn>
-            <WeightColumn>18kg</WeightColumn>
-            <SymptomColumn>기침</SymptomColumn>
-            <MemoColumn>점심먹고 배가 아프다 했어요</MemoColumn>
-          </ContentColumn>
-          <ContentColumn>
-            <DateColumn>2025.06.04</DateColumn>
-            <TempColumn>37.5°C</TempColumn>
-            <HeightColumn>100cm</HeightColumn>
-            <WeightColumn>18kg</WeightColumn>
-            <SymptomColumn>기침</SymptomColumn>
-            <MemoColumn>점심먹고 배가 아프다 했어요</MemoColumn>
-          </ContentColumn>
-          <ContentColumn>
-            <DateColumn>2025.06.03</DateColumn>
-            <TempColumn>37.5°C</TempColumn>
-            <HeightColumn>100cm</HeightColumn>
-            <WeightColumn>18kg</WeightColumn>
-            <SymptomColumn>기침</SymptomColumn>
-            <MemoColumn>점심먹고 배가 아프다 했어요</MemoColumn>
-          </ContentColumn>
-          <ContentColumn>
-            <DateColumn>2025.06.02</DateColumn>
-            <TempColumn>37.5°C</TempColumn>
-            <HeightColumn>100cm</HeightColumn>
-            <WeightColumn>18kg</WeightColumn>
-            <SymptomColumn>기침</SymptomColumn>
-            <MemoColumn>점심먹고 배가 아프다 했어요</MemoColumn>
-          </ContentColumn>
-          <LoadMoreButton>더보기</LoadMoreButton>
-          <FooterInfoLine>
-            <FooterBox>
-              <FooterTitle>복약정보</FooterTitle>
-              <FooterColumn>약이름:타이레놀 어린이시럽</FooterColumn>
-              <FooterColumn>복용 용량:5ml</FooterColumn>
-              <FooterColumn>복용 시간:식후 30분</FooterColumn>
-              <FooterColumn>복용 기간:6월22일~24일</FooterColumn>
-              <FooterColumn>복용 목적:열,콧물</FooterColumn>
-              <FooterColumn>메모:열 없으면 투약 중단, 너무 거부하면 사탕이랑 같이</FooterColumn>
-            </FooterBox>
-            <FooterBox>
-              <FooterTitle>예방접종</FooterTitle>
-              <FooterColumn>예방접종 내용은 통을 입력하게</FooterColumn>
-              <FooterColumn>BCG:2026.12.22</FooterColumn>
-              <FooterColumn>접종 예정:2025.06.25</FooterColumn>
-            </FooterBox>
-            <FooterBox>
-              <FooterTitle>알레르기</FooterTitle>
-              <FooterColumn>알레르기:계란,해산물,복숭아</FooterColumn>
-              <FooterColumn>반응:호흡곤란,두드러기</FooterColumn>
-              <FooterColumn>심각도:가벼움</FooterColumn>
-              <FooterColumn>메모:계란 알레르기가 심합니다. 유의 부탁드립니다.</FooterColumn>
-            </FooterBox>
-          </FooterInfoLine>
-          <LoadMoreButton>수정</LoadMoreButton>
+          {select.health ? (
+            <>
+              <Title>하루 건강</Title>
+              <Table>
+                <tbody>
+                  <HealthTr>
+                    <th>날짜</th>
+                    <th>체온</th>
+                    <th>키</th>
+                    <th>몸무게</th>
+                    <th>증상</th>
+                    <th>메모</th>
+                  </HealthTr>
+                  {child.healthRecords &&
+                    [...child.healthRecords]
+                      .sort((a, b) => new Date(b.date) - new Date(a.date))
+                      .slice(0, 4)
+                      .map((record, index) => (
+                        <HealthContentTr key={index}>
+                          <td>{record.date}</td>
+                          <td>{record.temp}</td>
+                          <td>{record.height}</td>
+                          <td>{record.weight}</td>
+                          <td>{record.symptom}</td>
+                          <td>{record.memo}</td>
+                        </HealthContentTr>
+                      ))}
+                </tbody>
+              </Table>
+              <LoadMoreButton>더보기</LoadMoreButton>
+
+              <FooterInfoLine>
+                <FooterBox>
+                  <FooterTitle>복약정보</FooterTitle>
+                  <FooterTable>
+                    <tbody>
+                      <tr>
+                        <FooterTd1>약 이름</FooterTd1>
+                        <FooterTd2>{child.medication.name}</FooterTd2>
+                      </tr>
+                      <tr>
+                        <FooterTd1>복용 용량</FooterTd1>
+                        <FooterTd2>{child.medication.dose}</FooterTd2>
+                      </tr>
+                      <tr>
+                        <FooterTd1>복용 시간</FooterTd1>
+                        <FooterTd2>{child.medication.time}</FooterTd2>
+                      </tr>
+                      <tr>
+                        <FooterTd1>복용 기간</FooterTd1>
+                        <FooterTd2>{child.medication.period}</FooterTd2>
+                      </tr>
+                      <tr>
+                        <FooterTd1>복용 목적</FooterTd1>
+                        <FooterTd2>{child.medication.purpose}</FooterTd2>
+                      </tr>
+                      <tr>
+                        <FooterTd1>메모</FooterTd1>
+                        <FooterTd2>{child.medication.note}</FooterTd2>
+                      </tr>
+                    </tbody>
+                  </FooterTable>
+                </FooterBox>
+
+                <FooterBox>
+                  <FooterTitle>예방접종</FooterTitle>
+                  <FooterTable>
+                    <tbody>
+                      <tr>
+                        <FooterTd1>BCG</FooterTd1>
+                        <FooterTd2>{child.vaccination.BCG}</FooterTd2>
+                      </tr>
+                      <tr>
+                        <FooterTd1>접종 예정</FooterTd1>
+                        <FooterTd2>{child.vaccination.schedule}</FooterTd2>
+                      </tr>
+                    </tbody>
+                  </FooterTable>
+                </FooterBox>
+
+                <FooterBox>
+                  <FooterTitle>알레르기</FooterTitle>
+                  <FooterTable>
+                    <tbody>
+                      <tr>
+                        <FooterTd1>알레르기</FooterTd1>
+                        <FooterTd2>{child.allergy.items}</FooterTd2>
+                      </tr>
+                      <tr>
+                        <FooterTd1>반응</FooterTd1>
+                        <FooterTd2>{child.allergy.reaction}</FooterTd2>
+                      </tr>
+                      <tr>
+                        <FooterTd1>심각도</FooterTd1>
+                        <FooterTd2>{child.allergy.severity}</FooterTd2>
+                      </tr>
+                      <tr>
+                        <FooterTd1>메모</FooterTd1>
+                        <FooterTd2>{child.allergy.note}</FooterTd2>
+                      </tr>
+                    </tbody>
+                  </FooterTable>
+                </FooterBox>
+              </FooterInfoLine>
+              <LoadMoreButton>수정</LoadMoreButton>
+            </>
+          ) : (
+            ''
+          )}
+          {select.life ? (
+            <>
+              <Title>하루 생활</Title>
+              <Table>
+                <tbody>
+                  <HealthTr>
+                    <th>날짜</th>
+                    <th>식사</th>
+                    <th>낮잠시간</th>
+                    <th>놀이참여</th>
+                    <th>교우관계</th>
+                    <th>메모</th>
+                  </HealthTr>
+
+                  {child.lifeRecords &&
+                    [...child.lifeRecords]
+                      .sort((a, b) => new Date(b.date) - new Date(a.date))
+                      .slice(0, 4) //최신순으로 상위 4개까지 잘라냄
+                      .map((record, index) => (
+                        <HealthContentTr key={index}>
+                          <td>{record.date}</td>
+                          <td>{record.meal}</td>
+                          <td>{record.napTime}</td>
+                          <td>{record.play}</td>
+                          <td>{record.social}</td>
+                          <td>{record.memo}</td>
+                        </HealthContentTr>
+                      ))}
+                </tbody>
+              </Table>
+
+              <LoadMoreButton>더보기</LoadMoreButton>
+
+              <FooterInfoLine>
+                <FooterBox2>
+                  <FooterTitle>식습관</FooterTitle>
+                  <FooterTable>
+                    <tbody>
+                      <tr>
+                        <FooterTd1>좋아하는 음식</FooterTd1>
+                        <FooterTd2>{child.eatingHabit.likes}</FooterTd2>
+                      </tr>
+                      <tr>
+                        <FooterTd1>싫어하는 음식</FooterTd1>
+                        <FooterTd2>{child.eatingHabit.dislikes}</FooterTd2>
+                      </tr>
+                      <tr>
+                        <FooterTd1>식사량</FooterTd1>
+                        <FooterTd2>{child.eatingHabit.status}</FooterTd2>
+                      </tr>
+                      <tr>
+                        <FooterTd1>메모</FooterTd1>
+                        <FooterTd2>{child.eatingHabit.note}</FooterTd2>
+                      </tr>
+                    </tbody>
+                  </FooterTable>
+                </FooterBox2>
+                <FooterBox2>
+                  <FooterTitle>교우관계</FooterTitle>
+                  <FooterTable>
+                    <tbody>
+                      <tr>
+                        <FooterTd1>친한친구</FooterTd1>
+                        <FooterTd2>{child.socialRelation.closeFriends}</FooterTd2>
+                      </tr>
+                      <tr>
+                        <FooterTd1>좋아하는 놀이</FooterTd1>
+                        <FooterTd2>{child.socialRelation.favoritePlay}</FooterTd2>
+                      </tr>
+                      <tr>
+                        <FooterTd1>메모</FooterTd1>
+                        <FooterTd2>{child.socialRelation.note}</FooterTd2>
+                      </tr>
+                    </tbody>
+                  </FooterTable>
+                </FooterBox2>
+              </FooterInfoLine>
+              <LoadMoreButton>수정</LoadMoreButton>
+            </>
+          ) : (
+            ''
+          )}
+          {select.attendance ? (
+            <>
+              <AttendanceOutline>
+                <CalendarHeader>
+                  <h2>출석표</h2>
+                  <div>
+                    <InfoTable>
+                      <tbody>
+                        <tr>
+                          <Point1></Point1>
+                          <td>출석</td>
+                        </tr>
+                        <tr>
+                          <Point2></Point2>
+                          <td>지각</td>
+                        </tr>
+                        <tr>
+                          <Point3></Point3>
+                          <td>결석</td>
+                        </tr>
+                      </tbody>
+                    </InfoTable>
+                  </div>
+                </CalendarHeader>
+
+                <CalendarOutline>
+                  <AttendanceChildSchedule data={attendanceData} />
+                </CalendarOutline>
+              </AttendanceOutline>
+            </>
+          ) : (
+            ''
+          )}
         </DetailInfoContainer>
       </HealthInfoContainer>
     </>
@@ -149,14 +368,90 @@ const ChildDetail = () => {
 
 export default ChildDetail;
 
+const InfoTable = styled.table`
+  border-collapse: separate;
+  border-spacing: 6px;
+`;
+
+const Point1 = styled.td`
+  border-radius: ${({ theme }) => theme.borderRadius.full};
+  background-color: ${({ theme }) => theme.colors.green};
+  width: 20px;
+  height: 20px;
+`;
+const Point3 = styled.td`
+  border-radius: ${({ theme }) => theme.borderRadius.full};
+  background-color: ${({ theme }) => theme.colors.orange};
+  width: 20px;
+  height: 20px;
+`;
+const Point2 = styled.td`
+  border-radius: ${({ theme }) => theme.borderRadius.full};
+  background-color: ${({ theme }) => theme.colors.yellow};
+  width: 20px;
+  height: 20px;
+`;
+
+const AttendanceOutline = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+`;
+
+const CalendarHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray[300]};
+`;
+
+const CalendarOutline = styled.div`
+  width: 100%;
+  height: 100%;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray[300]};
+`;
+
+const FooterTable = styled.table`
+  border-collapse: separate;
+  border-spacing: 10px;
+`;
+
+const FooterTd1 = styled.td`
+  width: 30%;
+  text-align: left;
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+`;
+
+const FooterTd2 = styled.td`
+  width: 50%;
+  text-align: left;
+`;
+
+const Table = styled.table`
+  width: 100%;
+`;
+
+const HealthTr = styled.tr`
+  background-color: #ffce6540;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray[400]};
+`;
+
+const HealthContentTr = styled.tr`
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray[400]};
+`;
+
 const BasicInfoContainer = styled.div`
   min-width: 1024px;
-  max-height: 365px;
 `;
 
 const BasicInfo = styled.div`
   display: flex;
-  flex-direction: row;
+  justify-content: space-around;
   background-color: white;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
@@ -171,50 +466,53 @@ const PictureLine = styled.div`
 
 const Picture = styled.img``;
 
-const FirstInfo = styled.div`
-  margin-top: 20px;
-  flex-direction: column;
+const FirstInfo = styled.table`
+  text-align: left;
+  border-collapse: separate;
+  border-spacing: 10px;
 `;
 
-const Name = styled.div`
+const NameTr = styled.tr`
   display: flex;
   justify-content: flex-start;
   font-size: 24px;
   font-weight: ${({ theme }) => theme.fontWeights.bold};
-  margin-bottom: 25px;
 `;
 
-const Info = styled.div`
+const Info = styled.tr``;
+
+const SpanWrapper = styled.div`
   display: flex;
-  flex-direction: row;
-  margin-bottom: 15px;
+  flex-direction: column; /* 또는 row로 가로배치 */
+  justify-content: center; /* 세로 가운데 정렬 */
+  height: 100%;
+  padding-top: 40px;
 `;
 
-const InfoColumn = styled.div`
+const InfoColumn = styled.td`
   font-weight: ${({ theme }) => theme.fontWeights.bold};
 `;
 
-const InfoResult = styled.div`
-  margin-left: 25px;
+const InfoResult = styled.td``;
+
+const InfoResult1 = styled.td`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 `;
 
-const Class = styled.div`
+const Class = styled.tr`
   display: flex;
   justify-content: flex-start;
   font-size: 24px;
   font-weight: ${({ theme }) => theme.fontWeights.bold};
-  margin-bottom: 25px;
-`;
-
-const Phone = styled.div`
-  flex-direction: column;
 `;
 
 const HealthInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   min-width: 1024px;
-  max-height: 620px;
   margin-top: 10px;
 `;
 
@@ -234,7 +532,7 @@ const HealthStyle = styled.div.withConfig({
   border-top-left-radius: 10px;
   width: 180px;
   height: 48px;
-  background-color: ${({ select, theme }) => (select ? theme.colors.yellow : 'rgba(255, 206, 101, 0.25)')};
+  background-color: ${({ select, theme }) => (select.health ? theme.colors.yellow : 'rgba(255, 206, 101, 0.25)')};
   font-weight: ${({ theme }) => theme.fontWeights.bold};
   margin-right: 10px;
 
@@ -253,7 +551,26 @@ const LifeStyle = styled.div.withConfig({
   border-top-left-radius: 10px;
   width: 180px;
   height: 48px;
-  background-color: ${({ select, theme }) => (select ? 'rgba(255, 206, 101, 0.25)' : theme.colors.yellow)};
+  background-color: ${({ select, theme }) => (select.life ? theme.colors.yellow : 'rgba(255, 206, 101, 0.25)')};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  margin-right: 10px;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const Attendance = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'select',
+})`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  width: 180px;
+  height: 48px;
+  background-color: ${({ select, theme }) => (select.attendance ? theme.colors.yellow : 'rgba(255, 206, 101, 0.25)')};
   font-weight: ${({ theme }) => theme.fontWeights.bold};
   margin-right: 10px;
 
@@ -264,74 +581,23 @@ const LifeStyle = styled.div.withConfig({
 
 const DetailInfoContainer = styled.div`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   flex-direction: column;
   min-width: 1024px;
-  height: 570px;
+
   border: 8px solid ${({ theme }) => theme.colors.yellow};
   border-radius: 20px;
   background-color: white;
+  padding: ${({ theme }) => theme.spacing[16]};
+  padding-top: ${({ theme }) => theme.spacing[8]};
 `;
 
-const Title = styled.div`
+const Title = styled.h2`
   font-size: 24px;
   font-weight: bold;
-  margin-left: 70px;
-  margin-top: 30px;
-  margin-bottom: 5px;
-`;
-
-const HeaderColumn = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: row;
-  margin-left: 70px;
-  width: 900px;
-  height: 30px;
-  background-color: rgba(255, 206, 101, 0.25);
-  font-size: 16px;
-  font-weight: bold;
-  border-bottom: 1px solid black;
-`;
-
-const ContentColumn = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: row;
-  margin-left: 70px;
-  width: 900px;
-  height: 30px;
-  background-color: white;
-  font-size: 16px;
-  font-weight: normal;
-  border-bottom: 1px solid black;
-`;
-
-const DateColumn = styled.div`
-  width: 123px;
-`;
-
-const TempColumn = styled.div`
-  width: 82px;
-`;
-
-const HeightColumn = styled.div`
-  width: 82px;
-`;
-const WeightColumn = styled.div`
-  width: 80px;
-`;
-
-const SymptomColumn = styled.div`
-  width: 150px;
-`;
-
-const MemoColumn = styled.div`
-  width: 308px;
+  padding-bottom: ${({ theme }) => theme.spacing[8]};
+  width: 100%;
+  text-align: left;
 `;
 
 const LoadMoreButton = styled.button`
@@ -342,10 +608,8 @@ const LoadMoreButton = styled.button`
   height: 20px;
   font-size: 16px;
   background-color: ${({ theme }) => theme.colors.yellow};
-  margin-top: 10px;
-  margin-bottom: 20px;
+  margin: ${({ theme }) => theme.spacing[6]} 0;
   border-radius: 10px;
-  margin-left: 465px;
 
   &:hover {
     cursor: pointer;
@@ -355,31 +619,34 @@ const LoadMoreButton = styled.button`
 
 const FooterInfoLine = styled.div`
   display: flex;
-  flex-direction: row;
-  margin-left: 70px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
 `;
 
 const FooterBox = styled.div`
   display: flex;
   flex-direction: column;
   width: 280px;
+  height: 330px;
+  background-color: rgba(255, 206, 101, 0.25);
+  border-radius: 10px;
+  padding: ${({ theme }) => theme.spacing[3]};
+`;
+
+const FooterBox2 = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 400px;
   height: 260px;
   background-color: rgba(255, 206, 101, 0.25);
   border-radius: 10px;
-  margin-right: 25px;
+  padding: ${({ theme }) => theme.spacing[3]};
 `;
 
 const FooterTitle = styled.div`
   font-size: 18px;
   font-weight: bold;
-  margin-top: 15px;
-`;
-
-const FooterColumn = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  max-width: 220px;
-  font-size: 14px;
-  margin-left: 30px;
-  margin-bottom: 10px;
+  padding: ${({ theme }) => theme.spacing[4]} 0;
 `;

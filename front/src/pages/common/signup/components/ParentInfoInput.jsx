@@ -1,22 +1,73 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Controller } from 'react-hook-form';
 
-const ParentInfoInput = () => {
+const formatPhoneNumber = (value = '') => {
+  const onlyNums = value.replace(/\D/g, '');
+  if (onlyNums.length <= 3) return onlyNums;
+  if (onlyNums.length <= 7) return onlyNums.replace(/(\d{3})(\d{1,4})/, '$1-$2');
+  return onlyNums.replace(/(\d{3})(\d{4})(\d{1,4})/, '$1-$2-$3');
+};
+
+const ParentInfoInput = ({ disabled, register, errors, control }) => {
   return (
     <InputWrapper>
       <Label>부모 정보</Label>
       <InputRow>
         <Text>부 이름 : </Text>
-        <InputName type="text" placeholder="이름" />
+        <InputName type="text" placeholder="이름" disabled={disabled} {...register('parentInfo.fatherName')} />
         <Text>부 연락처 : </Text>
-        <InputPhone type="text" placeholder="'-' 제외 11자리 연락처" />
+        <Controller
+          name="parentInfo.fatherPhone"
+          control={control}
+          render={({ field }) => (
+            <InputPhone
+              {...field}
+              type="text"
+              placeholder="'-' 제외 11자리 연락처"
+              value={field.value || ''} // ✅ 그대로 보여주고
+              onChange={(e) => {
+                const formatted = formatPhoneNumber(e.target.value);
+                field.onChange(formatted); // ✅ 여기서만 포맷
+              }}
+              disabled={disabled}
+              maxLength={13}
+            />
+          )}
+        />
       </InputRow>
       <InputRow>
         <Text>모 이름 : </Text>
-        <InputName type="text" placeholder="이름" />
+        <InputName type="text" placeholder="이름" disabled={disabled} {...register('parentInfo.motherName')} />
         <Text>모 연락처 : </Text>
-        <InputPhone type="text" placeholder="'-' 제외 11자리 연락처" />
+        <Controller
+          name="parentInfo.motherPhone"
+          control={control}
+          render={({ field }) => (
+            <InputPhone
+              {...field}
+              type="text"
+              placeholder="'-' 제외 11자리 연락처"
+              value={field.value || ''} // ✅ 그대로 보여주고
+              onChange={(e) => {
+                const formatted = formatPhoneNumber(e.target.value);
+                field.onChange(formatted); // ✅ 여기서만 포맷
+              }}
+              disabled={disabled}
+              maxLength={13}
+            />
+          )}
+        />
       </InputRow>
+      {(errors.parentInfo?.fatherName ||
+        errors.parentInfo?.fatherPhone ||
+        errors.parentInfo?.motherName ||
+        errors.parentInfo?.motherPhone) && (
+        <ErrorMessage>
+          {errors.parentInfo.fatherName?.message} <br /> {errors.parentInfo.fatherPhone?.message} <br />
+          {errors.parentInfo.motherName?.message} <br /> {errors.parentInfo.motherPhone?.message}
+        </ErrorMessage>
+      )}
     </InputWrapper>
   );
 };
@@ -33,7 +84,7 @@ const InputWrapper = styled.div`
 const Label = styled.label`
   text-align: left;
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: ${({ theme }) => theme.spacing[1]};
   font-size: ${({ theme }) => theme.fontSizes.base};
   color: ${({ theme }) => theme.colors.gray[400]};
 `;
@@ -42,7 +93,7 @@ const InputRow = styled.div`
   display: flex;
   width: 400px;
   justify-content: space-between;
-  margin-bottom: 5px;
+  margin-bottom: ${({ theme }) => theme.spacing[1]};
 `;
 
 const Text = styled.span`
@@ -56,10 +107,10 @@ const InputName = styled.input`
   width: 100px;
   height: 40px;
   border: 1px solid ${({ theme }) => theme.colors.gray[300]};
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   outline: none;
   font-size: ${({ theme }) => theme.fontSizes.sm};
-  padding: 10px;
+  padding: ${({ theme }) => theme.spacing[3]};
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.gray[300]};
@@ -70,12 +121,20 @@ const InputPhone = styled.input`
   width: 180px;
   height: 40px;
   border: 1px solid ${({ theme }) => theme.colors.gray[300]};
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   outline: none;
   font-size: ${({ theme }) => theme.fontSizes.sm};
-  padding: 10px;
+  padding: ${({ theme }) => theme.spacing[3]};
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.gray[300]};
   }
+`;
+
+const ErrorMessage = styled.p`
+  color: ${({ theme }) => theme.colors.orange};
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  margin-top: ${({ theme }) => theme.spacing[1]};
+  margin-left: ${({ theme }) => theme.spacing[1]};
+  text-align: left;
 `;

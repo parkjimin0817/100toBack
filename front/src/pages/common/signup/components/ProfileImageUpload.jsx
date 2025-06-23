@@ -1,24 +1,13 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 
-const ProfileImageUpload = ({ label }) => {
+const ProfileImageUpload = ({ label, error, onChange, ref, name, disabled }) => {
   const fileInputRef = useRef();
   const [preview, setPreview] = useState(null);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
-    const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-    if (!validTypes.includes(file.type)) {
-      alert('JPG, JPEG, PNG 파일만 업로드 가능합니다.');
-      return;
-    }
-
-    if (file.size > 200 * 1024) {
-      alert('파일 크기는 200KB 이하만 가능합니다.');
-      return;
-    }
 
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -38,11 +27,20 @@ const ProfileImageUpload = ({ label }) => {
         <HiddenInput
           type="file"
           accept="image/jpeg, image/png, image/jpg"
-          onChange={handleImageChange}
-          ref={fileInputRef}
+          name={name}
+          onChange={(e) => {
+            onChange(e.target.files[0]);
+            handleImageChange(e);
+          }}
+          ref={(el) => {
+            fileInputRef.current = el;
+            if (ref) ref(el);
+          }}
+          disabled={disabled}
         />
       </PreviewRow>
       <InfoText>사이즈: 150 x 150 픽셀, 파일 형식: JPG, JPEG, PNG, 용량: 200KB 이하</InfoText>
+      {error && <ErrorMessage>{error}</ErrorMessage>}
     </ImageUploadWrapper>
   );
 };
@@ -59,7 +57,7 @@ const ImageUploadWrapper = styled.div`
 const Label = styled.label`
   display: block;
   text-align: left;
-  margin-bottom: 4px;
+  margin-bottom: ${({ theme }) => theme.spacing[1]};
   font-size: ${({ theme }) => theme.fontSizes.base};
   color: ${({ theme }) => theme.colors.gray[400]};
 `;
@@ -68,26 +66,26 @@ const PreviewRow = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 8px;
+  gap: ${({ theme }) => theme.spacing[4]};
+  margin-bottom: ${({ theme }) => theme.spacing[2]};
 `;
 
 const PreviewImage = styled.img`
   width: 100px;
   height: 100px;
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   object-fit: cover;
   border: 1px solid ${({ theme }) => theme.colors.gray[300]};
 `;
 
 const UploadButton = styled.button`
-  padding: 8px 12px;
+  padding: ${({ theme }) => `${theme.spacing[2]} ${theme.spacing[3]}`};
   height: 40px;
   outline: none;
   background-color: ${({ theme }) => theme.colors.gray[100]};
   color: ${({ theme }) => theme.colors.gray[800]};
   border: 1px solid ${({ theme }) => theme.colors.gray[300]};
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   font-size: ${({ theme }) => theme.fontSizes.sm};
   cursor: pointer;
 
@@ -104,4 +102,12 @@ const InfoText = styled.div`
   font-size: ${({ theme }) => theme.fontSizes.xs};
   color: ${({ theme }) => theme.colors.gray[500]};
   line-height: 1.4;
+`;
+
+const ErrorMessage = styled.p`
+  color: ${({ theme }) => theme.colors.orange};
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  margin-top: ${({ theme }) => theme.spacing[1]};
+  margin-left: ${({ theme }) => theme.spacing[1]};
+  text-align: left;
 `;

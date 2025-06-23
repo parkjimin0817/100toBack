@@ -3,19 +3,22 @@ import styled from 'styled-components';
 import logo from '../../assets/img/KinderBridge.png';
 import userProfile from '../../assets/img/userProfile.png';
 import { IoCallOutline } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
+  const navigate = useNavigate();
   return (
     <HeaderContainer>
       <HeaderLeftBox>
-        <Logo src={logo} alt="KinderBridge" />
+        {/* 로그인한 사람 role 기준으로 url 바뀌기 */}
+        <Logo src={logo} alt="KinderBridge" onClick={() => navigate('/parent/main')} />
         <LinearBar></LinearBar>
         <IoCallOutline />
         <p>1544-9970</p>
       </HeaderLeftBox>
       <HeaderRightBox>
         <UserProfile>
-          <img src={userProfile} alt="사용자 프로필" />
+          <Img src={userProfile} alt="사용자 프로필" onClick={() => navigate('/teacher/mypage')} />
           <UserNameAndRole>
             <p>정형일</p>
             <p>교사</p>
@@ -68,6 +71,10 @@ const UserProfile = styled.div`
 const UserNameAndRole = styled.div`
   text-align: start;
   margin-left: 10px;
+`;
+
+const Img = styled.img`
+  cursor: pointer;
 `;
 
 export default Header;
