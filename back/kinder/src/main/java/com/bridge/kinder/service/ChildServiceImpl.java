@@ -23,7 +23,7 @@ public class ChildServiceImpl implements ChildService {
     //아동 생성
     @Override
     public String createChild(ChildDto.CreateChild dto) {
-        Member parent = memberRepository.findById(dto.getMember_no())
+        Member parent = memberRepository.findByMemberNo(dto.getMember_no())
                 .orElseThrow(() -> new RuntimeException("부모 회원이 존재하지 않습니다."));
 
         Child child = dto.toEntity();

@@ -73,43 +73,36 @@ public class MemberDto {
         }
     }
 
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class LoginRequest {
+        private String memberId;
+        private String memberPwd;
+    }
+
 
     @Getter
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class Response {
+    public static class LoginResponse {
         private int member_no;
         private String member_name;
-        private LocalDate member_birth;
         private String member_id;
-        private String member_pwd;
-        private String member_phone;
         private CommonEnums.MemberType member_type;
-        private String member_profile;
-        private String address;
-        private LocalDateTime created_date;
-        private CommonEnums.AdmissionStatus status;
 
         private int center_no;
-        private int class_no;
 
-        public static Response toDto(Member member) {
-            return Response.builder()
+        public static LoginResponse toDto(Center center, Member member) {
+            return LoginResponse.builder()
                     .member_no(member.getMemberNo())
                     .member_name(member.getMemberName())
-                    .member_birth(member.getMemberBirth())
                     .member_id(member.getMemberId())
-                    .member_pwd(member.getMemberPwd())
-                    .member_phone(member.getMemberPhone())
                     .member_type(member.getMemberType())
-                    .member_profile(member.getMemberProfile())
-                    .address(member.getAddress())
-                    .created_date(member.getCreateDate())
-                    .status(member.getStatus())
-//                    .center_no(member.getCenter().getCenterNo())
-//                    .center_no(member.getClassRoom().getClassNo())
+                    .center_no(member.getCenter().getCenterNo())
                     .build();
         }
     }

@@ -38,7 +38,7 @@ public class ApprovalServiceImpl implements ApprovalService {
         Center center = centerRepository.findById(dto.getCenter_no())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
         
-        Member member = memberRepository.findById(dto.getMember_no())
+        Member member = memberRepository.findByMemberNo(dto.getMember_no())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
 
         Approval approval = dto.toEntity(center, member);

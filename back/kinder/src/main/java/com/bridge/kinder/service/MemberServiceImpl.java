@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -89,15 +90,21 @@ public class MemberServiceImpl implements MemberService {
         return String.valueOf(teacher.getMemberNo());
     }
 
-    //멤버 조회(임시)
-    @Transactional(readOnly = true)
+    //로그인
     @Override
-    public MemberDto.Response findMEmber(int memberNo) {
-        return memberRepository.findById(memberNo)
-                .map(MemberDto.Response::toDto)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
+    public MemberDto.LoginResponse getLoginMember(String memberId, String memberPwd) {
+        Member member = memberRepository.findByMemberId(memberId).get();
+
+        if(!member.getMemberPwd().equals(memberPwd)) {
+            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+        }
+
+        Center center = member.getCenter();
+
+        return MemberDto.LoginResponse.toDto(center, member);
     }
 
+    //멤버 ID 찾기(이름, 생년월일)
     @Override
     public MemberDto.SearchId searchId(MemberDto.SearchId dto) {
         String memberName = dto.getMember_name();

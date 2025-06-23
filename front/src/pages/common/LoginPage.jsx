@@ -4,36 +4,17 @@ import Logo from '../../assets/img/logo.png';
 import CommonFind from '../../components/Common/CommonFind';
 import { useNavigate } from 'react-router-dom';
 import { ContentArea, SearchIdForm } from '../../styles/Common/Container';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
-
-const loginSchema = yup.object().shape({
-  memberId: yup
-    .string()
-    .min(6, '6자 이상 입력해주세요.')
-    .matches(/^[가-힣a-zA-Z][^!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\s]*$/, '특수문자와 숫자가 없어야합니다.')
-    .required('아이디를 입력해주세요.'),
-  memberPwd: yup
-    .string()
-    .min(8, '8자 이상 입력해주세요.')
-    .matches(/^[가-힣a-zA-Z][^!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\s]*$/, '특수문자와 숫자가 없어야합니다.')
-    .required('비밀번호를 입력해주세요.'),
-});
+// import * as yup from 'yup';
+// import { yupResolver } from '@hookform/resolvers/yup';
+// import { useForm } from 'react-hook-form';
+// import { memberService } from '../../api/member';
+// import { useLoginStore } from '../../store/loginStore';
+// import { toast } from 'react-toastify';
+import { useLoginForm } from '../../hook/login/useLoginForm';
 
 const LoginPage = () => {
-  const [checked, setChecked] = useState(false);
   const navigator = useNavigate();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(loginSchema),
-  });
-
-  const onSubmit = async () => {};
+  const { register, handleSubmit, onSubmit, errors, checked, setChecked } = useLoginForm();
 
   return (
     <CommonFind>
