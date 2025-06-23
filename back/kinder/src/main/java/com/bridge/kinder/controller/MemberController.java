@@ -28,7 +28,7 @@ public class MemberController {
 
     //시설장(시설) 생성
     @PostMapping("/manager")
-    public ResponseEntity<String> createManager(@RequestBody CreateManagerDto dto) {
+    public ResponseEntity<String> createManager(@ModelAttribute CreateManagerDto dto) throws IOException {
         String memberNo = memberService.createManager(dto);
         return ResponseEntity.ok(memberNo);
     }

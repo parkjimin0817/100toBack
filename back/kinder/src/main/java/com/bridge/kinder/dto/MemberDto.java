@@ -16,36 +16,6 @@ public class MemberDto {
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class CreateManager {
-
-        private String member_name;
-        private LocalDate member_birth;
-        private String member_id;
-        private String member_pwd;
-        private String member_phone;
-        private CommonEnums.MemberType member_type;
-        private String member_profile;
-        private String address;
-
-        public Member toEntity(Center center) {
-            return Member.builder()
-                    .memberName(member_name)
-                    .memberBirth(member_birth)
-                    .memberId(member_id)
-                    .memberPwd(member_pwd)
-                    .memberPhone(member_phone)
-                    .memberType(member_type)
-                    .memberProfile(member_profile)
-                    .address(address)
-                    .center(center)
-                    .build();
-        }
-    }
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
     public static class CreateMember {
         private String member_name;
         private LocalDate member_birth;

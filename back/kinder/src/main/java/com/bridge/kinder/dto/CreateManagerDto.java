@@ -10,6 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateManagerDto {
-    private MemberDto.CreateManager member;
+    private MemberDto.CreateMember member;
     private CenterDto.Create center;
 }

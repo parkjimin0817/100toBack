@@ -11,7 +11,7 @@ public interface MemberService {
     //아이디 중복 체크
     boolean checkIdDuplicate(String memberId);
     //시설장(시설) 생성
-    String createManager(CreateManagerDto dto);
+    String createManager(CreateManagerDto dto) throws IOException;
     //교사 생성
     String createTeacher(MemberDto.CreateMember dto) throws IOException;
     //학부모 생성, 아동 등록
