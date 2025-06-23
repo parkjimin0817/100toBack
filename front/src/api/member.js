@@ -8,10 +8,11 @@ export const memberService = {
       const { data } = await api.get(API_ENDPOINTS.MEMBERS.CHECKID(memberId));
       return data; //true면 중복, false면 사용 가능
     } catch (error) {
-      throw new Error('서버 통신 불량');
+      throw new Error(error, '서버 통신 불량');
     }
   },
 
+  //회원가입
   signUp: async (mergedData) => {
     try {
       let endpoint;
@@ -54,6 +55,29 @@ export const memberService = {
     } catch (error) {
       console.error('회원가입 요청 실패:', error);
       throw new Error('서버 통신 불량');
+    }
+  },
+
+  //로그인
+  login: async (memberId, memberPwd) => {
+    try {
+      const { data } = await api.post(API_ENDPOINTS.MEMBERS.LOGIN, { memberId, memberPwd });
+
+      const camelData = {
+        memberNo: data.member_no,
+        memberName: data.member_name,
+        memberId: data.member_id,
+        memberType: data.member_type,
+        centerNo: data.center_no,
+      };
+
+      return camelData;
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.message || '로그인에 실패했습니다.';
+        throw new Error(errorMessage);
+      }
+      throw new Error('서버와의 통신에 실패했습니다.');
     }
   },
 };

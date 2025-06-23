@@ -29,9 +29,21 @@ public class MemberRepositoryImpl implements MemberRepository {
         em.persist(member);
     }
 
+    //멤버 로그인
+    @Override
+    public Optional<Member> findByMemberId(String memberId) {
+        String jpql = "SELECT m FROM Member m WHERE m.memberId = :memberId";
+        Member member = em.createQuery(jpql, Member.class)
+                .setParameter("memberId", memberId)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+        return Optional.ofNullable(member);
+    }
+
     //멤버 조회(임시)
     @Override
-    public Optional<Member> findById(int memberNo) {
+    public Optional<Member> findByMemberNo(int memberNo) {
         return Optional.ofNullable(em.find(Member.class, memberNo));
     }
 }

@@ -13,7 +13,7 @@ public interface MemberService {
     String createManager(CreateManagerDto dto);
     //교사/학부모 생성
     String createMember(MemberDto.CreateMember dto) throws IOException;
-    //멤버 조회(임시)
-    MemberDto.Response findMEmber(int memberNo);
+    //멤버 로그인
+    MemberDto.LoginResponse getLoginMember(String memberId, String memberPwd);
 
 }

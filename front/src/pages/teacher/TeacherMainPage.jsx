@@ -8,6 +8,8 @@ import TeacherMainChild from './components/TeacherMainChild';
 import TeacherMainHealth from './components/TeacherMainHealth';
 import RecentBoard from '../common/ParentMain/components/RecentBoard';
 import MainSchedule from '../common/ParentMain/components/MainSchedule';
+import useLoginStore from '../../store/loginStore';
+import { useEffect } from 'react';
 
 const data = [
   { name: '박지민', age: '5', time: '10:00~12:00', type: '채팅' },
@@ -25,6 +27,13 @@ const data = [
 const TeacherMainPage = () => {
   const [activeTab, setActiveTab] = useState('상담');
   const [activeCounselTab, setActiveCounselTab] = useState('상담 대기');
+  const { member } = useLoginStore();
+
+  console.log(member.memberName);
+
+  useEffect(() => {
+    console.log('스토어 member:', member);
+  }, [member]);
 
   return (
     <Wrapper>
