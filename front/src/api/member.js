@@ -49,7 +49,7 @@ export const memberService = {
 
       //교사 추가 정보
       if (mergedData.member_type === 'TEACHER') {
-        formData.append('center_no', mergedData.center_no);
+        formData.append('member.center_no', mergedData.center_no);
       }
 
       //학부모 추가 정보
@@ -84,7 +84,13 @@ export const memberService = {
       });
 
       return data;
-    } catch (error) {}
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.message || '회원가입에 실패했습니다.';
+        throw new Error(errorMessage);
+      }
+      throw new Error('서버와의 통신에 실패했습니다.');
+    }
   },
 
   //로그인

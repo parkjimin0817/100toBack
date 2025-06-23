@@ -3,6 +3,7 @@ package com.bridge.kinder.service;
 import com.bridge.kinder.dto.CreateManagerDto;
 import com.bridge.kinder.dto.MemberChildDto;
 import com.bridge.kinder.dto.MemberDto;
+import com.bridge.kinder.dto.MemberTeacherDto;
 import com.bridge.kinder.entity.*;
 import com.bridge.kinder.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -69,15 +70,15 @@ public class MemberServiceImpl implements MemberService {
 
     //교사 생성
     @Override
-    public String createTeacher(MemberDto.CreateMember dto) throws IOException {
-        Center center = centerRepository.findById(dto.getCenter_no())
+    public String createTeacher(MemberTeacherDto dto) throws IOException {
+        Center center = centerRepository.findById(dto.getMember().getCenter_no())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
 
         String originName = null;
         String profilePath = null;
 
-        if(dto.getMember_profile() != null && !dto.getMember_profile().isEmpty()) {
-            originName = dto.getMember_profile()
+        if(dto.getMember().getMember_profile() != null && !dto.getMember().getMember_profile().isEmpty()) {
+            originName = dto.getMember().getMember_profile()
                     .getOriginalFilename();
             profilePath = UUID.randomUUID().toString() + "_member_" + originName;
 
@@ -86,10 +87,10 @@ public class MemberServiceImpl implements MemberService {
                 uploadDir.mkdirs();
             }
 
-            dto.getMember_profile().transferTo(new File(UPLOAD_PATH + profilePath));
+            dto.getMember().getMember_profile().transferTo(new File(UPLOAD_PATH + profilePath));
         }
 
-        Member teacher = dto.toEntity(center, profilePath);
+        Member teacher = dto.getMember().toEntity(center, profilePath);
         memberRepository.save(teacher);
 
         Approval approval = Approval.builder()

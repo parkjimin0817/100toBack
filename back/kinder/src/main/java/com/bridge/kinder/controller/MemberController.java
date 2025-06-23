@@ -3,6 +3,7 @@ package com.bridge.kinder.controller;
 import com.bridge.kinder.dto.CreateManagerDto;
 import com.bridge.kinder.dto.MemberChildDto;
 import com.bridge.kinder.dto.MemberDto;
+import com.bridge.kinder.dto.MemberTeacherDto;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class MemberController {
 
     //교사 생성
     @PostMapping("/teacher")
-    public ResponseEntity<String> createTeacher(@ModelAttribute MemberDto.CreateMember dto) throws IOException {
+    public ResponseEntity<String> createTeacher(@ModelAttribute MemberTeacherDto dto) throws IOException {
         String memberNo = memberService.createTeacher(dto);
         return ResponseEntity.ok(memberNo);
     }
