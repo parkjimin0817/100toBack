@@ -34,32 +34,33 @@ export const memberService = {
       const formData = new FormData();
 
       //멤버 공통 정보
-      formData.append('member_name', mergedData.member_name);
-      formData.append('member_id', mergedData.member_id);
-      formData.append('member_pwd', mergedData.member_pwd);
-      formData.append('member_phone', mergedData.member_phone);
-      formData.append('member_birth', mergedData.member_birth); // yyyy-MM-dd
-      formData.append('member_type', mergedData.member_type);
-      formData.append('address', mergedData.address); // 빠져있다면 추가 필요
+      formData.append('member.member_name', mergedData.member_name);
+      formData.append('member.member_id', mergedData.member_id);
+      formData.append('member.member_pwd', mergedData.member_pwd);
+      formData.append('member.member_phone', mergedData.member_phone);
+      formData.append('member.member_birth', mergedData.member_birth); // yyyy-MM-dd
+      formData.append('member.member_type', mergedData.member_type);
+      formData.append('member.address', mergedData.address); // 빠져있다면 추가 필요
 
       if (mergedData.member_profile instanceof File) {
-        formData.append('member_profile', mergedData.member_profile);
+        formData.append('member.member_profile', mergedData.member_profile);
       }
 
       if (mergedData.member_type === 'TEACHER') {
         formData.append('center_no', mergedData.center_no);
       }
       if (mergedData.member_type === 'PARENT') {
-        formData.append('center_no', mergedData.center_no);
-        formData.append('child_name', mergedData.child_name);
-        formData.append('child_RNo', mergedData.child_RNo);
+        formData.append('member.center_no', mergedData.center_no);
+        formData.append('child.center_no', mergedData.center_no);
+        formData.append('child.child_name', mergedData.child_name);
+        formData.append('child.child_resident_no', mergedData.child_RNo);
         if (mergedData.child_profile instanceof File) {
-          formData.append('child_profile', mergedData.child_profile);
+          formData.append('child.child_profile', mergedData.child_profile);
         }
-        formData.append('father_name', mergedData.father_name);
-        formData.append('father_phone', mergedData.father_phone);
-        formData.append('mother_name', mergedData.mother_name);
-        formData.append('mother_phone', mergedData.mother_phone);
+        formData.append('child.f_parents_name', mergedData.father_name);
+        formData.append('child.f_parents_phone', mergedData.father_phone);
+        formData.append('child.m_parents_name', mergedData.mother_name);
+        formData.append('child.m_parents_phone', mergedData.mother_phone);
       }
 
       if (mergedData.member_type === 'MANAGER') {

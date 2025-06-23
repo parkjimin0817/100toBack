@@ -40,7 +40,7 @@ const ProfileImageUpload = ({ label, error, onChange, ref, name, disabled }) => 
         />
       </PreviewRow>
       <InfoText>사이즈: 150 x 150 픽셀, 파일 형식: JPG, JPEG, PNG, 용량: 200KB 이하</InfoText>
-      {error && <Message>{error}</Message>}
+      {error && <ErrorMessage>{error}</ErrorMessage>}
     </ImageUploadWrapper>
   );
 };
@@ -104,10 +104,10 @@ const InfoText = styled.div`
   line-height: 1.4;
 `;
 
-const Message = styled.p`
+const ErrorMessage = styled.p`
   color: ${({ theme }) => theme.colors.orange};
-  font-size: 12px;
-  margin-top: 4px;
-  margin-left: 4px;
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  margin-top: ${({ theme }) => theme.spacing[1]};
+  margin-left: ${({ theme }) => theme.spacing[1]};
   text-align: left;
 `;

@@ -14,7 +14,7 @@ const CenterTypeSelect = ({ error, ...rest }) => {
         <option value="놀이방">놀이방</option>
         <option value="기타">기타</option>
       </SelectCenter>
-      {error && <Message>{error}</Message>}
+      {error && <ErrorMessage>{error}</ErrorMessage>}
     </Wrapper>
   );
 };
@@ -45,10 +45,10 @@ const SelectCenter = styled.select`
   font-size: ${({ theme }) => theme.fontSizes.sm};
 `;
 
-const Message = styled.p`
+const ErrorMessage = styled.p`
   color: ${({ theme }) => theme.colors.orange};
-  font-size: ${({ theme }) => theme.fontSizes.sm};
-  margin-top: 4px;
-  margin-left: 4px;
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  margin-top: ${({ theme }) => theme.spacing[1]};
+  margin-left: ${({ theme }) => theme.spacing[1]};
   text-align: left;
 `;

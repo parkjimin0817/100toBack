@@ -95,8 +95,8 @@ const Button = styled.button`
 
 const ErrorMessage = styled.p`
   color: ${({ theme }) => theme.colors.orange};
-  font-size: 12px;
-  margin-top: 4px;
-  margin-left: 4px;
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  margin-top: ${({ theme }) => theme.spacing[1]};
+  margin-left: ${({ theme }) => theme.spacing[1]};
   text-align: left;
 `;
