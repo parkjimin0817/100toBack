@@ -91,9 +91,9 @@ const teacherSidebar = [
     icon: <FaRegCalendarAlt />,
     color: 'purple',
     subItems: [
-      { label: '유치원 일정', link: '' },
+      { label: '유치원 일정', link: '*' },
       { label: '일과표', link: '/daily' },
-      { label: '학부모 상담 일정', link: '' },
+      { label: '학부모 상담 일정', link: '*' },
     ],
   },
   {
@@ -102,11 +102,11 @@ const teacherSidebar = [
     icon: <MdFilterFrames />,
     color: 'green',
     subItems: [
-      { label: '공지사항', link: '' },
+      { label: '공지사항', link: '*' },
       { label: '가정통신문', link: '/familycommunity/list' },
-      { label: '식단표', link: '' },
-      { label: '알림장', link: '' },
-      { label: '사진 게시판', link: '' },
+      { label: '식단표', link: '*' },
+      { label: '알림장', link: '*' },
+      { label: '사진 게시판', link: '*' },
     ],
   },
   {
@@ -127,7 +127,7 @@ const teacherSidebar = [
     color: 'yellow',
     subItems: [
       { label: '나의 건강 데이터', link: '/teacherhealth' },
-      { label: '건강 관리', link: '' },
+      { label: '건강 관리', link: '*' },
     ],
   },
 ];
@@ -151,9 +151,9 @@ const managerSidebar = [
     icon: <FaRegCalendarAlt />,
     color: 'purple',
     subItems: [
-      { label: '유치원 일정', link: '' },
+      { label: '유치원 일정', link: '*' },
       { label: '반 별 일과표', link: '/daily' },
-      { label: '학부모 상담 일정', link: '' },
+      { label: '학부모 상담 일정', link: '*' },
     ],
   },
   {
@@ -162,11 +162,11 @@ const managerSidebar = [
     icon: <MdFilterFrames />,
     color: 'green',
     subItems: [
-      { label: '공지사항', link: '' },
+      { label: '공지사항', link: '*' },
       { label: '가정통신문', link: '/familycommunity/list' },
-      { label: '식단표', link: '' },
-      { label: '알림장', link: '' },
-      { label: '사진 게시판', link: '' },
+      { label: '식단표', link: '*' },
+      { label: '알림장', link: '*' },
+      { label: '사진 게시판', link: '*' },
     ],
   },
   {
@@ -175,10 +175,10 @@ const managerSidebar = [
     icon: <IoPeopleOutline />,
     color: 'blue',
     subItems: [
-      { label: '근태 관리', link: '/manager/teacherattendance' },
-      { label: '휴가 관리', link: '' },
+      { label: '근태 관리', link: '/manager/teacherlist' },
+      { label: '휴가 관리', link: '/vacationList' },
       { label: '회원가입 승인', link: '/approvalList' },
-      { label: '교사 소개', link: '' },
+      { label: '교사 소개', link: '/manager/introteacher' },
       { label: '반 배정', link: '/manager/classplacement' },
     ],
   },
@@ -189,7 +189,7 @@ const managerSidebar = [
     color: 'yellow',
     subItems: [
       { label: '나의 건강 데이터', link: '/teacherhealth' },
-      { label: '건강 관리', link: '' },
+      { label: '건강 관리', link: '*' },
     ],
   },
 ];
@@ -201,7 +201,7 @@ const parentSidebar = [
     icon: <LuBaby />,
     color: 'orange',
     subItems: [
-      { label: '아동 출결', link: '/classlist' },
+      { label: '아동 출결', link: '/parent/mychild' },
       { label: '아동 건강', link: '/childhealthcheck' },
       { label: '아동 생활', link: '/childlifecheck' },
     ],
@@ -212,9 +212,9 @@ const parentSidebar = [
     icon: <FaSchoolFlag />,
     color: 'green',
     subItems: [
-      { label: '유치원 일정', link: '' },
+      { label: '유치원 일정', link: '*' },
       { label: '일과표', link: '/daily' },
-      { label: '사진 게시판', link: '' },
+      { label: '사진 게시판', link: '*' },
     ],
   },
   {
@@ -223,10 +223,10 @@ const parentSidebar = [
     icon: <MdFilterFrames />,
     color: 'purple',
     subItems: [
-      { label: '공지사항', link: '' },
+      { label: '공지사항', link: '*' },
       { label: '가정통신문', link: '/familycommunity/list' },
-      { label: '식단표', link: '' },
-      { label: '알림장', link: '' },
+      { label: '식단표', link: '*' },
+      { label: '알림장', link: '*' },
     ],
   },
   {
@@ -234,7 +234,7 @@ const parentSidebar = [
     label: '상담일정',
     icon: <FaRegClock />,
     color: 'blue',
-    subItems: [{ label: '상담일정', link: '' }],
+    subItems: [{ label: '상담일정', link: '*' }],
   },
 ];
 

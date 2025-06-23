@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import ChildImg from '../../assets/Child.png';
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { List } from '../../components/ChildDummyData';
 import AttendanceChildSchedule from '../../components/AttendanceChildSchedule';
 
@@ -33,8 +33,9 @@ const attendanceData = [
 
 const ChildDetail = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const id = searchParams.get('id'); // URL에서 ?id= 추출
+  const { id } = useParams();
+  // const [searchParams] = useSearchParams();
+  // const id = searchParams.get('id'); // URL에서 ?id= 추출
 
   const [select, setSelect] = useState({
     health: true,
@@ -648,23 +649,4 @@ const FooterTitle = styled.div`
   font-size: 18px;
   font-weight: bold;
   padding: ${({ theme }) => theme.spacing[4]} 0;
-`;
-
-const FooterColumn = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  max-width: 220px;
-  font-size: 14px;
-`;
-
-const FooterColumn2 = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  max-width: 220px;
-  font-size: 14px;
-`;
-
-const FooterDetailColumn = styled.div`
-  font-weight: bold;
-  white-space: nowrap; // 줄바꿈 금지(메모 글자가 세로로 들어가서)
 `;

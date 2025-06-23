@@ -64,6 +64,7 @@ import ParentMyPage from './pages/parent/ParentMyPage';
 import AddChild from './pages/parent/AddChild';
 import SearchChild from './pages/parent/SearchChild';
 import ErrorPage from './pages/ErrorPage';
+import ParentChildList from './pages/parent/ParentChildList';
 
 function App() {
   return (
@@ -121,6 +122,7 @@ function App() {
              *
              * */}
             <Route path="/parent/main" element={<ParentMainPage />} />
+            <Route path="/parent/mychild" element={<ParentChildList />} />
 
             {/**
              * 교사
@@ -165,7 +167,7 @@ function App() {
             <Route path="/manager/teacherlist" element={<TeacherList />} />
             <Route path="/approvalList" element={<ApprovalList />} />
             <Route path="/vacationList" element={<VacationList />} />
-            <Route path="/manager/teacherattendance" element={<TeacherAttendance />} />
+            <Route path="/manager/teacherattendance/:id" element={<TeacherAttendance />} />
             <Route path="/manager/introteacher" element={<TeacherIntroList />} />
 
             {/**
@@ -179,6 +181,7 @@ function App() {
              * 6. 일과표 반 상세보기
              * 7. 아동 상세보기
              * 8. 교사 휴가 관리 페이지
+             * 9. 아동 출결 관리 페이지
              *
              *  */}
             <Route path="/childlist" element={<ChildList />} />
@@ -187,8 +190,9 @@ function App() {
             <Route path="/childlifecheck" element={<ChildLifeCheck />} />
             <Route path="/daily" element={<DailySchedule />} />
             <Route path="/dailyDetail/:SCHADULE_NO" element={<DailyScheduleDetail />} />
-            <Route path="/child/detail" element={<ChildDetail />} />
+            <Route path="/child/detail/:id" element={<ChildDetail />} />
             <Route path="/teacher/workcation" element={<MyVacation />} />
+            <Route path="/childattendance/:id" element={<AttendancePage />} />
 
             {/**
              * 공용
@@ -201,12 +205,8 @@ function App() {
             <Route path="/familycommunity/list" element={<FamilyCommunityPage />} />
             <Route path="/child/healthlist" element={<PersonalHealth />} />
             <Route path="/child/lifelist" element={<PersonalLife />} />
-
-            {/* 수정필요(navigator) */}
-            <Route path="/childattendance" element={<AttendancePage />} />
           </Route>
           {/* 공통 회원가입, 로그인, 아이디찾기, 비밀번호 찾기 */}
-
           {/* Login Page */}
           <Route path="/" element={<LoginPage />} />
           {/* 회원가입 권한 선택 */}
