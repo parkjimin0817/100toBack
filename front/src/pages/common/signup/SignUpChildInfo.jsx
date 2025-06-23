@@ -36,7 +36,7 @@ const SignUpChildInfo = () => {
 
   const [enrollChild, setEnrollChild] = useState(true);
   const [phone, setPhone] = useState('');
-  const { register, handleSubmit, setValue, errors, control } = useParentInfoForm(enrollChild);
+  const { register, handleSubmit, setValue, errors, control, clearErrors } = useParentInfoForm(enrollChild);
 
   useEffect(() => {
     if (!enrollChild) {
@@ -109,7 +109,7 @@ const SignUpChildInfo = () => {
               checked={enrollChild === false}
               onChange={() => {
                 setEnrollChild(false);
-                toast.info('연결할 아동의 주민등록번호만 입력해주세요.');
+                toast.info('연결할 아동의 시설과 주민등록번호를 입력해주세요.');
               }}
             />
             이미 등록된 아동이 있습니다.
@@ -119,7 +119,6 @@ const SignUpChildInfo = () => {
           label="아동 시설 검색"
           data={centers}
           loading={loading}
-          disabled={!enrollChild}
           onSelect={(centerNo) => setValue('centerNo', centerNo)}
           error={errors.centerNo?.message}
           {...register('centerNo')}
@@ -136,7 +135,10 @@ const SignUpChildInfo = () => {
         <ProfileImageUpload
           label="아동 사진 등록"
           disabled={!enrollChild}
-          {...register('childImg')}
+          onChange={(file) => {
+            setValue('childImg', file); // ✅ 파일 수동 세팅
+            clearErrors('childImg'); // 선택: 에러 클리어
+          }}
           error={errors.childImg?.message}
         />
         <ParentInfoInput

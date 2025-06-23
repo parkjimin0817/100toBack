@@ -29,4 +29,11 @@ public class ChildRepositoryImpl implements ChildRepository {
 
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
+
+    @Override
+    public List<Child> findByClassNo(int class_no) {
+        return em.createQuery("SELECT c FROM Child c WHERE c.class_no = :class_no", Child.class)
+                .setParameter("class_no", class_no)
+                .getResultList();
+    }
 }

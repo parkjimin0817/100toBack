@@ -29,7 +29,7 @@ const ProfileImageUpload = ({ label, error, onChange, ref, name, disabled }) => 
           accept="image/jpeg, image/png, image/jpg"
           name={name}
           onChange={(e) => {
-            onChange(e);
+            onChange(e.target.files[0]);
             handleImageChange(e);
           }}
           ref={(el) => {

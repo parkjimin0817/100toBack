@@ -35,19 +35,13 @@ const parentInfoSchema = yup.object().shape({
   childImg: yup
     .mixed()
     .nullable()
-    .when('$enrollChild', {
-      is: true,
-      then: (schema) =>
-        schema
-          .test('fileSize', '200KB 이하 이미지만 업로드 가능합니다.', (fileList) => {
-            if (!fileList || fileList.length === 0) return true;
-            return fileList[0].size <= FILE_SIZE;
-          })
-          .test('file-type', 'JPG, JPEG, PNG 형식만 업로드 가능합니다.', (fileList) => {
-            if (!fileList || fileList.length === 0) return true;
-            return SUPPORTED_FORMATS.includes(fileList[0].type);
-          }),
-      otherwise: (schema) => schema.notRequired(),
+    .test('fileSize', '200KB 이하 이미지만 업로드 가능합니다.', (file) => {
+      if (!file) return true;
+      return file.size <= 200 * 1024;
+    })
+    .test('fileType', 'JPG, JPEG, PNG 형식만 업로드 가능합니다.', (file) => {
+      if (!file) return true;
+      return ['image/jpg', 'image/jpeg', 'image/png'].includes(file.type);
     }),
   parentInfo: yup.object().shape({
     fatherName: yup.string().when('$enrollChild', {
@@ -84,6 +78,7 @@ export const useParentInfoForm = (enrollChild) => {
     register,
     handleSubmit,
     setValue,
+    clearErrors,
     formState: { errors },
     control,
   } = useForm({
@@ -101,5 +96,6 @@ export const useParentInfoForm = (enrollChild) => {
     setValue,
     errors,
     control,
+    clearErrors,
   };
 };

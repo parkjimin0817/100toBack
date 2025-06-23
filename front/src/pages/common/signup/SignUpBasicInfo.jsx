@@ -179,7 +179,14 @@ const SignUpBasicInfo = () => {
           }}
           error={errors.fullAddress?.message}
         />
-        <ProfileImageUpload label="본인 사진 등록" {...register('profileImg')} error={errors.profileImg?.message} />
+        <ProfileImageUpload
+          label="본인 사진 등록"
+          onChange={(file) => {
+            setValue('profileImg', file); // ✅ 파일 수동 세팅
+            clearErrors('profileImg'); // 선택: 에러 클리어
+          }}
+          error={errors.profileImg?.message}
+        />
         <PhoneInput
           label="전화번호"
           value={phone}

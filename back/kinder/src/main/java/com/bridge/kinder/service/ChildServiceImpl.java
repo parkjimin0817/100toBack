@@ -13,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
@@ -82,5 +85,13 @@ public class ChildServiceImpl implements ChildService {
 
 
         return String.valueOf(child.getChildNo());
+    }
+
+    //반으로 아동목록 불러오기
+    @Override
+    public List<ChildDto.Response> findChildrenByClassNo(int class_no) {
+        return childRepository.findByClassNo(class_no).stream()
+                .map(ChildDto.Response::toDto)
+                .collect(Collectors.toList());
     }
 }

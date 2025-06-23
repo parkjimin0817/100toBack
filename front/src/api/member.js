@@ -30,7 +30,8 @@ export const memberService = {
         default:
           throw new Error('알 수 없는 사용자 유형입니다.');
       }
-
+      console.log(mergedData.member_profile);
+      console.log(mergedData.child_profile);
       const formData = new FormData();
 
       //멤버 공통 정보
@@ -40,27 +41,35 @@ export const memberService = {
       formData.append('member.member_phone', mergedData.member_phone);
       formData.append('member.member_birth', mergedData.member_birth); // yyyy-MM-dd
       formData.append('member.member_type', mergedData.member_type);
-      if (mergedData.member_profile instanceof File) {
+      if (mergedData.member_profile instanceof FileList || Array.isArray(mergedData.member_profile)) {
+        formData.append('member.member_profile', mergedData.member_profile[0]);
+      } else if (mergedData.member_profile instanceof File) {
         formData.append('member.member_profile', mergedData.member_profile);
       }
 
+      //교사 추가 정보
       if (mergedData.member_type === 'TEACHER') {
         formData.append('center_no', mergedData.center_no);
       }
+
+      //학부모 추가 정보
       if (mergedData.member_type === 'PARENT') {
         formData.append('member.center_no', mergedData.center_no);
         formData.append('child.center_no', mergedData.center_no);
         formData.append('child.child_name', mergedData.child_name);
         formData.append('child.child_resident_no', mergedData.child_RNo);
-        if (mergedData.child_profile instanceof File) {
-          formData.append('child.child_profile', mergedData.child_profile);
-        }
         formData.append('child.f_parents_name', mergedData.father_name);
         formData.append('child.f_parents_phone', mergedData.father_phone);
         formData.append('child.m_parents_name', mergedData.mother_name);
         formData.append('child.m_parents_phone', mergedData.mother_phone);
+        if (mergedData.child_profile instanceof FileList || Array.isArray(mergedData.child_profile)) {
+          formData.append('child.child_profile', mergedData.child_profile[0]);
+        } else if (mergedData.child_profile instanceof File) {
+          formData.append('child.child_profile', mergedData.child_profile);
+        }
       }
 
+      //시설장 정보 정보
       if (mergedData.member_type === 'MANAGER') {
         formData.append('center.center_name', mergedData.center_name);
         formData.append('center.center_address', mergedData.center_address);
@@ -75,10 +84,7 @@ export const memberService = {
       });
 
       return data;
-    } catch (error) {
-      console.error('회원가입 요청 실패:', error);
-      throw new Error('서버 통신 불량');
-    }
+    } catch (error) {}
   },
 
   //로그인

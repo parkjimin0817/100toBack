@@ -2,6 +2,7 @@ package com.bridge.kinder.repository;
 
 import com.bridge.kinder.entity.Child;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ChildRepository {
@@ -9,4 +10,6 @@ public interface ChildRepository {
     void save(Child child);
     //주민번호로 아동 찾기
     Optional<Child> findByResidentNo(String residentNo);
+    //반으로 아동 목록
+    List<Child> findByClassNo(int class_no);
 }
