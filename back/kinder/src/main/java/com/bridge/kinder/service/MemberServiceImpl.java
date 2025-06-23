@@ -89,6 +89,7 @@ public class MemberServiceImpl implements MemberService {
         return String.valueOf(teacher.getMemberNo());
     }
 
+    //로그인
     @Override
     public MemberDto.LoginResponse getLoginMember(String memberId, String memberPwd) {
         Member member = memberRepository.findByMemberId(memberId).get();

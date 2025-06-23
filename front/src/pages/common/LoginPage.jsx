@@ -4,65 +4,17 @@ import Logo from '../../assets/img/logo.png';
 import CommonFind from '../../components/Common/CommonFind';
 import { useNavigate } from 'react-router-dom';
 import { ContentArea, SearchIdForm } from '../../styles/Common/Container';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
-import { memberService } from '../../api/member';
-import { useLoginStore } from '../../store/loginStore';
-import { toast } from 'react-toastify';
-
-const loginSchema = yup.object().shape({
-  memberId: yup
-    .string()
-    .min(6, '6자 이상 입력해주세요.')
-    .matches(/^[가-힣a-zA-Z][^!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\s]*$/, '특수문자와 숫자가 없어야합니다.')
-    .required('아이디를 입력해주세요.'),
-  memberPwd: yup
-    .string()
-    .min(8, '8자 이상 입력해주세요.')
-    .matches(/^[가-힣a-zA-Z][^!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\s]*$/, '특수문자와 숫자가 없어야합니다.')
-    .required('비밀번호를 입력해주세요.'),
-});
+// import * as yup from 'yup';
+// import { yupResolver } from '@hookform/resolvers/yup';
+// import { useForm } from 'react-hook-form';
+// import { memberService } from '../../api/member';
+// import { useLoginStore } from '../../store/loginStore';
+// import { toast } from 'react-toastify';
+import { useLoginForm } from '../../hook/login/useLoginForm';
 
 const LoginPage = () => {
-  const [checked, setChecked] = useState(false);
   const navigator = useNavigate();
-  const { login } = useLoginStore();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(loginSchema),
-  });
-
-  const onSubmit = async (formData) => {
-    console.log('a - onSubmit 시작'); // 제일 처음
-
-    try {
-      const { memberId, memberPwd } = formData;
-      console.log('b - 전송 데이터:', memberId, memberPwd);
-
-      const memberData = await memberService.login(memberId, memberPwd);
-      console.log('c - 로그인 응답 데이터:', memberData);
-
-      login(memberData);
-      console.log('d - 상태 저장 완료');
-
-      // 네비게이트 분기 예시
-      if (memberData.memberType === 'MANAGER') {
-        navigator('/manager/mypage');
-      } else if (memberData.memberType === 'TEACHER') {
-        navigator('/teacher/main');
-      } else if (memberData.memberType === 'PARENT') {
-        navigator('/parent/main');
-      }
-      console.log('e - 네비게이트 완료');
-    } catch (err) {
-      console.error('로그인 에러:', err.message);
-    }
-  };
+  const { register, handleSubmit, onSubmit, errors, checked, setChecked } = useLoginForm();
 
   return (
     <CommonFind>

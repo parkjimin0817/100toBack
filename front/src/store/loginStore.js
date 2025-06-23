@@ -11,12 +11,12 @@ export const useLoginStore = create(
       login: (memberData) => {
         set({
           member: {
-            memberNo: memberData.member_no,
-            memberId: memberData.member_id,
-            memberName: memberData.member_name,
-            memberProfile: memberData.member_profile,
-            memberType: memberData.member_type,
-            centerNo: memberData.center_no,
+            memberNo: memberData.memberNo,
+            memberId: memberData.memberId,
+            memberName: memberData.memberName,
+            memberProfile: memberData.memberProfile,
+            memberType: memberData.memberType,
+            centerNo: memberData.centerNo,
           },
           isAuthenticated: true,
         });
@@ -38,10 +38,10 @@ export const useLoginStore = create(
       },
     }),
     {
-      name: 'user-storage', // localStorage에 저장될 키 이름
+      name: 'login-storage', // localStorage에 저장될 키 이름
       // storage: localStorage, // 기본은 localStorage (생략해도 됨)
       partialize: (state) => ({
-        user: state.user,
+        member: state.member,
         isAuthenticated: state.isAuthenticated,
       }),
     }
