@@ -75,7 +75,7 @@ const CheckButton = styled.button`
 
 const Message = styled.p`
   color: ${({ $isError, theme }) => ($isError ? theme.colors.orange : theme.colors.green)};
-  font-size: ${({ theme }) => theme.fontSizes.sm};
+  font-size: ${({ theme }) => theme.fontSizes.xs};
   margin-top: ${({ theme }) => theme.spacing[1]};
   margin-left: ${({ theme }) => theme.spacing[1]};
   text-align: left;

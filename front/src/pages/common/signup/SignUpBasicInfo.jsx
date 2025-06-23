@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import CommonFind from '../../../components/Common/CommonFind';
 import SignUpProgressBar from './components/SignUpProgressBar';
 import SignUpInput from './components/SignUpInput';
@@ -12,6 +11,7 @@ import { useSignUpStore } from '../../../store/signupStore';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { memberService } from '../../../api/member';
+import AddressInput from './components/AddressInput';
 
 const getStepsByType = (type) => {
   switch (type) {
@@ -31,6 +31,7 @@ const SignUpBasicInfo = () => {
   const type = useSignUpStore((state) => state.type);
   const setBasicInfo = useSignUpStore((state) => state.setBasicInfo);
 
+  const [fullAddress, setFullAddress] = useState('');
   const [birthdate, setBirthdate] = useState({
     year: '',
     month: '',
@@ -171,6 +172,13 @@ const SignUpBasicInfo = () => {
           </SelectWrapper>
           {errors.birthdate && <ErrorMessage>{errors.birthdate.message}</ErrorMessage>}
         </BirthWrapper>
+        <AddressInput
+          onAddressChange={(val) => {
+            setFullAddress(val); // 로컬 상태
+            setValue('fullAddress', val); // ✅ 폼에도 주입
+          }}
+          error={errors.fullAddress?.message}
+        />
         <ProfileImageUpload label="본인 사진 등록" {...register('profileImg')} error={errors.profileImg?.message} />
         <PhoneInput
           label="전화번호"

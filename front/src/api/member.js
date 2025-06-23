@@ -40,8 +40,6 @@ export const memberService = {
       formData.append('member.member_phone', mergedData.member_phone);
       formData.append('member.member_birth', mergedData.member_birth); // yyyy-MM-dd
       formData.append('member.member_type', mergedData.member_type);
-      formData.append('member.address', mergedData.address); // 빠져있다면 추가 필요
-
       if (mergedData.member_profile instanceof File) {
         formData.append('member.member_profile', mergedData.member_profile);
       }
@@ -64,9 +62,10 @@ export const memberService = {
       }
 
       if (mergedData.member_type === 'MANAGER') {
-        formData.append('center_no', mergedData.center_no);
-        formData.append('child_name', mergedData.child_name);
-        formData.append('child_RNo', mergedData.child_RNo);
+        formData.append('center.center_name', mergedData.center_name);
+        formData.append('center.center_address', mergedData.center_address);
+        formData.append('center.center+type', mergedData.center_type);
+        formData.append('center.center_tel', mergedData.center_tel);
       }
 
       const { data } = await api.post(endpoint, formData, {
