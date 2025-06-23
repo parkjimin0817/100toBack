@@ -92,10 +92,10 @@ const sidebarMenus = [
     icon: <MdFilterFrames />,
     color: "green",
     subItems: [
-      {label : "공지사항", link : ""}, 
+      {label : "공지사항", link : "/announcement/list"}, 
       {label : "가정통신문", link : "/familycommunity/list"}, 
       {label : "식단표", link : ""}, 
-      {label : "알림장", link : ""}, 
+      {label : "알림장", link : "/notice/list"}, 
       {label : "사진 게시판", link : ""}],
   },
   {

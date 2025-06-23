@@ -42,6 +42,9 @@ import ChildDetail from './pages/teacher/ChildDetail';
 import FamilyCommunityPage from './pages/teacher/FamilyCommunityPage';
 
 import ManagerMyPage from './pages/manager/ManagerMyPage';
+import BoardWritePage from './pages/BoardWritePage';
+import AnnouncementPage from './pages/AnnouncementPage';
+import NoticePage from './pages/NoticePage';
 
 function App() {
   return (
@@ -65,8 +68,27 @@ function App() {
             <Route path="/manager/classplacement" element={<ClassPlacement />} />
             {/* 추가 페이지는 아래 붙이기. */}
 
-            {/* 교사 가정통신문 게시글 목록 페이지 */}
-            <Route path="/familycommunity/list" element={<FamilyCommunityPage />} />
+            {/* 교사 가정통신문 페이지 */}
+            <Route path="/familycommunity">
+              {/* 교사 가정통신문 게시글 목록 페이지 */}
+              <Route path="list" element={<FamilyCommunityPage />} />
+              {/* 교사 가정통신문 게시글 목록 페이지 */}
+              <Route path="write" element={<BoardWritePage />} />
+            </Route>
+            {/* 공지사항 페이지 */}
+            <Route path="/announcement">
+              {/* 공지사항 게시글 목록 페이지 */}
+              <Route path="list" element={<AnnouncementPage />} />
+              {/* 공지사항 게시글 작성 페이지 */}
+              <Route path="write" element={<BoardWritePage />} />
+            </Route>
+            {/* 알림장 페이지 */}
+            <Route path="/notice">
+              {/* 알림장 게시글 목록 페이지 */}
+              <Route path="list" element={<NoticePage />} />
+              {/* 알림장 게시글 작성 페이지 */}
+              <Route path="write" element={<BoardWritePage />} />
+            </Route>
 
             {/* 회원가입 승인 리스트(시설장) */}
             <Route path="/approvalList" element={<ApprovalList />}></Route>

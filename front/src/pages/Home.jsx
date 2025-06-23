@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import ContentHeader from '../components/Common/ContentHeader';
 import BoardTable from '../components/Board/BoardTable';
 import theme from "../styles/theme";
+import TipTapEditor from '../components/Board/TextEditor';
+import PostEditor from '../components/Board/BoardEditor';
 
 const columns = [
   {
@@ -56,6 +58,12 @@ const Home = () => {
           boardData={BoardData}
         />
       </BoardContainer>
+      {/* <div style={{ padding: '2rem' }}>
+        <h2>📝 게시글 작성</h2>
+        <TipTapEditor />
+      </div> */}
+
+      <PostEditor></PostEditor>
     </Content>
   );
 };
