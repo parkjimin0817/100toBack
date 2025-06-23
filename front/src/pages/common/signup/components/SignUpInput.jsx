@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const SignUpInput = ({ type, label, description, showCheckButton, onClickCheck, error, ...rest }) => {
+const SignUpInput = ({ type, label, description, showCheckButton, onClickCheck, error, disabled, ...rest }) => {
   return (
     <InputWrapper>
       <Label>{label}</Label>
       <InputBox>
-        <Input type={type} placeholder={description} $error={error} {...rest} />
+        <Input type={type} placeholder={description} $error={error} {...rest} disabled={disabled} />
         {showCheckButton && (
           <CheckButton type="button" onClick={onClickCheck}>
             중복확인
@@ -75,8 +75,8 @@ const CheckButton = styled.button`
 
 const Message = styled.p`
   color: ${({ $isError, theme }) => ($isError ? theme.colors.orange : theme.colors.green)};
-  font-size: ${({ theme }) => theme.fontSizes.sm};
-  margin-top: 4px;
-  margin-left: 4px;
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  margin-top: ${({ theme }) => theme.spacing[1]};
+  margin-left: ${({ theme }) => theme.spacing[1]};
   text-align: left;
 `;
