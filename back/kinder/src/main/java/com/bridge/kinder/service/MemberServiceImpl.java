@@ -34,11 +34,27 @@ public class MemberServiceImpl implements MemberService {
 
     //시설장(센터) 생성
     @Override
-    public String createManager(CreateManagerDto dto) {
+    public String createManager(CreateManagerDto dto) throws IOException {
         Center center = dto.getCenter().toEntity();
         Center savedCenter = centerRepository.save(center);
 
-        Member manager = dto.getMember().toEntity(savedCenter);
+        String originName = null;
+        String profilePath = null;
+
+        if(dto.getMember().getMember_profile() != null && !dto.getMember().getMember_profile().isEmpty()) {
+            originName = dto.getMember().getMember_profile()
+                    .getOriginalFilename();
+            profilePath = UUID.randomUUID().toString() + "_manager_" + originName;
+
+            File uploadDir = new File(UPLOAD_PATH);
+            if(!uploadDir.exists()) {
+                uploadDir.mkdirs();
+            }
+
+            dto.getMember().getMember_profile().transferTo(new File(UPLOAD_PATH + profilePath));
+        }
+
+        Member manager = dto.getMember().toEntity(savedCenter, profilePath);
         memberRepository.save(manager);
 
         Approval approval = Approval.builder()
@@ -64,8 +80,6 @@ public class MemberServiceImpl implements MemberService {
             originName = dto.getMember_profile()
                     .getOriginalFilename();
             profilePath = UUID.randomUUID().toString() + "_member_" + originName;
-
-            System.out.println(profilePath);
 
             File uploadDir = new File(UPLOAD_PATH);
             if(!uploadDir.exists()) {

@@ -21,7 +21,7 @@ public class ChildDto {
         private String f_parents_phone;
         private String m_parents_name;
         private String m_parents_phone;
-        private MultipartFile child_profile; //현재 스트링으로 저장, Multiple로 바꿔야함
+        private MultipartFile child_profile;
         
 
         private int member_id;

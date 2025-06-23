@@ -20,6 +20,7 @@ public class ChildRepositoryImpl implements ChildRepository {
         em.persist(child);
     }
 
+    //주민번호로 아동 찾기
     @Override
     public Optional<Child> findByResidentNo(String residentNo) {
         List<Child> result = em.createQuery("select c from Child c where c.childResidentNo = :residentNo", Child.class)
