@@ -46,6 +46,7 @@ const SignUpCenterInfo = () => {
       member_profile: basicInfo.profileImg || null,
       member_birth: basicInfo.birthdate,
       member_type: type.toUpperCase(),
+      address: basicInfo.fullAddress,
       //시설정보
       center_name: data.centerName,
       center_address: data.fullAddress,

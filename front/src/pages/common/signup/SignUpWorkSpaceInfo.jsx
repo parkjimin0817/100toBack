@@ -41,6 +41,7 @@ const SignUpWorkSpaceInfo = () => {
       member_phone: basicInfo.phone,
       member_profile: basicInfo.profileImg || null,
       member_birth: basicInfo.birthdate,
+      address: basicInfo.fullAddress,
       member_type: type.toUpperCase(),
       center_no: data.centerNo,
     };

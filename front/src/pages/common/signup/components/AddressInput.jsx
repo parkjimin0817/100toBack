@@ -23,7 +23,7 @@ const AddressInput = ({ onAddressChange, error }) => {
   };
 
   useEffect(() => {
-    const full = `${address} ${detail}`.trim();
+    const full = `${address}, ${detail}`.trim();
     onAddressChange?.(full);
   }, [address, detail, onAddressChange]);
 

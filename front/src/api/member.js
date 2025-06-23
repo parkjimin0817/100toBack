@@ -64,7 +64,7 @@ export const memberService = {
       if (mergedData.member_type === 'MANAGER') {
         formData.append('center.center_name', mergedData.center_name);
         formData.append('center.center_address', mergedData.center_address);
-        formData.append('center.center+type', mergedData.center_type);
+        formData.append('center.center_type', mergedData.center_type);
         formData.append('center.center_tel', mergedData.center_tel);
       }
 

@@ -62,6 +62,7 @@ const SignUpChildInfo = () => {
       member_profile: basicInfo.profileImg || null,
       member_birth: basicInfo.birthdate,
       member_type: type.toUpperCase(),
+      address: basicInfo.fullAddress,
       //아동정보
       center_no: data.centerNo,
       child_name: data.childName,
