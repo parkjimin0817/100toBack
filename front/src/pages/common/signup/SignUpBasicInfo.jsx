@@ -93,6 +93,7 @@ const SignUpBasicInfo = () => {
     }
     const { confirmPassword, ...rest } = data;
     setBasicInfo(rest);
+    console.log(data);
     navigate(`/signup/${type}`);
   };
 

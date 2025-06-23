@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-const CenterSearchInput = ({ onSelect, label, data = [], loading = false, error }) => {
+const CenterSearchInput = ({ onSelect, label, data = [], loading = false, error, disabled }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [showDropDown, setShowDropDown] = useState(false);
@@ -54,6 +54,7 @@ const CenterSearchInput = ({ onSelect, label, data = [], loading = false, error 
             }
           }}
           placeholder="시설명 입력 후 선택해주세요"
+          disabled={disabled}
         />
       </InputRow>
       {loading ? (
@@ -82,7 +83,7 @@ export default CenterSearchInput;
 
 const Wrapper = styled.div`
   width: 400px;
-  height: 130px;
+  height: 80px;
   margin: 0 auto;
   margin-top: ${({ theme }) => theme.spacing[3]};
   position: relative;

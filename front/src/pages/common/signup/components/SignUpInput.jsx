@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const SignUpInput = ({ type, label, description, showCheckButton, onClickCheck, error, ...rest }) => {
+const SignUpInput = ({ type, label, description, showCheckButton, onClickCheck, error, disabled, ...rest }) => {
   return (
     <InputWrapper>
       <Label>{label}</Label>
       <InputBox>
-        <Input type={type} placeholder={description} $error={error} {...rest} />
+        <Input type={type} placeholder={description} $error={error} {...rest} disabled={disabled} />
         {showCheckButton && (
           <CheckButton type="button" onClick={onClickCheck}>
             중복확인

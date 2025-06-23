@@ -1,7 +1,6 @@
 import api from './axios';
 import { API_ENDPOINTS } from './config';
 
-
 export const memberService = {
   //아이디 중복체크
   checkId: async (memberId) => {
@@ -32,6 +31,8 @@ export const memberService = {
       }
 
       const formData = new FormData();
+
+      //멤버 공통 정보
       formData.append('member_name', mergedData.member_name);
       formData.append('member_id', mergedData.member_id);
       formData.append('member_pwd', mergedData.member_pwd);
@@ -39,10 +40,31 @@ export const memberService = {
       formData.append('member_birth', mergedData.member_birth); // yyyy-MM-dd
       formData.append('member_type', mergedData.member_type);
       formData.append('address', mergedData.address); // 빠져있다면 추가 필요
-      formData.append('center_no', mergedData.center_no);
 
       if (mergedData.member_profile instanceof File) {
         formData.append('member_profile', mergedData.member_profile);
+      }
+
+      if (mergedData.member_type === 'TEACHER') {
+        formData.append('center_no', mergedData.center_no);
+      }
+      if (mergedData.member_type === 'PARENT') {
+        formData.append('center_no', mergedData.center_no);
+        formData.append('child_name', mergedData.child_name);
+        formData.append('child_RNo', mergedData.child_RNo);
+        if (mergedData.child_profile instanceof File) {
+          formData.append('child_profile', mergedData.child_profile);
+        }
+        formData.append('father_name', mergedData.father_name);
+        formData.append('father_phone', mergedData.father_phone);
+        formData.append('mother_name', mergedData.mother_name);
+        formData.append('mother_phone', mergedData.mother_phone);
+      }
+
+      if (mergedData.member_type === 'MANAGER') {
+        formData.append('center_no', mergedData.center_no);
+        formData.append('child_name', mergedData.child_name);
+        formData.append('child_RNo', mergedData.child_RNo);
       }
 
       const { data } = await api.post(endpoint, formData, {

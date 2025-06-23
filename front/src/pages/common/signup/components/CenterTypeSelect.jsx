@@ -1,19 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const CenterTypeSelect = () => {
+const CenterTypeSelect = ({ error, ...rest }) => {
   return (
     <Wrapper>
       <Label>시설유형</Label>
-      <SelectCenter>
+      <SelectCenter {...rest}>
         <option value="">선택해주세요</option>
-        <option value="">어린이집</option>
-        <option value="">유치원</option>
-        <option value="">지역아동센터</option>
-        <option value="">돌봄교실</option>
-        <option value="">놀이방</option>
-        <option value="">기타</option>
+        <option value="어린이집">어린이집</option>
+        <option value="유치원">유치원</option>
+        <option value="지역아동센터">지역아동센터</option>
+        <option value="돌봄교실">돌봄교실</option>
+        <option value="놀이방">놀이방</option>
+        <option value="기타">기타</option>
       </SelectCenter>
+      {error && <Message>{error}</Message>}
     </Wrapper>
   );
 };
@@ -42,4 +43,12 @@ const SelectCenter = styled.select`
   border: 1px solid ${({ theme }) => theme.colors.gray[300]};
   padding: ${({ theme }) => theme.spacing[3]};
   font-size: ${({ theme }) => theme.fontSizes.sm};
+`;
+
+const Message = styled.p`
+  color: ${({ theme }) => theme.colors.orange};
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+  margin-top: 4px;
+  margin-left: 4px;
+  text-align: left;
 `;

@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-const ProfileImageUpload = ({ label, error, onChange, ref, name }) => {
+const ProfileImageUpload = ({ label, error, onChange, ref, name, disabled }) => {
   const fileInputRef = useRef();
   const [preview, setPreview] = useState(null);
 
@@ -36,6 +36,7 @@ const ProfileImageUpload = ({ label, error, onChange, ref, name }) => {
             fileInputRef.current = el;
             if (ref) ref(el);
           }}
+          disabled={disabled}
         />
       </PreviewRow>
       <InfoText>사이즈: 150 x 150 픽셀, 파일 형식: JPG, JPEG, PNG, 용량: 200KB 이하</InfoText>
