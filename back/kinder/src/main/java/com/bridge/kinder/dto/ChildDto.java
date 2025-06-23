@@ -24,7 +24,7 @@ public class ChildDto {
         private MultipartFile child_profile;
         
 
-        private int member_id;
+        private int member_no;
         private int center_no;
 
         public Child toEntity(Center center, String profilePath) {

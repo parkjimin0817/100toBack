@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @CrossOrigin("http://localhost:5173")
 @RestController
 @RequestMapping("/api/childs")
@@ -15,9 +17,9 @@ public class ChildController {
     private final ChildService childService;
 
     //아동 생성
-//    @PostMapping
-//    public ResponseEntity<String> createManager(@RequestBody ChildDto.CreateChild dto) {
-//        String childNo = childService.createChild(dto);
-//        return ResponseEntity.ok(childNo);
-//    }
+    @PostMapping
+    public ResponseEntity<String> createManager(@ModelAttribute ChildDto.CreateChild dto) throws IOException {
+        String childNo = childService.createChild(dto);
+        return ResponseEntity.ok(childNo);
+    }
 }

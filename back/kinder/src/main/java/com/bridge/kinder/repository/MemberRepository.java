@@ -15,5 +15,5 @@ public interface MemberRepository  {
     Optional<Member> findByMemberId(String memberId);
 
     //학부모 찾기
-    Optional<Member> findByParentId(int memberId);
+    Optional<Member> findByParentNo(int memberNo);
 }
