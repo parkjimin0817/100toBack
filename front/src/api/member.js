@@ -1,6 +1,7 @@
 import api from './axios';
 import { API_ENDPOINTS } from './config';
 
+
 export const memberService = {
   //아이디 중복체크
   checkId: async (memberId) => {
