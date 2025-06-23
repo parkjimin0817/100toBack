@@ -28,7 +28,7 @@ public class Member {// 멤버
     private String memberName;
     //이름
 
-    @Column(name = "MEBER_BIRTH", nullable = false)
+    @Column(name = "MEMBER_BIRTH", nullable = false)
     private LocalDate memberBirth;
     //생년월일
 
@@ -130,5 +130,11 @@ public class Member {// 멤버
         if(this.status == null) {
             this.status = CommonEnums.AdmissionStatus.PENDING;
         }
+    }
+
+
+    //---------------------------------------------------------------------------------------------
+    public void changeMemberStatus(CommonEnums.AdmissionStatus newStatus) {
+        this.status = newStatus;
     }
 }

@@ -24,7 +24,7 @@ public class MemberServiceImpl implements MemberService {
     private final CenterRepository centerRepository;
     private final ApprovalRepository approvalRepository;
     private final MemberChildRepository memberChildRepository;
-    private final String UPLOAD_PATH = "C://test_upload/";
+    private final String UPLOAD_PATH = "C://test_upload/"; //aws S3 연결시 관련 코드 수정할 것.
 
     //회원가입 시 아이디 중복 체크
     @Override

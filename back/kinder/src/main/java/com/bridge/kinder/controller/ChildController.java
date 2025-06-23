@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import java.io.IOException;
+
 @CrossOrigin("http://localhost:5173")
 @RestController
 @RequestMapping("/api/childs")
@@ -16,16 +18,23 @@ public class ChildController {
 
     private final ChildService childService;
 
-    //아동 생성
-//    @PostMapping
-//    public ResponseEntity<String> createManager(@RequestBody ChildDto.CreateChild dto) {
-//        String childNo = childService.createChild(dto);
-//        return ResponseEntity.ok(childNo);
-//    }
 
     //반 번호로 아동 목록 가져오기
     @GetMapping
     public ResponseEntity<List<ChildDto.Response>> getChildrenByClassNo(@RequestParam int class_no){
         return ResponseEntity.ok(childService.findChildrenByClassNo(class_no));
+    }
+    //아동 생성
+    @PostMapping("/add")
+    public ResponseEntity<String> createChild(@ModelAttribute ChildDto.CreateChild dto) throws IOException {
+        String childNo = childService.createChild(dto);
+        return ResponseEntity.ok(childNo);
+    }
+
+    //로그인된 부모의 아동 연결
+    @PostMapping("/link")
+    public ResponseEntity<String> linkChild(@RequestBody ChildDto.LinkChildRequest dto) throws IOException {
+        String childNo = childService.linkChild(dto);
+        return ResponseEntity.ok(childNo);
     }
 }

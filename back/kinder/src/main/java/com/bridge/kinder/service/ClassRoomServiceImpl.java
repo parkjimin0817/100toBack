@@ -48,5 +48,5 @@ public class ClassRoomServiceImpl implements ClassRoomService {
             return Long.valueOf(classRoom.getClassNo());
         }
     }
-    
+
 
