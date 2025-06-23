@@ -1,13 +1,10 @@
 package com.bridge.kinder.service;
 
 import com.bridge.kinder.dto.CreateManagerDto;
+import com.bridge.kinder.dto.MemberChildDto;
 import com.bridge.kinder.dto.MemberDto;
-import com.bridge.kinder.entity.Approval;
-import com.bridge.kinder.entity.Center;
-import com.bridge.kinder.entity.Member;
-import com.bridge.kinder.repository.ApprovalRepository;
-import com.bridge.kinder.repository.CenterRepository;
-import com.bridge.kinder.repository.MemberRepository;
+import com.bridge.kinder.entity.*;
+import com.bridge.kinder.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +20,10 @@ import java.util.UUID;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final ChildRepository childRepository;
     private final CenterRepository centerRepository;
     private final ApprovalRepository approvalRepository;
+    private final MemberChildRepository memberChildRepository;
     private final String UPLOAD_PATH = "C://test_upload/";
 
     //회원가입 시 아이디 중복 체크
@@ -52,9 +51,9 @@ public class MemberServiceImpl implements MemberService {
         return String.valueOf(manager.getMemberNo());
     }
 
-    //교사/학부모 생성
+    //교사 생성
     @Override
-    public String createMember(MemberDto.CreateMember dto) throws IOException {
+    public String createTeacher(MemberDto.CreateMember dto) throws IOException {
         Center center = centerRepository.findById(dto.getCenter_no())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
 
@@ -89,6 +88,82 @@ public class MemberServiceImpl implements MemberService {
         return String.valueOf(teacher.getMemberNo());
     }
 
+    //학부모 생성, 아동 등록
+    @Override
+    public String createParentChild(MemberChildDto dto) throws IOException {
+        Center centerMember = centerRepository.findById(dto.getMember().getCenter_no())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
+
+        String originNameMember = null;
+        String profilePathMember = null;
+
+        if(dto.getMember().getMember_profile() != null && !dto.getMember().getMember_profile().isEmpty()) {
+            originNameMember = dto.getMember()
+                    .getMember_profile()
+                    .getOriginalFilename();
+            profilePathMember = UUID.randomUUID().toString() + "_member_" + originNameMember;
+
+            File uploadDir = new File(UPLOAD_PATH);
+            if(!uploadDir.exists()) {
+                uploadDir.mkdirs();
+            }
+
+            dto.getMember().getMember_profile().transferTo(new File(UPLOAD_PATH + profilePathMember));
+        }
+
+        Member parent = dto.getMember().toEntity(centerMember, profilePathMember);
+        memberRepository.save(parent);
+
+        Approval approvalParent = Approval.builder()
+                .center(centerMember)
+                .member(parent)
+                .build();
+        approvalRepository.save(approvalParent);
+        // 여기까지 학부모 회원가입
+
+        //여기부터 아동 등록, 조회
+        Child child = childRepository.findByResidentNo(dto.getChild().getChild_resident_no()).orElse(null);
+
+        if(child == null) {
+            Center centerChild = centerRepository.findById(dto.getChild().getCenter_no())
+                    .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
+
+            String originNameChild = null;
+            String profilePathChild = null;
+
+            if(dto.getChild().getChild_profile() != null && !dto.getChild().getChild_profile().isEmpty()) {
+                originNameChild = dto.getChild()
+                        .getChild_profile()
+                        .getOriginalFilename();
+                profilePathChild = UUID.randomUUID().toString() + "_child_" + originNameChild;
+
+                File uploadDir = new File(UPLOAD_PATH);
+                if(!uploadDir.exists()) {
+                    uploadDir.mkdirs();
+                }
+
+                dto.getChild().getChild_profile().transferTo(new File(UPLOAD_PATH + profilePathChild));
+            }
+
+            child = dto.getChild().toEntity(centerChild, profilePathChild);
+            childRepository.save(child);
+
+            Approval approvalChild = Approval.builder()
+                    .center(centerChild)
+                    .child(child)
+                    .build();
+            approvalRepository.save(approvalChild);
+        }
+
+        MemberChild link = MemberChild.builder()
+                .member(parent)
+                .child(child)
+                .build();
+        memberChildRepository.save(link);
+
+        return String.valueOf(parent.getMemberNo());
+    }
+
     //로그인
     @Override
     public MemberDto.LoginResponse getLoginMember(String memberId, String memberPwd) {
@@ -98,8 +173,6 @@ public class MemberServiceImpl implements MemberService {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
 
-        Center center = member.getCenter();
-
-        return MemberDto.LoginResponse.toDto(center, member);
+        return MemberDto.LoginResponse.toDto(member);
     }
 }

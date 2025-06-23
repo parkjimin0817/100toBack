@@ -28,7 +28,7 @@ const SignUpComplete = () => {
           <Icon>✔</Icon>
           <Title>회원가입이 완료되었습니다.</Title>
           <Message>이제 로그인하여 다양한 서비스를 이용해보세요.</Message>
-          <Button onClick={() => navigate('/login')}>로그인하러 가기</Button>
+          <Button onClick={() => navigate('/')}>로그인하러 가기</Button>
         </Card>
       </Wrapper>
     </CommonFind>

@@ -93,10 +93,11 @@ public class MemberDto {
         private String member_name;
         private String member_id;
         private CommonEnums.MemberType member_type;
+        //만약 멤버정보 필요한거 있으시면 그냥 추가하시면 됩니다.
 
         private int center_no;
 
-        public static LoginResponse toDto(Center center, Member member) {
+        public static LoginResponse toDto(Member member) {
             return LoginResponse.builder()
                     .member_no(member.getMemberNo())
                     .member_name(member.getMemberName())

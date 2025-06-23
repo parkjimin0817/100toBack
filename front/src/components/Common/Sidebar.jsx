@@ -91,7 +91,7 @@ const teacherSidebar = [
     icon: <FaRegCalendarAlt />,
     color: 'purple',
     subItems: [
-      { label: '유치원 일정', link: '*' },
+      { label: '유치원 일정', link: '/scheduleTeacher' },
       { label: '일과표', link: '/daily' },
       { label: '학부모 상담 일정', link: '*' },
     ],

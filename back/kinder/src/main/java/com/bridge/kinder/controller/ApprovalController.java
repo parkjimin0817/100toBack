@@ -22,10 +22,10 @@ public class ApprovalController {
         return ResponseEntity.ok(approvalService.findAllApprovals(centerNo));
     }
 
-    //승인 요청 생성(현재 교사 회원가입시 자동 요청 생성은 되어있음)
-    @PostMapping
-    public ResponseEntity<String> createApproval(@RequestBody ApprovalDto.MemberApprovalCreate dto) {
-        String approvalNo = approvalService.createApproval(dto);
-         return ResponseEntity.ok(approvalNo);
-    }
+//    //승인 요청 생성(현재 교사 회원가입시 자동 요청 생성은 되어있음)
+//    @PostMapping
+//    public ResponseEntity<String> createApproval(@RequestBody ApprovalDto.MemberApprovalCreate dto) {
+//        String approvalNo = approvalService.createApproval(dto);
+//         return ResponseEntity.ok(approvalNo);
+//    }
 }

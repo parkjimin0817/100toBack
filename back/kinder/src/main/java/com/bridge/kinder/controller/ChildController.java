@@ -15,9 +15,9 @@ public class ChildController {
     private final ChildService childService;
 
     //아동 생성
-    @PostMapping
-    public ResponseEntity<String> createManager(@RequestBody ChildDto.CreateChild dto) {
-        String childNo = childService.createChild(dto);
-        return ResponseEntity.ok(childNo);
-    }
+//    @PostMapping
+//    public ResponseEntity<String> createManager(@RequestBody ChildDto.CreateChild dto) {
+//        String childNo = childService.createChild(dto);
+//        return ResponseEntity.ok(childNo);
+//    }
 }

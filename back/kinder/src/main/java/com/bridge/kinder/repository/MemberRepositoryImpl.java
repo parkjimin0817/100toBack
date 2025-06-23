@@ -41,9 +41,9 @@ public class MemberRepositoryImpl implements MemberRepository {
         return Optional.ofNullable(member);
     }
 
-    //멤버 조회(임시)
+    //아동 생성 시 학부모 찾기
     @Override
-    public Optional<Member> findByMemberNo(int memberNo) {
-        return Optional.ofNullable(em.find(Member.class, memberNo));
+    public Optional<Member> findByParentId(int memberId) {
+        return Optional.ofNullable(em.find(Member.class, memberId));
     }
 }
