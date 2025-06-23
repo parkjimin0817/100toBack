@@ -1,8 +1,8 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-const AddressInput = () => {
+const AddressInput = ({ onAddressChange, error }) => {
   const [zonecode, setZonecode] = useState('');
   const [address, setAddress] = useState('');
   const [detail, setDetail] = useState('');
@@ -17,9 +17,20 @@ const AddressInput = () => {
       oncomplete: (data) => {
         setZonecode(data.zonecode);
         setAddress(data.address);
+        setDetail('');
       },
     }).open();
   };
+
+  useEffect(() => {
+    const full = `${address}, ${detail}`.trim();
+    onAddressChange?.(full);
+  }, [address, detail, onAddressChange]);
+
+  const handleDetailChange = (e) => {
+    setDetail(e.target.value);
+  };
+
   return (
     <Wrapper>
       <Label>주소</Label>
@@ -33,7 +44,8 @@ const AddressInput = () => {
 
       <LongInput type="text" placeholder="기본주소" value={address} readOnly />
 
-      <LongInput type="text" placeholder="상세주소" value={detail} onChange={(e) => setDetail(e.target.value)} />
+      <LongInput type="text" placeholder="상세주소" value={detail} onChange={handleDetailChange} />
+      {error && <ErrorMessage>{error}</ErrorMessage>}
     </Wrapper>
   );
 };
@@ -101,4 +113,12 @@ const SearchButton = styled.button`
   &:hover {
     background-color: ${({ theme }) => theme.colors.lightblue};
   }
+`;
+
+const ErrorMessage = styled.p`
+  color: ${({ theme }) => theme.colors.orange};
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  margin-top: ${({ theme }) => theme.spacing[1]};
+  margin-left: ${({ theme }) => theme.spacing[1]};
+  text-align: left;
 `;

@@ -30,6 +30,7 @@ const basicInfoSchema = yup.object().shape({
     .string()
     .matches(/^01[016789]-\d{3,4}-\d{4}$/, '유효한 전화번호를 입력하세요.')
     .required('전화번호를 정확히 입력해주세요.'),
+  fullAddress: yup.string().required('주소를 입력해주세요.'),
 });
 
 export const useBasicInfoForm = () => {
