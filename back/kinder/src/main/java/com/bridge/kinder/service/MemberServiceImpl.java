@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
@@ -94,6 +95,15 @@ public class MemberServiceImpl implements MemberService {
     public MemberDto.Response findMEmber(int memberNo) {
         return memberRepository.findById(memberNo)
                 .map(MemberDto.Response::toDto)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
+    }
+
+    @Override
+    public MemberDto.SearchId searchId(MemberDto.SearchId dto) {
+        String memberName = dto.getMember_name();
+        LocalDate memberBirth = dto.getMember_birth();
+        return memberRepository.searchId(memberName, memberBirth)
+                .map(MemberDto.SearchId::toDto)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
     }
 }

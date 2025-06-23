@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import CommonFind from '../../components/Common/CommonFind';
@@ -10,9 +10,18 @@ import { useNavigate } from 'react-router-dom';
 const SearchId = () => {
   const navigator = useNavigate();
 
-  const BIRTHDAY_YEAR_LIST = Array.from({ length: 36 }, (_, i) => `${i + 1990}년`);
+  const [name, setName] = useState('');
+  const [choiceYear, setChoiceYear] = useState('');
+  const [choiceMonth, setChoiceMonth] = useState('');
+  const [choiceDay, setChoiceDay] = useState('');
+
+  const BIRTHDAY_YEAR_LIST = Array.from({ length: 36 }, (_, i) => `${i + 1970}년`);
   const BIRTHDAY_MONTH_LIST = Array.from({ length: 12 }, (_, i) => `${i + 1}월`);
   const BIRTHDAY_DAY_LIST = Array.from({ length: 31 }, (_, i) => `${i + 1}일`);
+
+  const handleChange = (e) => {
+    const [name, value] = e.target;
+  };
   return (
     <>
       <CommonFind />
@@ -53,7 +62,7 @@ const SearchId = () => {
                 <Button1 type="submit" onClick={() => navigator('/findidsuccess')}>
                   완료
                 </Button1>
-                <Button1 type="button" onClick={() => navigator('/login')}>
+                <Button1 type="button" onClick={() => navigator('/')}>
                   돌아가기
                 </Button1>
               </ButtonArea>

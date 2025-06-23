@@ -44,4 +44,10 @@ public class MemberController {
     public ResponseEntity<MemberDto.Response> getMember(@PathVariable int memberNo){
         return ResponseEntity.ok(memberService.findMEmber(memberNo));
     }
+
+    //멤버 ID 조회(이름, 생년월일)
+    @PostMapping("/searchId")
+    public ResponseEntity<MemberDto.SearchId> searchId(@RequestBody MemberDto.SearchId dto){
+        return ResponseEntity.ok(memberService.searchId(dto));
+    }
 }

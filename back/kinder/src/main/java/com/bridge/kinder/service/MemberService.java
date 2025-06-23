@@ -15,5 +15,6 @@ public interface MemberService {
     String createMember(MemberDto.CreateMember dto) throws IOException;
     //멤버 조회(임시)
     MemberDto.Response findMEmber(int memberNo);
-
+    //멤버 ID 조회(이름, 생년월일)
+    MemberDto.SearchId searchId(MemberDto.SearchId dto);
 }
