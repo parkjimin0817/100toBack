@@ -47,7 +47,6 @@ public class MemberController {
         return ResponseEntity.ok(memberNo);
     }
 
-
     //로그인
     @PostMapping("/login")
     public ResponseEntity<MemberDto.LoginResponse> loginMember(@RequestBody MemberDto.LoginRequest dto) throws IOException {

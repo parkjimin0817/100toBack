@@ -24,6 +24,7 @@ public class ApprovalServiceImpl implements ApprovalService {
     private final MemberRepository memberRepository;
 
     //승인 대기 리스트
+    @Transactional(readOnly = true)
     @Override
     public List<ApprovalDto.MemberApprovalResponse> findAllApprovals(int centerNo) {
         return approvalRepository.findAllApprovals(centerNo)
@@ -32,19 +33,20 @@ public class ApprovalServiceImpl implements ApprovalService {
                 .collect(Collectors.toList());
     }
 
-    //승인 요청 생성
-//    @Override
-//    public String createApproval(ApprovalDto.MemberApprovalCreate dto) {
-//        Center center = centerRepository.findById(dto.getCenter_no())
-//                .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
-//
-//        Member member = memberRepository.findByMemberId(dto.getMember_No())
-//                .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
-//
-//        Approval approval = dto.toEntity(center, member);
-//
-//        approvalRepository.save(approval);
-//
-//        return String.valueOf(approval.getApprovalNo());
-//    }
+    //승인, 거절 결정
+    @Override
+    public String updateMemberApprovals(ApprovalDto.MemberApprovalUpdate dto) {
+        Approval approval = approvalRepository.findByApprovalNo(dto.getApproval_no())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 승인 요청입니다."));
+
+        Member member = memberRepository.findByParentNo(dto.getMember_no())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
+
+        //멤버 정보 가져와서 status 바꿔줘야함
+
+        approval.changeApprovalStatus(dto.getStatus());
+        member.changeMemberStatus(dto.getStatus());
+
+        return dto.toDto(member).toString();
+    }
 }

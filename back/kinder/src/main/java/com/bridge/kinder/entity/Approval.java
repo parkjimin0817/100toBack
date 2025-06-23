@@ -66,4 +66,9 @@ public class Approval {// 승인, 거부 신텅
         this.decisionDate = LocalDateTime.now();
     }
 
+
+    //---------------------------------------------------------------------------------------------
+    public void changeApprovalStatus(CommonEnums.AdmissionStatus newStatus) {
+        this.status = newStatus;
+    }
 }
