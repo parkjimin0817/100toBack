@@ -7,4 +7,5 @@ import java.io.IOException;
 public interface ChildService {
     //아동 생성
     String createChild(ChildDto.CreateChild dto) throws IOException;
+    String linkChild(ChildDto.LinkChildRequest dto) throws IOException;
 }

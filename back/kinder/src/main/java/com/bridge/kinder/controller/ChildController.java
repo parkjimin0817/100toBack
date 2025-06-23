@@ -17,9 +17,16 @@ public class ChildController {
     private final ChildService childService;
 
     //아동 생성
-    @PostMapping
-    public ResponseEntity<String> createManager(@ModelAttribute ChildDto.CreateChild dto) throws IOException {
+    @PostMapping("/add")
+    public ResponseEntity<String> createChild(@ModelAttribute ChildDto.CreateChild dto) throws IOException {
         String childNo = childService.createChild(dto);
+        return ResponseEntity.ok(childNo);
+    }
+
+    //로그인된 부모의 아동 연결
+    @PostMapping("/link")
+    public ResponseEntity<String> linkChild(@RequestBody ChildDto.LinkChildRequest dto) throws IOException {
+        String childNo = childService.linkChild(dto);
         return ResponseEntity.ok(childNo);
     }
 }

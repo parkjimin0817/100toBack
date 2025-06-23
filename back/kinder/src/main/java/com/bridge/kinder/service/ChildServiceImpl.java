@@ -64,7 +64,23 @@ public class ChildServiceImpl implements ChildService {
         memberChildRepository.save(link);
 
         return String.valueOf(child.getChildNo());
+    }
 
-        //아동 연결
+    @Override
+    public String linkChild(ChildDto.LinkChildRequest dto) throws IOException {
+        Member parent = memberRepository.findByParentNo(dto.getMember_no())
+                .orElseThrow(() -> new RuntimeException("부모 회원이 존재하지 않습니다."));
+
+        Child child = childRepository.findByResidentNo(dto.getChild_resident_no())
+                .orElseThrow(() -> new RuntimeException("아동이 존재하지 않습니다."));
+
+        MemberChild link = MemberChild.builder()
+                .member(parent)
+                .child(child)
+                .build();
+        memberChildRepository.save(link);
+
+
+        return String.valueOf(child.getChildNo());
     }
 }

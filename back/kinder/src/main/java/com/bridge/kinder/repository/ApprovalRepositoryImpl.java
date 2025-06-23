@@ -7,6 +7,7 @@ import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ApprovalRepositoryImpl implements ApprovalRepository {
@@ -26,8 +27,15 @@ public class ApprovalRepositoryImpl implements ApprovalRepository {
                 .getResultList();
     }
 
+    //승인 요청 생성
     @Override
     public void save(Approval approval) {
         em.persist(approval);
+    }
+
+    //승인 요청 검색
+    @Override
+    public Optional<Approval> findByApprovalNo(int approvalNo) {
+        return Optional.ofNullable(em.find(Approval.class, approvalNo));
     }
 }
