@@ -55,5 +55,14 @@ public class MemberController {
         return ResponseEntity.ok(response);
     }
 
+    //멤버 ID 조회(이름, 생년월일)
+    @PostMapping("/searchId")
+    public ResponseEntity<MemberDto.SearchId> searchId(@RequestBody MemberDto.SearchId dto){
+        return ResponseEntity.ok(memberService.searchId(dto));
+    }
 
+    @PostMapping("/pwdSearchId")
+    public ResponseEntity<?> pwdSearchId(@RequestBody MemberDto.SearchId dto){
+        return ResponseEntity.ok(null);
+    }
 }
