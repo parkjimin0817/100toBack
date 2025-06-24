@@ -62,6 +62,9 @@ public class ApprovalDto {
         private LocalDateTime declined_date;
 
         private int center_no;
+        private String center_name;
+        private CommonEnums.CenterType center_type;
+        private String center_tel;
 
         //시설장, 교사, 학부모
         private int member_no;
@@ -107,6 +110,9 @@ public class ApprovalDto {
                     .status(approval.getStatus())
                     .declined_date(approval.getDecisionDate())
                     .center_no(approval.getCenter().getCenterNo())
+                    .center_name(approval.getCenter().getCenterName())
+                    .center_type(approval.getCenter().getCenterType())
+                    .center_tel(approval.getCenter().getCenterTel())
                     .member_no(memberNo)
                     .member_type(memberType)
                     .member_name(memberName)

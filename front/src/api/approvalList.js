@@ -6,8 +6,7 @@ export const approvalListService = {
   getPendingList: async (centerNo) => {
     try {
       const { data } = await api.get(API_ENDPOINTS.APPLOVALLIST.PENDINGLIST(centerNo));
-      console.log('승인 대기 목록 조회:', data);
-      return data; //승인 대기 목록
+      return data;
     } catch (error) {
       throw new Error(error, '서버 통신 불량');
     }
@@ -20,7 +19,7 @@ export const approvalListService = {
         status: status,
         member_no: memberNo,
       });
-      return data; //승인/거절 결과
+      return data;
     } catch (error) {
       throw new Error(error, '서버 통신 불량');
     }
@@ -33,7 +32,7 @@ export const approvalListService = {
         status: status,
         child_no: childNo,
       });
-      return data; //승인/거절 결과
+      return data;
     } catch (error) {
       throw new Error(error, '서버 통신 불량');
     }

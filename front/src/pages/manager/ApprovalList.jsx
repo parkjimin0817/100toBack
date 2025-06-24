@@ -5,22 +5,23 @@ import App from '../../App';
 import { LuSearch } from 'react-icons/lu';
 import useLoginStore from '../../store/loginStore';
 import { approvalListService } from '../../api/approvalList';
+import { toast } from 'react-toastify';
 
 const ApprovalList = () => {
   const [selectedType, setSelectedType] = useState('교사');
   const [dataAll, setDataAll] = useState([]);
   const { member } = useLoginStore();
 
-  useEffect(() => {
-    const fetchPendingList = async () => {
-      try {
-        const data = await approvalListService.getPendingList(member.centerNo);
-        setDataAll(data || []);
-      } catch (error) {
-        console.error('승인 대기 목록 로딩 실패:', error.message);
-      }
-    };
+  const fetchPendingList = async () => {
+    try {
+      const data = await approvalListService.getPendingList(member.centerNo);
+      setDataAll(data || []);
+    } catch (error) {
+      console.error('승인 대기 목록 로딩 실패:', error.message);
+    }
+  };
 
+  useEffect(() => {
     fetchPendingList();
   }, []);
 
@@ -29,6 +30,22 @@ const ApprovalList = () => {
     (item) => item.member_type === 'PARENT' && !item.child_name && item.status === 'PENDING'
   );
   const childList = dataAll.filter((item) => item.child_name && item.status === 'PENDING');
+
+  const handleApprovalAction = async (item, status) => {
+    try {
+      if (item.member_type && item.member_no !== 0 && item.child_no === 0) {
+        await approvalListService.updateMemberApprovalStatus(item.approval_no, status, item.member_no);
+      } else if (item.child_no !== 0) {
+        await approvalListService.updateChildApprovalStatus(item.approval_no, status, item.child_no);
+      }
+
+      toast.success(`${status === 'APPROVED' ? '승인' : '거절'} 처리되었습니다.`);
+      fetchPendingList();
+    } catch (error) {
+      console.error('처리 실패:', error.message);
+      alert('요청 처리 중 오류가 발생했습니다.');
+    }
+  };
 
   return (
     <Content>
@@ -75,8 +92,12 @@ const ApprovalList = () => {
                     <td>{item.member_phone}</td>
                     <td>{item.approval_request_date.split('T')[0]}</td>
                     <td>
-                      <button className="approved">승인</button>
-                      <button className="rejected">거절</button>
+                      <button className="approved" onClick={() => handleApprovalAction(item, 'APPROVED')}>
+                        승인
+                      </button>
+                      <button className="rejected" onClick={() => handleApprovalAction(item, 'REJECTED')}>
+                        거절
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -103,8 +124,12 @@ const ApprovalList = () => {
                     <td>{item.member_phone}</td>
                     <td>{item.approval_request_date.split('T')[0]}</td>
                     <td>
-                      <button className="approved">승인</button>
-                      <button className="rejected">거절</button>
+                      <button className="approved" onClick={() => handleApprovalAction(item, 'APPROVED')}>
+                        승인
+                      </button>
+                      <button className="rejected" onClick={() => handleApprovalAction(item, 'REJECTED')}>
+                        거절
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -117,8 +142,8 @@ const ApprovalList = () => {
               <thead>
                 <tr>
                   <th>번호</th>
-                  <th>보호자명</th>
                   <th>아동명</th>
+                  <th>보호자명</th>
                   <th>가입일</th>
                   <th>승인여부</th>
                 </tr>
@@ -127,12 +152,16 @@ const ApprovalList = () => {
                 {childList.map((item, index) => (
                   <tr key={item.approval_no}>
                     <td>{index + 1}</td>
-                    <td>{item.member_name}</td>
                     <td>{item.child_name}</td>
+                    <td>{item.member_name}</td>
                     <td>{item.approval_request_date.split('T')[0]}</td>
                     <td>
-                      <button className="approved">승인</button>
-                      <button className="rejected">거절</button>
+                      <button className="approved" onClick={() => handleApprovalAction(item, 'APPROVED')}>
+                        승인
+                      </button>
+                      <button className="rejected" onClick={() => handleApprovalAction(item, 'REJECTED')}>
+                        거절
+                      </button>
                     </td>
                   </tr>
                 ))}

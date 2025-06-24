@@ -1,33 +1,60 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import App from '../../App';
 import { LuSearch } from 'react-icons/lu';
+import { approvalListService } from '../../api/approvalList';
+import useLoginStore from '../../store/loginStore';
+import { toast } from 'react-toastify';
 
 const ApprovalListAdmin = () => {
-  const data = [
-    {
-      center_name: '어린이집 A',
-      name: '막시무스',
-      center_type: '어린이집',
-      center_tel: '010-1234-5678',
-      create_date: '2023-10-01',
-    },
-    {
-      center_name: '아동센터 B',
-      name: '이철수',
-      center_type: '지역아동센터',
-      center_tel: '010-9876-5432',
-      create_date: '2023-10-02',
-    },
-    {
-      center_name: '유치원 A',
-      name: '박지민',
-      center_type: '유치원',
-      center_tel: '010-1111-2222',
-      create_date: '2023-10-03',
-    },
-  ];
+  const [dataAll, setDataAll] = useState([]);
+  const { member } = useLoginStore();
+
+  const fetchPendingList = async () => {
+    try {
+      const data = await approvalListService.getPendingList(member.centerNo);
+      data.forEach((item) => {
+        switch (item.center_type) {
+          case 'DAYCARE':
+            item.center_type = '어린이집';
+            break;
+          case 'KINDERGARTEN':
+            item.center_type = '유치원';
+            break;
+          case 'CHILD_CENTER':
+            item.center_type = '지역아동센터';
+            break;
+          case 'ETC':
+            item.center_type = '기타';
+            break;
+          default:
+            item.center_type = '알 수 없음';
+        }
+      });
+      setDataAll(data || []);
+    } catch (error) {
+      console.error('승인 대기 목록 로딩 실패:', error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchPendingList();
+  }, []);
+
+  const managerList = dataAll.filter((item) => item.member_type === 'MANAGER' && item.status === 'PENDING');
+
+  const handleApprovalAction = async (item, status) => {
+    try {
+      await approvalListService.updateMemberApprovalStatus(item.approval_no, status, item.member_no);
+
+      toast.success(`${status === 'APPROVED' ? '승인' : '거절'} 처리되었습니다.`);
+      fetchPendingList();
+    } catch (error) {
+      console.error('처리 실패:', error.message);
+      alert('요청 처리 중 오류가 발생했습니다.');
+    }
+  };
 
   return (
     <Content>
@@ -57,17 +84,21 @@ const ApprovalListAdmin = () => {
               </tr>
             </thead>
             <tbody>
-              {data.map((item, index) => (
+              {managerList.map((item, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{item.center_name}</td>
-                  <td>{item.name}</td>
+                  <td>{item.member_name}</td>
                   <td>{item.center_type}</td>
                   <td>{item.center_tel}</td>
-                  <td>{item.create_date}</td>
+                  <td>{item.approval_request_date.split('T')[0]}</td>
                   <td>
-                    <button>승인</button>
-                    <button>거절</button>
+                    <button className="approved" onClick={() => handleApprovalAction(item, 'APPROVED')}>
+                      승인
+                    </button>
+                    <button className="rejected" onClick={() => handleApprovalAction(item, 'REJECTED')}>
+                      거절
+                    </button>
                   </td>
                 </tr>
               ))}
