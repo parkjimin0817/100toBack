@@ -30,8 +30,7 @@ export const memberService = {
         default:
           throw new Error('알 수 없는 사용자 유형입니다.');
       }
-      console.log(mergedData.member_profile);
-      console.log(mergedData.child_profile);
+
       const formData = new FormData();
 
       //멤버 공통 정보
@@ -41,6 +40,7 @@ export const memberService = {
       formData.append('member.member_phone', mergedData.member_phone);
       formData.append('member.member_birth', mergedData.member_birth); // yyyy-MM-dd
       formData.append('member.member_type', mergedData.member_type);
+      formData.append('member.address', mergedData.address);
       if (mergedData.member_profile instanceof FileList || Array.isArray(mergedData.member_profile)) {
         formData.append('member.member_profile', mergedData.member_profile[0]);
       } else if (mergedData.member_profile instanceof File) {
@@ -116,6 +116,9 @@ export const memberService = {
     }
   },
 
+  //교사 목록 불러오기
+  teacherlist: async (centerNo) => {
+
   //마이페이지
   Mypage: async (memberNo) => {
     try {
@@ -144,9 +147,12 @@ export const memberService = {
   //아이디 찾기
   searchId: async (member_name, member_birth) => {
     try {
-      const { data } = await api.post(API_ENDPOINTS.MEMBERS.SEARCHID, { member_name, member_birth });
+      const { data } = await api.get(API_ENDPOINTS.MEMBERS.TEACHERLIST(centerNo));
       return data;
     } catch (error) {
+
+      throw new Error('서버 통신 불량' + error.message);
+
       if (error.response) {
         const errorMessage = error.response.data.message || '로그인에 실패했습니다.';
 

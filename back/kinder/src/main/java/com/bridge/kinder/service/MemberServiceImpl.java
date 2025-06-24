@@ -13,9 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -191,6 +193,15 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return MemberDto.LoginResponse.toDto(member);
+    }
+
+    //시설 별 교사 목록 찾기
+    @Override
+    @Transactional(readOnly = true)
+    public List<MemberDto.Response> findTeachersByCenterNo(int centerNo) {
+        return memberRepository.findTeacherByCenterNo(centerNo).stream()
+                .map(MemberDto.Response::toDto)
+                .collect(Collectors.toList());
     }
 
     //멤버 ID 찾기(이름, 생년월일)

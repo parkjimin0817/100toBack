@@ -3,6 +3,7 @@ package com.bridge.kinder.controller;
 import com.bridge.kinder.dto.CreateManagerDto;
 import com.bridge.kinder.dto.MemberChildDto;
 import com.bridge.kinder.dto.MemberDto;
+import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.dto.MypageDto;
 import com.bridge.kinder.dto.MemberTeacherDto;
 import com.bridge.kinder.entity.Member;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @CrossOrigin("http://localhost:5173")
 @RestController
@@ -56,6 +58,11 @@ public class MemberController {
         return ResponseEntity.ok(response);
     }
 
+    //시설 별 교사 목록 불러오기
+    @GetMapping("/teacherlist/{centerNo}")
+    public ResponseEntity<List<MemberDto.Response>> findTeachers(@PathVariable int centerNo){
+        return ResponseEntity.ok(memberService.findTeachersByCenterNo(centerNo));
+    }
     //멤버 ID 조회(이름, 생년월일)
     @PostMapping("/searchId")
     public ResponseEntity<MemberDto.SearchId> searchId(@RequestBody MemberDto.SearchId dto){
