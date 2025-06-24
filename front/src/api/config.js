@@ -26,12 +26,18 @@ export const API_ENDPOINTS = {
     Mypage: (memberNo) => `/api/members/mypage?id=${memberNo}`,
     SEARCHID: `/api/members/searchId`,
     PWDSEARCHID: `/api/members/pwdSearchId`,
+    TEACHERLIST: (centerNo) => `api/members/teacherlist/${centerNo}`,
   },
   APPLOVALLIST: {
     BASE: 'api/approvalList',
-    PENDINGLIST: (centerNo) => `api/approvalList/centerNo=${centerNo}`,
+    PENDINGLIST: (centerNo) => `api/approvalList?centerNo=${centerNo}`,
   },
   CENTERS: {
     BASE: '/api/center',
+  },
+  CLASSROOM: {
+    BASE: '/api/classroom',
+    CREATE: '/api/classroom/create',
+    CLASSROOMLIST: (centerNo) => `api/classroom/list/${centerNo}`,
   },
 };

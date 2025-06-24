@@ -78,6 +78,30 @@ public class MemberDto {
         }
     }
 
+
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    //멤버 목록 가져오기
+    public static class Response {
+        private int member_no;
+        private String member_name;
+
+        private int center_no;
+
+        public static Response toDto(Member member) {
+            return Response.builder()
+                    .member_no(member.getMemberNo())
+                    .member_name(member.getMemberName())
+                    .center_no(member.getCenter().getCenterNo())
+                    .build();
+        }
+    }
+
+
     @Getter
     @Setter
     @AllArgsConstructor

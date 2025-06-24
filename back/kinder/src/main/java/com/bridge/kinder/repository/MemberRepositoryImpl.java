@@ -2,10 +2,12 @@ package com.bridge.kinder.repository;
 
 import com.bridge.kinder.dto.MypageDto;
 import com.bridge.kinder.entity.Member;
+import com.bridge.kinder.enums.CommonEnums;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -49,17 +51,29 @@ public class MemberRepositoryImpl implements MemberRepository {
         return Optional.ofNullable(em.find(Member.class, memberNo));
     }
 
-    //멤버 ID 찾기(이름, 생년월일
+    //클래스 별 담당 교사 불러오기
     @Override
-    public Optional<Member> searchId(String memberName, LocalDate memberBirth) {
-        String query = "select m from Member m where m.memberName = :memberName and m.memberBirth = :memberBirth";
-
-        return Optional.ofNullable(em.createQuery(query, Member.class)
-                .setParameter("memberName", memberName )
-                .setParameter("memberBirth", memberBirth)
-                .getSingleResult());
+    public Optional<Member> findTeacherByClassNo(int classNo) {
+        String jpql = "SELECT m FROM Member m WHERE m.classRoom.classNo = :classNo";
+        Member member = em.createQuery(jpql, Member.class)
+                .setParameter("classNo", classNo)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+        return Optional.ofNullable(member);
     }
 
+    //시설 별 교사 불러오기
+    @Override
+    public List<Member> findTeacherByCenterNo(int centerNo) {
+        return em.createQuery("select m from Member m where m.memberType =:memberType and m.status =: status and m.center.centerNo =:centerNo", Member.class)
+                .setParameter("memberType", CommonEnums.MemberType.TEACHER)
+                .setParameter("status", CommonEnums.AdmissionStatus.APPROVED)
+                .setParameter("centerNo", centerNo)
+                .getResultList();
+    }
+
+    //member_no으로 멤버 찾기
     @Override
     public Optional<Member> findByMemberNo(int memberNo) {
         String jpql = "SELECT m FROM Member m WHERE m.memberNo = :memberNo";
@@ -70,6 +84,18 @@ public class MemberRepositoryImpl implements MemberRepository {
                 .orElse(null);
         return Optional.ofNullable(member);
     }
+
+    //멤버 ID 찾기(이름, 생년월일
+    @Override
+    public Optional<Member> searchId(String memberName, LocalDate memberBirth) {
+        String query = "select m from Member m where m.memberName = :memberName and m.memberBirth = :memberBirth";
+
+        return Optional.ofNullable(em.createQuery(query, Member.class)
+                .setParameter("memberName", memberName )
+                .setParameter("memberBirth", memberBirth)
+                .getSingleResult());
+    }
+    
 
     @Override
     public Optional<Member> myPageUpdate(int id, MypageDto.Update dto) {

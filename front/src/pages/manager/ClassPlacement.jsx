@@ -12,10 +12,15 @@ const ClassPlacement = () => {
   const member = useLoginStore((state) => state.member);
   const centerNo = member.centerNo;
   const navigate = useNavigate();
+
   const [accessDenied, setAccessDenied] = useState(false); // 🔒 차단 상태
 
+  // const headerButtons = [{ Title: '반 목록', func: () => navigate('/classlist') }];
+
+  const headerButtons = [{ Title: '반 목록', func: () => navigate('/manager/classmanage') }];
+
   // ✅ 여기부터는 문제 없이 useState 사용 가능
-  const headerButtons = [{ Title: '반 목록', func: () => navigate('/classlist') }];
+  // true → 전체, false → 미배정
   const [showAll, setShowAll] = useState(true);
   const [openModal, setOpenModal] = useState(false);
   const [sort, setSort] = useState('createDate');
