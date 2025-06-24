@@ -4,6 +4,7 @@ import com.bridge.kinder.dto.CreateManagerDto;
 import com.bridge.kinder.dto.MemberChildDto;
 import com.bridge.kinder.dto.MemberDto;
 import com.bridge.kinder.dto.MemberTeacherDto;
+import com.bridge.kinder.dto.MypageDto;
 
 import java.io.IOException;
 
@@ -22,4 +23,9 @@ public interface MemberService {
     //멤버 로그인
     MemberDto.LoginResponse getLoginMember(String memberId, String memberPwd);
 
+    //마이페이지
+    MemberDto.MyPageResponse getMyInfo(int memberNo);
+
+    //마이페이지 수정
+    String updateMyPage(int id ,MypageDto.Update dto);
 }

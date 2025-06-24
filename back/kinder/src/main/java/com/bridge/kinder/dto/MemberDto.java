@@ -96,4 +96,31 @@ public class MemberDto {
         }
     }
 
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class MyPageResponse {
+        private String member_name;
+        private LocalDate member_birth;
+        private CommonEnums.MemberType member_type;
+        private String center_name;
+        private String center_tel;
+        private String center_address;
+        private CommonEnums.CenterType center_type;
+
+        public static MyPageResponse toDto(Center center, Member member) {
+            return MyPageResponse.builder()
+                    .member_name(member.getMemberName())
+                    .member_birth(member.getMemberBirth())
+                    .member_type(member.getMemberType())
+                    .center_name(center.getCenterName())
+                    .center_tel(center.getCenterTel())
+                    .center_address(center.getCenterAddress())
+                    .center_type(center.getCenterType())
+                    .build();
+        }
+    }
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ContentHeader from '../../components/Common/ContentHeader';
 import styled from 'styled-components';
 import MyPageProfileImage from '../manager/components/MyPageProfileImage';
@@ -7,42 +7,96 @@ import MyPageCenterInfo from '../manager/components/MyPageCenterInfo';
 import MyPageMenuBox from '../manager/components/MyPageMenuBox';
 import { FaUmbrellaBeach, FaRegClock } from 'react-icons/fa';
 import { RiHealthBookLine } from 'react-icons/ri';
+import { useLoginStore } from '../../store/loginStore';
+import { useNavigate } from 'react-router-dom';
+import api from '../../api/axios.js';
 
 const TeacherMyPage = () => {
-  const [isEditMode, setIsEditMode] = useState(false);
-  const hanldeEditClick = () => {
-    setIsEditMode((prev) => !prev);
+  const member = useLoginStore((state) => state.member);
+  const navigate = useNavigate();
+  const isAuthenticated = useLoginStore((state) => state.isAuthenticated);
+
+  const [myInfo, setMyInfo] = useState(null);
+  const [editableInfo, setEditableInfo] = useState(null);
+  const [centerInfo, setCenterInfo] = useState(null);
+
+  useEffect(() => {
+    if (!isAuthenticated || !member) {
+      alert('로그인이 필요합니다');
+      navigate('/');
+      return;
+    }
+
+    const fetchMyInfo = async () => {
+      try {
+        const url = `/api/members/mypage?id=${member.memberNo}`;
+        const { data } = await api.get(url);
+        setMyInfo(data);
+
+        setEditableInfo({
+          memberName: data.member_name,
+          memberBirth: data.member_birth,
+          memberType: data.member_type,
+        });
+
+        setCenterInfo({
+          centerName: data.center_name,
+          centerTel: data.center_tel,
+          centerAddress: data.center_address,
+          centerType: data.center_type,
+        });
+      } catch (error) {
+        alert('불러오기 실패');
+      }
+    };
+
+    fetchMyInfo();
+  }, [isAuthenticated, member, navigate]);
+
+  if (!member || !editableInfo || !centerInfo) return null;
+
+  const handleSave = async () => {
+    try {
+      await api.patch(`/api/members/mypage?id=${member.memberNo}`, {
+        memberName: editableInfo.memberName,
+        memberBirth: editableInfo.memberBirth,
+        centerName: centerInfo.centerName,
+        centerTel: centerInfo.centerTel,
+        centerAddress: centerInfo.centerAddress,
+        centerType: centerInfo.centerType,
+      });
+      alert('수정 완료!');
+    } catch (e) {
+      alert('수정 실패: ' + e.message);
+    }
   };
+
   return (
     <Content>
       <ContentHeader
         Title={'마이페이지'}
         Color={'blue'}
         FontSize="xl"
-        ButtonProps={[{ Title: isEditMode ? '저장하기' : '수정하기', func: hanldeEditClick }]}
+        ButtonProps={[{ Title: '수정하기', func: handleSave }]}
       />
-
-      {/* 만약, 시설장이 들어갈 경우, 
-      Title={'교사 상세보기'}
-      Color={'blue'}
-      ButtonProps={[{ Title: '뒤로가기', func: () => navigate(-1) }, { Title: '퇴사 처리' }]}
-      교사 본인이 들어올 경우,
-      Title={'교사 마이페이지'}
-      Color={'orange'}
-      ButtonProps={[{ Title: '뒤로가기', func: () => navigate(-1) }, { Title: '탈퇴하기' }]} */}
 
       <Wrapper>
         <InfoBox>
           <ProfileImgBox>
-            <MyPageProfileImage isEditMode={isEditMode} />
+            <MyPageProfileImage />
           </ProfileImgBox>
           <MyInfoBox>
-            <MyPageMyInfo isEditMode={isEditMode} />
+            <MyPageMyInfo info={editableInfo} isEditable={true} onChange={setEditableInfo} />
           </MyInfoBox>
           <CenterInfoBox>
-            <MyPageCenterInfo />
+            <MyPageCenterInfo
+              centerInfo={centerInfo}
+              isEditable={member.memberType === 'MANAGER'}
+              onChange={setCenterInfo}
+            />
           </CenterInfoBox>
         </InfoBox>
+
         <MenuBox>
           <MyPageMenuBox menuName="근태관리" icon={<FaRegClock size={60} />} url="/근태관리" color="blue" />
           <MyPageMenuBox menuName="나의 건강" icon={<RiHealthBookLine size={60} />} url="/myhealth" color="yellow" />
