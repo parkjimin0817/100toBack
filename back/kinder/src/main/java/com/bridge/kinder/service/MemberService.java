@@ -3,6 +3,7 @@ package com.bridge.kinder.service;
 import com.bridge.kinder.dto.CreateManagerDto;
 import com.bridge.kinder.dto.MemberChildDto;
 import com.bridge.kinder.dto.MemberDto;
+import com.bridge.kinder.dto.MemberTeacherDto;
 
 import java.io.IOException;
 
@@ -13,7 +14,7 @@ public interface MemberService {
     //시설장(시설) 생성
     String createManager(CreateManagerDto dto) throws IOException;
     //교사 생성
-    String createTeacher(MemberDto.CreateMember dto) throws IOException;
+    String createTeacher(MemberTeacherDto dto) throws IOException;
     //학부모 생성, 아동 등록
     String createParentChild(MemberChildDto dto) throws IOException;
 
