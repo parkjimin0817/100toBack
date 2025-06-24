@@ -1,5 +1,6 @@
 package com.bridge.kinder.repository;
 
+import com.bridge.kinder.dto.MypageDto;
 import com.bridge.kinder.entity.Center;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface CenterRepository {
     Optional<Center> findById(Integer centerNo);
     //센터 전체 리스트 불러오기
     List<Center> findAll();
+    //마이페이지 시설정보 수정
+    Optional<Center> myPageUpdate(int id, MypageDto.Update dto);
 }

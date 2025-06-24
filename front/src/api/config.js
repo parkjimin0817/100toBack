@@ -23,8 +23,10 @@ export const API_ENDPOINTS = {
     PARENTSIGNUP: '/api/members/parent',
     MANAGERSIGNUP: '/api/members/manager',
     LOGIN: `/api/members/login`,
+    Mypage: (memberNo) => `/api/members/mypage?id=${memberNo}`,
     SEARCHID: `/api/members/searchId`,
     PWDSEARCHID: `/api/members/pwdSearchId`,
+    TEACHERLIST: (centerNo) => `api/members/teacherlist/${centerNo}`,
   },
   APPLOVALLIST: {
     BASE: 'api/approvalList',
@@ -34,5 +36,10 @@ export const API_ENDPOINTS = {
   },
   CENTERS: {
     BASE: '/api/center',
+  },
+  CLASSROOM: {
+    BASE: '/api/classroom',
+    CREATE: '/api/classroom/create',
+    CLASSROOMLIST: (centerNo) => `api/classroom/list/${centerNo}`,
   },
 };

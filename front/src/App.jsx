@@ -65,6 +65,7 @@ import AddChild from './pages/parent/AddChild';
 import SearchChild from './pages/parent/SearchChild';
 import ErrorPage from './pages/ErrorPage';
 import ParentChildList from './pages/parent/ParentChildList';
+import ClassRoomManage from './pages/manager/ClassRoomManage';
 
 function App() {
   return (
@@ -119,6 +120,8 @@ function App() {
              *
              * 8. 시설장 교사 상세보기 페이지(만들어야함)
              *
+             * 9. 시설장 반 목록 / 생성 모달
+             *
              *  */}
             <Route path="/manager/mypage" element={<ManagerMyPage />} />
             <Route path="/manager/classplacement" element={<ClassPlacement />} />
@@ -127,6 +130,7 @@ function App() {
             <Route path="/vacationList" element={<VacationList />} />
             <Route path="/manager/teacherattendance/:id" element={<TeacherAttendance />} />
             <Route path="/manager/introteacher" element={<TeacherIntroList />} />
+            <Route path="/manager/classmanage" element={<ClassRoomManage />} />
 
             {/**
              * 교사, 시설장 공용

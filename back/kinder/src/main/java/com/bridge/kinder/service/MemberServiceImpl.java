@@ -4,6 +4,7 @@ import com.bridge.kinder.dto.CreateManagerDto;
 import com.bridge.kinder.dto.MemberChildDto;
 import com.bridge.kinder.dto.MemberDto;
 import com.bridge.kinder.dto.MemberTeacherDto;
+import com.bridge.kinder.dto.MypageDto;
 import com.bridge.kinder.entity.*;
 import com.bridge.kinder.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -192,6 +195,15 @@ public class MemberServiceImpl implements MemberService {
         return MemberDto.LoginResponse.toDto(member);
     }
 
+    //시설 별 교사 목록 찾기
+    @Override
+    @Transactional(readOnly = true)
+    public List<MemberDto.Response> findTeachersByCenterNo(int centerNo) {
+        return memberRepository.findTeacherByCenterNo(centerNo).stream()
+                .map(MemberDto.Response::toDto)
+                .collect(Collectors.toList());
+    }
+
     //멤버 ID 찾기(이름, 생년월일)
     @Override
     public MemberDto.SearchId searchId(MemberDto.SearchId dto) {
@@ -201,5 +213,20 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.searchId(memberName, memberBirth)
                 .map(MemberDto.SearchId::toDto)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
+    }
+
+    @Override
+    public MemberDto.MyPageResponse getMyInfo(int memberNo) {
+        Member member = memberRepository.findByMemberNo(memberNo).get();
+
+        Center center = member.getCenter();
+        return MemberDto.MyPageResponse.toDto(center, member);
+    }
+
+    @Override
+    public String updateMyPage(int id, MypageDto.Update dto) {
+        Member member = memberRepository.myPageUpdate(id, dto).get();
+        Center center = centerRepository.myPageUpdate(id, dto).get();
+        return "";
     }
 }

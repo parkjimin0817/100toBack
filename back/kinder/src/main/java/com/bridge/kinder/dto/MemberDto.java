@@ -78,6 +78,30 @@ public class MemberDto {
         }
     }
 
+
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    //멤버 목록 가져오기
+    public static class Response {
+        private int member_no;
+        private String member_name;
+
+        private int center_no;
+
+        public static Response toDto(Member member) {
+            return Response.builder()
+                    .member_no(member.getMemberNo())
+                    .member_name(member.getMemberName())
+                    .center_no(member.getCenter().getCenterNo())
+                    .build();
+        }
+    }
+
+
     @Getter
     @Setter
     @AllArgsConstructor
@@ -96,4 +120,31 @@ public class MemberDto {
         }
     }
 
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class MyPageResponse {
+        private String member_name;
+        private LocalDate member_birth;
+        private CommonEnums.MemberType member_type;
+        private String center_name;
+        private String center_tel;
+        private String center_address;
+        private CommonEnums.CenterType center_type;
+
+        public static MyPageResponse toDto(Center center, Member member) {
+            return MyPageResponse.builder()
+                    .member_name(member.getMemberName())
+                    .member_birth(member.getMemberBirth())
+                    .member_type(member.getMemberType())
+                    .center_name(center.getCenterName())
+                    .center_tel(center.getCenterTel())
+                    .center_address(center.getCenterAddress())
+                    .center_type(center.getCenterType())
+                    .build();
+        }
+    }
 }

@@ -3,6 +3,8 @@ package com.bridge.kinder.controller;
 import com.bridge.kinder.dto.CreateManagerDto;
 import com.bridge.kinder.dto.MemberChildDto;
 import com.bridge.kinder.dto.MemberDto;
+import com.bridge.kinder.entity.Center;
+import com.bridge.kinder.dto.MypageDto;
 import com.bridge.kinder.dto.MemberTeacherDto;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.service.MemberService;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @CrossOrigin("http://localhost:5173")
 @RestController
@@ -55,10 +58,28 @@ public class MemberController {
         return ResponseEntity.ok(response);
     }
 
+    //시설 별 교사 목록 불러오기
+    @GetMapping("/teacherlist/{centerNo}")
+    public ResponseEntity<List<MemberDto.Response>> findTeachers(@PathVariable int centerNo){
+        return ResponseEntity.ok(memberService.findTeachersByCenterNo(centerNo));
+    }
     //멤버 ID 조회(이름, 생년월일)
     @PostMapping("/searchId")
     public ResponseEntity<MemberDto.SearchId> searchId(@RequestBody MemberDto.SearchId dto){
         return ResponseEntity.ok(memberService.searchId(dto));
+    }
+    //마이페이지에서 정보 조회
+    @GetMapping("/mypage")
+    public ResponseEntity<MemberDto.MyPageResponse> myPage(@RequestParam int id){
+        MemberDto.MyPageResponse mypage = memberService.getMyInfo(id);
+        return ResponseEntity.ok(mypage);
+    }
+
+    //마이페이지에서 정보 수정(교사일 경우 본인 이름,전화번호만 수정 가능, 시설장일 경우 시설정보까지 수정 가능)
+    @PatchMapping("/mypage")
+    public ResponseEntity<String> updateMypage(@RequestParam int id, @RequestBody MypageDto.Update dto){
+        String memberNo = memberService.updateMyPage(id, dto);
+        return ResponseEntity.ok(memberNo);
     }
 
     @PostMapping("/pwdSearchId")
