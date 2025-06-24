@@ -29,7 +29,7 @@ const SeachIdSuccess = () => {
             </ContentForm>
 
             <ButtonArea>
-              <Button1 onClick={() => navigator('/login')}>로그인하기</Button1>
+              <Button1 onClick={() => navigator('/')}>로그인하기</Button1>
               <Button1 onClick={() => navigator('/authenticationuser')}>비밀번호 찾기</Button1>
             </ButtonArea>
 
