@@ -24,6 +24,7 @@ public class CenterRepositoryImpl implements CenterRepository {
         return center;
     }
 
+    //센터 검색
     @Override
     public Optional<Center> findById(Integer centerNo) {
         if(centerNo == null) return Optional.empty();

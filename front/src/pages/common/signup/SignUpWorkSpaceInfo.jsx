@@ -34,6 +34,7 @@ const SignUpWorkSpaceInfo = () => {
   const { handleSubmit, setValue, errors, isSubmitting } = useTeacherInfoForm();
 
   const onSubmit = async (data) => {
+    console.log('넘어온 데이터', basicInfo);
     const mergedData = {
       member_name: basicInfo.memberName,
       member_id: basicInfo.memberId,

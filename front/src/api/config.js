@@ -24,6 +24,8 @@ export const API_ENDPOINTS = {
     MANAGERSIGNUP: '/api/members/manager',
     LOGIN: `/api/members/login`,
     Mypage: (memberNo) => `/api/members/mypage?id=${memberNo}`,
+    SEARCHID: `/api/members/searchId`,
+    PWDSEARCHID: `/api/members/pwdSearchId`,
   },
   APPLOVALLIST: {
     BASE: 'api/approvalList',

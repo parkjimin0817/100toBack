@@ -36,10 +36,9 @@ const ClassRoomCard = ({ rooms, address }) => {
 };
 
 const FlexContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
+  place-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   padding: ${({ theme }) => theme.spacing[10]};
   gap: 60px;
 `;

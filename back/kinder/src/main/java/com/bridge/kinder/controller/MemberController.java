@@ -4,6 +4,7 @@ import com.bridge.kinder.dto.CreateManagerDto;
 import com.bridge.kinder.dto.MemberChildDto;
 import com.bridge.kinder.dto.MemberDto;
 import com.bridge.kinder.dto.MypageDto;
+import com.bridge.kinder.dto.MemberTeacherDto;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class MemberController {
 
     //교사 생성
     @PostMapping("/teacher")
-    public ResponseEntity<String> createTeacher(@ModelAttribute MemberDto.CreateMember dto) throws IOException {
+    public ResponseEntity<String> createTeacher(@ModelAttribute MemberTeacherDto dto) throws IOException {
         String memberNo = memberService.createTeacher(dto);
         return ResponseEntity.ok(memberNo);
     }
@@ -55,6 +56,11 @@ public class MemberController {
         return ResponseEntity.ok(response);
     }
 
+    //멤버 ID 조회(이름, 생년월일)
+    @PostMapping("/searchId")
+    public ResponseEntity<MemberDto.SearchId> searchId(@RequestBody MemberDto.SearchId dto){
+        return ResponseEntity.ok(memberService.searchId(dto));
+    }
     //마이페이지에서 정보 조회
     @GetMapping("/mypage")
     public ResponseEntity<MemberDto.MyPageResponse> myPage(@RequestParam int id){
@@ -69,4 +75,8 @@ public class MemberController {
         return ResponseEntity.ok(memberNo);
     }
 
+    @PostMapping("/pwdSearchId")
+    public ResponseEntity<?> pwdSearchId(@RequestBody MemberDto.SearchId dto){
+        return ResponseEntity.ok(null);
+    }
 }

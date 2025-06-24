@@ -83,6 +83,25 @@ public class MemberDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
+    public static class SearchId{
+        private String member_name;
+        private LocalDate member_birth;
+
+        private String member_id;
+
+        public static SearchId toDto(Member member) {
+            return SearchId.builder()
+                    .member_id(member.getMemberId())
+                    .build();
+        }
+    }
+
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
     public static class MyPageResponse {
         private String member_name;
         private LocalDate member_birth;
