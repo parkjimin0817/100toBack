@@ -3,6 +3,8 @@ import { useLocation } from "react-router-dom";
 import BoardEditor from '../components/Board/BoardEditor';
 import ContentHeader from '../components/Common/ContentHeader';
 import styled from 'styled-components';
+import BoardDetail from '../components/Board/BoardDetail';
+import content from "../components/Board/content.json";
 
 const categoryName = {
   letterhome : "가정통신문",
@@ -32,7 +34,10 @@ const BoardDetailPage = () => {
       ></ContentHeader>
 
       {/* 공통 에디터 컴포넌트 */}
-      <BoardEditor category={category} />
+      {/* <BoardEditor category={category} /> */}
+
+      {/* 더미데이터를 사용했으므로, 추후 수정해야함. */}
+      <BoardDetail category={content.Post[1].type} post={content.Post[1]}></BoardDetail>
     </PageContainer>
   );
 }

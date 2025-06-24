@@ -68,6 +68,7 @@ import AddChild from './pages/parent/AddChild';
 import SearchChild from './pages/parent/SearchChild';
 import ErrorPage from './pages/ErrorPage';
 import ParentChildList from './pages/parent/ParentChildList';
+import BoardDetailPage from './pages/BoardDetailPage';
 
 function App() {
   return (
@@ -125,6 +126,7 @@ function App() {
               <Route path="list" element={<NoticePage />} />
               {/* 알림장 게시글 작성 페이지 */}
               <Route path="write" element={<BoardWritePage />} />
+              <Route path=':id' element={<BoardDetailPage />} />
             </Route>
 
             {/* 회원가입 승인 리스트(시설장) */}

@@ -3,6 +3,7 @@
     "id" : 1,
     "title" : "공지사항 테스트1",
     "type" : "notice",
+    "create_date" : "2025년 06월 04일",
     "member" : {
       "name" : "정형일"
     },
@@ -28,6 +29,7 @@
     "id" : 2,
     "title" : "알림장 테스트1",
     "type" : "note",
+    "create_date" : "2025년 06월 04일",
     "member" : {
       "name" : "정형일"
     },

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ContentHeader from '../components/Common/ContentHeader';
 import BoardTable from '../components/Board/BoardTable';
 import theme from "../styles/theme";
-import TipTapEditor from '../components/Board/TextEditor';
+// import TipTapEditor from '../components/Board/TextEditor';
 import PostEditor from '../components/Board/BoardEditor';
 
 const columns = [
