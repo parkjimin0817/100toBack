@@ -37,4 +37,10 @@ public class ChildController {
         String childNo = childService.linkChild(dto);
         return ResponseEntity.ok(childNo);
     }
+
+    //시설장 아동 목록 가져오기
+    @GetMapping("/manager/childlist")
+    public ResponseEntity<List<ChildDto.childListResponse>> managerChildList(@RequestParam int centerNo){
+        return ResponseEntity.ok(childService.managerChildList(centerNo));
+    }
 }
