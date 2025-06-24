@@ -37,5 +37,6 @@ export const API_ENDPOINTS = {
   CLASSROOM: {
     BASE: '/api/classroom',
     CREATE: '/api/classroom/create',
+    CLASSROOMLIST: (centerNo) => `api/classroom/list/${centerNo}`,
   },
 };

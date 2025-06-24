@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @CrossOrigin("http://localhost:5173")
 @RestController
@@ -21,6 +22,13 @@ public class ClassRoomController {
     @PostMapping("/create")
     public ResponseEntity<Long> createClass(@ModelAttribute ClassRoomDto.Create classRoomCreate) throws IOException {
         return ResponseEntity.ok(classRoomService.createClass(classRoomCreate));
+    }
+
+    //시설 별 반 목록 불러오기
+    @GetMapping("/list/{centerNo}")
+    public ResponseEntity<List<ClassRoomDto.Response>> findClasses(@PathVariable int centerNo) {
+        System.out.println("결과 : " + classRoomService.findClassesByCenterNo(centerNo));
+        return ResponseEntity.ok(classRoomService.findClassesByCenterNo(centerNo));
     }
 
 }

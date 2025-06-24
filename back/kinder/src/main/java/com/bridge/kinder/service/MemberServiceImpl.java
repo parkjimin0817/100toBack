@@ -198,7 +198,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public List<MemberDto.Response> findTeachersByCenterNo(int centerNo) {
-        return memberRepository.findByCenterNo(centerNo).stream()
+        return memberRepository.findTeacherByCenterNo(centerNo).stream()
                 .map(MemberDto.Response::toDto)
                 .collect(Collectors.toList());
     }

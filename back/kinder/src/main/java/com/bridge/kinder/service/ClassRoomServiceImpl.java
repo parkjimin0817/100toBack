@@ -14,7 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.management.relation.RoleUnresolved;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -57,10 +60,27 @@ public class ClassRoomServiceImpl implements ClassRoomService {
 
             //멤버(교사)에 연결
             teacher.setClassRoom(classRoom);
-            memberRepository.save(teacher);
+            memberRepository.save(teacher); //업데이트
 
             return Long.valueOf(classRoom.getClassNo());
         }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ClassRoomDto.Response> findClassesByCenterNo(int centerNo) {
+        //시설 별 반 목록
+        List<ClassRoom> classRooms = classRoomRepository.findByCenterNo(centerNo);
+
+        return classRooms.stream()
+                .map(classRoom -> {
+                    //교사 조회
+                    Optional<Member> teacherOpt = memberRepository.findTeacherByClassNo(classRoom.getClassNo());
+                    Member teacher = teacherOpt.orElse(null);
+
+                    return ClassRoomDto.Response.toDto(classRoom, teacher);
+                })
+                .collect(Collectors.toList());
     }
+}
 
 

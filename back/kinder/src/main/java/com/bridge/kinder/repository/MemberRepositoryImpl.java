@@ -1,6 +1,7 @@
 package com.bridge.kinder.repository;
 
 import com.bridge.kinder.entity.Member;
+import com.bridge.kinder.enums.CommonEnums;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
@@ -49,8 +50,21 @@ public class MemberRepositoryImpl implements MemberRepository {
         return Optional.ofNullable(em.find(Member.class, memberNo));
     }
 
+    //클래스 별 담당 교사 불러오기
     @Override
-    public List<Member> findByCenterNo(int centerNo) {
+    public Optional<Member> findTeacherByClassNo(int classNo) {
+        String jpql = "SELECT m FROM Member m WHERE m.classRoom.classNo = :classNo";
+        Member member = em.createQuery(jpql, Member.class)
+                .setParameter("classNo", classNo)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+        return Optional.ofNullable(member);
+    }
+
+    //시설 별 교사 불러오기
+    @Override
+    public List<Member> findTeacherByCenterNo(int centerNo) {
         return em.createQuery("select m from Member m where m.memberType =:memberType and m.status =: status and m.center.centerNo =:centerNo", Member.class)
                 .setParameter("memberType", CommonEnums.MemberType.TEACHER)
                 .setParameter("status", CommonEnums.AdmissionStatus.APPROVED)

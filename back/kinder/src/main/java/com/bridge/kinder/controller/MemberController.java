@@ -57,7 +57,7 @@ public class MemberController {
         return ResponseEntity.ok(response);
     }
 
-    //교사 목록 불러오기
+    //시설 별 교사 목록 불러오기
     @GetMapping("/teacherlist/{centerNo}")
     public ResponseEntity<List<MemberDto.Response>> findTeachers(@PathVariable int centerNo){
         return ResponseEntity.ok(memberService.findTeachersByCenterNo(centerNo));

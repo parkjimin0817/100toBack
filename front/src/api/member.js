@@ -115,4 +115,13 @@ export const memberService = {
       throw new Error('서버와의 통신에 실패했습니다.');
     }
   },
+  //교사 목록 불러오기
+  teacherlist: async (centerNo) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.MEMBERS.TEACHERLIST(centerNo));
+      return data;
+    } catch (error) {
+      throw new Error('서버 통신 불량' + error.message);
+    }
+  },
 };

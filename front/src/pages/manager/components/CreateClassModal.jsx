@@ -91,7 +91,7 @@ const CreateClassModal = ({ onClose, centerNo }) => {
               <option value="선택">선택</option>
               {teachers.map((teacher) => (
                 <option key={teacher.member_no} value={teacher.member_no}>
-                  {teacher.name}
+                  {teacher.member_name}
                 </option>
               ))}
             </Select>

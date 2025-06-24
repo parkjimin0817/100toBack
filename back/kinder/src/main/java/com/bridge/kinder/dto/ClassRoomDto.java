@@ -3,10 +3,7 @@ package com.bridge.kinder.dto;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.entity.Member;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 public class ClassRoomDto {
@@ -31,6 +28,33 @@ public class ClassRoomDto {
                     .classImage(profilePath)
                     .color(color)
                     .center(center)
+                    .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    //반 목록
+    public static class Response {
+        private int class_no;
+        private String class_name;
+        private int capacity;
+        private String color;
+        private String class_image;
+
+        private String member_name;
+
+        public static Response toDto(ClassRoom classRoom, Member teacher) {
+            return Response.builder()
+                    .class_no(classRoom.getClassNo())
+                    .class_name(classRoom.getClassName())
+                    .capacity(classRoom.getCapacity())
+                    .color(classRoom.getColor())
+                    .class_image(classRoom.getClassImage())
+                    .member_name(teacher != null ? teacher.getMemberName() : "미지정")
                     .build();
         }
     }
