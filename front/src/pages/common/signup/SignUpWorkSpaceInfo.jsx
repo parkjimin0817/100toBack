@@ -27,20 +27,22 @@ const SignUpWorkSpaceInfo = () => {
   const currentStep = 2;
   const navigate = useNavigate();
   const type = useSignUpStore((state) => state.type);
+  const basicInfo = useSignUpStore((state) => state.basicInfo);
+
   const { centers, loading } = useCenterList();
 
   const { handleSubmit, setValue, errors, isSubmitting } = useTeacherInfoForm();
 
   const onSubmit = async (data) => {
-    //store에서 모든 값 가져오기
-    const { type, basicInfo } = useSignUpStore.getState();
+    console.log('넘어온 데이터', basicInfo);
     const mergedData = {
       member_name: basicInfo.memberName,
       member_id: basicInfo.memberId,
       member_pwd: basicInfo.password,
       member_phone: basicInfo.phone,
-      member_profile: basicInfo.profileImg,
+      member_profile: basicInfo.profileImg || null,
       member_birth: basicInfo.birthdate,
+      address: basicInfo.fullAddress,
       member_type: type.toUpperCase(),
       center_no: data.centerNo,
     };

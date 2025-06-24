@@ -3,6 +3,7 @@ package com.bridge.kinder.repository;
 import com.bridge.kinder.entity.Approval;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ApprovalRepository {
 
@@ -10,5 +11,7 @@ public interface ApprovalRepository {
     List<Approval> findAllApprovals(int centerNo);
     //승인 요청 생성
     void save(Approval approval);
+    //승인 요청 검색
+    Optional<Approval> findByApprovalNo(int approvalNo);
 
 }

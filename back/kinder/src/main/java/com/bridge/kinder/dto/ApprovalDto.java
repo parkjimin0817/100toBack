@@ -16,16 +16,16 @@ public class ApprovalDto {
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class MemberApprovalCreate{
-        private LocalDateTime decision_date;
+    public static class MemberApprovalUpdate{
+        private int approval_no;
+        private CommonEnums.AdmissionStatus status;
 
-        private int center_no;
-        private int member_no;
+        int member_no;
 
-        public Approval toEntity(Center center, Member member) {
+        public Approval toDto(Member member) {
             return Approval.builder()
-                    .decisionDate(decision_date)
-                    .center(center)
+                    .approvalNo(approval_no)
+                    .status(status)
                     .member(member)
                     .build();
         }

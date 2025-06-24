@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
-import { useState } from 'react';
 import CustomCalendar from '../../components/CustomCalendar';
 import ScheduleList from './components/ScheduleList';
+import useLoginStore from '../../store/loginStore';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 
@@ -120,6 +120,13 @@ const data = [
 const ScheduleTeacher = () => {
   const [selectedSchedules, setSelectedSchedules] = useState([]);
   const [selectedDate, setSelectedDate] = useState(dayjs().format('YYYY-MM-DD (ddd)'));
+  const { member } = useLoginStore();
+
+  console.log(member.memberName);
+
+  useEffect(() => {
+    console.log('스토어 member:', member);
+  }, [member]);
 
   //modal
   const [openModal, setOpenModal] = useState(false);

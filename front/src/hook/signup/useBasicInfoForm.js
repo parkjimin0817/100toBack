@@ -18,18 +18,19 @@ const basicInfoSchema = yup.object().shape({
   profileImg: yup
     .mixed()
     .nullable()
-    .test('fileSize', '200KB 이하 이미지만 업로드 가능합니다.', (fileList) => {
-      if (!fileList || fileList.length === 0) return true;
-      return fileList[0].size <= FILE_SIZE;
+    .test('fileSize', '200KB 이하 이미지만 업로드 가능합니다.', (file) => {
+      if (!file) return true;
+      return file.size <= FILE_SIZE;
     })
-    .test('file-type', 'JPG, JPEG, PNG 형식만 업로드 가능합니다.', (fileList) => {
-      if (!fileList || fileList.length === 0) return true;
-      return SUPPORTED_FORMATS.includes(fileList[0].type);
+    .test('fileType', 'JPG, JPEG, PNG 형식만 업로드 가능합니다.', (file) => {
+      if (!file) return true;
+      return SUPPORTED_FORMATS.includes(file.type);
     }),
   phone: yup
     .string()
     .matches(/^01[016789]-\d{3,4}-\d{4}$/, '유효한 전화번호를 입력하세요.')
     .required('전화번호를 정확히 입력해주세요.'),
+  fullAddress: yup.string().required('주소를 입력해주세요.'),
 });
 
 export const useBasicInfoForm = () => {

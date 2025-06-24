@@ -4,7 +4,8 @@ public class CommonEnums {
     public enum CenterType {
         DAYCARE,        //어린이집
         KINDERGARTEN,   //유치원
-        CHILD_CENTER    //지역아동센터
+        CHILD_CENTER,    //지역아동센터
+        ETC,            //기타
     }
 
     public enum MemberType {

@@ -16,36 +16,6 @@ public class MemberDto {
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class CreateManager {
-
-        private String member_name;
-        private LocalDate member_birth;
-        private String member_id;
-        private String member_pwd;
-        private String member_phone;
-        private CommonEnums.MemberType member_type;
-        private String member_profile;
-        private String address;
-
-        public Member toEntity(Center center) {
-            return Member.builder()
-                    .memberName(member_name)
-                    .memberBirth(member_birth)
-                    .memberId(member_id)
-                    .memberPwd(member_pwd)
-                    .memberPhone(member_phone)
-                    .memberType(member_type)
-                    .memberProfile(member_profile)
-                    .address(address)
-                    .center(center)
-                    .build();
-        }
-    }
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
     public static class CreateMember {
         private String member_name;
         private LocalDate member_birth;
@@ -67,8 +37,8 @@ public class MemberDto {
                     .memberPhone(member_phone)
                     .memberType(member_type)
                     .memberProfile(profilePath)
-                    .address(address)
                     .center(center)
+                    .address(address)
                     .build();
         }
     }
@@ -93,10 +63,11 @@ public class MemberDto {
         private String member_name;
         private String member_id;
         private CommonEnums.MemberType member_type;
+        //만약 멤버정보 필요한거 있으시면 그냥 추가하시면 됩니다.
 
         private int center_no;
 
-        public static LoginResponse toDto(Center center, Member member) {
+        public static LoginResponse toDto(Member member) {
             return LoginResponse.builder()
                     .member_no(member.getMemberNo())
                     .member_name(member.getMemberName())
