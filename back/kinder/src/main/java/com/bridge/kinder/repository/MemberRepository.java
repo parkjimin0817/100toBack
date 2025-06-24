@@ -16,8 +16,6 @@ public interface MemberRepository  {
     Optional<Member> findByMemberId(String memberId);
     //멤버 ID 찾기(이름, 생년월일)
     Optional<Member> searchId(String memberName, LocalDate memberBirth);
-    //멤버 조회(임시)
-    Optional<Member> findByMemberNo(int memberNo);
 
     //학부모 검색
     Optional<Member> findByParentNo(int memberNo);

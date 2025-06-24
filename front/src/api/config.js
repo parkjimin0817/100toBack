@@ -28,7 +28,9 @@ export const API_ENDPOINTS = {
   },
   APPLOVALLIST: {
     BASE: 'api/approvalList',
-    PENDINGLIST: (centerNo) => `api/approvalList/centerNo=${centerNo}`,
+    PENDINGLIST: (centerNo) => `api/approval/lists/${centerNo}`,
+    DECISIONMEMBER: `api/approval/decision/member`,
+    DECISIONCHILD: `api/approval/decision/child`,
   },
   CENTERS: {
     BASE: '/api/center',

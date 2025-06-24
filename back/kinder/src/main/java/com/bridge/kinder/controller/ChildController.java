@@ -21,9 +21,10 @@ public class ChildController {
 
     //반 번호로 아동 목록 가져오기
     @GetMapping
-    public ResponseEntity<List<ChildDto.Response>> getChildrenByClassNo(@RequestParam int class_no){
-        return ResponseEntity.ok(childService.findChildrenByClassNo(class_no));
+    public ResponseEntity<List<ChildDto.Response>> getChildrenByClassNo(@RequestParam int classNo){
+        return ResponseEntity.ok(childService.findChildrenByClassNo(classNo));
     }
+
     //아동 생성
     @PostMapping("/add")
     public ResponseEntity<String> createChild(@ModelAttribute ChildDto.CreateChild dto) throws IOException {

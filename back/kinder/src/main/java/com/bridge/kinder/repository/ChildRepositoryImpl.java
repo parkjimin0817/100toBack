@@ -20,6 +20,12 @@ public class ChildRepositoryImpl implements ChildRepository {
         em.persist(child);
     }
 
+    //번호로 아동 찾기
+    @Override
+    public Optional<Child> findByChildNo(int childNo) {
+        return Optional.ofNullable(em.find(Child.class, childNo));
+    }
+
     //주민번호로 아동 찾기
     @Override
     public Optional<Child> findByResidentNo(String residentNo) {
@@ -30,10 +36,11 @@ public class ChildRepositoryImpl implements ChildRepository {
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 
+    //반번호로 찾기
     @Override
-    public List<Child> findByClassNo(int class_no) {
-        return em.createQuery("SELECT c FROM Child c WHERE c.class_no = :class_no", Child.class)
-                .setParameter("class_no", class_no)
+    public List<Child> findByClassNo(int classNo) {
+        return em.createQuery("SELECT c FROM Child c WHERE c.classRoom.classNo = :classNo", Child.class)
+                .setParameter("classNo", classNo)
                 .getResultList();
     }
 }
