@@ -5,9 +5,12 @@ import SearchFormNav from '../../components/Common/SearchFormNav';
 import styled from 'styled-components';
 import { Button } from '../../styles/Common/Button';
 import { useNavigate } from 'react-router-dom';
+import useSearchIdStore from '../../store/searchStore';
 
 const SeachIdSuccess = () => {
   const navigator = useNavigate();
+  const { memberId } = useSearchIdStore();
+
   return (
     <>
       <CommonFind />
@@ -21,7 +24,7 @@ const SeachIdSuccess = () => {
 
             <ContentForm>
               <Info>
-                고객님의 아이디는 <UserID>user01</UserID>입니다.
+                고객님의 아이디는 <UserID>{memberId}</UserID>입니다.
               </Info>
             </ContentForm>
 

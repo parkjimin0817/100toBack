@@ -74,48 +74,6 @@ function App() {
       <Router>
         <Routes>
           <Route element={<Layout />}>
-            {/* Main Page */}
-            <Route path="/home" element={<Home />} />
-            <Route path="/parent/main" element={<ParentMainPage />} />
-            {/* 학부모 마이페이지 */}
-            <Route path="/parent/mypage" element={<ParentMyPage />} />
-            {/* 학부모 아동 추가 페이지 */}
-            <Route path="/parent/addchild" element={<AddChild />} />
-            {/* 학부모 아동 검색 페이지 */}
-            <Route path="/parent/searchchild" element={<SearchChild />} />
-            {/* <Route path="/" element={<Home />} /> */}
-            {/* 아동 목록 페이지(교사) */}
-            <Route path="/childlist" element={<ChildList />} />
-            {/* 유치원 반 목록 페이지(교사 -> 아동 출결) */}
-            <Route path="/classlist" element={<AttendanceClassList />} />
-            {/* 반별 일과표 목록 페이지 */}
-            <Route path="/daily" element={<DailySchedule />} />
-            {/* 반별 일과표 목록  */}
-            <Route path="/dailyDetail/:SCHADULE_NO" element={<DailyScheduleDetail />} />
-            <Route path="/childlist" element={<ChildList />} />
-            {/* 아동목록 페이지(교사) */}
-            <Route path="/dailyDetail" element={<DailyScheduleDetail />} />
-            {/* 아동 반배치 페이지(시설장) */}
-            <Route path="/manager/classplacement" element={<ClassPlacement />} />
-            {/* 교사 목록 페이지(시설장) */}
-            <Route path="/manager/teacherlist" element={<TeacherList />} />
-            {/* 추가 페이지는 아래 붙이기. */}
-            {/* 교사 아동 상세보기 페이지 */}
-            <Route path="/child/detail" element={<ChildDetail />} />
-
-            {/* 교사 가정통신문 게시글 목록 페이지 */}
-            <Route path="/familycommunity/list" element={<FamilyCommunityPage />} />
-
-            {/* 회원가입 승인 리스트(시설장) */}
-            <Route path="/approvalList" element={<ApprovalList />}></Route>
-            {/* 시설장 승인 리스트(관리자) */}
-            {/**
-             * 관리자
-             *
-             * 1. 관리자 시설장 회원가입 승인
-             *
-             * */}
-            <Route path="/approvalListAdmin" element={<ApprovalListAdmin />} />
             {/**
              * 학부모
              *
@@ -193,7 +151,7 @@ function App() {
             <Route path="/childhealthcheck" element={<ChildHealthCheck />} />
             <Route path="/childlifecheck" element={<ChildLifeCheck />} />
             <Route path="/daily" element={<DailySchedule />} />
-            <Route path="/dailyDetail/:SCHADULE_NO" element={<DailyScheduleDetail />} />
+            <Route path="/dailyDetail/:schedule_no" element={<DailyScheduleDetail />} />
             <Route path="/child/detail/:id" element={<ChildDetail />} />
             <Route path="/teacher/workcation" element={<MyVacation />} />
             <Route path="/childattendance/:id" element={<AttendancePage />} />
@@ -210,38 +168,53 @@ function App() {
             <Route path="/child/healthlist" element={<PersonalHealth />} />
             <Route path="/child/lifelist" element={<PersonalLife />} />
           </Route>
-          {/* 공통 회원가입, 로그인, 아이디찾기, 비밀번호 찾기 */}
-          {/* Login Page */}
+
+          {/**
+           * 관리자
+           *
+           * 1. 관리자 시설장 회원가입 승인
+           *
+           * */}
+          <Route path="/approvalListAdmin" element={<ApprovalListAdmin />} />
+
+          {/**
+           * 공통 회원가입, 로그인, 아이디찾기, 비밀번호 찾기
+           *
+           * 1. 로그인 페이지
+           * 2-1. 회원가입 권한 선택
+           * 2-2. 회원가입 약관 동의
+           * 2-3. 회원가입 정보 입력
+           * 2-4. 회원가입 교사 정보 입력
+           * 2-5. 회원가입 시설장 정보 입력
+           * 2-6. 회원가입 학부모 정보 입력
+           * 2-7. 회원가입 성공 페이지
+           * 2-8. 회원가입 관리자 페이지
+           * 3-1. 아이디 찾기
+           * 3-2. 아이디 찾기 성공
+           * 4-1. 비밀번호 찾기(아이디 입력 페이지)
+           * 4-2. 비밀번호 찾기(이름, 인증번호 찾기)
+           * 4-3. 비밀번호 재설정
+           * 5. 에러페이지
+           *
+           *  */}
           <Route path="/" element={<LoginPage />} />
-          {/* 회원가입 권한 선택 */}
+
           <Route path="/signup/userselect" element={<UserTypeSelect />} />
-          {/* 회원가입 약관 동의 */}
           <Route path="/signup/terms" element={<TermsAgreement />} />
-          {/* 회원가입 정보 입력 */}
           <Route path="/signup/info" element={<SignUpBasicInfo />} />
           <Route path="/signup/teacher" element={<SignUpWorkSpaceInfo />} />
-          <Route path="/signup/complete" element={<SignUpComplete />} />
-          <Route path="/signup/parent" element={<SignUpChildInfo />} />
-
-          <Route path="/signup/manager" element={<SignUpCenterInfo />} />
-          {/* Regist Page */}
-          <Route path="/regist" element={<Home />}></Route>
-
           <Route path="/signup/center" element={<SignUpCenterInfo />} />
+          <Route path="/signup/parent" element={<SignUpChildInfo />} />
+          <Route path="/signup/complete" element={<SignUpComplete />} />
+          <Route path="/signup/manager" element={<SignUpCenterInfo />} />
 
-          {/* Find ID Page */}
           <Route path="/findid" element={<SearchId />} />
-          {/* Find ID Success Page */}
           <Route path="/findidsuccess" element={<SeachIdSuccess />} />
-          {/* Find Password Page */}
+
           <Route path="/findpwd" element={<SearchPassword />} />
-          {/* Find Password Page -처음으로 나오는 비밀번호 찾기 페이지*/}
-          {/* authenticationuser -비밀번호 찾기 사용자인증 페이지  */}
           <Route path="/authenticationuser" element={<AuthenticationUser />} />
-          {/* Change Password Page - 비밀번호 재설정 페이지 */}
           <Route path="/changepwd" element={<ChangePassword />} />
 
-          {/* 404 Not Found */}
           <Route path="*" element={<ErrorPage />} />
 
           {/* Regist Page */}

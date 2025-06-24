@@ -3,6 +3,7 @@ package com.bridge.kinder.repository;
 import com.bridge.kinder.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +15,8 @@ public interface MemberRepository  {
     void save(Member member);
     //멤버 로그인
     Optional<Member> findByMemberId(String memberId);
+    //멤버 ID 찾기(이름, 생년월일)
+    Optional<Member> searchId(String memberName, LocalDate memberBirth);
 
     //학부모 검색
     Optional<Member> findByParentNo(int memberNo);

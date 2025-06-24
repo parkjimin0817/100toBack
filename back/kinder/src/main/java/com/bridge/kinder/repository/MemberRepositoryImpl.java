@@ -1,12 +1,12 @@
 package com.bridge.kinder.repository;
 
 import com.bridge.kinder.entity.Member;
-import com.bridge.kinder.enums.CommonEnums;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Repository
@@ -68,5 +68,16 @@ public class MemberRepositoryImpl implements MemberRepository {
                 .findFirst()
                 .orElse(null);
         return Optional.ofNullable(member);
+    }
+
+    //멤버 ID 찾기(이름, 생년월일
+    @Override
+    public Optional<Member> searchId(String memberName, LocalDate memberBirth) {
+        String query = "select m from Member m where m.memberName = :memberName and m.memberBirth = :memberBirth";
+
+        return Optional.ofNullable(em.createQuery(query, Member.class)
+                .setParameter("memberName", memberName )
+                .setParameter("memberBirth", memberBirth)
+                .getSingleResult());
     }
 }

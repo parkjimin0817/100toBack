@@ -23,6 +23,8 @@ export const API_ENDPOINTS = {
     PARENTSIGNUP: '/api/members/parent',
     MANAGERSIGNUP: '/api/members/manager',
     LOGIN: `/api/members/login`,
+    SEARCHID: `/api/members/searchId`,
+    PWDSEARCHID: `/api/members/pwdSearchId`,
     TEACHERLIST: (centerNo) => `api/members/teacherlist/${centerNo}`,
   },
   APPLOVALLIST: {

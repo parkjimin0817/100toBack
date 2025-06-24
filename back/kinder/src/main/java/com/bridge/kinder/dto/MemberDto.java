@@ -4,7 +4,6 @@ import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.enums.CommonEnums;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -98,6 +97,25 @@ public class MemberDto {
                     .member_no(member.getMemberNo())
                     .member_name(member.getMemberName())
                     .center_no(member.getCenter().getCenterNo())
+                    .build();
+        }
+    }
+
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class SearchId{
+        private String member_name;
+        private LocalDate member_birth;
+
+        private String member_id;
+
+        public static SearchId toDto(Member member) {
+            return SearchId.builder()
+                    .member_id(member.getMemberId())
                     .build();
         }
     }

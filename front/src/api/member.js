@@ -49,7 +49,7 @@ export const memberService = {
 
       //교사 추가 정보
       if (mergedData.member_type === 'TEACHER') {
-        formData.append('center_no', mergedData.center_no);
+        formData.append('member.center_no', mergedData.center_no);
       }
 
       //학부모 추가 정보
@@ -85,8 +85,11 @@ export const memberService = {
 
       return data;
     } catch (error) {
-      console.error('회원가입 실패 : ', error);
-      throw error;
+      if (error.response) {
+        const errorMessage = error.response.data.message || '회원가입에 실패했습니다.';
+        throw new Error(errorMessage);
+      }
+      throw new Error('서버와의 통신에 실패했습니다.');
     }
   },
 
@@ -110,16 +113,6 @@ export const memberService = {
         throw new Error(errorMessage);
       }
       throw new Error('서버와의 통신에 실패했습니다.');
-    }
-  },
-
-  //교사 목록 불러오기
-  teacherlist: async (centerNo) => {
-    try {
-      const { data } = await api.get(API_ENDPOINTS.MEMBERS.TEACHERLIST(centerNo));
-      return data; //교사 목록
-    } catch (error) {
-      throw new Error('서버 통신 불량' + error.message);
     }
   },
 };
