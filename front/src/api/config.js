@@ -23,6 +23,7 @@ export const API_ENDPOINTS = {
     PARENTSIGNUP: '/api/members/parent',
     MANAGERSIGNUP: '/api/members/manager',
     LOGIN: `/api/members/login`,
+    Mypage: (memberNo) => `/api/members/mypage?id=${memberNo}`,
   },
   APPLOVALLIST: {
     BASE: 'api/approvalList',
