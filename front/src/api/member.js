@@ -30,8 +30,7 @@ export const memberService = {
         default:
           throw new Error('알 수 없는 사용자 유형입니다.');
       }
-      console.log(mergedData.member_profile);
-      console.log(mergedData.child_profile);
+
       const formData = new FormData();
 
       //멤버 공통 정보
@@ -41,6 +40,7 @@ export const memberService = {
       formData.append('member.member_phone', mergedData.member_phone);
       formData.append('member.member_birth', mergedData.member_birth); // yyyy-MM-dd
       formData.append('member.member_type', mergedData.member_type);
+      formData.append('member.address', mergedData.address);
       if (mergedData.member_profile instanceof FileList || Array.isArray(mergedData.member_profile)) {
         formData.append('member.member_profile', mergedData.member_profile[0]);
       } else if (mergedData.member_profile instanceof File) {
@@ -84,7 +84,10 @@ export const memberService = {
       });
 
       return data;
-    } catch (error) {}
+    } catch (error) {
+      console.error('회원가입 실패 : ', error);
+      throw error;
+    }
   },
 
   //로그인
@@ -107,6 +110,16 @@ export const memberService = {
         throw new Error(errorMessage);
       }
       throw new Error('서버와의 통신에 실패했습니다.');
+    }
+  },
+
+  //교사 목록 불러오기
+  teacherlist: async (centerNo) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.MEMBERS.TEACHERLIST(centerNo));
+      return data; //교사 목록
+    } catch (error) {
+      throw new Error('서버 통신 불량' + error.message);
     }
   },
 };

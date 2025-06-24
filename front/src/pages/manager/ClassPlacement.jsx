@@ -8,7 +8,7 @@ import Modal from '../../components/ClassPlacementModal';
 
 const ClassPlacement = () => {
   const navigate = useNavigate();
-  const headerButtons = [{ Title: '반 목록', func: () => navigate('/classlist') }];
+  const headerButtons = [{ Title: '반 목록', func: () => navigate('/manager/classmanage') }];
 
   // true → 전체, false → 미배정
   const [showAll, setShowAll] = useState(true);

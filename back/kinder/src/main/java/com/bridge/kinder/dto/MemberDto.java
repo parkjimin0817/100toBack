@@ -4,6 +4,7 @@ import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.enums.CommonEnums;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -77,4 +78,28 @@ public class MemberDto {
                     .build();
         }
     }
+
+
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    //멤버 목록 가져오기
+    public static class Response {
+        private int member_no;
+        private String member_name;
+
+        private int center_no;
+
+        public static Response toDto(Member member) {
+            return Response.builder()
+                    .member_no(member.getMemberNo())
+                    .member_name(member.getMemberName())
+                    .center_no(member.getCenter().getCenterNo())
+                    .build();
+        }
+    }
+
 }

@@ -7,16 +7,8 @@ import { useLoginStore } from '../../store/loginStore';
 import { memberService } from '../../api/member';
 
 const loginSchema = yup.object().shape({
-  memberId: yup
-    .string()
-    .min(6, '6자 이상 입력해주세요.')
-    .matches(/^[가-힣a-zA-Z][^!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\s]*$/, '특수문자와 숫자가 없어야합니다.')
-    .required('아이디를 입력해주세요.'),
-  memberPwd: yup
-    .string()
-    .min(8, '8자 이상 입력해주세요.')
-    .matches(/^[가-힣a-zA-Z][^!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\s]*$/, '특수문자와 숫자가 없어야합니다.')
-    .required('비밀번호를 입력해주세요.'),
+  memberId: yup.string().required('아이디를 입력해주세요.'),
+  memberPwd: yup.string().required('비밀번호를 입력해주세요.'),
 });
 
 export const useLoginForm = () => {

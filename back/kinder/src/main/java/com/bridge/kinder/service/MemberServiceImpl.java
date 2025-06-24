@@ -11,8 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -70,6 +72,7 @@ public class MemberServiceImpl implements MemberService {
     //교사 생성
     @Override
     public String createTeacher(MemberDto.CreateMember dto) throws IOException {
+
         Center center = centerRepository.findById(dto.getCenter_no())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
 
@@ -188,5 +191,13 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return MemberDto.LoginResponse.toDto(member);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<MemberDto.Response> findTeachersByCenterNo(int centerNo) {
+        return memberRepository.findByCenterNo(centerNo).stream()
+                .map(MemberDto.Response::toDto)
+                .collect(Collectors.toList());
     }
 }

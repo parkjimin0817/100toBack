@@ -18,7 +18,7 @@ public class ClassRoomController {
     private final ClassRoomService classRoomService;
 
     //반 생성하기
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Long> createClass(@ModelAttribute ClassRoomDto.Create classRoomCreate) throws IOException {
         return ResponseEntity.ok(classRoomService.createClass(classRoomCreate));
     }
