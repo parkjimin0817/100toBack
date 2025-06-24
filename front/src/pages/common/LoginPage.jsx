@@ -14,7 +14,7 @@ import { useLoginForm } from '../../hook/login/useLoginForm';
 
 const LoginPage = () => {
   const navigator = useNavigate();
-  const { register, handleSubmit, onSubmit, errors, checked, setChecked } = useLoginForm();
+  const { register, handleSubmit, onSubmit, errors, checked, setChecked, error, isLoading } = useLoginForm();
 
   return (
     <CommonFind>
@@ -24,6 +24,11 @@ const LoginPage = () => {
             <Title>로그인</Title>
 
             <Content>
+              {error ? (
+                <SmalltextError>{error}</SmalltextError>
+              ) : (
+                <Smalltext>아이디와 비밀번호를 입력해주세요.</Smalltext>
+              )}
               <InputLine>
                 <Input
                   id="memberId"
@@ -32,7 +37,6 @@ const LoginPage = () => {
                   {...register('memberId')}
                   $error={errors.memberId}
                 />
-                {errors.memberId && <ErrorMessage>{errors.memberId.message}</ErrorMessage>}
                 <Input
                   id="memberPwd"
                   type="password"
@@ -40,7 +44,6 @@ const LoginPage = () => {
                   {...register('memberPwd')}
                   $error={errors.memberPwd}
                 />
-                {errors.memberPwd && <ErrorMessage>{errors.memberPwd.message}</ErrorMessage>}
               </InputLine>
               <CheckboxLine>
                 <Lable>
@@ -48,8 +51,24 @@ const LoginPage = () => {
                   로그인 상태유지
                 </Lable>
               </CheckboxLine>
+
+              {errors.memberId &&
+              errors.memberId.type === 'required' &&
+              errors.memberPwd &&
+              errors.memberPwd.type === 'required' ? (
+                <ErrorMessage>아이디와 비밀번호를 모두 입력해주세요.</ErrorMessage>
+              ) : (
+                <>
+                  {errors.memberId && <ErrorMessage>{errors.memberId.message}</ErrorMessage>}
+                  {errors.memberPwd && <ErrorMessage>{errors.memberPwd.message}</ErrorMessage>}
+                </>
+              )}
               <LoginButtonLine>
-                <Button type="submit">로그인하기</Button>
+                {!(errors.memberId && errors.memberPwd) ? (
+                  <Button1 type="submit">{isLoading ? '로그인 중...' : '로그인'}</Button1>
+                ) : (
+                  <Button2 type="submit">{isLoading ? '로그인 중...' : '로그인'}</Button2>
+                )}
               </LoginButtonLine>
               <EtcLine>
                 <Etc onClick={() => navigator('/signup/terms')}>회원가입</Etc>
@@ -76,9 +95,8 @@ export default LoginPage;
 
 const ErrorMessage = styled.span`
   color: ${({ theme }) => theme.colors.orange};
-  font-size: ${({ theme }) => theme.fontSizes.base};
+  font-size: ${({ theme }) => theme.fontSizes.sm};
   font-weight: ${({ theme }) => theme.fontWeights.medium};
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 `;
@@ -119,6 +137,10 @@ const Input = styled.input`
   &::placeholder {
     color: #b4b2b2; /* placeholder만 회색 */
   }
+
+  &:focus {
+    outline: 2px solid ${({ theme }) => theme.colors.green};
+  }
 `;
 
 const CheckboxLine = styled.div`
@@ -146,10 +168,25 @@ const LoginButtonLine = styled.div`
   padding-top: ${({ theme }) => theme.spacing[8]};
 `;
 
-const Button = styled.button`
+const Button1 = styled.button`
   width: 100%;
   height: 44px;
-  background-color: #bae8f5;
+  background-color: ${({ theme }) => theme.colors.lightblue};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border: 1px solid ${({ theme }) => theme.colors.gray[500]};
+  font-size: 18px;
+  font-weight: bold;
+
+  &:hover {
+    scale: 0.98;
+  }
+`;
+
+const Button2 = styled.button`
+  width: 100%;
+  height: 44px;
+  background-color: ${({ theme }) => theme.colors.gray[300]};
+  color: ${({ theme }) => theme.colors.gray[100]};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   border: 1px solid ${({ theme }) => theme.colors.gray[500]};
   font-size: 18px;
@@ -191,4 +228,16 @@ const Foot = styled.div`
   &:hover {
     cursor: pointer;
   }
+`;
+
+const SmalltextError = styled.span`
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.orange};
+  padding: ${({ theme }) => theme.spacing[2]};
+`;
+
+const Smalltext = styled.span`
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.gray[400]};
+  padding: ${({ theme }) => theme.spacing[2]};
 `;

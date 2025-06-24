@@ -51,4 +51,9 @@ public class MemberController {
     public ResponseEntity<MemberDto.SearchId> searchId(@RequestBody MemberDto.SearchId dto){
         return ResponseEntity.ok(memberService.searchId(dto));
     }
+
+    @PostMapping("/pwdSearchId")
+    public ResponseEntity<?> pwdSearchId(@RequestBody MemberDto.SearchId dto){
+        return ResponseEntity.ok(null);
+    }
 }

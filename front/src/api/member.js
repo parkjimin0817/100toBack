@@ -80,4 +80,18 @@ export const memberService = {
       throw new Error('서버와의 통신에 실패했습니다.');
     }
   },
+
+  //아이디 찾기
+  searchId: async (member_name, member_birth) => {
+    try {
+      const { data } = await api.post(API_ENDPOINTS.MEMBERS.SEARCHID, { member_name, member_birth });
+      return data;
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.message || '로그인에 실패했습니다.';
+        throw new Error(errorMessage);
+      }
+      throw new Error('서버와의 통신에 실패했습니다.');
+    }
+  },
 };

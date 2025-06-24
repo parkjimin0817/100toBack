@@ -107,6 +107,7 @@ public class MemberServiceImpl implements MemberService {
     //멤버 ID 찾기(이름, 생년월일)
     @Override
     public MemberDto.SearchId searchId(MemberDto.SearchId dto) {
+        System.out.println(dto.getMember_birth());
         String memberName = dto.getMember_name();
         LocalDate memberBirth = dto.getMember_birth();
         return memberRepository.searchId(memberName, memberBirth)
