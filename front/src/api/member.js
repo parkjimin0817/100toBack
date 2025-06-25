@@ -104,6 +104,7 @@ export const memberService = {
         memberId: data.member_id,
         memberType: data.member_type,
         centerNo: data.center_no,
+        classNo: data.class_no,
       };
 
       return camelData;

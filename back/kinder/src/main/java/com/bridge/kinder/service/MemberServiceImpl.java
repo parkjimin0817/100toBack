@@ -1,12 +1,17 @@
 package com.bridge.kinder.service;
 
+import com.bridge.kinder.dto.ChildDto;
 import com.bridge.kinder.dto.CreateManagerDto;
 import com.bridge.kinder.dto.MemberChildDto;
 import com.bridge.kinder.dto.MemberDto;
+import com.bridge.kinder.dto.MemberDto.modalResponse;
+import com.bridge.kinder.dto.MemberDto.teacherListResponse;
+import com.bridge.kinder.dto.MemberDto.updateClass;
 import com.bridge.kinder.dto.MemberTeacherDto;
 import com.bridge.kinder.dto.MypageDto;
 import com.bridge.kinder.entity.*;
 import com.bridge.kinder.repository.*;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -228,5 +233,26 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.myPageUpdate(id, dto).get();
         Center center = centerRepository.myPageUpdate(id, dto).get();
         return "";
+    }
+
+    @Override
+    public List<MemberDto.teacherListResponse> managerTeacherList(int centerNo) {
+        return memberRepository.findByCenterNo(centerNo).stream()
+                .map(MemberDto.teacherListResponse::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public MemberDto.modalResponse getMember(int member_no) {
+        Member member = memberRepository.getByMemberNo(member_no)
+                .orElseThrow(() -> new EntityNotFoundException("해당 멤버가 존재하지 않습니다."));
+        return MemberDto.modalResponse.toDto(member);
+    }
+
+    @Override
+    public updateClass updateClass(int member_no, int class_no) {
+        Member member = memberRepository.updateClass(member_no,class_no)
+                .orElseThrow(() -> new EntityNotFoundException("정상적으로 수정되지 않았습니다."));
+        return MemberDto.updateClass.toDto(member);
     }
 }

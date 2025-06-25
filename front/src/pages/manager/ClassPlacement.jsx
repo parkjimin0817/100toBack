@@ -27,12 +27,12 @@ const ClassPlacement = () => {
   const [role, setRole] = useState('child');
   const today = new Date().toISOString().split('T')[0];
   const [selectedDate, setSelectedDate] = useState(today);
-  const [selectedId, setSelectedId] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const handleSort = (e) => setSort(e.target.value);
   const handleRole = (e) => setRole(e.target.value);
   useEffect(() => {
-    if (member?.memberType === 'TEACHER') {
+    if (member?.memberType === 'TEACHER' || member?.memberType === 'PARENT') {
       alert('접근 권한이 없습니다.');
       setAccessDenied(true); // 차단 상태 true 설정
       navigate(-1); // 뒤로 이동
@@ -77,11 +77,18 @@ const ClassPlacement = () => {
           sortBy={sort}
           roleBy={role}
           classPlacement={true}
-          setSelectedId={setSelectedId}
-          selectedId={selectedId}
+          selectedItem={selectedItem}
+          setSelectedItem={setSelectedItem}
+          centerNo={centerNo}
         />
       </Content>
-      <Modal isOpen={openModal} onClose={() => setOpenModal(false)} selectedDate={selectedDate} id={selectedId} />
+      <Modal
+        isOpen={openModal}
+        onClose={() => setOpenModal(false)}
+        selectedDate={selectedDate}
+        selectedItem={selectedItem}
+        centerNo={centerNo}
+      />
     </>
   );
 };

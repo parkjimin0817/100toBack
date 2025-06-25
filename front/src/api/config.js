@@ -40,4 +40,8 @@ export const API_ENDPOINTS = {
     CREATE: '/api/classroom/create',
     CLASSROOMLIST: (centerNo) => `api/classroom/list/${centerNo}`,
   },
+  CHILDS: {
+    BASE: '/api/childs',
+    GETALL: '/api/childs/manager/childlist',
+  },
 };

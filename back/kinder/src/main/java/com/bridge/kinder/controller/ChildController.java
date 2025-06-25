@@ -39,8 +39,22 @@ public class ChildController {
     }
 
     //시설장 아동 목록 가져오기
-    @GetMapping("/manager/childlist")
+    @GetMapping("/all")
     public ResponseEntity<List<ChildDto.childListResponse>> managerChildList(@RequestParam int centerNo){
         return ResponseEntity.ok(childService.managerChildList(centerNo));
     }
+
+    //아동 번호로 아동 가져오기
+    @GetMapping("/get")
+    public ResponseEntity<ChildDto.modalResponse> getChild(@RequestParam int child_no){
+        return ResponseEntity.ok(childService.getChild(child_no));
+    }
+
+    //아동 번호로 반 수정하기
+    @PatchMapping("/updateclass")
+    public ResponseEntity<ChildDto.updateClass> updateClass(@RequestParam int child_no,@RequestParam int class_no){
+        return ResponseEntity.ok(childService.updateClass(child_no,class_no));
+    }
+
+
 }

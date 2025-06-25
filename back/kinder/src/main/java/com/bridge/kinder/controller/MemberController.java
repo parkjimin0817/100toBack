@@ -87,4 +87,22 @@ public class MemberController {
     public ResponseEntity<?> pwdSearchId(@RequestBody MemberDto.SearchId dto){
         return ResponseEntity.ok(null);
     }
+
+    //시설장 선생 목록 가져오기(시설 번호를 받아서)
+    @GetMapping("/getteacher")
+    public ResponseEntity<List<MemberDto.teacherListResponse>> getTeacherList(@RequestParam int id){
+        return ResponseEntity.ok(memberService.managerTeacherList(id));
+    }
+
+    //멤버 번호로 멤버 가져오기
+    @GetMapping("/get")
+    public ResponseEntity<MemberDto.modalResponse> getChild(@RequestParam int member_no){
+        return ResponseEntity.ok(memberService.getMember(member_no));
+    }
+
+    //멤버 번호로 반 수정하기
+    @PatchMapping("/updateclass")
+    public ResponseEntity<MemberDto.updateClass> updateClass(@RequestParam int member_no,@RequestParam int class_no){
+        return ResponseEntity.ok(memberService.updateClass(member_no,class_no));
+    }
 }

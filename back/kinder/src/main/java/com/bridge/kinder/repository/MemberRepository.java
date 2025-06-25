@@ -1,6 +1,7 @@
 package com.bridge.kinder.repository;
 
 import com.bridge.kinder.dto.MypageDto;
+import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -33,5 +34,14 @@ public interface MemberRepository  {
 
     //마이페이지 정보 수정
     Optional<Member> myPageUpdate(int id, MypageDto.Update dto);
+
+    //시설 번호로 선생 목록 조회
+    List<Member> findByCenterNo(int centerNo);
+
+    //멤버 번호로 멤버 조회
+    Optional<Member> getByMemberNo(int member_no);
+
+    //멤버 번호로 반 수정하기
+    Optional<Member> updateClass(int member_no, int class_no);
 
 }
