@@ -5,6 +5,7 @@ import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.repository.CenterRepository;
+import com.bridge.kinder.repository.ChildRepository;
 import com.bridge.kinder.repository.ClassRoomRepository;
 import com.bridge.kinder.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,11 +28,12 @@ public class ClassRoomServiceImpl implements ClassRoomService {
     private final ClassRoomRepository classRoomRepository;
     private final CenterRepository centerRepository;
     private final MemberRepository memberRepository;
+    private final ChildRepository childRepository;
     private final String UPLOAD_PATH = "C://test_upload/";
 
 
     @Override
-    public Long createClass(ClassRoomDto.Create classRoomCreate) throws IOException {
+    public ClassRoomDto.Response createClass(ClassRoomDto.Create classRoomCreate) throws IOException {
         //센터 조회
         Center center = centerRepository.findById(classRoomCreate.getCenter_no())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
@@ -62,7 +64,8 @@ public class ClassRoomServiceImpl implements ClassRoomService {
             teacher.setClassRoom(classRoom);
             memberRepository.save(teacher); //업데이트
 
-            return Long.valueOf(classRoom.getClassNo());
+            //dto 반환 (새로 생성된 반이니 childCount = 0)
+            return ClassRoomDto.Response.toDto(classRoom, teacher, 0);
         }
 
     @Override
@@ -71,13 +74,16 @@ public class ClassRoomServiceImpl implements ClassRoomService {
         //시설 별 반 목록
         List<ClassRoom> classRooms = classRoomRepository.findByCenterNo(centerNo);
 
+
         return classRooms.stream()
                 .map(classRoom -> {
                     //교사 조회
                     Optional<Member> teacherOpt = memberRepository.findTeacherByClassNo(classRoom.getClassNo());
                     Member teacher = teacherOpt.orElse(null);
+                    //반 별 아동 현재 수
+                    int childCount = childRepository.countChildByClassroom(classRoom.getClassNo());
 
-                    return ClassRoomDto.Response.toDto(classRoom, teacher);
+                    return ClassRoomDto.Response.toDto(classRoom, teacher, childCount);
                 })
                 .collect(Collectors.toList());
     }

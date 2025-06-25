@@ -19,11 +19,15 @@ public interface MemberRepository  {
     Optional<Member> findByMemberId(String memberId);
     //멤버 ID 찾기(이름, 생년월일)
     Optional<Member> searchId(String memberName, LocalDate memberBirth);
+    //멤버 PWD 찾기(아이디)
+    Optional<Member> pwdSearchId(String memberId);
 
     //학부모 검색
     Optional<Member> findByParentNo(int memberNo);
+    //전화번호 멤버찾기
+    Optional<Member> findByPhone(String memberPhone);
 
-    //시설별 교사 목록
+    //시설별 교사 목록(for셀렉트바 / 간단)
     List<Member> findTeacherByCenterNo(int centerNo);
 
     //멤버no으로 한명 찾기

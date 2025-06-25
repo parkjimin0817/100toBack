@@ -1,18 +1,18 @@
 // src/pages/manager/ClassPlacement.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import ContentHeader from '../../components/Common/ContentHeader';
 import ChildrenList from '../../components/ChildrenList';
 import SearchButton from '../../../src/assets/img/searchbutton.png';
 import theme from '../../styles/theme';
+import useLoginStore from '../../store/loginStore';
+import { memberService } from '../../api/member';
 
 const TeacherList = () => {
-  const navigate = useNavigate();
-  const headerButtons = [
-    { Title: '반 목록', func: () => navigate('/childlist') },
-    { Title: '뒤로가기', func: () => navigate(-1) },
-  ];
+  const { member } = useLoginStore();
+  const centerNo = member?.centerNo;
+
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredName, setFilteredName] = useState('');
 
@@ -24,9 +24,22 @@ const TeacherList = () => {
 
   const [role, setRole] = useState('child');
 
+  //교사 목록 불러오기
+  const [teachers, setTeachers] = useState([]);
+  useEffect(() => {
+    if (!centerNo) return;
+
+    memberService
+      .teacherDetailList(centerNo)
+      .then((data) => setTeachers(data))
+      .catch((err) => console.error('교사 목록 불러오기 실패 : ', err));
+  }, [centerNo]);
+
+  console.log(teachers);
+
   return (
     <Content>
-      <ContentHeader Title="교사 목록" Color="blue" ButtonProps={headerButtons} />
+      <ContentHeader Title="근태 관리 (교사 목록)" Color="blue" />
       <SearchLine>
         <ShowAllButton
           onClick={() => {
@@ -51,7 +64,14 @@ const TeacherList = () => {
           <SearchIcon src={SearchButton} onClick={() => setFilteredName(searchTerm.trim())} />
         </SearchBox>
       </SearchLine>
-      <ChildrenList Color="blue" showAll={showAll} sortBy={sort} roleBy={'teacher'} nameFilter={filteredName} />
+      <ChildrenList
+        Color="blue"
+        showAll={showAll}
+        sortBy={sort}
+        roleBy={'teacher'}
+        nameFilter={filteredName}
+        data={teachers}
+      />
     </Content>
   );
 };

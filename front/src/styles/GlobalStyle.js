@@ -98,6 +98,10 @@ const GlobalStyle = createGlobalStyle`
   button:hover {
     scale: 0.98;
   }
+
+  .toast-message {
+  font-size: ${({ theme }) => theme.fontSizes.sm}; /* 원하는 글자 크기 */
+}
 `;
 
 export default GlobalStyle;

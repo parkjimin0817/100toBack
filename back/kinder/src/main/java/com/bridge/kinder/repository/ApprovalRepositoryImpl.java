@@ -33,7 +33,7 @@ public class ApprovalRepositoryImpl implements ApprovalRepository {
         em.persist(approval);
     }
 
-    //승인 요청 검색
+    //승인 요청 찾기
     @Override
     public Optional<Approval> findByApprovalNo(int approvalNo) {
         return Optional.ofNullable(em.find(Approval.class, approvalNo));

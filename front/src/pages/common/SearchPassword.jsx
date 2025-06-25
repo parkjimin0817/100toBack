@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Form from '../../components/Common/SearchFormNav';
 import { ContentArea, SearchIdForm } from '../../styles/Common/Container';
 import styled from 'styled-components';
@@ -6,9 +6,15 @@ import CommonFind from '../../components/Common/CommonFind';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../styles/Common/Button';
 import SearchFormNav from '../../components/Common/SearchFormNav';
+import axios from 'axios';
+import { memberService } from '../../api/member';
+import useSearchIdStore from '../../store/searchStore';
+import { toast } from 'react-toastify';
+import { useSearchPwdForm1 } from '../../hook/searchForm/useSearchPwdForm1';
 
 const SearchPassword = () => {
-  const navigator = useNavigate();
+  const { navigator, id, error, isLoading, handleChange, onSubmit } = useSearchPwdForm1();
+
   return (
     <>
       <CommonFind />
@@ -18,22 +24,19 @@ const SearchPassword = () => {
         <ContentArea>
           <h2>비밀번호 찾기</h2>
           <Content>
-            {/* {error ? <SmalltextError>{error}</SmalltextError> : <Smalltext>비밀번호 재설정을 위해 사용자 확인을 진행합니다.</Smalltext>} */}
+            {error ? (
+              <SmalltextError>{error}</SmalltextError>
+            ) : (
+              <Smalltext>비밀번호 재설정을 위해 사용자 확인을 진행합니다.</Smalltext>
+            )}
 
-            <form>
+            <form onSubmit={onSubmit}>
               <ContentInner>
                 <h3>아이디</h3>
-                <Input
-                  type="text"
-                  name="name"
-                  placeholder="이름을 입력해주세요."
-                  value={name}
-                  // onChange={handleChange}
-                />
+                <Input type="text" name="id" placeholder="아이디를 입력해주세요." value={id} onChange={handleChange} />
               </ContentInner>
               <ButtonArea>
-                {/* {isLoading ? '아이디 찾는중 ...' : '완료'} */}
-                <Button1 type="submit">다음</Button1>
+                <Button1 type="submit">{isLoading ? '아이디 찾는중 ...' : '완료'}</Button1>
                 <Button1 type="button" onClick={() => navigator('/')}>
                   돌아가기
                 </Button1>
@@ -119,6 +122,7 @@ const Input = styled.input`
   border-radius: ${({ theme }) => theme.borderRadius.md};
   padding: ${({ theme }) => theme.spacing[2]};
   outline: none;
+  margin-top: ${({ theme }) => theme.spacing[1]};
 `;
 
 const Container = styled.div`

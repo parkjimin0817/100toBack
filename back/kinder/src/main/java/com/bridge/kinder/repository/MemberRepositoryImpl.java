@@ -64,7 +64,7 @@ public class MemberRepositoryImpl implements MemberRepository {
         return Optional.ofNullable(member);
     }
 
-    //시설 별 교사 불러오기
+    //시설 별 교사 불러오기 (for 셀렉트바 / 간단)
     @Override
     public List<Member> findTeacherByCenterNo(int centerNo) {
         return em.createQuery("select m from Member m where m.memberType =:memberType and m.status =: status and m.center.centerNo =:centerNo", Member.class)
@@ -77,16 +77,10 @@ public class MemberRepositoryImpl implements MemberRepository {
     //member_no으로 멤버 찾기
     @Override
     public Optional<Member> findByMemberNo(int memberNo) {
-        String jpql = "SELECT m FROM Member m WHERE m.memberNo = :memberNo";
-        Member member = em.createQuery(jpql, Member.class)
-                .setParameter("memberNo", memberNo)
-                .getResultStream()
-                .findFirst()
-                .orElse(null);
-        return Optional.ofNullable(member);
+       return Optional.ofNullable(em.find(Member.class, memberNo));
     }
 
-    //멤버 ID 찾기(이름, 생년월일
+    //멤버 ID 찾기(이름, 생년월일)
     @Override
     public Optional<Member> searchId(String memberName, LocalDate memberBirth) {
         String query = "select m from Member m where m.memberName = :memberName and m.memberBirth = :memberBirth";
@@ -98,6 +92,25 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
 
+    //멤버 PWD 찾기(아이디)
+    @Override
+    public Optional<Member> pwdSearchId(String memberId) {
+        String query = "select m from Member m where m.memberId = :memberId";
+        return Optional.ofNullable(em.createQuery(query, Member.class)
+                .setParameter("memberId", memberId)
+                .getSingleResult());
+    }
+
+    //전화번호로 멤버찾기
+    @Override
+    public Optional<Member> findByPhone(String memberPhone) {
+        String query = "select m from Member m where m.memberPhone = :memberPhone";
+        return Optional.ofNullable(em.createQuery(query, Member.class)
+                .setParameter("memberPhone", memberPhone)
+                .getSingleResult());
+    }
+
+    //마이페이지 수정
     @Override
     public Optional<Member> myPageUpdate(int id, MypageDto.Update dto) {
         String jpql = "UPDATE Member m SET m.memberName = :name, m.memberBirth = :birth WHERE m.memberNo = :memberNo";

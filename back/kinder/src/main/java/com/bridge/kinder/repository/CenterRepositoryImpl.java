@@ -31,6 +31,7 @@ public class CenterRepositoryImpl implements CenterRepository {
         return Optional.ofNullable(em.find(Center.class, centerNo));
     }
 
+    //센터 전체 리스트 불러오기
     @Override
     public List<Center> findAll() {
         return em.createQuery("SELECT c FROM Center c WHERE c.status = :status", Center.class)

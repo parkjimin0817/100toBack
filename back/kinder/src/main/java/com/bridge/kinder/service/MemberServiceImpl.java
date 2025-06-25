@@ -4,6 +4,9 @@ import com.bridge.kinder.dto.ChildDto;
 import com.bridge.kinder.dto.CreateManagerDto;
 import com.bridge.kinder.dto.MemberChildDto;
 import com.bridge.kinder.dto.MemberDto;
+import com.bridge.kinder.dto.MemberDto.PhoneAccess;
+import com.bridge.kinder.dto.MemberDto.PwdUpdate;
+import com.bridge.kinder.dto.MemberDto.DetailMemberDto;
 import com.bridge.kinder.dto.MemberDto.modalResponse;
 import com.bridge.kinder.dto.MemberDto.teacherListResponse;
 import com.bridge.kinder.dto.MemberDto.updateClass;
@@ -11,8 +14,10 @@ import com.bridge.kinder.dto.MemberTeacherDto;
 import com.bridge.kinder.dto.MypageDto;
 import com.bridge.kinder.entity.*;
 import com.bridge.kinder.repository.*;
+import com.bridge.kinder.util.SmsUtil;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +34,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class MemberServiceImpl implements MemberService {
 
+    private final SmsUtil smsUtil;
     private final MemberRepository memberRepository;
     private final ChildRepository childRepository;
     private final CenterRepository centerRepository;
@@ -200,19 +206,25 @@ public class MemberServiceImpl implements MemberService {
         return MemberDto.LoginResponse.toDto(member);
     }
 
-    //시설 별 교사 목록 찾기
+    //시설 별 교사 목록 찾기 (for selectbar)
     @Override
     @Transactional(readOnly = true)
-    public List<MemberDto.Response> findTeachersByCenterNo(int centerNo) {
+    public List<MemberDto.SimpleDto> findTeachersByCenterNo(int centerNo) {
         return memberRepository.findTeacherByCenterNo(centerNo).stream()
-                .map(MemberDto.Response::toDto)
+                .map(MemberDto.SimpleDto::from)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MemberDto.DetailMemberDto> findDetailedTeachersByCenterNo(int centerNo) {
+        return memberRepository.findTeacherByCenterNo(centerNo).stream()
+                .map(MemberDto.DetailMemberDto::from)
                 .collect(Collectors.toList());
     }
 
     //멤버 ID 찾기(이름, 생년월일)
     @Override
     public MemberDto.SearchId searchId(MemberDto.SearchId dto) {
-        System.out.println(dto.getMember_birth());
         String memberName = dto.getMember_name();
         LocalDate memberBirth = dto.getMember_birth();
         return memberRepository.searchId(memberName, memberBirth)
@@ -233,6 +245,45 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.myPageUpdate(id, dto).get();
         Center center = centerRepository.myPageUpdate(id, dto).get();
         return "";
+    }
+
+    @Override
+    public MemberDto.SearchPwd pwdSearchId(MemberDto.SearchPwd dto) {
+        String memberId = dto.getMember_id();
+        return memberRepository.pwdSearchId(memberId)
+                .map(MemberDto.SearchPwd::toDto)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
+    }
+
+    @Override
+    public MemberDto.PhoneAccess sendingNumberToFindId(MemberDto.PhoneAccess dto) {
+        Optional<Member> optionalMember = memberRepository.findByPhone(dto.getPhone_number());
+        if (optionalMember.isPresent()) {
+            String certificationNumber = String.format("%06d", (int) (Math.random() * 1000000));
+            SingleMessageSentResponse response = smsUtil.sendOne(optionalMember.get().getMemberPhone(), certificationNumber);
+
+            if (response != null && response.getStatusCode().equals("2000")) {
+                return MemberDto.PhoneAccess.toDto(certificationNumber, "인증번호 전송에 성공하였습니다.");
+            }else{
+                return MemberDto.PhoneAccess.toDto(null, "인증번호 전송에 실패하였습니다.");
+            }
+        }else{
+            return MemberDto.PhoneAccess.toDto(null, "가입되지 않은 번호입니다.");
+        }
+    }
+
+    @Override
+    public MemberDto.PwdUpdate updatePwd(MemberDto.PwdUpdate dto) {
+        Member member = memberRepository.findByMemberId(dto.getMember_id())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        if(member == null){
+            return MemberDto.PwdUpdate.toDto("존재하지 않는 회원입니다.");
+        }else {
+            //멤버의 비밀번호를 변경
+            member.changeMemberPwd(dto.getMember_pwd());
+            return MemberDto.PwdUpdate.toDto("비밀번호를 성공적으로 변경하였습니다.");
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.bridge.kinder.entity;
 
 import com.bridge.kinder.enums.CommonEnums;
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -29,9 +30,9 @@ public class Schedule {// 일정
     private String description;
     //내용
 
-    @Column(name = "CREATE_DATE")
-    private LocalDateTime createDate;
-    //생성일
+    @Column(name = "SCHEDULE_DATE")
+    private LocalDate scheduleDate;
+    //일정날짜
 
     @Column(name = "START_TIME")
     private LocalTime startTime;
@@ -45,6 +46,10 @@ public class Schedule {// 일정
     @Enumerated(EnumType.STRING)
     private CommonEnums.RollType type;
     //분류(시설, 반, 멤버)
+
+    @Column(name = "CREATE_DATE")
+    private LocalDateTime createDate;
+    //생성일
 
 
     //---------------------------------------------------------------------------------------------

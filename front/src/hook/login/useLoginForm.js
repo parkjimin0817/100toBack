@@ -8,8 +8,8 @@ import { memberService } from '../../api/member';
 import { toast } from 'react-toastify';
 
 const loginSchema = yup.object().shape({
-  memberId: yup.string().required('아이디를 입력해주세요.').min(6, '아이디는 최소 6자 이상이어야 합니다.'),
-  memberPwd: yup.string().required('비밀번호를 입력해주세요.').min(6, '비밀번호는 최소 6자 이상이어야 합니다.'),
+  memberId: yup.string().required('아이디를 입력해주세요.'),
+  memberPwd: yup.string().required('비밀번호를 입력해주세요.'),
 });
 
 export const useLoginForm = () => {
@@ -39,11 +39,13 @@ export const useLoginForm = () => {
       toast.success('로그인 성공하였습니다.');
 
       if (memberData.memberType === 'MANAGER') {
-        navigator('/manager/mypage');
+        navigator('/teacher/main');
       } else if (memberData.memberType === 'TEACHER') {
         navigator('/teacher/main');
       } else if (memberData.memberType === 'PARENT') {
         navigator('/parent/main');
+      } else if (memberData.memberType === 'ADMIN') {
+        navigator('/approvalListAdmin');
       }
     } catch (err) {
       toast.error('로그인 실패하였습니다.');

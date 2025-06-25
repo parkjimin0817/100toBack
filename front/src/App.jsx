@@ -128,7 +128,7 @@ function App() {
             <Route path="/manager/teacherlist" element={<TeacherList />} />
             <Route path="/approvalList" element={<ApprovalList />} />
             <Route path="/vacationList" element={<VacationList />} />
-            <Route path="/manager/teacherattendance/:id" element={<TeacherAttendance />} />
+            <Route path="/manager/teacherattendance/:memberNo" element={<TeacherAttendance />} />
             <Route path="/manager/introteacher" element={<TeacherIntroList />} />
             <Route path="/manager/classmanage" element={<ClassRoomManage />} />
 
@@ -223,7 +223,7 @@ function App() {
         </Routes>
       </Router>
       <ToastContainer
-        position="top-right"
+        position="top-center"
         autoClose={3000}
         closeOnClick
         draggable
@@ -231,6 +231,7 @@ function App() {
         newestOnTop
         theme="light"
         pauseOnHover
+        toastClassName="toast-message"
       />
     </ThemeProvider>
   );

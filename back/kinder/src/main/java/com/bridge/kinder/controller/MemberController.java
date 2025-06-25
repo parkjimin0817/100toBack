@@ -10,6 +10,7 @@ import com.bridge.kinder.dto.MemberTeacherDto;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,11 +60,18 @@ public class MemberController {
         return ResponseEntity.ok(response);
     }
 
-    //시설 별 교사 목록 불러오기
-    @GetMapping("/teacherlist/{centerNo}")
-    public ResponseEntity<List<MemberDto.Response>> findTeachers(@PathVariable int centerNo){
+    //시설 별 교사 목록 불러오기 for 셀렉트바
+    @GetMapping("/teacher/select/{centerNo}")
+    public ResponseEntity<List<MemberDto.SimpleDto>> findTeachers(@PathVariable int centerNo){
         return ResponseEntity.ok(memberService.findTeachersByCenterNo(centerNo));
     }
+
+    //시설 별 교사 목록 조회 for 목록 페이지
+    @GetMapping("/teacher/list/{centerNo}")
+    public ResponseEntity<List<MemberDto.DetailMemberDto>> findDetailTeachers(@PathVariable int centerNo){
+        return ResponseEntity.ok(memberService.findDetailedTeachersByCenterNo(centerNo));
+    }
+
     //멤버 ID 조회(이름, 생년월일)
     @PostMapping("/searchId")
     public ResponseEntity<MemberDto.SearchId> searchId(@RequestBody MemberDto.SearchId dto){
@@ -83,9 +91,28 @@ public class MemberController {
         return ResponseEntity.ok(memberNo);
     }
 
+    //멤버 PWD 찾기(아이디)
     @PostMapping("/pwdSearchId")
-    public ResponseEntity<?> pwdSearchId(@RequestBody MemberDto.SearchId dto){
-        return ResponseEntity.ok(null);
+    public ResponseEntity<MemberDto.SearchPwd> pwdSearchId(@RequestBody MemberDto.SearchPwd dto){
+        return ResponseEntity.ok(memberService.pwdSearchId(dto));
+    }
+
+    //전화번호 인증번호
+    @PostMapping("/sendOne")
+    public ResponseEntity<MemberDto.PhoneAccess> PhoneAccess(@RequestBody MemberDto.PhoneAccess dto){
+        try{
+            MemberDto.PhoneAccess resultMsg = memberService.sendingNumberToFindId(dto);
+            return ResponseEntity.ok(resultMsg);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(MemberDto.PhoneAccess.toDto(null, "인증번호 전송에 실패하였습니다."));
+        }
+    }
+
+    //비밀번호 변경
+    @PatchMapping("/pwdUpdate")
+    public ResponseEntity<MemberDto.PwdUpdate> updatePwd(@RequestBody MemberDto.PwdUpdate dto){
+        return ResponseEntity.ok(memberService.updatePwd(dto));
     }
 
     //시설장 선생 목록 가져오기(시설 번호를 받아서)

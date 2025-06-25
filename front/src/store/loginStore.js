@@ -18,9 +18,11 @@ export const useLoginStore = create(
             memberType: memberData.memberType,
             centerNo: memberData.centerNo,
             classNo: memberData.classNo,
+            centerTel: memberData.centerTel,
           },
           isAuthenticated: true,
         });
+        console.log('🧾 로그인된 유저 정보:', useLoginStore.getState().member);
       },
 
       // 로그아웃
