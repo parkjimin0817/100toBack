@@ -1,3 +1,5 @@
+import TeacherAttendance from '../pages/manager/TeacherAttendance';
+
 const { VITE_API_URL, VITE_API_TIMEOUT = 5000, VITE_API_VERSION = 'v1' } = import.meta.env;
 
 export const API_CONFIG = {
@@ -26,7 +28,8 @@ export const API_ENDPOINTS = {
     MYPAGE: (memberNo) => `/api/members/mypage?id=${memberNo}`,
     SEARCHID: `/api/members/searchId`,
     PWDSEARCHID: `/api/members/pwdSearchId`,
-    TEACHERLIST: (centerNo) => `api/members/teacherlist/${centerNo}`,
+    TEACHERLIST: (centerNo) => `/api/members/teacher/select/${centerNo}`,
+    TEACHER_DETAIL_LIST: (centerNo) => `/api/members/teacher/list/${centerNo}`,
   },
   APPLOVALLIST: {
     BASE: 'api/approvalList',
@@ -40,6 +43,12 @@ export const API_ENDPOINTS = {
   CLASSROOM: {
     BASE: '/api/classroom',
     CREATE: '/api/classroom/create',
-    CLASSROOMLIST: (centerNo) => `api/classroom/list/${centerNo}`,
+    CLASSROOMLIST: (centerNo) => `/api/classroom/list/${centerNo}`,
+  },
+  ATTENDANCE: {
+    BASE: '/api/attendance',
+    //교사가 자신 근태 기록 조회
+    //시설장이 교사 별 근태 조회
+    TEACHERATTENDANCE: (memberNo) => `/api/attendance/teacher/${memberNo}`,
   },
 };

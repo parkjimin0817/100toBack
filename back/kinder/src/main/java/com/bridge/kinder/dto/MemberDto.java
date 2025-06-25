@@ -63,8 +63,9 @@ public class MemberDto {
         private String member_name;
         private String member_id;
         private CommonEnums.MemberType member_type;
-        //만약 멤버정보 필요한거 있으시면 그냥 추가하시면 됩니다.
 
+        //만약 멤버정보 필요한거 있으시면 그냥 추가하시면 됩니다.
+        private String center_tel;
         private int center_no;
 
         public static LoginResponse toDto(Member member) {
@@ -74,6 +75,7 @@ public class MemberDto {
                     .member_id(member.getMemberId())
                     .member_type(member.getMemberType())
                     .center_no(member.getCenter().getCenterNo())
+                    .center_tel(member.getCenter().getCenterTel())
                     .build();
         }
     }
@@ -85,18 +87,42 @@ public class MemberDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    //멤버 목록 가져오기
-    public static class Response {
+    //멤버 간단한 목록 가져오기 ex 셀렉트바 드롭다운
+    public static class SimpleDto {
         private int member_no;
         private String member_name;
-
         private int center_no;
 
-        public static Response toDto(Member member) {
-            return Response.builder()
+        public static SimpleDto from(Member member) {
+            return SimpleDto.builder()
                     .member_no(member.getMemberNo())
                     .member_name(member.getMemberName())
                     .center_no(member.getCenter().getCenterNo())
+                    .build();
+        }
+    }
+
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    //멤버 목록 불러오기 (for 목록페이지)
+    public static class DetailMemberDto {
+        private int member_no;
+        private String member_name;
+        private int center_no;
+        private int class_no;
+        private String class_name;
+
+        public static DetailMemberDto from(Member member) {
+            return DetailMemberDto.builder()
+                    .member_no(member.getMemberNo())
+                    .member_name(member.getMemberName())
+                    .center_no(member.getCenter().getCenterNo())
+                    .class_no(member.getClassRoom().getClassNo())
+                    .class_name(member.getClassRoom().getClassName())
                     .build();
         }
     }
@@ -147,4 +173,5 @@ public class MemberDto {
                     .build();
         }
     }
+
 }

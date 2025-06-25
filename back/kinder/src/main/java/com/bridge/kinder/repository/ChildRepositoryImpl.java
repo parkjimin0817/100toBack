@@ -36,7 +36,7 @@ public class ChildRepositoryImpl implements ChildRepository {
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 
-    //반번호로 찾기
+    //반 별 아동 목록
     @Override
     public List<Child> findByClassNo(int classNo) {
         return em.createQuery("SELECT c FROM Child c WHERE c.classRoom.classNo = :classNo", Child.class)
@@ -49,5 +49,15 @@ public class ChildRepositoryImpl implements ChildRepository {
         return em.createQuery("SELECT c FROM Child c WHERE c.center.centerNo  = :centerNo", Child.class)
                 .setParameter("centerNo", centerNo)
                 .getResultList();
+    }
+
+    //반별 아동 수 카운트
+    @Override
+    public int countChildByClassroom(int classNo) {
+       Long count =  em.createQuery("SELECT COUNT(c) FROM Child c WHERE c.classRoom.classNo =: classNo", Long.class)
+                .setParameter("classNo", classNo)
+                .getSingleResult();
+
+       return count.intValue();
     }
 }

@@ -128,7 +128,7 @@ function App() {
             <Route path="/manager/teacherlist" element={<TeacherList />} />
             <Route path="/approvalList" element={<ApprovalList />} />
             <Route path="/vacationList" element={<VacationList />} />
-            <Route path="/manager/teacherattendance/:id" element={<TeacherAttendance />} />
+            <Route path="/manager/teacherattendance/:memberNo" element={<TeacherAttendance />} />
             <Route path="/manager/introteacher" element={<TeacherIntroList />} />
             <Route path="/manager/classmanage" element={<ClassRoomManage />} />
 

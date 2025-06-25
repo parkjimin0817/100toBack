@@ -23,11 +23,11 @@ const ClassRoomCard = ({ classrooms, address }) => {
             key={classroom.classroom_no}
             img={classroom.class_image}
             className={classroom.class_name}
-            mateCount={classroom.capacity} //정원 세야함
+            mateCount={classroom.child_count} //정원 세야함
             capacity={classroom.capacity}
-            teacher={classroom.teacher}
-            classColor={classroom.class_color}
-            address={address + `/${classroom.classroom_no}`}
+            teacher={classroom.member_name}
+            classColor={classroom.color}
+            //address={address + `/${classroom.classroom_no}`}
           />
         ))}
       </FlexContainer>

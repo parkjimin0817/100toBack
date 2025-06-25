@@ -63,7 +63,7 @@ public class MemberRepositoryImpl implements MemberRepository {
         return Optional.ofNullable(member);
     }
 
-    //시설 별 교사 불러오기
+    //시설 별 교사 불러오기 (for 셀렉트바 / 간단)
     @Override
     public List<Member> findTeacherByCenterNo(int centerNo) {
         return em.createQuery("select m from Member m where m.memberType =:memberType and m.status =: status and m.center.centerNo =:centerNo", Member.class)
@@ -76,13 +76,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     //member_no으로 멤버 찾기
     @Override
     public Optional<Member> findByMemberNo(int memberNo) {
-        String jpql = "SELECT m FROM Member m WHERE m.memberNo = :memberNo";
-        Member member = em.createQuery(jpql, Member.class)
-                .setParameter("memberNo", memberNo)
-                .getResultStream()
-                .findFirst()
-                .orElse(null);
-        return Optional.ofNullable(member);
+       return Optional.ofNullable(em.find(Member.class, memberNo));
     }
 
     //멤버 ID 찾기(이름, 생년월일
