@@ -1,26 +1,38 @@
 // src/pages/manager/ClassPlacement.jsx
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import ContentHeader from '../../components/Common/ContentHeader';
 import ChildrenList from '../../components/ChildrenList';
 import Modal from '../../components/ClassPlacementModal';
 import useLoginStore from '../../store/loginStore';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const ClassPlacement = () => {
   const member = useLoginStore((state) => state.member);
-  const centerNo = member.centerNo;
   const navigate = useNavigate();
 
-  const [accessDenied, setAccessDenied] = useState(false); // 🔒 차단 상태
+  const [accessDenied, setAccessDenied] = useState(false);
 
-  // const headerButtons = [{ Title: '반 목록', func: () => navigate('/classlist') }];
+  useEffect(() => {
+    if (!member) {
+      alert('로그인이 필요합니다.');
+      navigate('/login'); // 로그인 페이지로 이동
+      return;
+    }
 
+    if (member.memberType === 'TEACHER' || member.memberType === 'PARENT') {
+      alert('접근 권한이 없습니다.');
+      setAccessDenied(true);
+      navigate(-1);
+    }
+  }, [member, navigate]);
+
+  if (!member || accessDenied) return null; // ❗️렌더링 차단
+
+  const centerNo = member.centerNo;
   const headerButtons = [{ Title: '반 목록', func: () => navigate('/manager/classmanage') }];
 
-  // ✅ 여기부터는 문제 없이 useState 사용 가능
-  // true → 전체, false → 미배정
   const [showAll, setShowAll] = useState(true);
   const [openModal, setOpenModal] = useState(false);
   const [sort, setSort] = useState('createDate');
@@ -31,29 +43,19 @@ const ClassPlacement = () => {
 
   const handleSort = (e) => setSort(e.target.value);
   const handleRole = (e) => setRole(e.target.value);
-  useEffect(() => {
-    if (member?.memberType === 'TEACHER' || member?.memberType === 'PARENT') {
-      alert('접근 권한이 없습니다.');
-      setAccessDenied(true); // 차단 상태 true 설정
-      navigate(-1); // 뒤로 이동
-    }
-  }, [member, navigate]);
-
-  if (accessDenied) return null; // 안전하게 렌더링 차단
 
   return (
     <>
       <Content>
         <ContentHeader Title="반 배정" Color="blue" ButtonProps={headerButtons} />
-
         <ButtonLine>
           <ToggleButton $active={showAll} onClick={() => setShowAll(true)}>
             전체
           </ToggleButton>
-
           <ToggleButton $active={!showAll} onClick={() => setShowAll(false)}>
             미배정
           </ToggleButton>
+
           <DropdownLine>
             <P>대상</P>
             <Dropdown value={role} onChange={handleRole}>
@@ -61,6 +63,7 @@ const ClassPlacement = () => {
               <option value="teacher">교사</option>
             </Dropdown>
           </DropdownLine>
+
           <DropdownLine style={{ marginLeft: '0px' }}>
             <P>정렬</P>
             <Dropdown value={sort} onChange={handleSort}>
@@ -69,8 +72,10 @@ const ClassPlacement = () => {
               <option value="name">이름순</option>
             </Dropdown>
           </DropdownLine>
+
           <PlacementButton onClick={() => setOpenModal(true)}>반 배정</PlacementButton>
         </ButtonLine>
+
         <ChildrenList
           Color="blue"
           showAll={showAll}
@@ -82,6 +87,7 @@ const ClassPlacement = () => {
           centerNo={centerNo}
         />
       </Content>
+
       <Modal
         isOpen={openModal}
         onClose={() => setOpenModal(false)}

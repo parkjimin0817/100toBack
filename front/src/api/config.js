@@ -55,6 +55,7 @@ export const API_ENDPOINTS = {
   },
   CHILDS: {
     BASE: '/api/childs',
-    GETALL: '/api/childs/manager/childlist',
+    GETALL: '/api/childs/all',
+    GET: '/api/childs/get',
   },
 };

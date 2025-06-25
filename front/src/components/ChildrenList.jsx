@@ -26,7 +26,7 @@ const ChildrenList = ({
         if (roleBy === 'child') {
           if (classFilter) {
             res = await axios.get(`http://localhost:8888/api/childs`, {
-              params: { class_no: classFilter },
+              params: { classNo: classFilter },
             });
           } else {
             res = await axios.get(`http://localhost:8888/api/childs/all`, {
