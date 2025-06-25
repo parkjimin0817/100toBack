@@ -13,6 +13,7 @@ export const API_CONFIG = {
 export const API_ENDPOINTS = {
   SCHEDULES: {
     BASE: '/api/schedule',
+    CREATE: '/api/schedule/create',
     LISTS: `/api/schedule/lists`,
   },
   MEMBERS: {
@@ -22,7 +23,7 @@ export const API_ENDPOINTS = {
     PARENTSIGNUP: '/api/members/parent',
     MANAGERSIGNUP: '/api/members/manager',
     LOGIN: `/api/members/login`,
-    Mypage: (memberNo) => `/api/members/mypage?id=${memberNo}`,
+    MYPAGE: (memberNo) => `/api/members/mypage?id=${memberNo}`,
     SEARCHID: `/api/members/searchId`,
     PWDSEARCHID: `/api/members/pwdSearchId`,
     TEACHERLIST: (centerNo) => `api/members/teacherlist/${centerNo}`,

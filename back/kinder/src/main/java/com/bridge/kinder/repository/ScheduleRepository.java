@@ -11,5 +11,5 @@ public interface ScheduleRepository {
     void save(Schedule schedule);
 
     //스케줄 리스트 불러오기
-    List<Schedule> findScheduleAll(int centerNo, int memberNo, CommonEnums.RollType type);
+    List<Schedule> findScheduleAll(int centerNo, int memberNo);
 }

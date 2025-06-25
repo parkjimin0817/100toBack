@@ -6,60 +6,43 @@ import ScheduleList from './components/ScheduleList';
 import useLoginStore from '../../store/loginStore';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
+import { useScheduleService } from '../../api/schedule';
 
 import ScheduleModal from '../../components/ScheduleModal';
 
 dayjs.locale('ko');
 
-const data = [
-  // 시설장 일정 5개 (날짜 분산)
-  {
-    id: 1,
-    member_no: '1',
-    title: '안전 점검 회의',
-    description: '정기적인 시설 안전 점검',
-    create_date: '2025-06-26',
-    start_time: '09:00',
-    end_time: '10:00',
-    type: '센터',
-  },
-  // 교사 일정 5개 (같은 날짜)
-  {
-    id: 6,
-    member_no: '2',
-    title: '아침 조회',
-    description: '아이들과 하루 시작 준비',
-    create_date: '2025-06-26',
-    start_time: '09:00',
-    end_time: '09:30',
-    type: '멤버',
-  },
-];
-
 const ScheduleTeacher = () => {
   const [selectedSchedules, setSelectedSchedules] = useState([]);
   const [selectedDate, setSelectedDate] = useState(dayjs().format('YYYY-MM-DD (ddd)'));
   const { member } = useLoginStore();
-
-  console.log(member.memberName);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-    console.log('스토어 member:', member);
-  }, [member]);
+    const fetchData = async () => {
+      try {
+        const scheduleData = await useScheduleService.getScheduleList(member.centerNo, member.memberNo);
+        const sortedData = [...scheduleData].sort((a, b) => a.start_time.localeCompare(b.start_time));
+        setData(sortedData);
+        const today = dayjs().format('YYYY-MM-DD');
+        const todaySchedules = sortedData.filter((item) => dayjs(item.create_date).format('YYYY-MM-DD') === today);
+        setSelectedSchedules(todaySchedules);
+        setSelectedDate(dayjs().format('YYYY-MM-DD (ddd)'));
+      } catch (error) {
+        console.error('스케줄 데이터 로딩 실패:', error.message);
+      }
+    };
+    fetchData();
+  }, []);
 
   //modal
   const [openModal, setOpenModal] = useState(false);
-
   const [editSchedule, setEditSchedule] = useState(null);
 
   const handleDateClick = (date) => {
     const dateStr = dayjs(date).format('YYYY-MM-DD');
-    console.log(dateStr);
-
-    const selectDay = dayjs(date).format('YYYY-MM-DD (ddd)');
-    setSelectedDate(selectDay);
-
-    const matched = data.filter((item) => item.create_date === dateStr);
+    setSelectedDate(dayjs(date).format('YYYY-MM-DD (ddd)'));
+    const matched = data.filter((item) => dayjs(item.create_date).format('YYYY-MM-DD') === dateStr);
     setSelectedSchedules(matched);
   };
 
@@ -95,7 +78,7 @@ const ScheduleTeacher = () => {
                 <AreaDate>{selectedDate}</AreaDate>
                 <AreaList>
                   <ScheduleList
-                    schedules={selectedSchedules.filter((item) => item.type === '멤버')}
+                    schedules={selectedSchedules.filter((item) => item.type === 'MEMBER')}
                     onEditClick={handleEditClick}
                   />
                 </AreaList>
@@ -106,7 +89,7 @@ const ScheduleTeacher = () => {
               <ContentSceduleArea>
                 <AreaDate>{selectedDate}</AreaDate>
                 <AreaList>
-                  <ScheduleList schedules={selectedSchedules.filter((item) => item.type === '센터')} />
+                  <ScheduleList schedules={selectedSchedules.filter((item) => item.type === 'CENTER')} />
                 </AreaList>
               </ContentSceduleArea>
             </ContentRightBottom>

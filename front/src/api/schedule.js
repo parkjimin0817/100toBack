@@ -10,6 +10,7 @@ export const useScheduleService = {
       formData.append('member_no', mergedData.memberNo);
       formData.append('title', mergedData.title);
       formData.append('description', mergedData.description);
+      formData.append('schedule_date', mergedData.selectedDate);
       formData.append('create_date', mergedData.createDate);
       formData.append('start_time', mergedData.startTime);
       formData.append('end_time', mergedData.endTime);
@@ -24,10 +25,10 @@ export const useScheduleService = {
   },
 
   // 스케줄 목록 조회
-  getScheduleList: async (centerNo, memberNo, type) => {
+  getScheduleList: async (centerNo, memberNo) => {
     try {
       const { data } = await api.get(API_ENDPOINTS.SCHEDULES.LISTS, {
-        params: { centerNo, memberNo, type },
+        params: { centerNo, memberNo },
       });
       console.log('스케줄 목록 조회:', data);
       return data;

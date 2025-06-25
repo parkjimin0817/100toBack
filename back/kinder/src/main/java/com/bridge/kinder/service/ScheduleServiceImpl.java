@@ -6,6 +6,7 @@ import com.bridge.kinder.dto.ScheduleDto.ScheduleResponse;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.entity.Schedule;
+import com.bridge.kinder.enums.CommonEnums;
 import com.bridge.kinder.repository.CenterRepository;
 import com.bridge.kinder.repository.MemberRepository;
 import com.bridge.kinder.repository.ScheduleRepository;
@@ -43,16 +44,20 @@ public class ScheduleServiceImpl implements ScheduleService {
     //스케줄 리스트 불러오기
     @Transactional(readOnly = true)
     @Override
-    public List<ScheduleResponse> getSchedules(ScheduleResponse dto) {
-        Center center = centerRepository.findById(dto.getCenter_no())
+    public List<ScheduleResponse> getSchedules(int centerNo, int memberNo) {
+        Center center = centerRepository.findById(centerNo)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
 
-        Member member = memberRepository.findByMemberNo(dto.getMember_no())
+        Member member = memberRepository.findByMemberNo(memberNo)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
 
-        return scheduleRepository.findScheduleAll(center.getCenterNo(), member.getMemberNo(), dto.getType())
+        return scheduleRepository.findScheduleAll(center.getCenterNo(), member.getMemberNo())
                 .stream()
-                .map(ScheduleDto.ScheduleResponse::toDto)
+                .map(schedule -> ScheduleDto.ScheduleResponse.toDto(
+                        schedule,
+                        schedule.getCenter(),
+                        schedule.getMember()
+                ))
                 .collect(Collectors.toList());
     }
 }

@@ -22,15 +22,13 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 
     //스케줄 리스트 불러오기
     @Override
-    public List<Schedule> findScheduleAll(int centerNo, int memberNo, CommonEnums.RollType type) {
+    public List<Schedule> findScheduleAll(int centerNo, int memberNo) {
         return em.createQuery(
                 "SELECT s FROM Schedule s " +
                         "WHERE s.center.centerNo = :centerNo " +
-                        "AND s.member.memberNo = : memberNo " +
-                        "AND s.type = :type", Schedule.class)
+                        "AND s.member.memberNo = : memberNo ", Schedule.class)
                 .setParameter("centerNo", centerNo)
                 .setParameter("memberNo", memberNo)
-                .setParameter("type", type)
                 .getResultList();
     }
 }
