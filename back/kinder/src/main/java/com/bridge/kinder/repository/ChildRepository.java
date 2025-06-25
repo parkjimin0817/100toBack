@@ -11,5 +11,7 @@ public interface ChildRepository {
     //주민번호로 아동 찾기
     Optional<Child> findByResidentNo(String residentNo);
     //반으로 아동 목록
-    List<Child> findByClassNo(int class_no);
+    List<Child> findByClassNo(int classNo);
+    //반 별 아동 수
+    int countChildByClassroom(int classNo);
 }

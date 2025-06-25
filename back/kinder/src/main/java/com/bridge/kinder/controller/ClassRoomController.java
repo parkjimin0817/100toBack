@@ -20,14 +20,13 @@ public class ClassRoomController {
 
     //반 생성하기
     @PostMapping("/create")
-    public ResponseEntity<Long> createClass(@ModelAttribute ClassRoomDto.Create classRoomCreate) throws IOException {
+    public ResponseEntity<ClassRoomDto.Response> createClass(@ModelAttribute ClassRoomDto.Create classRoomCreate) throws IOException {
         return ResponseEntity.ok(classRoomService.createClass(classRoomCreate));
     }
 
     //시설 별 반 목록 불러오기
     @GetMapping("/list/{centerNo}")
     public ResponseEntity<List<ClassRoomDto.Response>> findClasses(@PathVariable int centerNo) {
-        System.out.println("결과 : " + classRoomService.findClassesByCenterNo(centerNo));
         return ResponseEntity.ok(classRoomService.findClassesByCenterNo(centerNo));
     }
 

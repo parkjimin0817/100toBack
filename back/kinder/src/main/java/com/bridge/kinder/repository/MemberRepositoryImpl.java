@@ -82,6 +82,8 @@ public class MemberRepositoryImpl implements MemberRepository {
                 .findFirst()
                 .orElse(null);
         return Optional.ofNullable(member);
+
+       // return Optional.ofNullable(em.find(Member.class, memberNo));
     }
 
     //멤버 ID 찾기(이름, 생년월일

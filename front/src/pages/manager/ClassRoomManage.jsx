@@ -35,7 +35,13 @@ const ClassRoomManage = () => {
         ButtonProps={[{ Title: '반 생성하기', func: () => setIsModalOpen(true) }]}
       />
       <ClassRoomCard classrooms={classrooms} />
-      {isModalOpen && <CreateClassModal onClose={() => setIsModalOpen(false)} centerNo={centerNo} />}
+      {isModalOpen && (
+        <CreateClassModal
+          onClose={() => setIsModalOpen(false)}
+          centerNo={centerNo}
+          onSuccess={(newClassroom) => setClassrooms((prev) => [...prev, newClassroom])}
+        />
+      )}
     </Content>
   );
 };

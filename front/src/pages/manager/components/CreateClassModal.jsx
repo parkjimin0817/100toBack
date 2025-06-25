@@ -4,7 +4,7 @@ import { classService } from '../../../api/class';
 import { toast } from 'react-toastify';
 import { memberService } from '../../../api/member';
 
-const CreateClassModal = ({ onClose, centerNo }) => {
+const CreateClassModal = ({ onClose, centerNo, onSuccess }) => {
   const [teachers, setTeachers] = useState([]);
 
   useEffect(() => {
@@ -15,8 +15,6 @@ const CreateClassModal = ({ onClose, centerNo }) => {
       .then((data) => setTeachers(data))
       .catch((err) => console.error('교사 목록 불러오기 실패 : ', err));
   }, [centerNo]);
-
-  console.log(teachers);
 
   const [classImage, setClassImage] = useState(null); //반 이미지
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -48,7 +46,7 @@ const CreateClassModal = ({ onClose, centerNo }) => {
     }
 
     try {
-      await classService.createClass({
+      const newClassroom = await classService.createClass({
         className,
         capacity,
         teacherNo,
@@ -57,6 +55,9 @@ const CreateClassModal = ({ onClose, centerNo }) => {
         classImage,
       });
       toast.info(`${className}반 생성이 완료되었습니다.`);
+      if (onSuccess) {
+        onSuccess(newClassroom);
+      }
       onClose();
     } catch (error) {
       console.error('반 생성 실패 : ', error);
