@@ -223,7 +223,7 @@ function App() {
         </Routes>
       </Router>
       <ToastContainer
-        position="top-right"
+        position="top-center"
         autoClose={3000}
         closeOnClick
         draggable
@@ -231,6 +231,7 @@ function App() {
         newestOnTop
         theme="light"
         pauseOnHover
+        toastClassName="toast-message"
       />
     </ThemeProvider>
   );

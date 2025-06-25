@@ -8,8 +8,8 @@ const SearchFormNav = () => {
   const navigator = useNavigate();
   const location = useLocation();
 
-  const isIdPage = location.pathname === '/findid';
-  const isPwdPage = location.pathname === '/findpwd';
+  const isIdPage = ['/findid', '/findidsuccess'].includes(location.pathname);
+  const isPwdPage = ['/findpwd', '/authenticationuser', '/changepwd'].includes(location.pathname);
 
   const handleChange = (e) => {
     const { id } = e.target;

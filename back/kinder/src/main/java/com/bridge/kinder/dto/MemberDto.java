@@ -142,6 +142,64 @@ public class MemberDto {
         public static SearchId toDto(Member member) {
             return SearchId.builder()
                     .member_id(member.getMemberId())
+                    .member_name(member.getMemberName())
+                    .member_birth(member.getMemberBirth())
+                    .build();
+        }
+    }
+
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class SearchPwd{
+        private String member_id;
+        private String member_phone;
+        private String member_name;
+
+        public static SearchPwd toDto(Member member) {
+            return SearchPwd.builder()
+                    .member_id(member.getMemberId())
+                    .member_phone(member.getMemberPhone())
+                    .member_name(member.getMemberName())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @Builder
+    public static class PhoneAccess {
+        //전화번호
+        private String phone_number;
+        //인증번호
+        private String number;
+        //성공 여부
+        private String status;
+
+        public static PhoneAccess toDto(String number,String info){
+            return PhoneAccess.builder()
+                    .status(info)
+                    .number(number)
+                    .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @Builder
+    public static class PwdUpdate {
+        private String member_id;
+        private String member_pwd;
+        private String reaction;
+
+        public static PwdUpdate toDto(String reaction) {
+            return PwdUpdate.builder()
+                    .reaction(reaction)
                     .build();
         }
     }

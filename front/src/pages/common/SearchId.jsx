@@ -148,6 +148,7 @@ const ContentDiv = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: ${({ theme }) => theme.spacing[1]};
 `;
 
 const SelectBar = styled.select`
@@ -167,6 +168,7 @@ const Input = styled.input`
   border-radius: ${({ theme }) => theme.borderRadius.md};
   padding: ${({ theme }) => theme.spacing[2]};
   outline: none;
+  margin-top: ${({ theme }) => theme.spacing[1]};
 `;
 
 export default SearchId;
