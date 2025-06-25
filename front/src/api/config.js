@@ -17,6 +17,8 @@ export const API_ENDPOINTS = {
     BASE: '/api/schedule',
     CREATE: '/api/schedule/create',
     LISTS: `/api/schedule/lists`,
+    EDIT: `/api/schedule/edit`,
+    DELETE: `/api/schedule/delete`,
   },
   MEMBERS: {
     BASE: '/api/members',
@@ -28,6 +30,8 @@ export const API_ENDPOINTS = {
     MYPAGE: (memberNo) => `/api/members/mypage?id=${memberNo}`,
     SEARCHID: `/api/members/searchId`,
     PWDSEARCHID: `/api/members/pwdSearchId`,
+    PHONEACCESS: `/api/members/sendOne`,
+    PWDUPDATE: `/api/members/pwdUpdate`,
     TEACHERLIST: (centerNo) => `/api/members/teacher/select/${centerNo}`,
     TEACHER_DETAIL_LIST: (centerNo) => `/api/members/teacher/list/${centerNo}`,
   },

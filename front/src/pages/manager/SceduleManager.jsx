@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import CustomCalendar from '../../components/CustomCalendar';
-import ScheduleList from './components/ScheduleList';
+import ScheduleList from '../teacher/components/ScheduleList';
 import useLoginStore from '../../store/loginStore';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
@@ -75,7 +75,7 @@ const ScheduleTeacher = () => {
   return (
     <>
       <Content>
-        <ContentHeader Title={'교사 일정'} Color={'purple'}></ContentHeader>
+        <ContentHeader Title={'시설장 일정'} Color={'purple'}></ContentHeader>
         <ContentWrapper>
           <ContentLeft>
             <CustomCalendar scheduleData={data} onDateClick={handleDateClick} />
@@ -107,11 +107,27 @@ const ScheduleTeacher = () => {
               </ContentSceduleArea>
             </ContentRightTop>
             <ContentRightBottom>
-              <ContentHeader Title={'유치원 일정'} Color={'purple'} FontSize={'xl'} />
+              <ContentHeader
+                Title={'유치원 일정'}
+                Color={'purple'}
+                FontSize={'xl'}
+                ButtonProps={[
+                  {
+                    Title: '일정 추가',
+                    func: () => {
+                      setOpenModal(true), setEditSchedule(null), setScheduleType('CENTER');
+                    },
+                  },
+                ]}
+              />
               <ContentSceduleArea>
                 <AreaDate>{selectedDate}</AreaDate>
                 <AreaList>
-                  <ScheduleList schedules={selectedSchedules.filter((item) => item.type === 'CENTER')} />
+                  <ScheduleList
+                    schedules={selectedSchedules.filter((item) => item.type === 'CENTER')}
+                    onEditClick={handleEditClick}
+                    onDeleteClick={handleDeleteClick}
+                  />
                 </AreaList>
               </ContentSceduleArea>
             </ContentRightBottom>

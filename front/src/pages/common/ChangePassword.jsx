@@ -1,124 +1,118 @@
-import React from 'react'
-import Form from '../../components/Common/SearchFormNav'
-import { SearchIdForm } from '../../styles/Common/Container';
-import styled from 'styled-components'
-import CommonFind from '../../components/Common/CommonFind';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 
+import styled from 'styled-components';
+import CommonFind from '../../components/Common/CommonFind';
+import SearchFormNav from '../../components/Common/SearchFormNav';
+import { Button } from '../../styles/Common/Button';
+import { ContentArea, SearchIdForm } from '../../styles/Common/Container';
+import { useSearchPwdForm3 } from '../../hook/searchForm/useSearchPwdForm3';
 
 const ChangePassword = () => {
-  const navigator = useNavigate();
+  const { navigator, password, passwordCheck, error, isLoading, handleChange, onSubmit } = useSearchPwdForm3();
 
   return (
-  <Container>
-    <CommonFind></CommonFind>
-    <Contents>
-      <Form></Form>
-      <Title>비밀번호 재설정</Title>
-      <Info>비밀번호 재설정을 위해 사용자 확인을 진행합니다.</Info>
-      <PasswordLine>
-        <Column>비밀번호</Column>
-        <Input placeholder='비밀번호(8~32자)를 입력해주세요.' />
-        <Column>비밀번호 확인</Column>
-        <Input placeholder='비밀번호 재입력' />
-      </PasswordLine>
-      <Button onClick={() => navigator('/login')}>완료</Button>
-      <FooterLine>
-        <Foot style={{ marginLeft: '410px' }}>고객센터</Foot>
-        <Foot>1:1문의</Foot>
-      </FooterLine>
-    </Contents>
-    <div style={{ marginTop: '10px' }}>
-      <span>@KB Corp</span>
-    </div>
-  </Container>
-    
-  )
-}
+    <>
+      <CommonFind />
 
-export default ChangePassword
+      <SearchIdForm>
+        <SearchFormNav />
+        <ContentArea>
+          <h2>비밀번호 재설정</h2>
+          <Content>
+            {error ? <SmalltextError>{error}</SmalltextError> : <Smalltext>새로운 비밀번호를 입력해주세요.</Smalltext>}
+            <form onSubmit={onSubmit}>
+              <ContentInner>
+                <h3>새 비밀번호</h3>
+                <Input
+                  type="password"
+                  name="password"
+                  placeholder="새 비밀번호를 입력해주세요."
+                  value={password}
+                  onChange={handleChange}
+                />
+              </ContentInner>
+              <ContentInner>
+                <h3>새 비밀번호 확인</h3>
+                <Input
+                  type="password"
+                  name="passwordCheck"
+                  placeholder="새 비밀번호를 다시 입력해주세요."
+                  value={passwordCheck}
+                  onChange={handleChange}
+                />
+              </ContentInner>
 
-const Container = styled.div`
+              <ButtonArea>
+                <Button1 type="submit">{isLoading ? '변경 중...' : '완료'}</Button1>
+                <Button1 type="button" onClick={() => navigator('/authenticationuser')}>
+                  돌아가기
+                </Button1>
+              </ButtonArea>
+            </form>
+            <ContentFooter>
+              <div>고객센터</div>
+              <div>1 : 1 문의하기</div>
+            </ContentFooter>
+          </Content>
+        </ContentArea>
+      </SearchIdForm>
+      <div>
+        <span>@KB Corp</span>
+      </div>
+    </>
+  );
+};
+
+export default ChangePassword;
+
+const Content = styled.div`
+  padding: ${({ theme }) => theme.spacing[8]} 0;
+  padding-bottom: 0;
+`;
+
+const Smalltext = styled.span`
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.gray[400]};
+`;
+
+const SmalltextError = styled.span`
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.orange};
+`;
+
+const ButtonArea = styled.div`
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-`
+  gap: 20px;
+  padding: ${({ theme }) => theme.spacing[3]} 0;
+`;
 
-const Contents = styled.div`
-  margin: 0 auto;
-  width: 574px;
-  height: 650px;
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
-  border: 1px solid ${({ theme }) => theme.colors.gray[400]};
-`
+const Button1 = styled(Button)`
+  width: 100%;
+  background-color: ${({ theme }) => theme.colors.lightblue};
+`;
 
-const Title = styled.div`
+const ContentFooter = styled.div`
+  padding-top: ${({ theme }) => theme.spacing[16]};
   display: flex;
-  align-items: flex-start;
-  margin-left: 55px;
-  margin-top: 55px;
-  font-size: 24px;
-  font-weight: bold;
-  height: 65px;
-`
+  justify-content: right;
+  align-items: center;
+  gap: 15px;
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+`;
 
-const Info = styled.div`
-  display: flex;
-  align-items: flex-start;
-  margin-left: 55px;
-  font-size: 14px;
-  color: #B5B5B5;
-  height: 30px;
-`
-const PasswordLine = styled.div`
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  margin-left: 55px;
-  
-`
-const Column = styled.div`
-  margin-top: 20px;
-`
+const ContentInner = styled.div`
+  padding: ${({ theme }) => theme.spacing[2]} 0;
+  position: relative;
+`;
 
 const Input = styled.input`
-  width: 450px;
-  padding-right: 100px;
-  height: 50px;
-  border: 0.8px solid #BDBCBC;
-  border-radius: 5px;
-  padding-left: 10px;
-`
-
-
-const Button = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 55px;
-  margin-top: 70px;
-  width: 450px;
-  height: 50px;
-  background-color: #BAE8F5;
-  border-radius: 8px;
-  font-weight: bold;
-
-  &:hover {
-    cursor: pointer;
-  }
-`
-
-const FooterLine = styled.div`
-  margin-top: 80px;
-  display: flex;
-  flex-direction: row;
-`
-
-const Foot = styled.div`
-  font-size: 12px;
-  margin-right: 15px;
-  &:hover{
-    cursor: pointer;
-  }
-`
+  width: 100%;
+  height: 40px;
+  border: 1px solid ${({ theme }) => theme.colors.gray[400]};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: ${({ theme }) => theme.spacing[2]};
+  outline: none;
+  margin-top: ${({ theme }) => theme.spacing[1]};
+`;

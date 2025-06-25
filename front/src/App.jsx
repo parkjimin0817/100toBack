@@ -66,6 +66,7 @@ import SearchChild from './pages/parent/SearchChild';
 import ErrorPage from './pages/ErrorPage';
 import ParentChildList from './pages/parent/ParentChildList';
 import ClassRoomManage from './pages/manager/ClassRoomManage';
+import ScheduleManager from './pages/manager/SceduleManager';
 
 function App() {
   return (
@@ -122,6 +123,8 @@ function App() {
              *
              * 9. 시설장 반 목록 / 생성 모달
              *
+             * 10. 시설장 유치원 일정 페이지
+             *
              *  */}
             <Route path="/manager/mypage" element={<TeacherMyPage />} />
             <Route path="/manager/classplacement" element={<ClassPlacement />} />
@@ -131,6 +134,7 @@ function App() {
             <Route path="/manager/teacherattendance/:memberNo" element={<TeacherAttendance />} />
             <Route path="/manager/introteacher" element={<TeacherIntroList />} />
             <Route path="/manager/classmanage" element={<ClassRoomManage />} />
+            <Route path="/manager/schedule" element={<ScheduleManager />} />
 
             {/**
              * 교사, 시설장 공용
@@ -223,7 +227,7 @@ function App() {
         </Routes>
       </Router>
       <ToastContainer
-        position="top-right"
+        position="top-center"
         autoClose={3000}
         closeOnClick
         draggable
@@ -231,6 +235,7 @@ function App() {
         newestOnTop
         theme="light"
         pauseOnHover
+        toastClassName="toast-message"
       />
     </ThemeProvider>
   );

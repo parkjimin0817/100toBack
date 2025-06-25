@@ -1,24 +1,75 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 
-const useSearchIdStore = create(
-  persist((set, get) => ({
-    memberId: null,
-    memberPwd: null,
+const useSearchStore = create((set, get) => ({
+  member: {
+    member_id: '',
+    member_pwd: '',
+    member_name: '',
+    member_phone: '',
+    member_birth: '',
+  },
 
-    searchId: (memberData) => {
-      set({
-        memberId: memberData.memberId,
-      });
-    },
+  //성공 / 실패
+  reaction: '',
 
-    searchPwd: (memberData) => {
-      set({
-        memberId: memberData.memberId,
-        memberPwd: memberData.memberPwd,
-      });
-    },
-  }))
-);
+  //전화번호 인증번호
+  phoneAccess: {
+    number: '',
+    status: '',
+  },
 
-export default useSearchIdStore;
+  //해당 페이지 나가면 store에 있는 정보 reset
+  reset: (choice) => {
+    switch (choice) {
+      case 'member':
+        set({
+          member: {
+            member_id: '',
+            member_pwd: '',
+            member_name: '',
+            member_phone: '',
+          },
+        });
+        break;
+      case 'access':
+        set({
+          phoneAccess: {
+            number: '',
+            status: '',
+          },
+        });
+      default:
+        break;
+    }
+  },
+
+  //아이디 찾기
+  searchId: (memberData) => {
+    set({
+      member: memberData,
+    });
+  },
+
+  //비밀번호 찾기(아이디)
+  searchPwd: (memberData) => {
+    set({
+      member: memberData,
+    });
+  },
+
+  //비밀번호 찾기(인증번호)
+  savePhoneAccess: (phoneAccess) => {
+    set({
+      phoneAccess: phoneAccess,
+    });
+  },
+
+  //비밀번호 찾기 성공/실패
+  pwdSelectReaction: (reaction) => {
+    set({
+      reaction: reaction,
+    });
+  },
+}));
+
+export default useSearchStore;
