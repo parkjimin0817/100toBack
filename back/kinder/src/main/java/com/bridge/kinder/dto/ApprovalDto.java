@@ -20,7 +20,7 @@ public class ApprovalDto {
         private int approval_no;
         private CommonEnums.AdmissionStatus status;
 
-        int member_no;
+        private int member_no;
 
         public Approval toDto(Member member) {
             return Approval.builder()
@@ -39,7 +39,7 @@ public class ApprovalDto {
         private int approval_no;
         private CommonEnums.AdmissionStatus status;
 
-        int child_no;
+        private int child_no;
 
         public Approval toDto(Child child) {
             return Approval.builder()

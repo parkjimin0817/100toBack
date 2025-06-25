@@ -17,6 +17,8 @@ export const API_ENDPOINTS = {
     BASE: '/api/schedule',
     CREATE: '/api/schedule/create',
     LISTS: `/api/schedule/lists`,
+    EDIT: `/api/schedule/edit`,
+    DELETE: `/api/schedule/delete`,
   },
   MEMBERS: {
     BASE: '/api/members',
