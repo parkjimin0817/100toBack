@@ -97,17 +97,6 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Optional<Member> findByMemberNo(int memberNo) {
-        String jpql = "SELECT m FROM Member m WHERE m.memberNo = :memberNo";
-        Member member = em.createQuery(jpql, Member.class)
-                .setParameter("memberNo", memberNo)
-                .getResultStream()
-                .findFirst()
-                .orElse(null);
-        return Optional.ofNullable(member);
-    }
-
-    @Override
     public Optional<Member> myPageUpdate(int id, MypageDto.Update dto) {
         String jpql = "UPDATE Member m SET m.memberName = :name, m.memberBirth = :birth WHERE m.memberNo = :memberNo";
 

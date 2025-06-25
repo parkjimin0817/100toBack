@@ -12,9 +12,8 @@ export const API_CONFIG = {
 
 export const API_ENDPOINTS = {
   SCHEDULES: {
-    BASE: '/schedule',
-    FORDATE: (center_no, class_no, member_no, create_date, type) =>
-      `/schedule?center_no=${center_no}&class_no=${class_no}&member_no=${member_no}&create_date=${create_date}&type=${type}`,
+    BASE: '/api/schedule',
+    LISTS: `/api/schedule/lists`,
   },
   MEMBERS: {
     BASE: '/api/members',
