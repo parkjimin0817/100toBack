@@ -6,9 +6,8 @@ import { IoCallOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import useLoginStore from '../../store/loginStore';
 
-const Header = () => {
+const Header = ({ member }) => {
   //헤더 정보
-  const { member } = useLoginStore();
   const name = member?.memberName;
   let type = '';
   if (member?.memberType === 'TEACHER') {

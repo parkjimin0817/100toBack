@@ -5,23 +5,22 @@ import Footer from './Footer';
 import SideBar from './Sidebar';
 import { Outlet } from 'react-router-dom';
 import { useState } from 'react';
+import useLoginStore from '../../store/loginStore';
 
 const Layout = () => {
-  const [role, setRole] = useState('teacher');
+  const { member } = useLoginStore();
+  const type = member?.memberType;
+  console.log(type);
+
   return (
     <>
       <HeaderWrapper>
-        <Header />
+        <Header member={member} />
       </HeaderWrapper>
 
       <MainWrapper>
         <SideBarWrapper>
-          <RoleButtons>
-            <button onClick={() => setRole('teacher')}>교사</button>
-            <button onClick={() => setRole('manager')}>시설장</button>
-            <button onClick={() => setRole('parent')}>학부모</button>
-          </RoleButtons>
-          <SideBar role={role} />
+          <SideBar type={type} />
         </SideBarWrapper>
 
         <ContentWrapper>
