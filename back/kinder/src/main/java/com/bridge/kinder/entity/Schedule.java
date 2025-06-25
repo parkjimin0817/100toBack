@@ -30,7 +30,7 @@ public class Schedule {// 일정
     private String description;
     //내용
 
-    @Column(name = "SCHADULE_DATE")
+    @Column(name = "SCHEDULE_DATE")
     private LocalDate scheduleDate;
     //일정날짜
 
