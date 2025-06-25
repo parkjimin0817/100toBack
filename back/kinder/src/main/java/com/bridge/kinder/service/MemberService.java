@@ -24,8 +24,10 @@ public interface MemberService {
     //멤버 로그인
     MemberDto.LoginResponse getLoginMember(String memberId, String memberPwd);
 
-    //교사 목록 (시설별)
-    List<MemberDto.Response> findTeachersByCenterNo(int centerNo);
+    //교사 목록 (시설별 for 셀렉트바)
+    List<MemberDto.SimpleDto> findTeachersByCenterNo(int centerNo);
+    //교사 목록 (시설별 for 목록페이지)
+    List<MemberDto.DetailMemberDto> findDetailedTeachersByCenterNo(int centerNo);
 
     //마이페이지
     MemberDto.MyPageResponse getMyInfo(int memberNo);

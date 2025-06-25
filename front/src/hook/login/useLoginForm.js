@@ -39,7 +39,7 @@ export const useLoginForm = () => {
       toast.success('로그인 성공하였습니다.');
 
       if (memberData.memberType === 'MANAGER') {
-        navigator('/manager/mypage');
+        navigator('/teacher/main');
       } else if (memberData.memberType === 'TEACHER') {
         navigator('/teacher/main');
       } else if (memberData.memberType === 'PARENT') {

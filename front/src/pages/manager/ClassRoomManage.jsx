@@ -16,6 +16,7 @@ const ClassRoomManage = () => {
 
   const [classrooms, setClassrooms] = useState([]);
 
+  //반 목록 불러오기
   useEffect(() => {
     if (!centerNo) return;
 

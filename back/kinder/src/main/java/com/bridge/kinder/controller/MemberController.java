@@ -59,11 +59,18 @@ public class MemberController {
         return ResponseEntity.ok(response);
     }
 
-    //시설 별 교사 목록 불러오기
-    @GetMapping("/teacherlist/{centerNo}")
-    public ResponseEntity<List<MemberDto.Response>> findTeachers(@PathVariable int centerNo){
+    //시설 별 교사 목록 불러오기 for 셀렉트바
+    @GetMapping("/teacher/select/{centerNo}")
+    public ResponseEntity<List<MemberDto.SimpleDto>> findTeachers(@PathVariable int centerNo){
         return ResponseEntity.ok(memberService.findTeachersByCenterNo(centerNo));
     }
+
+    //시설 별 교사 목록 조회 for 목록 페이지
+    @GetMapping("/teacher/list/{centerNo}")
+    public ResponseEntity<List<MemberDto.DetailMemberDto>> findDetailTeachers(@PathVariable int centerNo){
+        return ResponseEntity.ok(memberService.findDetailedTeachersByCenterNo(centerNo));
+    }
+
     //멤버 ID 조회(이름, 생년월일)
     @PostMapping("/searchId")
     public ResponseEntity<MemberDto.SearchId> searchId(@RequestBody MemberDto.SearchId dto){
