@@ -47,7 +47,14 @@ export const API_ENDPOINTS = {
   },
   ATTENDANCE: {
     BASE: '/api/attendance',
+    //교사 로그인 시 출퇴근 상태 불러오기
+    TODAYATTENDANCE: (memberNo) => `/api/attendance/today/${memberNo}`,
+    //출근 시간 기록
+    WORKIN: (memberNo) => `/api/attendance/workin/${memberNo}`,
+    //퇴근 시간 기록
+    WORKOUT: (memberNo) => `/api/attendance/workout/${memberNo}`,
     //교사가 자신 근태 기록 조회
+    //MYATTENDANCE:
     //시설장이 교사 별 근태 조회
     TEACHERATTENDANCE: (memberNo) => `/api/attendance/teacher/${memberNo}`,
   },
