@@ -1,5 +1,6 @@
 package com.bridge.kinder.repository;
 
+import com.bridge.kinder.dto.MypageDto;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.enums.CommonEnums;
 import jakarta.persistence.EntityManager;
@@ -95,5 +96,38 @@ public class MemberRepositoryImpl implements MemberRepository {
                 .setParameter("memberName", memberName )
                 .setParameter("memberBirth", memberBirth)
                 .getSingleResult());
+    }
+
+    @Override
+    public Optional<Member> findByMemberNo(int memberNo) {
+        String jpql = "SELECT m FROM Member m WHERE m.memberNo = :memberNo";
+        Member member = em.createQuery(jpql, Member.class)
+                .setParameter("memberNo", memberNo)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+        return Optional.ofNullable(member);
+    }
+
+    @Override
+    public Optional<Member> myPageUpdate(int id, MypageDto.Update dto) {
+        String jpql = "UPDATE Member m SET m.memberName = :name, m.memberBirth = :birth WHERE m.memberNo = :memberNo";
+
+        int updated = em.createQuery(jpql)
+                .setParameter("name", dto.getMemberName())
+                .setParameter("birth", dto.getMemberBirth())
+                .setParameter("memberNo", String.valueOf(id))
+                .executeUpdate();
+
+        // JPQL UPDATE는 반환값이 없음 → 다시 조회해서 Optional로 감싸야 함
+        if (updated > 0) {
+            Member member = em.createQuery(
+                            "SELECT m FROM Member m WHERE m.memberNo = :memberNo", Member.class)
+                    .setParameter("memberNo", String.valueOf(id))
+                    .getSingleResult();
+            return Optional.of(member);
+        } else {
+            return Optional.empty();
+        }
     }
 }

@@ -38,6 +38,7 @@ public class ChildRepositoryImpl implements ChildRepository {
                 .getResultList();
     }
 
+    //반별 아동 수 카운트
     @Override
     public int countChildByClassroom(int classNo) {
        Long count =  em.createQuery("SELECT COUNT(c) FROM Child c WHERE c.classRoom.classNo =: classNo", Long.class)

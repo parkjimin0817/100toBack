@@ -4,6 +4,7 @@ import com.bridge.kinder.dto.CreateManagerDto;
 import com.bridge.kinder.dto.MemberChildDto;
 import com.bridge.kinder.dto.MemberDto;
 import com.bridge.kinder.dto.MemberTeacherDto;
+import com.bridge.kinder.dto.MypageDto;
 import com.bridge.kinder.entity.*;
 import com.bridge.kinder.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -212,5 +213,20 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.searchId(memberName, memberBirth)
                 .map(MemberDto.SearchId::toDto)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
+    }
+
+    @Override
+    public MemberDto.MyPageResponse getMyInfo(int memberNo) {
+        Member member = memberRepository.findByMemberNo(memberNo).get();
+
+        Center center = member.getCenter();
+        return MemberDto.MyPageResponse.toDto(center, member);
+    }
+
+    @Override
+    public String updateMyPage(int id, MypageDto.Update dto) {
+        Member member = memberRepository.myPageUpdate(id, dto).get();
+        Center center = centerRepository.myPageUpdate(id, dto).get();
+        return "";
     }
 }

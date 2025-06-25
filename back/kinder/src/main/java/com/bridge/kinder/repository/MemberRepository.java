@@ -1,5 +1,6 @@
 package com.bridge.kinder.repository;
 
+import com.bridge.kinder.dto.MypageDto;
 import com.bridge.kinder.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -29,4 +30,8 @@ public interface MemberRepository  {
 
     //클래스no으로 담당 교사 찾기
     Optional<Member> findTeacherByClassNo(int classNo);
+
+    //마이페이지 정보 수정
+    Optional<Member> myPageUpdate(int id, MypageDto.Update dto);
+
 }
