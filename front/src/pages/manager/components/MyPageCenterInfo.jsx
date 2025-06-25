@@ -1,81 +1,75 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-const infodata = {
-  centerName: 'KH유치원',
-  centerPhone: '010-1234-2323',
-  address: '서울 강남구 테헤란로14길 6 남도빌딩 2층',
-  type: '유치원',
-};
-
-const MyPageCenterInfo = ({ isEditMode }) => {
-  const [data, setData] = useState(infodata);
+const MyPageCenterInfo = ({ centerInfo, onChange, isEditable }) => {
   const handleChange = (key, value) => {
-    setData((prev) => ({ ...prev, [key]: value }));
+    if (!isEditable) return;
+    onChange((prev) => ({ ...prev, [key]: value }));
   };
 
   const openAddressSearch = () => {
-    if (!window.daum || !window.daum.Postcode) {
-      alert('주소 검색 API 로드 안 됨!');
-      return;
-    }
-
     new window.daum.Postcode({
       oncomplete: (dataFromApi) => {
-        setData((prev) => ({ ...prev, address: dataFromApi.address }));
+        handleChange('centerAddress', dataFromApi.address);
       },
     }).open();
   };
+
+  const typeLabelMap = {
+    DAYCARE: '어린이집',
+    KINDERGARTEN: '유치원',
+    CHILD_CENTER: '지역아동센터',
+    ETC: '기타',
+  };
+  if (!centerInfo) return null;
 
   return (
     <Wrapper>
       <InfoRow>
         <InfoType>시설명 </InfoType>
         <Info>
-          {isEditMode ? (
-            <InfoInput value={data.centerName} onChange={(e) => handleChange('centerName', e.target.value)} />
+          {isEditable ? (
+            <InfoInput value={centerInfo.centerName} onChange={(e) => handleChange('centerName', e.target.value)} />
           ) : (
-            data.centerName
+            centerInfo.centerName
           )}
         </Info>
       </InfoRow>
       <InfoRow>
         <InfoType>연락처</InfoType>
         <Info>
-          {isEditMode ? (
-            <InfoInput value={data.centerPhone} onChange={(e) => handleChange('centerPhone', e.target.value)} />
+          {isEditable ? (
+            <InfoInput value={centerInfo.centerTel} onChange={(e) => handleChange('centerTel', e.target.value)} />
           ) : (
-            data.centerPhone
+            centerInfo.centerTel
           )}
         </Info>
       </InfoRow>
       <InfoRow>
         <InfoType>주소</InfoType>
         <Info>
-          {isEditMode ? (
+          {isEditable ? (
             <>
-              <AddressInput value={data.address} placeholder="주소를 검색해주세요" />
+              <AddressInput value={centerInfo.centerAddress} placeholder="주소를 검색해주세요" readOnly />
               <SearchButton onClick={openAddressSearch}>주소 검색</SearchButton>
             </>
           ) : (
-            data.address || '-'
+            centerInfo.centerAddress || '-'
           )}
         </Info>
       </InfoRow>
       <InfoRow>
         <InfoType>유형</InfoType>
         <Info>
-          {isEditMode ? (
-            <Select value={data.type} onChange={(e) => handleChange('type', e.target.value)}>
-              <option value="어린이집">어린이집</option>
-              <option value="유치원">유치원</option>
-              <option value="지역아동센터">지역아동센터</option>
-              <option value="돌봄교실">돌봄교실</option>
-              <option value="놀이방">놀이방</option>
-              <option value="기타">기타</option>
+          {isEditable ? (
+            <Select value={centerInfo.centerType} onChange={(e) => handleChange('centerType', e.target.value)}>
+              <option value="DAYCARE">어린이집</option>
+              <option value="KINDERGARTEN">유치원</option>
+              <option value="CHILD_CENTER">지역아동센터</option>
+              <option value="ETC">기타</option>
             </Select>
           ) : (
-            data.type
+            (typeLabelMap[centerInfo.centerType] ?? centerInfo.centerType)
           )}
         </Info>
       </InfoRow>

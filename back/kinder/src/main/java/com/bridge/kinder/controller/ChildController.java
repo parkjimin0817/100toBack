@@ -21,9 +21,10 @@ public class ChildController {
 
     //반 번호로 아동 목록 가져오기
     @GetMapping
-    public ResponseEntity<List<ChildDto.Response>> getChildrenByClassNo(@RequestParam int class_no){
-        return ResponseEntity.ok(childService.findChildrenByClassNo(class_no));
+    public ResponseEntity<List<ChildDto.Response>> getChildrenByClassNo(@RequestParam int classNo){
+        return ResponseEntity.ok(childService.findChildrenByClassNo(classNo));
     }
+
     //아동 생성
     @PostMapping("/add")
     public ResponseEntity<String> createChild(@ModelAttribute ChildDto.CreateChild dto) throws IOException {
@@ -36,5 +37,11 @@ public class ChildController {
     public ResponseEntity<String> linkChild(@RequestBody ChildDto.LinkChildRequest dto) throws IOException {
         String childNo = childService.linkChild(dto);
         return ResponseEntity.ok(childNo);
+    }
+
+    //시설장 아동 목록 가져오기
+    @GetMapping("/manager/childlist")
+    public ResponseEntity<List<ChildDto.childListResponse>> managerChildList(@RequestParam int centerNo){
+        return ResponseEntity.ok(childService.managerChildList(centerNo));
     }
 }

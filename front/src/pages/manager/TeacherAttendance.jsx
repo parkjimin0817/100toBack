@@ -1,11 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import TeacherAttendanceCard from './components/TeacherAttendanceCard';
 import CustomCalendar from '../../components/CustomCalendar';
+import { useParams } from 'react-router-dom';
+import { attendanceService } from '../../api/attendance';
 
 const TeacherAttendance = () => {
+  const { memberNo } = useParams();
+  const [attendances, setAttendances] = useState([]);
+
+  useEffect(() => {
+    if (!memberNo) return;
+
+    attendanceService
+      .teacherAttendance(memberNo)
+      .then((data) => setAttendances(data))
+      .catch((err) => console.error('교사 근태 목록 불러오기 실패', err));
+  }, [memberNo]);
+
   const [selectedDate, setSelectedDate] = useState(new Date());
+
   return (
     <Wrapper>
       <ContentHeader Title={'교사 근태 관리'} Color={'blue'} />

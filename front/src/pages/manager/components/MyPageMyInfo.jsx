@@ -1,53 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-const infodata = {
-  name: '박지민',
-  birthdate: '1999-08-17',
-  role: '시설장',
-};
-
-const MyPageMyInfo = ({ isEditMode }) => {
-  const [data, setData] = useState(infodata);
-  const handleChange = (key, value) => {
-    setData((prev) => ({ ...prev, [key]: value }));
+const MyPageMyInfo = ({ info, onChange, isEditable }) => {
+  const handleChange = (field, value) => {
+    if (!isEditable) return;
+    onChange((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
   };
+  if (!info) return null;
 
   return (
     <Wrapper>
       <InfoRow>
-        <InfoType>이름 </InfoType>
+        <InfoType>이름</InfoType>
         <Info>
-          {isEditMode ? (
-            <InfoInput value={data.name} onChange={(e) => handleChange('name', e.target.value)} />
-          ) : (
-            data.name
-          )}
+          <InfoInput
+            value={info.memberName}
+            onChange={(e) => handleChange('memberName', e.target.value)}
+            disabled={!isEditable}
+          />
         </Info>
       </InfoRow>
       <InfoRow>
         <InfoType>생년월일</InfoType>
         <Info>
-          {isEditMode ? (
-            <InfoInput type="date" value={data.birthdate} onChange={(e) => handleChange('birthdate', e.target.value)} />
-          ) : (
-            data.birthdate
-          )}
+          <InfoInput
+            type="date"
+            value={info.memberBirth}
+            onChange={(e) => handleChange('memberBirth', e.target.value)}
+            disabled={!isEditable}
+          />
         </Info>
       </InfoRow>
       <InfoRow>
         <InfoType>직위</InfoType>
         <Info>
-          {/* {isEditMode ? (
-            <Select value={data.role} onChange={(e) => handleChange('role', e.target.value)}>
-              <option value="시설장">시설장</option>
-              <option value="교사">교사</option>
-              <option value="기타">기타</option>
-            </Select>
-          ) : (
-            data.role
-          )} */}
-          {data.role}
+          {info.memberType === 'TEACHER' ? '교사' : info.memberType === 'MANAGER' ? '시설장' : info.memberType}
         </Info>
       </InfoRow>
     </Wrapper>

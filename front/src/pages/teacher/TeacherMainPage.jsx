@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import ChildImage from '../../assets/img/cardchild.png';
@@ -9,7 +9,6 @@ import TeacherMainHealth from './components/TeacherMainHealth';
 import RecentBoard from '../common/ParentMain/components/RecentBoard';
 import MainSchedule from '../common/ParentMain/components/MainSchedule';
 import useLoginStore from '../../store/loginStore';
-import { useEffect } from 'react';
 
 const data = [
   { name: '박지민', age: '5', time: '10:00~12:00', type: '채팅' },
@@ -29,11 +28,7 @@ const TeacherMainPage = () => {
   const [activeCounselTab, setActiveCounselTab] = useState('상담 대기');
   const { member } = useLoginStore();
 
-  console.log(member.memberName);
-
-  useEffect(() => {
-    console.log('스토어 member:', member);
-  }, [member]);
+  useEffect(() => {}, [member]);
 
   return (
     <Wrapper>

@@ -32,7 +32,7 @@ public class ClassRoom {// 반
     private String classImage;
     //반 이미지
 
-    @Column(name = "COLOR", length = 6)
+    @Column(name = "COLOR", length = 7)
     private String color;
     //반 테마 색
 

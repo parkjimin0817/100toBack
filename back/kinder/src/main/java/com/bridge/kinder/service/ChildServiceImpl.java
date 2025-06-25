@@ -1,6 +1,7 @@
 package com.bridge.kinder.service;
 
 import com.bridge.kinder.dto.ChildDto;
+import com.bridge.kinder.dto.ChildDto.childListResponse;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.Member;
@@ -69,6 +70,7 @@ public class ChildServiceImpl implements ChildService {
         return String.valueOf(child.getChildNo());
     }
 
+    //학부모 회원가입 후 마이페이지 아동 연결
     @Override
     public String linkChild(ChildDto.LinkChildRequest dto) throws IOException {
         Member parent = memberRepository.findByParentNo(dto.getMember_no())
@@ -89,9 +91,17 @@ public class ChildServiceImpl implements ChildService {
 
     //반으로 아동목록 불러오기
     @Override
-    public List<ChildDto.Response> findChildrenByClassNo(int class_no) {
-        return childRepository.findByClassNo(class_no).stream()
+    public List<ChildDto.Response> findChildrenByClassNo(int classNo) {
+        return childRepository.findByClassNo(classNo).stream()
                 .map(ChildDto.Response::toDto)
+                .collect(Collectors.toList());
+    }
+
+    //시설장 아동목록 불러오기(해당 시설의 모든 아동)
+    @Override
+    public List<ChildDto.childListResponse> managerChildList(int centerNo) {
+        return childRepository.findByCenterNo(centerNo).stream()
+                .map(ChildDto.childListResponse::toDto)
                 .collect(Collectors.toList());
     }
 }

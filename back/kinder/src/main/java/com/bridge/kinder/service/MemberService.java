@@ -4,8 +4,10 @@ import com.bridge.kinder.dto.CreateManagerDto;
 import com.bridge.kinder.dto.MemberChildDto;
 import com.bridge.kinder.dto.MemberDto;
 import com.bridge.kinder.dto.MemberTeacherDto;
+import com.bridge.kinder.dto.MypageDto;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface MemberService {
 
@@ -27,4 +29,15 @@ public interface MemberService {
     MemberDto.PhoneAccess sendingNumberToFindId(MemberDto.PhoneAccess dto);
     //비밀번호 변경
     MemberDto.PwdUpdate updatePwd(MemberDto.PwdUpdate dto);
+
+    //교사 목록 (시설별 for 셀렉트바)
+    List<MemberDto.SimpleDto> findTeachersByCenterNo(int centerNo);
+    //교사 목록 (시설별 for 목록페이지)
+    List<MemberDto.DetailMemberDto> findDetailedTeachersByCenterNo(int centerNo);
+
+    //마이페이지
+    MemberDto.MyPageResponse getMyInfo(int memberNo);
+
+    //마이페이지 수정
+    String updateMyPage(int id ,MypageDto.Update dto);
 }
