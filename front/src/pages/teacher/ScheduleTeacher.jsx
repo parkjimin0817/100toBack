@@ -17,22 +17,25 @@ const ScheduleTeacher = () => {
   const [selectedDate, setSelectedDate] = useState(dayjs().format('YYYY-MM-DD (ddd)'));
   const { member } = useLoginStore();
   const [data, setData] = useState([]);
+  const [scheduleType, setScheduleType] = useState('');
+
+  const fetchData = async () => {
+    try {
+      const scheduleData = await useScheduleService.getScheduleList(member.centerNo, member.memberNo);
+      const sortedData = [...scheduleData].sort((a, b) => a.start_time.localeCompare(b.start_time));
+      setData(sortedData);
+      const today = dayjs().format('YYYY-MM-DD');
+      const todaySchedules = sortedData.filter((item) => dayjs(item.schedule_date).format('YYYY-MM-DD') === today);
+      setSelectedSchedules(todaySchedules);
+      setSelectedDate(dayjs().format('YYYY-MM-DD (ddd)'));
+    } catch (error) {
+      console.error('스케줄 데이터 로딩 실패:', error.message);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const scheduleData = await useScheduleService.getScheduleList(member.centerNo, member.memberNo);
-        const sortedData = [...scheduleData].sort((a, b) => a.start_time.localeCompare(b.start_time));
-        setData(sortedData);
-        const today = dayjs().format('YYYY-MM-DD');
-        const todaySchedules = sortedData.filter((item) => dayjs(item.create_date).format('YYYY-MM-DD') === today);
-        setSelectedSchedules(todaySchedules);
-        setSelectedDate(dayjs().format('YYYY-MM-DD (ddd)'));
-      } catch (error) {
-        console.error('스케줄 데이터 로딩 실패:', error.message);
-      }
-    };
     fetchData();
+    handleDateClick(dayjs().format('YYYY-MM-DD'));
   }, []);
 
   //modal
@@ -42,7 +45,7 @@ const ScheduleTeacher = () => {
   const handleDateClick = (date) => {
     const dateStr = dayjs(date).format('YYYY-MM-DD');
     setSelectedDate(dayjs(date).format('YYYY-MM-DD (ddd)'));
-    const matched = data.filter((item) => dayjs(item.create_date).format('YYYY-MM-DD') === dateStr);
+    const matched = data.filter((item) => dayjs(item.schedule_date).format('YYYY-MM-DD') === dateStr);
     setSelectedSchedules(matched);
   };
 
@@ -69,7 +72,7 @@ const ScheduleTeacher = () => {
                   {
                     Title: '일정 추가',
                     func: () => {
-                      setOpenModal(true), setEditSchedule(null);
+                      setOpenModal(true), setEditSchedule(null), setScheduleType('MEMBER');
                     },
                   },
                 ]}
@@ -101,6 +104,8 @@ const ScheduleTeacher = () => {
         onClose={() => setOpenModal(false)}
         selectedDate={selectedDate.split(' ')[0]}
         initialData={editSchedule}
+        type={scheduleType}
+        onSuccess={fetchData}
       />
     </>
   );

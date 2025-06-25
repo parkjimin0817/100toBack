@@ -3,6 +3,7 @@ package com.bridge.kinder.repository;
 import com.bridge.kinder.dto.ScheduleDto.CreateScheduleDto;
 import com.bridge.kinder.entity.Schedule;
 import com.bridge.kinder.enums.CommonEnums;
+import com.bridge.kinder.enums.CommonEnums.RollType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
@@ -22,13 +23,24 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 
     //스케줄 리스트 불러오기
     @Override
-    public List<Schedule> findScheduleAll(int centerNo, int memberNo) {
+    public List<Schedule> findMemberScheduleAll(int centerNo, int memberNo) {
         return em.createQuery(
                 "SELECT s FROM Schedule s " +
                         "WHERE s.center.centerNo = :centerNo " +
                         "AND s.member.memberNo = : memberNo ", Schedule.class)
                 .setParameter("centerNo", centerNo)
                 .setParameter("memberNo", memberNo)
+                .getResultList();
+    }
+
+    @Override
+    public List<Schedule> findCenterScheduleAll(int centerNo) {
+        return em.createQuery(
+                "SELECT s FROM Schedule s " +
+                        "WHERE s.center.centerNo = :centerNo " +
+                        "AND s.type = : type ", Schedule.class)
+                .setParameter("centerNo", centerNo)
+                .setParameter("type", RollType.CENTER)
                 .getResultList();
     }
 }

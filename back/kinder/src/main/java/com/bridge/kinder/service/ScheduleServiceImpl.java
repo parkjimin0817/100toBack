@@ -11,7 +11,10 @@ import com.bridge.kinder.repository.CenterRepository;
 import com.bridge.kinder.repository.MemberRepository;
 import com.bridge.kinder.repository.ScheduleRepository;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -51,13 +54,21 @@ public class ScheduleServiceImpl implements ScheduleService {
         Member member = memberRepository.findByMemberNo(memberNo)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
 
-        return scheduleRepository.findScheduleAll(center.getCenterNo(), member.getMemberNo())
-                .stream()
-                .map(schedule -> ScheduleDto.ScheduleResponse.toDto(
-                        schedule,
-                        schedule.getCenter(),
-                        schedule.getMember()
-                ))
+        List<Schedule> memberSchedules = scheduleRepository.findMemberScheduleAll(center.getCenterNo(), member.getMemberNo());
+
+        List<Schedule> centerSchedules = scheduleRepository.findCenterScheduleAll(center.getCenterNo());
+
+        // scheduleNo 기준 중복 제거
+        Map<Integer, Schedule> uniqueScheduleMap = new LinkedHashMap<>();
+        for (Schedule schedule : memberSchedules) {
+            uniqueScheduleMap.put(schedule.getScheduleNo(), schedule);
+        }
+        for (Schedule schedule : centerSchedules) {
+            uniqueScheduleMap.putIfAbsent(schedule.getScheduleNo(), schedule);
+        }
+
+        return uniqueScheduleMap.values().stream()
+                .map(schedule -> ScheduleResponse.toDto(schedule, schedule.getCenter(), schedule.getMember()))
                 .collect(Collectors.toList());
     }
 }

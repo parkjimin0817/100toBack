@@ -17,7 +17,6 @@ export const useScheduleService = {
       formData.append('type', mergedData.type);
 
       const { data } = await api.post(API_ENDPOINTS.SCHEDULES.CREATE, formData);
-      console.log('스케줄 생성:', data);
       return data;
     } catch (error) {
       throw new Error(error, '서버 통신 불량');
@@ -30,7 +29,6 @@ export const useScheduleService = {
       const { data } = await api.get(API_ENDPOINTS.SCHEDULES.LISTS, {
         params: { centerNo, memberNo },
       });
-      console.log('스케줄 목록 조회:', data);
       return data;
     } catch (error) {
       throw new Error(error, '서버 통신 불량');

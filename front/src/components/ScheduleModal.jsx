@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import useLoginStore from '../store/loginStore';
+import { useScheduleService } from '../api/schedule';
+import { toast } from 'react-toastify';
 
-const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData }) => {
+const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData, type, onSuccess }) => {
   const [title, setTitle] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
@@ -23,8 +25,30 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData }) => {
     }
   }, [initialData]);
 
-  const handleSubmit = () => {
-    //데이터 전송
+  const handleAddSubmit = async () => {
+    const mergedData = {
+      centerNo: member.centerNo,
+      memberNo: member.memberNo,
+      title,
+      description,
+      selectedDate,
+      startTime,
+      endTime,
+      type,
+    };
+
+    try {
+      await useScheduleService.createSchedule(mergedData);
+      toast.success('일정이 등록되었습니다.');
+      onClose();
+      if (onSuccess) onSuccess();
+    } catch (error) {
+      console.error('일정 등록 실패:', error.message);
+      toast.error('일정 등록 중 오류가 발생했습니다.');
+    }
+  };
+
+  const handleUpdateSubmit = () => {
     onClose();
   };
 
@@ -76,11 +100,11 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData }) => {
         </ModalContent>
         <ModalFooter>
           {initialData ? (
-            <Button className="edit" onClick={handleSubmit}>
+            <Button className="edit" onClick={handleUpdateSubmit}>
               수정
             </Button>
           ) : (
-            <Button className="add" onClick={handleSubmit}>
+            <Button className="add" onClick={handleAddSubmit}>
               등록
             </Button>
           )}
