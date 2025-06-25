@@ -21,7 +21,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         em.persist(schedule);
     }
 
-    //스케줄 리스트 불러오기
+    //개인 스케줄 리스트 불러오기
     @Override
     public List<Schedule> findMemberScheduleAll(int centerNo, int memberNo) {
         return em.createQuery(
@@ -33,6 +33,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
                 .getResultList();
     }
 
+    //시설 스케줄 리스트 불러오기
     @Override
     public List<Schedule> findCenterScheduleAll(int centerNo) {
         return em.createQuery(
@@ -42,5 +43,15 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
                 .setParameter("centerNo", centerNo)
                 .setParameter("type", RollType.CENTER)
                 .getResultList();
+    }
+
+    @Override
+    public Schedule findScheduleByScheduleNo(int scheduleNo) {
+        return em.find(Schedule.class, scheduleNo);
+    }
+
+    @Override
+    public void deleteSchedule(Schedule schedule) {
+        em.remove(schedule);
     }
 }

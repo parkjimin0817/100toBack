@@ -12,18 +12,20 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData, type, onSuc
   const { member } = useLoginStore();
 
   useEffect(() => {
-    if (initialData) {
-      setTitle(initialData.title || '');
-      setStartTime(initialData.start_time || '');
-      setEndTime(initialData.end_time || '');
-      setDescription(initialData.description || '');
-    } else {
-      setTitle('');
-      setStartTime('');
-      setEndTime('');
-      setDescription('');
+    if (isOpen) {
+      if (initialData) {
+        setTitle(initialData.title || '');
+        setStartTime(initialData.start_time || '');
+        setEndTime(initialData.end_time || '');
+        setDescription(initialData.description || '');
+      } else {
+        setTitle('');
+        setStartTime('');
+        setEndTime('');
+        setDescription('');
+      }
     }
-  }, [initialData]);
+  }, [isOpen, initialData]);
 
   const handleAddSubmit = async () => {
     const mergedData = {
@@ -41,7 +43,10 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData, type, onSuc
       await useScheduleService.createSchedule(mergedData);
       toast.success('일정이 등록되었습니다.');
       onClose();
-      if (onSuccess) onSuccess();
+
+      if (onSuccess) {
+        onSuccess(selectedDate);
+      }
     } catch (error) {
       console.error('일정 등록 실패:', error.message);
       toast.error('일정 등록 중 오류가 발생했습니다.');
@@ -49,7 +54,27 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData, type, onSuc
   };
 
   const handleUpdateSubmit = () => {
-    onClose();
+    const mergedData = {
+      scheduleNo: initialData.schedule_no,
+      title,
+      description,
+      startTime,
+      endTime,
+    };
+
+    useScheduleService
+      .updateSchedule(mergedData)
+      .then(() => {
+        toast.success('일정이 수정되었습니다.');
+        onClose();
+        if (onSuccess) {
+          onSuccess(selectedDate);
+        }
+      })
+      .catch((error) => {
+        console.error('일정 수정 실패:', error.message);
+        toast.error('일정 수정 중 오류가 발생했습니다.');
+      });
   };
 
   if (!isOpen) return null;

@@ -3,6 +3,7 @@ package com.bridge.kinder.service;
 import com.bridge.kinder.dto.ScheduleDto;
 import com.bridge.kinder.dto.ScheduleDto.CreateScheduleDto;
 import com.bridge.kinder.dto.ScheduleDto.ScheduleResponse;
+import com.bridge.kinder.dto.ScheduleDto.ScheduleUpdateDto;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.entity.Schedule;
@@ -70,5 +71,23 @@ public class ScheduleServiceImpl implements ScheduleService {
         return uniqueScheduleMap.values().stream()
                 .map(schedule -> ScheduleResponse.toDto(schedule, schedule.getCenter(), schedule.getMember()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String updateSchedule(ScheduleUpdateDto dto) {
+        Schedule schedule = scheduleRepository.findScheduleByScheduleNo(dto.getSchedule_no());
+
+        schedule.updateTitle(dto.getTitle());
+        schedule.updateDescription(dto.getDescription());
+        schedule.updateStartTime(dto.getStart_time());
+        schedule.updateEndTime(dto.getEnd_time());
+
+        return dto.toDto(schedule).toString();
+    }
+
+    @Override
+    public void deleteSchedule(int scheduleNo) {
+        Schedule schedule = scheduleRepository.findScheduleByScheduleNo(scheduleNo);
+        scheduleRepository.deleteSchedule(schedule);
     }
 }

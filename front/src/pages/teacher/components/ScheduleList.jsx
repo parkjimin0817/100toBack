@@ -5,7 +5,7 @@ import { TbEdit } from 'react-icons/tb';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import useLoginStore from '../../../store/loginStore';
 
-const ScheduleList = ({ schedules, emptyMessage = '일정이 없습니다.', onEditClick }) => {
+const ScheduleList = ({ schedules, emptyMessage = '일정이 없습니다.', onEditClick, onDeleteClick }) => {
   const { member } = useLoginStore();
   if (!schedules || schedules.length === 0) {
     return <Message>{emptyMessage}</Message>;
@@ -28,7 +28,7 @@ const ScheduleList = ({ schedules, emptyMessage = '일정이 없습니다.', onE
                   <EditButton onClick={() => onEditClick(item)} />
                 </BoxButton>
                 <BoxButton>
-                  <DeleteButton />
+                  <DeleteButton onClick={() => onDeleteClick(item.schedule_no)} />
                 </BoxButton>
               </>
             )}

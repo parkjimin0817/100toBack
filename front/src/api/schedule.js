@@ -34,4 +34,31 @@ export const useScheduleService = {
       throw new Error(error, '서버 통신 불량');
     }
   },
+  // 스케줄 수정
+  updateSchedule: async (mergedData) => {
+    try {
+      const formData = new FormData();
+      formData.append('schedule_no', mergedData.scheduleNo);
+      formData.append('title', mergedData.title);
+      formData.append('description', mergedData.description);
+      formData.append('start_time', mergedData.startTime);
+      formData.append('end_time', mergedData.endTime);
+
+      const { data } = await api.patch(API_ENDPOINTS.SCHEDULES.EDIT, formData);
+      return data;
+    } catch (error) {
+      throw new Error(error, '서버 통신 불량');
+    }
+  },
+  // 스케줄 삭제
+  deleteSchedule: async (scheduleNo) => {
+    try {
+      const { data } = await api.delete(`${API_ENDPOINTS.SCHEDULES.DELETE}`, {
+        params: { scheduleNo },
+      });
+      return data;
+    } catch (error) {
+      throw new Error(error, '서버 통신 불량');
+    }
+  },
 };
