@@ -48,7 +48,7 @@ public class MemberRepositoryImpl implements MemberRepository {
         return Optional.ofNullable(em.find(Member.class, memberNo));
     }
 
-    //멤버 ID 찾기(이름, 생년월일
+    //멤버 ID 찾기(이름, 생년월일)
     @Override
     public Optional<Member> searchId(String memberName, LocalDate memberBirth) {
         String query = "select m from Member m where m.memberName = :memberName and m.memberBirth = :memberBirth";
@@ -56,6 +56,24 @@ public class MemberRepositoryImpl implements MemberRepository {
         return Optional.ofNullable(em.createQuery(query, Member.class)
                 .setParameter("memberName", memberName )
                 .setParameter("memberBirth", memberBirth)
+                .getSingleResult());
+    }
+
+    //멤버 PWD 찾기(아이디)
+    @Override
+    public Optional<Member> pwdSearchId(String memberId) {
+        String query = "select m from Member m where m.memberId = :memberId";
+        return Optional.ofNullable(em.createQuery(query, Member.class)
+                .setParameter("memberId", memberId)
+                .getSingleResult());
+    }
+
+    //전화번호로 멤버찾기
+    @Override
+    public Optional<Member> findByPhone(String memberPhone) {
+        String query = "select m from Member m where m.memberPhone = :memberPhone";
+        return Optional.ofNullable(em.createQuery(query, Member.class)
+                .setParameter("memberPhone", memberPhone)
                 .getSingleResult());
     }
 }

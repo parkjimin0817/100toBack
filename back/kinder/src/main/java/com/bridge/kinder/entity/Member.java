@@ -137,4 +137,8 @@ public class Member {// 멤버
     public void changeMemberStatus(CommonEnums.AdmissionStatus newStatus) {
         this.status = newStatus;
     }
+
+    public void changeMemberPwd(String newPwd) {
+        this.memberPwd = newPwd;
+    }
 }

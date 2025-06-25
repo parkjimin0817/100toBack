@@ -25,6 +25,8 @@ export const API_ENDPOINTS = {
     LOGIN: `/api/members/login`,
     SEARCHID: `/api/members/searchId`,
     PWDSEARCHID: `/api/members/pwdSearchId`,
+    PHONEACCESS: `/api/members/sendOne`,
+    PWDUPDATE: `/api/members/pwdUpdate`,
   },
   APPLOVALLIST: {
     BASE: 'api/approvalList',
