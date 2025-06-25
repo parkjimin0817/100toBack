@@ -72,16 +72,6 @@ public class MemberRepositoryImpl implements MemberRepository {
                 .setParameter("centerNo", centerNo)
                 .getResultList();
     }
-    
-    //시설 별 교사 불러오기 (목록페이지 상세)
-    @Override
-    public List<Member> findDetailedTeachersByCenterNo(int centerNo) {
-        return em.createQuery("select m from Member m where m.memberType =:memberType and m.status =: status and m.center.centerNo =:centerNo", Member.class)
-                .setParameter("memberType", CommonEnums.MemberType.TEACHER)
-                .setParameter("status", CommonEnums.AdmissionStatus.APPROVED)
-                .setParameter("centerNo", centerNo)
-                .getResultList();
-    }
 
     //member_no으로 멤버 찾기
     @Override
@@ -100,8 +90,7 @@ public class MemberRepositoryImpl implements MemberRepository {
                 .getSingleResult());
     }
 
-
-
+    //마이페이지 수정
     @Override
     public Optional<Member> myPageUpdate(int id, MypageDto.Update dto) {
         String jpql = "UPDATE Member m SET m.memberName = :name, m.memberBirth = :birth WHERE m.memberNo = :memberNo";

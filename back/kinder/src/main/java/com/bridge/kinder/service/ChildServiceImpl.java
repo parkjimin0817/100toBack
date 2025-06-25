@@ -70,6 +70,7 @@ public class ChildServiceImpl implements ChildService {
         return String.valueOf(child.getChildNo());
     }
 
+    //학부모 회원가입 후 마이페이지 아동 연결
     @Override
     public String linkChild(ChildDto.LinkChildRequest dto) throws IOException {
         Member parent = memberRepository.findByParentNo(dto.getMember_no())
@@ -90,8 +91,8 @@ public class ChildServiceImpl implements ChildService {
 
     //반으로 아동목록 불러오기
     @Override
-    public List<ChildDto.Response> findChildrenByClassNo(int class_no) {
-        return childRepository.findByClassNo(class_no).stream()
+    public List<ChildDto.Response> findChildrenByClassNo(int classNo) {
+        return childRepository.findByClassNo(classNo).stream()
                 .map(ChildDto.Response::toDto)
                 .collect(Collectors.toList());
     }

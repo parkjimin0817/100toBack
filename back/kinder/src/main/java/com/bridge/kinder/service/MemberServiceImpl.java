@@ -207,7 +207,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<MemberDto.DetailMemberDto> findDetailedTeachersByCenterNo(int centerNo) {
-        return memberRepository.findDetailedTeachersByCenterNo(centerNo).stream()
+        return memberRepository.findTeacherByCenterNo(centerNo).stream()
                 .map(MemberDto.DetailMemberDto::from)
                 .collect(Collectors.toList());
     }

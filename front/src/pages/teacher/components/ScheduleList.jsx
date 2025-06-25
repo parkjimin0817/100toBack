@@ -12,10 +12,10 @@ const ScheduleList = ({ schedules, emptyMessage = '일정이 없습니다.', onE
   return (
     <>
       {schedules.map((item) => (
-        <Box key={item.id}>
+        <Box key={item.schedule_no}>
           <BoxLeft>
             <BoxTime>
-              {item.start_time} ~ {item.end_time}
+              {item.start_time?.substring(0, 5)} ~ {item.end_time?.substring(0, 5)}
             </BoxTime>
             <BoxSchedule>{item.title}</BoxSchedule>
           </BoxLeft>
