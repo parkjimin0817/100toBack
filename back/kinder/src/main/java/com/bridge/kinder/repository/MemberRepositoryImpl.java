@@ -98,6 +98,8 @@ public class MemberRepositoryImpl implements MemberRepository {
                 .getSingleResult());
     }
 
+
+
     @Override
     public Optional<Member> myPageUpdate(int id, MypageDto.Update dto) {
         String jpql = "UPDATE Member m SET m.memberName = :name, m.memberBirth = :birth WHERE m.memberNo = :memberNo";

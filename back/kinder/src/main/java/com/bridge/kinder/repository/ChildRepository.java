@@ -14,4 +14,6 @@ public interface ChildRepository {
     List<Child> findByClassNo(int classNo);
     //반 별 아동 수
     int countChildByClassroom(int classNo);
+    //센터번호로 아동 불러오기(해당 시설 아이 전체 조회)
+    List<Child> findByCenterNo(int centerNo);
 }

@@ -4,6 +4,7 @@ import ChildImg from '../assets/Child.png';
 import { useNavigate } from 'react-router-dom';
 import { List } from './ChildDummyData';
 import { useState } from 'react';
+import useLoginStore from '../store/loginStore';
 
 // 하드코딩된 예시 데이터
 
@@ -19,6 +20,7 @@ const ChildrenList = ({
   selectedId,
   setSelectedId,
 }) => {
+  const member = useLoginStore((state) => state.member);
   const navigate = useNavigate();
   let list = [...List];
 

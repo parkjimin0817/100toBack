@@ -110,7 +110,7 @@ function App() {
             {/**
              * 시설장
              *
-             * 1. 시설장 마이페이지
+             * 1. 시설장 마이페이지(교사 마이페이지랑 같음 element도 TeacherMyPage로 통일시킴)
              * 2. 시설장 반 배정 페이지
              * 3. 시설장 교사 목록 리스트 페이지
              * 4. 시설장 교사, 회원가입 승인 페이지
@@ -123,7 +123,7 @@ function App() {
              * 9. 시설장 반 목록 / 생성 모달
              *
              *  */}
-            <Route path="/manager/mypage" element={<ManagerMyPage />} />
+            <Route path="/manager/mypage" element={<TeacherMyPage />} />
             <Route path="/manager/classplacement" element={<ClassPlacement />} />
             <Route path="/manager/teacherlist" element={<TeacherList />} />
             <Route path="/approvalList" element={<ApprovalList />} />
