@@ -104,6 +104,7 @@ export const memberService = {
         memberId: data.member_id,
         memberType: data.member_type,
         centerNo: data.center_no,
+        centerTel: data.center_tel,
       };
 
       return camelData;
@@ -116,10 +117,19 @@ export const memberService = {
     }
   },
 
-  //교사 목록 불러오기
+  //교사 간단 목록 불러오기
   teacherlist: async (centerNo) => {
     try {
       const { data } = await api.get(API_ENDPOINTS.MEMBERS.TEACHERLIST(centerNo));
+      return data;
+    } catch (error) {
+      throw new Error('서버 통신 불량: ' + error.message);
+    }
+  },
+  //교사 상세 목록 불러오기
+  teacherDetailList: async (centerNo) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.MEMBERS.TEACHER_DETAIL_LIST(centerNo));
       return data;
     } catch (error) {
       throw new Error('서버 통신 불량: ' + error.message);

@@ -3,6 +3,7 @@ package com.bridge.kinder.service;
 import com.bridge.kinder.dto.CreateManagerDto;
 import com.bridge.kinder.dto.MemberChildDto;
 import com.bridge.kinder.dto.MemberDto;
+import com.bridge.kinder.dto.MemberDto.DetailMemberDto;
 import com.bridge.kinder.dto.MemberTeacherDto;
 import com.bridge.kinder.dto.MypageDto;
 import com.bridge.kinder.entity.*;
@@ -195,12 +196,19 @@ public class MemberServiceImpl implements MemberService {
         return MemberDto.LoginResponse.toDto(member);
     }
 
-    //시설 별 교사 목록 찾기
+    //시설 별 교사 목록 찾기 (for selectbar)
     @Override
     @Transactional(readOnly = true)
-    public List<MemberDto.Response> findTeachersByCenterNo(int centerNo) {
+    public List<MemberDto.SimpleDto> findTeachersByCenterNo(int centerNo) {
         return memberRepository.findTeacherByCenterNo(centerNo).stream()
-                .map(MemberDto.Response::toDto)
+                .map(MemberDto.SimpleDto::from)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MemberDto.DetailMemberDto> findDetailedTeachersByCenterNo(int centerNo) {
+        return memberRepository.findDetailedTeachersByCenterNo(centerNo).stream()
+                .map(MemberDto.DetailMemberDto::from)
                 .collect(Collectors.toList());
     }
 
