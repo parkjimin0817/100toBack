@@ -5,7 +5,7 @@ import styled from 'styled-components';
 // import { media } from '../../styles/MediaQueries';
 import useScheduleStore from '../../store/scheduleStore';
 // import { useDailyScheduleForm } from '../../hook/useDailyScheduleForm';
-import { useSchedule } from '../../api/schedule';
+import { useScheduleService } from '../../api/schedule';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -112,7 +112,7 @@ const DailyScheduleDetail = () => {
     try {
       setThisday(s.allDate);
 
-      const schedule = await useSchedule.searchDate(ad);
+      const schedule = await useScheduleService.searchDate(ad);
       if (!schedule) {
         throw new Error('일과표 없음');
       }

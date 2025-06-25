@@ -159,7 +159,7 @@ export const memberService = {
   },
 
   //아이디 찾기
-  searchId: async (member_name, member_birth) => {
+  searchId: async (memberName, memberPhone) => {
     try {
       const { data } = await api.get(API_ENDPOINTS.MEMBERS.SEARCHID(member_name, member_birth));
       return data;

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import useLoginStore from '../store/loginStore';
 
 const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData }) => {
   const [title, setTitle] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [description, setDescription] = useState('');
+  const { member } = useLoginStore();
 
   useEffect(() => {
     if (initialData) {
@@ -22,6 +24,7 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData }) => {
   }, [initialData]);
 
   const handleSubmit = () => {
+    //데이터 전송
     onClose();
   };
 

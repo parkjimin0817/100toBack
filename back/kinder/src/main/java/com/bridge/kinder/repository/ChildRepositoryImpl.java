@@ -20,6 +20,12 @@ public class ChildRepositoryImpl implements ChildRepository {
         em.persist(child);
     }
 
+    //번호로 아동 찾기
+    @Override
+    public Optional<Child> findByChildNo(int childNo) {
+        return Optional.ofNullable(em.find(Child.class, childNo));
+    }
+
     //주민번호로 아동 찾기
     @Override
     public Optional<Child> findByResidentNo(String residentNo) {

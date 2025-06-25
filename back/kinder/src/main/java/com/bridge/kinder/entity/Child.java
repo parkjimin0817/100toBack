@@ -114,4 +114,11 @@ public class Child {// 아동
         }
     }
 
+
+    //---------------------------------------------------------------------------------------------
+    public void changeChildStatus(CommonEnums.AdmissionStatus newStatus) {
+        this.status = newStatus;
+    }
+
+
 }

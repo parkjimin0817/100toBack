@@ -44,6 +44,8 @@ export const useLoginForm = () => {
         navigator('/teacher/main');
       } else if (memberData.memberType === 'PARENT') {
         navigator('/parent/main');
+      } else if (memberData.memberType === 'ADMIN') {
+        navigator('/approvalListAdmin');
       }
     } catch (err) {
       toast.error('로그인 실패하였습니다.');

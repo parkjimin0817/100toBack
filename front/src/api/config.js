@@ -14,9 +14,9 @@ export const API_CONFIG = {
 
 export const API_ENDPOINTS = {
   SCHEDULES: {
-    BASE: '/schedule',
-    FORDATE: (center_no, class_no, member_no, create_date, type) =>
-      `/schedule?center_no=${center_no}&class_no=${class_no}&member_no=${member_no}&create_date=${create_date}&type=${type}`,
+    BASE: '/api/schedule',
+    CREATE: '/api/schedule/create',
+    LISTS: `/api/schedule/lists`,
   },
   MEMBERS: {
     BASE: '/api/members',
@@ -25,7 +25,7 @@ export const API_ENDPOINTS = {
     PARENTSIGNUP: '/api/members/parent',
     MANAGERSIGNUP: '/api/members/manager',
     LOGIN: `/api/members/login`,
-    Mypage: (memberNo) => `/api/members/mypage?id=${memberNo}`,
+    MYPAGE: (memberNo) => `/api/members/mypage?id=${memberNo}`,
     SEARCHID: `/api/members/searchId`,
     PWDSEARCHID: `/api/members/pwdSearchId`,
     TEACHERLIST: (centerNo) => `/api/members/teacher/select/${centerNo}`,
@@ -33,7 +33,9 @@ export const API_ENDPOINTS = {
   },
   APPLOVALLIST: {
     BASE: 'api/approvalList',
-    PENDINGLIST: (centerNo) => `api/approvalList?centerNo=${centerNo}`,
+    PENDINGLIST: (centerNo) => `api/approval/lists/${centerNo}`,
+    DECISIONMEMBER: `api/approval/decision/member`,
+    DECISIONCHILD: `api/approval/decision/child`,
   },
   CENTERS: {
     BASE: '/api/center',
