@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { memberService } from '../../api/member';
-import useSearchIdStore from '../../store/searchStore';
+import useSearchStore from '../../store/searchStore';
 import { toast } from 'react-toastify';
 
 export const useSearchIdForm = () => {
@@ -23,7 +23,7 @@ export const useSearchIdForm = () => {
 
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { searchId } = useSearchIdStore();
+  const { searchId } = useSearchStore();
 
   useEffect(() => {
     const year = choiceYear.replace('년', '');
@@ -82,9 +82,7 @@ export const useSearchIdForm = () => {
         throw new Error('이름과 생년월일이 잘못되었습니다.');
       }
 
-      searchId({
-        memberId: user.member_id,
-      });
+      searchId(user);
 
       toast.success('아이디 찾기를 성공했습니다.');
       navigator('/findidsuccess');

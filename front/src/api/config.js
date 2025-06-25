@@ -28,6 +28,8 @@ export const API_ENDPOINTS = {
     MYPAGE: (memberNo) => `/api/members/mypage?id=${memberNo}`,
     SEARCHID: `/api/members/searchId`,
     PWDSEARCHID: `/api/members/pwdSearchId`,
+    PHONEACCESS: `/api/members/sendOne`,
+    PWDUPDATE: `/api/members/pwdUpdate`,
     TEACHERLIST: (centerNo) => `/api/members/teacher/select/${centerNo}`,
     TEACHER_DETAIL_LIST: (centerNo) => `/api/members/teacher/list/${centerNo}`,
   },

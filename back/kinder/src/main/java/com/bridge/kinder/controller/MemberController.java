@@ -10,6 +10,7 @@ import com.bridge.kinder.dto.MemberTeacherDto;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -90,8 +91,27 @@ public class MemberController {
         return ResponseEntity.ok(memberNo);
     }
 
+    //멤버 PWD 찾기(아이디)
     @PostMapping("/pwdSearchId")
-    public ResponseEntity<?> pwdSearchId(@RequestBody MemberDto.SearchId dto){
-        return ResponseEntity.ok(null);
+    public ResponseEntity<MemberDto.SearchPwd> pwdSearchId(@RequestBody MemberDto.SearchPwd dto){
+        return ResponseEntity.ok(memberService.pwdSearchId(dto));
+    }
+
+    //전화번호 인증번호
+    @PostMapping("/sendOne")
+    public ResponseEntity<MemberDto.PhoneAccess> PhoneAccess(@RequestBody MemberDto.PhoneAccess dto){
+        try{
+            MemberDto.PhoneAccess resultMsg = memberService.sendingNumberToFindId(dto);
+            return ResponseEntity.ok(resultMsg);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(MemberDto.PhoneAccess.toDto(null, "인증번호 전송에 실패하였습니다."));
+        }
+    }
+
+    //비밀번호 변경
+    @PatchMapping("/pwdUpdate")
+    public ResponseEntity<MemberDto.PwdUpdate> updatePwd(@RequestBody MemberDto.PwdUpdate dto){
+        return ResponseEntity.ok(memberService.updatePwd(dto));
     }
 }

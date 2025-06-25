@@ -43,6 +43,7 @@ const ChildInfoArea = styled.div`
   border-radius: 20px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   margin-top: 20px;
+  padding: ${({ theme }) => theme.spacing[5]};
 `;
 
 const Title = styled.h2`
