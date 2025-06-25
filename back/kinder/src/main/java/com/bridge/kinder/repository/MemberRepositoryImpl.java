@@ -76,13 +76,15 @@ public class MemberRepositoryImpl implements MemberRepository {
     //member_no으로 멤버 찾기
     @Override
     public Optional<Member> findByMemberNo(int memberNo) {
-        String jpql = "SELECT m FROM Member m WHERE m.memberNo = :memberNo";
-        Member member = em.createQuery(jpql, Member.class)
-                .setParameter("memberNo", memberNo)
-                .getResultStream()
-                .findFirst()
-                .orElse(null);
-        return Optional.ofNullable(member);
+//        String jpql = "SELECT m FROM Member m WHERE m.memberNo = :memberNo";
+//        Member member = em.createQuery(jpql, Member.class)
+//                .setParameter("memberNo", memberNo)
+//                .getResultStream()
+//                .findFirst()
+//                .orElse(null);
+//        return Optional.ofNullable(member);
+
+       return Optional.ofNullable(em.find(Member.class, memberNo));
     }
 
     //멤버 ID 찾기(이름, 생년월일
@@ -95,7 +97,8 @@ public class MemberRepositoryImpl implements MemberRepository {
                 .setParameter("memberBirth", memberBirth)
                 .getSingleResult());
     }
-    
+
+
 
     @Override
     public Optional<Member> myPageUpdate(int id, MypageDto.Update dto) {

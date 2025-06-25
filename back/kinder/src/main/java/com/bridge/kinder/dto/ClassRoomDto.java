@@ -46,8 +46,9 @@ public class ClassRoomDto {
         private String class_image;
 
         private String member_name;
+        private int child_count;
 
-        public static Response toDto(ClassRoom classRoom, Member teacher) {
+        public static Response toDto(ClassRoom classRoom, Member teacher, int childCount) {
             return Response.builder()
                     .class_no(classRoom.getClassNo())
                     .class_name(classRoom.getClassName())
@@ -55,6 +56,7 @@ public class ClassRoomDto {
                     .color(classRoom.getColor())
                     .class_image(classRoom.getClassImage())
                     .member_name(teacher != null ? teacher.getMemberName() : "미지정")
+                    .child_count(childCount)
                     .build();
         }
     }
