@@ -105,4 +105,21 @@ public class ChildDto {
                     .build();
         }
     }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class childListResponse {
+        private String child_name;
+        private String class_name;
+
+        public static childListResponse toDto(Child child){
+            return childListResponse.builder()
+                    .child_name(child.getChildName())
+                    .class_name(child.getClassRoom().getClassName())
+                    .build();
+        }
+    }
 }

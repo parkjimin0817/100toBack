@@ -118,6 +118,13 @@ export const memberService = {
 
   //교사 목록 불러오기
   teacherlist: async (centerNo) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.MEMBERS.TEACHERLIST(centerNo));
+      return data;
+    } catch (error) {
+      throw new Error('서버 통신 불량: ' + error.message);
+    }
+  },
 
   //마이페이지
   Mypage: async (memberNo) => {
@@ -136,29 +143,19 @@ export const memberService = {
 
       return camelData;
     } catch (error) {
-      if (error.response) {
-        const errorMessage = error.response.data.message || '정보를 불러오는데 실패했습니다.';
-        throw new Error(errorMessage);
-      }
-      throw new Error('서버와의 통신에 실패했습니다.');
+      const errorMessage = error.response?.data?.message || '정보를 불러오는데 실패했습니다.';
+      throw new Error(errorMessage);
     }
   },
 
   //아이디 찾기
   searchId: async (member_name, member_birth) => {
     try {
-      const { data } = await api.get(API_ENDPOINTS.MEMBERS.TEACHERLIST(centerNo));
+      const { data } = await api.get(API_ENDPOINTS.MEMBERS.SEARCHID(member_name, member_birth));
       return data;
     } catch (error) {
-
-      throw new Error('서버 통신 불량' + error.message);
-
-      if (error.response) {
-        const errorMessage = error.response.data.message || '로그인에 실패했습니다.';
-
-        throw new Error(errorMessage);
-      }
-      throw new Error('서버와의 통신에 실패했습니다.');
+      const errorMessage = error.response?.data?.message || '아이디 찾기에 실패했습니다.';
+      throw new Error(errorMessage);
     }
   },
 };

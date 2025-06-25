@@ -36,4 +36,11 @@ public class ChildRepositoryImpl implements ChildRepository {
                 .setParameter("class_no", class_no)
                 .getResultList();
     }
+
+    @Override
+    public List<Child> findByCenterNo(int centerNo) {
+        return em.createQuery("SELECT c FROM Child c WHERE c.center.centerNo  = :centerNo", Child.class)
+                .setParameter("centerNo", centerNo)
+                .getResultList();
+    }
 }
