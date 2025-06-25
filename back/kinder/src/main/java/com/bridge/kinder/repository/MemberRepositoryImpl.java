@@ -96,6 +96,7 @@ public class MemberRepositoryImpl implements MemberRepository {
                 .getSingleResult());
     }
 
+    //마이페이지 수정
     @Override
     public Optional<Member> myPageUpdate(int id, MypageDto.Update dto) {
         String jpql = "UPDATE Member m SET m.memberName = :name, m.memberBirth = :birth WHERE m.memberNo = :memberNo";

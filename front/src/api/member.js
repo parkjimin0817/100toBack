@@ -122,11 +122,15 @@ export const memberService = {
       const { data } = await api.get(API_ENDPOINTS.MEMBERS.TEACHERLIST(centerNo));
       return data;
     } catch (error) {
+<<<<<<< HEAD
       if (error.response) {
         const errorMessage = error.response.data.message || '교사 목록 불러오기 실패했습니다.';
         throw new Error(errorMessage);
       }
       throw new Error('서버와의 통신에 실패했습니다.');
+=======
+      throw new Error('서버 통신 불량: ' + error.message);
+>>>>>>> 51b2d3c4ea62429cbedc7b28b9f9708f08113ed6
     }
   },
 
@@ -147,28 +151,19 @@ export const memberService = {
 
       return camelData;
     } catch (error) {
-      if (error.response) {
-        const errorMessage = error.response.data.message || '정보를 불러오는데 실패했습니다.';
-        throw new Error(errorMessage);
-      }
-      throw new Error('서버와의 통신에 실패했습니다.');
+      const errorMessage = error.response?.data?.message || '정보를 불러오는데 실패했습니다.';
+      throw new Error(errorMessage);
     }
   },
 
   //아이디 찾기
   searchId: async (memberName, memberPhone) => {
     try {
-      const { data } = await api.post(API_ENDPOINTS.MEMBERS.SEARCHID, {
-        memberName,
-        memberPhone,
-      });
+      const { data } = await api.get(API_ENDPOINTS.MEMBERS.SEARCHID(member_name, member_birth));
       return data;
     } catch (error) {
-      if (error.response) {
-        const errorMessage = error.response.data.message || '아이디 찾기에 실패했습니다.';
-        throw new Error(errorMessage);
-      }
-      throw new Error('서버와의 통신에 실패했습니다.');
+      const errorMessage = error.response?.data?.message || '아이디 찾기에 실패했습니다.';
+      throw new Error(errorMessage);
     }
   },
 };

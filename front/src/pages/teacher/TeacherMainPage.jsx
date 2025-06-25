@@ -28,11 +28,7 @@ const TeacherMainPage = () => {
   const [activeCounselTab, setActiveCounselTab] = useState('상담 대기');
   const { member } = useLoginStore();
 
-  console.log(member.memberName);
-
-  useEffect(() => {
-    console.log('스토어 member:', member);
-  }, [member]);
+  useEffect(() => {}, [member]);
 
   return (
     <Wrapper>

@@ -14,4 +14,6 @@ public interface ChildService {
     String createChild(ChildDto.CreateChild dto) throws IOException;
     //학부모 회원가입 후 마이페이지 아동 연결
     String linkChild(ChildDto.LinkChildRequest dto) throws IOException;
+    //시설장 아동목록 조회(전부)
+    List<ChildDto.childListResponse> managerChildList(int centerNo);
 }

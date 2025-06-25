@@ -1,6 +1,7 @@
 package com.bridge.kinder.service;
 
 import com.bridge.kinder.dto.ChildDto;
+import com.bridge.kinder.dto.ChildDto.childListResponse;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.Member;
@@ -93,6 +94,14 @@ public class ChildServiceImpl implements ChildService {
     public List<ChildDto.Response> findChildrenByClassNo(int classNo) {
         return childRepository.findByClassNo(classNo).stream()
                 .map(ChildDto.Response::toDto)
+                .collect(Collectors.toList());
+    }
+
+    //시설장 아동목록 불러오기(해당 시설의 모든 아동)
+    @Override
+    public List<ChildDto.childListResponse> managerChildList(int centerNo) {
+        return childRepository.findByCenterNo(centerNo).stream()
+                .map(ChildDto.childListResponse::toDto)
                 .collect(Collectors.toList());
     }
 }
