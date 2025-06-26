@@ -43,6 +43,9 @@ import ChildDetail from './pages/teacher/ChildDetail';
 
 import FamilyCommunityPage from './pages/teacher/FamilyCommunityPage';
 import ManagerMyPage from './pages/manager/ManagerMyPage';
+import BoardWritePage from './pages/BoardWritePage';
+import AnnouncementPage from './pages/AnnouncementPage';
+import NoticePage from './pages/NoticePage';
 import ChildLifeCheck from './pages/teacher/ChildLifeCheck';
 import MyHealth from './pages/teacher/MyHealth';
 import MyHealthDetail from './pages/teacher/MyHealthDetail';
@@ -67,6 +70,7 @@ import ErrorPage from './pages/ErrorPage';
 import ParentChildList from './pages/parent/ParentChildList';
 import ClassRoomManage from './pages/manager/ClassRoomManage';
 import ScheduleManager from './pages/manager/SceduleManager';
+import BoardDetailPage from './pages/BoardDetailPage';
 
 function App() {
   return (
@@ -148,6 +152,10 @@ function App() {
              * 7. 아동 상세보기
              * 8. 교사 휴가 관리 페이지
              * 9. 아동 출결 관리 페이지
+             * 10. 공지사항 페이지
+             * 10-1. 목록
+             * 10-2. 작성
+             * 10-3. 상세
              *
              *  */}
             <Route path="/childlist" element={<ChildList />} />
@@ -159,18 +167,37 @@ function App() {
             <Route path="/child/detail/:id" element={<ChildDetail />} />
             <Route path="/teacher/workcation" element={<MyVacation />} />
             <Route path="/childattendance/:id" element={<AttendancePage />} />
+            <Route path="/notice">
+              <Route path="list" element={<AnnouncementPage />} />
+              <Route path="write" element={<BoardWritePage />} />
+              <Route path=':id' element={<BoardDetailPage />} />
+            </Route>
 
             {/**
              * 공용
              *
              * 1. 가정통신문 페이지
+             * 1-1. 게시글 목록 페이지
+             * 1-2. 작성 페이지
              * 2. 아동 건강 리스트 페이지
              * 3. 아동 생활 리스트 페이지
+             * 4. 알림장 페이지
+             * 4-1. 목록
+             * 4-2. 작성
+             * 4-3. 상세
              *
              *  */}
-            <Route path="/familycommunity/list" element={<FamilyCommunityPage />} />
+            <Route path="/family_notice">
+              <Route path="list" element={<FamilyCommunityPage />} />
+              <Route path="write" element={<BoardWritePage />} />
+            </Route>
             <Route path="/child/healthlist" element={<PersonalHealth />} />
             <Route path="/child/lifelist" element={<PersonalLife />} />
+            <Route path="/note">
+              <Route path="list" element={<NoticePage />} />
+              <Route path="write" element={<BoardWritePage />} />
+              <Route path=':id' element={<BoardDetailPage />} />
+            </Route>
           </Route>
 
           {/**
@@ -221,8 +248,7 @@ function App() {
 
           <Route path="*" element={<ErrorPage />} />
 
-          {/* Regist Page */}
-          <Route path="/regist" element={<Home />} />
+          {/* Test Page */}
           <Route path="/home" element={<Home />} />
         </Routes>
       </Router>
