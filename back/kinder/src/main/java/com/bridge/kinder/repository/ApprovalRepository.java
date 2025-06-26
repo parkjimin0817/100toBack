@@ -7,8 +7,10 @@ import java.util.Optional;
 
 public interface ApprovalRepository {
 
-    //승인 대기 리스트
-    List<Approval> findAllApprovals(int centerNo);
+    //시설 승인 대기 리스트
+    List<Approval> findCenterApprovals();
+    //멤버 승인 대기 리스트
+    List<Approval> findMemberApprovals(int centerNo);
     //승인 요청 생성
     void save(Approval approval);
     //승인 요청 검색
