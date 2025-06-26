@@ -22,7 +22,7 @@ public class Schedule {// 일정
     private int scheduleNo;
     //일정 번호
 
-    @Column(name = "ITLE", length = 50, nullable = false)
+    @Column(name = "TITLE", length = 50, nullable = false)
     private String title;
     //제목
 
