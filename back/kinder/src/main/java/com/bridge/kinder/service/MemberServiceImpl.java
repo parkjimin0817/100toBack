@@ -13,11 +13,14 @@ import com.bridge.kinder.dto.MemberDto.updateClass;
 import com.bridge.kinder.dto.MemberTeacherDto;
 import com.bridge.kinder.dto.MypageDto;
 import com.bridge.kinder.entity.*;
+import com.bridge.kinder.enums.CommonEnums;
+import com.bridge.kinder.enums.CommonEnums.AdmissionStatus;
 import com.bridge.kinder.repository.*;
 import com.bridge.kinder.util.SmsUtil;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +31,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -201,6 +205,10 @@ public class MemberServiceImpl implements MemberService {
 
         if(!member.getMemberPwd().equals(memberPwd)) {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+        }
+
+        if(member.getStatus().equals(AdmissionStatus.PENDING) || member.getStatus().equals(AdmissionStatus.REJECTED)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "승인되지 않은 계정입니다.");
         }
 
         return MemberDto.LoginResponse.toDto(member);

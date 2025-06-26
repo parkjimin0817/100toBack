@@ -12,4 +12,10 @@ public interface ScheduleService {
 
     //스케줄 리스트 불러오기
     List<ScheduleDto.ScheduleResponse> getSchedules(int centerNo, int memberNo);
+
+    //스케줄 수정
+    String updateSchedule(ScheduleDto.ScheduleUpdateDto dto);
+
+    //스케줄 삭제
+    void deleteSchedule(int scheduleNo);
 }

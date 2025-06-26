@@ -10,7 +10,6 @@ import useLoginStore from '../../store/loginStore';
 const Layout = () => {
   const { member } = useLoginStore();
   const type = member?.memberType;
-  console.log(type);
 
   return (
     <>

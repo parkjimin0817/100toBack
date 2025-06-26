@@ -78,4 +78,26 @@ public class ScheduleDto {
                     .build();
         }
     }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ScheduleUpdateDto {
+        private int schedule_no;
+        private String title;
+        private String description;
+        private LocalTime start_time;
+        private LocalTime end_time;
+
+        public Schedule toDto(Schedule schedule) {
+            return Schedule.builder()
+                    .scheduleNo(schedule_no)
+                    .title(title)
+                    .description(description)
+                    .startTime(start_time)
+                    .endTime(end_time)
+                    .build();
+        }
+    }
 }
