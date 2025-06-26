@@ -3,6 +3,7 @@ package com.bridge.kinder.service;
 import com.bridge.kinder.dto.ScheduleDto;
 import com.bridge.kinder.dto.ScheduleDto.CreateScheduleDto;
 import com.bridge.kinder.dto.ScheduleDto.ScheduleResponse;
+import com.bridge.kinder.dto.ScheduleDto.ScheduleUpdateDto;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.entity.Schedule;
@@ -11,11 +12,16 @@ import com.bridge.kinder.repository.CenterRepository;
 import com.bridge.kinder.repository.MemberRepository;
 import com.bridge.kinder.repository.ScheduleRepository;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +41,11 @@ public class ScheduleServiceImpl implements ScheduleService {
         Member member = memberRepository.findByMemberNo(dto.getMember_no())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
 
+//        if (dto.getStart_time() != null && dto.getEnd_time() != null &&
+//                dto.getEnd_time().isBefore(dto.getStart_time())) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "종료 시간이 시작 시간보다 빠를 수 없습니다.");
+//        }
+
         Schedule schedule = dto.toEntity(center, member);
 
         scheduleRepository.save(schedule);
@@ -51,13 +62,46 @@ public class ScheduleServiceImpl implements ScheduleService {
         Member member = memberRepository.findByMemberNo(memberNo)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
 
-        return scheduleRepository.findScheduleAll(center.getCenterNo(), member.getMemberNo())
-                .stream()
-                .map(schedule -> ScheduleDto.ScheduleResponse.toDto(
-                        schedule,
-                        schedule.getCenter(),
-                        schedule.getMember()
-                ))
+        List<Schedule> memberSchedules = scheduleRepository.findMemberScheduleAll(center.getCenterNo(), member.getMemberNo());
+
+        List<Schedule> centerSchedules = scheduleRepository.findCenterScheduleAll(center.getCenterNo());
+
+        // scheduleNo 기준 중복 제거
+        Map<Integer, Schedule> uniqueScheduleMap = new LinkedHashMap<>();
+        for (Schedule schedule : memberSchedules) {
+            uniqueScheduleMap.put(schedule.getScheduleNo(), schedule);
+        }
+        for (Schedule schedule : centerSchedules) {
+            uniqueScheduleMap.putIfAbsent(schedule.getScheduleNo(), schedule);
+        }
+
+        return uniqueScheduleMap.values().stream()
+                .map(schedule -> ScheduleResponse.toDto(schedule, schedule.getCenter(), schedule.getMember()))
                 .collect(Collectors.toList());
+    }
+
+    //스케줄 수정
+    @Override
+    public String updateSchedule(ScheduleUpdateDto dto) {
+        Schedule schedule = scheduleRepository.findScheduleByScheduleNo(dto.getSchedule_no());
+
+//        if (dto.getStart_time() != null && dto.getEnd_time() != null &&
+//                dto.getEnd_time().isBefore(dto.getStart_time())) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "종료 시간이 시작 시간보다 빠를 수 없습니다.");
+//        }
+
+        schedule.updateTitle(dto.getTitle());
+        schedule.updateDescription(dto.getDescription());
+        schedule.updateStartTime(dto.getStart_time());
+        schedule.updateEndTime(dto.getEnd_time());
+
+        return dto.toDto(schedule).toString();
+    }
+
+    //스케줄 삭제
+    @Override
+    public void deleteSchedule(int scheduleNo) {
+        Schedule schedule = scheduleRepository.findScheduleByScheduleNo(scheduleNo);
+        scheduleRepository.deleteSchedule(schedule);
     }
 }

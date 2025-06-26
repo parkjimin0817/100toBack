@@ -8,7 +8,9 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +38,19 @@ public class ScheduleController {
                                                                            @RequestParam int memberNo) {
         List<ScheduleDto.ScheduleResponse> response = scheduleService.getSchedules(centerNo, memberNo);
         return ResponseEntity.ok(response);
+    }
+
+    //스케줄 수정하기
+    @PatchMapping("/edit")
+    public ResponseEntity<String> editSchedule(@RequestBody ScheduleDto.ScheduleUpdateDto dto){
+        return ResponseEntity.ok(scheduleService.updateSchedule(dto));
+    }
+
+    //스케줄 삭제하기
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteSchedule(@RequestParam int scheduleNo) {
+        scheduleService.deleteSchedule(scheduleNo);
+        return ResponseEntity.ok().build();
     }
 
 }

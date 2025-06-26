@@ -1,5 +1,7 @@
 import React from 'react'
 import styled from 'styled-components';
+import { FiDownload } from "react-icons/fi";
+import { useLocation, useNavigate } from 'react-router-dom';
 
 /**
  * ? use Props
@@ -21,6 +23,29 @@ import styled from 'styled-components';
  */
 
 const BoardTable = ({ tableInfo, columns, boardData }) => {
+  const navigate = useNavigate();
+  const location = useLocation(); // 현재 URL을 가져옴
+
+  const formatDate = (isoDate) => {
+    if (!isoDate) return '';
+
+    const date = new Date(isoDate);
+
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, '0');
+    const day = `${date.getDate()}`.padStart(2, '0');
+    const hours = `${date.getHours()}`.padStart(2, '0');
+    const minutes = `${date.getMinutes()}`.padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+  };
+
+  const handleRowClick = (boardNo) => {
+    const currentPath = location.pathname;
+    const basePath = currentPath.split('/')[1]; // "notice" 등
+    navigate(`/${basePath}/${boardNo}`);
+  };
+
   return (
     <BoardTableContainer>
       <BoardTHead 
@@ -42,10 +67,16 @@ const BoardTable = ({ tableInfo, columns, boardData }) => {
         $fontSize={tableInfo?.tbFontSize}
       >
         {boardData && boardData.map((row, rowIndex) => (
-          <BoardTR key={rowIndex}>
+          <BoardTR 
+            key={rowIndex}
+            onClick={() => handleRowClick(row.boardNo)}
+          >
             {columns.map(col => (
               <BoardTD>
-                {row[col.key]}
+                {col.key === "attachment" ? <FiDownload /> : 
+                  col.key === "createDate" ? formatDate(row[col.key]) : 
+                  row[col.key]
+                }
               </BoardTD>
             ))}
           </BoardTR>
@@ -88,6 +119,12 @@ const BoardTBody = styled.tbody`
 
 const BoardTR = styled.tr`
   border-bottom: 1px solid #BFBFBF;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+  }
 `;
 
 const BoardTD = styled.td`

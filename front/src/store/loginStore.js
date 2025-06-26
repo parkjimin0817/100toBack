@@ -6,6 +6,7 @@ export const useLoginStore = create(
     (set) => ({
       member: null,
       isAuthenticated: false,
+      attendance: null,
 
       // 로그인
       login: (memberData) => {
@@ -17,11 +18,11 @@ export const useLoginStore = create(
             memberProfile: memberData.memberProfile,
             memberType: memberData.memberType,
             centerNo: memberData.centerNo,
+            classNo: memberData.classNo,
             centerTel: memberData.centerTel,
           },
           isAuthenticated: true,
         });
-        console.log('🧾 로그인된 유저 정보:', useLoginStore.getState().member);
       },
 
       // 로그아웃

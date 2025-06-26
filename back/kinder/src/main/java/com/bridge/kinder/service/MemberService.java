@@ -1,5 +1,6 @@
 package com.bridge.kinder.service;
 
+import com.bridge.kinder.dto.ChildDto;
 import com.bridge.kinder.dto.CreateManagerDto;
 import com.bridge.kinder.dto.MemberChildDto;
 import com.bridge.kinder.dto.MemberDto;
@@ -34,10 +35,22 @@ public interface MemberService {
     List<MemberDto.SimpleDto> findTeachersByCenterNo(int centerNo);
     //교사 목록 (시설별 for 목록페이지)
     List<MemberDto.DetailMemberDto> findDetailedTeachersByCenterNo(int centerNo);
+    //교사 조회
+    MemberDto.DetailMemberDto findTeacherByMemberNo(int memberNo);
 
     //마이페이지
     MemberDto.MyPageResponse getMyInfo(int memberNo);
 
     //마이페이지 수정
     String updateMyPage(int id ,MypageDto.Update dto);
+
+    //시설장 선생 목록 가져오기(시설번호를 받아서)
+    List<MemberDto.teacherListResponse> managerTeacherList(int centerNo);
+
+    //멤버 번호로 멤버 가져오기
+    MemberDto.modalResponse getMember(int member_no);
+
+    //멤버 번호로 반 배정
+    MemberDto.updateClass updateClass(int member_no, int class_no);
+
 }

@@ -16,29 +16,36 @@ public class ApprovalController {
 
     private final ApprovalService approvalService;
 
-    //승인 대기 리스트
-    @GetMapping("/lists/{centerNo}")
-    public ResponseEntity<List<ApprovalDto.MemberApprovalResponse>> getAllApprovals(@PathVariable int centerNo) {
-        List<ApprovalDto.MemberApprovalResponse> response = approvalService.findAllApprovals(centerNo);
+    //시설 승인 대기 리스트
+    @GetMapping("/lists")
+    public ResponseEntity<List<ApprovalDto.CenterApprovalResponse>> getCenterApprovals() {
+        List<ApprovalDto.CenterApprovalResponse> response = approvalService.findCenterApprovals();
         return ResponseEntity.ok(response);
     }
 
-    //시설장,교사,학부모 승인거절 결정
+    //시설장, 시설 승인거절 결정
+    @PatchMapping("/decision/center")
+    public ResponseEntity<String> updateCenterApprovals(@RequestBody ApprovalDto.CenterApprovalUpdate dto) {
+        return ResponseEntity.ok(approvalService.updateCenterApprovals(dto));
+    }
+
+
+    //승인 대기 리스트
+    @GetMapping("/lists/{centerNo}")
+    public ResponseEntity<List<ApprovalDto.MemberApprovalResponse>> getMemberApprovals(@PathVariable int centerNo) {
+        List<ApprovalDto.MemberApprovalResponse> response = approvalService.findMemberApprovals(centerNo);
+        return ResponseEntity.ok(response);
+    }
+
+    //교사,학부모 승인거절 결정
     @PatchMapping("/decision/member")
     public ResponseEntity<String> updateMemberApprovals(@RequestBody ApprovalDto.MemberApprovalUpdate dto) {
-        System.out.println("=== 넘어온 ChildApprovalUpdate 데이터 ===");
-        System.out.println("approval_no: " + dto.getApproval_no());
-        System.out.println("status: " + dto.getStatus());
         return ResponseEntity.ok(approvalService.updateMemberApprovals(dto));
     }
 
     //아동 승인거절 결정
     @PatchMapping("/decision/child")
     public ResponseEntity<String> updateChildApprovals(@RequestBody ApprovalDto.ChildApprovalUpdate dto) {
-        System.out.println("=== 넘어온 ChildApprovalUpdate 데이터 ===");
-        System.out.println("approval_no: " + dto.getApproval_no());
-        System.out.println("status: " + dto.getStatus());
-        System.out.println("child_no: " + dto.getChild_no());
         return ResponseEntity.ok(approvalService.updateChildApprovals(dto));
     }
 

@@ -29,6 +29,8 @@ public class Attendance {// 근태
     //퇴근시간
 
 
+
+
     //---------------------------------------------------------------------------------------------
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CENTER_NO")
@@ -40,10 +42,11 @@ public class Attendance {// 근태
     private Member member;
     //멤버
 
+    //----------------------------------------------------------------------------------------------
 
-    //---------------------------------------------------------------------------------------------
-    @PrePersist
-    protected void onCreate() {
-        this.inTime = LocalDateTime.now();
+    public void updateOutTime(LocalDateTime outTime) {
+        this.outTime = outTime;
     }
+
+
 }

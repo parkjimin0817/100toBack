@@ -17,22 +17,32 @@ const ScheduleTeacher = () => {
   const [selectedDate, setSelectedDate] = useState(dayjs().format('YYYY-MM-DD (ddd)'));
   const { member } = useLoginStore();
   const [data, setData] = useState([]);
+  const [scheduleType, setScheduleType] = useState('');
+
+  const fetchData = async (targetDate = dayjs().format('YYYY-MM-DD')) => {
+    try {
+      const scheduleData = await useScheduleService.getScheduleList(member.centerNo, member.memberNo);
+
+      // 시간 정렬 (null 예외 처리 포함)
+      const sortedData = [...scheduleData].sort((a, b) => a.start_time?.localeCompare(b.start_time));
+
+      setData(sortedData);
+
+      // 선택된 날짜의 일정 필터링
+      const matchedSchedules = sortedData.filter(
+        (item) => dayjs(item.schedule_date).format('YYYY-MM-DD') === targetDate
+      );
+
+      setSelectedSchedules(matchedSchedules);
+      setSelectedDate(dayjs(targetDate).format('YYYY-MM-DD (ddd)'));
+    } catch (error) {
+      console.error('스케줄 데이터 로딩 실패:', error.message);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const scheduleData = await useScheduleService.getScheduleList(member.centerNo, member.memberNo);
-        const sortedData = [...scheduleData].sort((a, b) => a.start_time.localeCompare(b.start_time));
-        setData(sortedData);
-        const today = dayjs().format('YYYY-MM-DD');
-        const todaySchedules = sortedData.filter((item) => dayjs(item.create_date).format('YYYY-MM-DD') === today);
-        setSelectedSchedules(todaySchedules);
-        setSelectedDate(dayjs().format('YYYY-MM-DD (ddd)'));
-      } catch (error) {
-        console.error('스케줄 데이터 로딩 실패:', error.message);
-      }
-    };
     fetchData();
+    handleDateClick(dayjs().format('YYYY-MM-DD'));
   }, []);
 
   //modal
@@ -42,13 +52,24 @@ const ScheduleTeacher = () => {
   const handleDateClick = (date) => {
     const dateStr = dayjs(date).format('YYYY-MM-DD');
     setSelectedDate(dayjs(date).format('YYYY-MM-DD (ddd)'));
-    const matched = data.filter((item) => dayjs(item.create_date).format('YYYY-MM-DD') === dateStr);
+    const matched = data.filter((item) => dayjs(item.schedule_date).format('YYYY-MM-DD') === dateStr);
     setSelectedSchedules(matched);
   };
 
   const handleEditClick = (item) => {
     setEditSchedule(item);
     setOpenModal(true);
+  };
+
+  const handleDeleteClick = async (scheduleNo) => {
+    if (window.confirm('정말로 이 일정을 삭제하시겠습니까?')) {
+      try {
+        await useScheduleService.deleteSchedule(scheduleNo);
+        fetchData(selectedDate.split(' ')[0]);
+      } catch (error) {
+        console.error('일정 삭제 실패:', error.message);
+      }
+    }
   };
 
   return (
@@ -69,7 +90,7 @@ const ScheduleTeacher = () => {
                   {
                     Title: '일정 추가',
                     func: () => {
-                      setOpenModal(true), setEditSchedule(null);
+                      setOpenModal(true), setEditSchedule(null), setScheduleType('MEMBER');
                     },
                   },
                 ]}
@@ -80,6 +101,7 @@ const ScheduleTeacher = () => {
                   <ScheduleList
                     schedules={selectedSchedules.filter((item) => item.type === 'MEMBER')}
                     onEditClick={handleEditClick}
+                    onDeleteClick={handleDeleteClick}
                   />
                 </AreaList>
               </ContentSceduleArea>
@@ -101,6 +123,8 @@ const ScheduleTeacher = () => {
         onClose={() => setOpenModal(false)}
         selectedDate={selectedDate.split(' ')[0]}
         initialData={editSchedule}
+        type={scheduleType}
+        onSuccess={(date) => fetchData(date)}
       />
     </>
   );

@@ -103,12 +103,11 @@ const teacherSidebar = [
     icon: <MdFilterFrames />,
     color: 'green',
     subItems: [
-      { label: '공지사항', link: '*' },
-      { label: '가정통신문', link: '/familycommunity/list' },
-      { label: '식단표', link: '*' },
-      { label: '알림장', link: '*' },
-      { label: '사진 게시판', link: '*' },
-    ],
+      {label : "공지사항", link : "/notice/list"}, 
+      {label : "가정통신문", link : "/family_notice/list"}, 
+      {label : "식단표", link : ""}, 
+      {label : "알림장", link : "/note/list"}, 
+      {label : "사진 게시판", link : ""}],
   },
   {
     id: 'menu4',
@@ -152,7 +151,7 @@ const managerSidebar = [
     icon: <FaRegCalendarAlt />,
     color: 'purple',
     subItems: [
-      { label: '유치원 일정', link: '*' },
+      { label: '유치원 일정', link: '/manager/schedule' },
       { label: '반 별 일과표', link: '/daily' },
       { label: '학부모 상담 일정', link: '*' },
     ],
@@ -164,7 +163,7 @@ const managerSidebar = [
     color: 'green',
     subItems: [
       { label: '공지사항', link: '*' },
-      { label: '가정통신문', link: '/familycommunity/list' },
+      { label: '가정통신문', link: '/family_notice/list' },
       { label: '식단표', link: '*' },
       { label: '알림장', link: '*' },
       { label: '사진 게시판', link: '*' },
@@ -225,7 +224,7 @@ const parentSidebar = [
     color: 'purple',
     subItems: [
       { label: '공지사항', link: '*' },
-      { label: '가정통신문', link: '/familycommunity/list' },
+      { label: '가정통신문', link: '/family_notice/list' },
       { label: '식단표', link: '*' },
       { label: '알림장', link: '*' },
     ],

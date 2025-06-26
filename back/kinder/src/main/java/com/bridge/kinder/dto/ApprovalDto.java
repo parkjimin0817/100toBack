@@ -16,11 +16,32 @@ public class ApprovalDto {
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
+    public static class CenterApprovalUpdate {
+        private int approval_no;
+        private CommonEnums.AdmissionStatus status;
+
+        private int center_no;
+        private int member_no;
+
+        public Approval toDto(Center center, Member member) {
+            return Approval.builder()
+                    .approvalNo(approval_no)
+                    .status(status)
+                    .center(center)
+                    .member(member)
+                    .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class MemberApprovalUpdate{
         private int approval_no;
         private CommonEnums.AdmissionStatus status;
 
-        int member_no;
+        private int member_no;
 
         public Approval toDto(Member member) {
             return Approval.builder()
@@ -39,7 +60,7 @@ public class ApprovalDto {
         private int approval_no;
         private CommonEnums.AdmissionStatus status;
 
-        int child_no;
+        private int child_no;
 
         public Approval toDto(Child child) {
             return Approval.builder()
@@ -48,6 +69,42 @@ public class ApprovalDto {
                     .child(child)
                     .build();
         }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class CenterApprovalResponse{
+        private int approval_no;
+        private LocalDateTime approval_request_date;
+        private CommonEnums.AdmissionStatus status;
+
+        private int center_no;
+        private String center_name;
+        private CommonEnums.CenterType center_type;
+        private String center_tel;
+
+        private int member_no;
+        private String member_name;
+        private CommonEnums.MemberType member_type;
+
+        public static CenterApprovalResponse toDto(Approval approval) {
+            return CenterApprovalResponse.builder()
+                    .approval_no(approval.getApprovalNo())
+                    .approval_request_date(approval.getApprovalRequestDate())
+                    .status(approval.getStatus())
+                    .center_no(approval.getCenter().getCenterNo())
+                    .center_name(approval.getCenter().getCenterName())
+                    .center_type(approval.getCenter().getCenterType())
+                    .center_tel(approval.getCenter().getCenterTel())
+                    .member_no(approval.getMember().getMemberNo())
+                    .member_name(approval.getMember().getMemberName())
+                    .member_type(approval.getMember().getMemberType())
+                    .build();
+        }
+
     }
 
     @Getter

@@ -16,6 +16,7 @@ public class CenterServiceImpl implements CenterService {
 
     private final CenterRepository centerRepository;
 
+    //센터 전체 리스트 불러오기
     @Override
     @Transactional(readOnly = true)
     public List<CenterDto.Response> findAllCenter() {

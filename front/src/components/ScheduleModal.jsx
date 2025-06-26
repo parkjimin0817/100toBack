@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import useLoginStore from '../store/loginStore';
+import { useScheduleService } from '../api/schedule';
+import { toast } from 'react-toastify';
 
-const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData }) => {
+const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData, type, onSuccess }) => {
   const [title, setTitle] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
@@ -10,22 +12,93 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData }) => {
   const { member } = useLoginStore();
 
   useEffect(() => {
-    if (initialData) {
-      setTitle(initialData.title || '');
-      setStartTime(initialData.start_time || '');
-      setEndTime(initialData.end_time || '');
-      setDescription(initialData.description || '');
-    } else {
-      setTitle('');
-      setStartTime('');
-      setEndTime('');
-      setDescription('');
+    if (isOpen) {
+      if (initialData) {
+        setTitle(initialData.title || '');
+        setStartTime(initialData.start_time || '');
+        setEndTime(initialData.end_time || '');
+        setDescription(initialData.description || '');
+      } else {
+        setTitle('');
+        setStartTime('');
+        setEndTime('');
+        setDescription('');
+      }
     }
-  }, [initialData]);
+  }, [isOpen, initialData]);
 
-  const handleSubmit = () => {
-    //데이터 전송
-    onClose();
+  const handleAddSubmit = async () => {
+    if (!title) {
+      toast.error('제목을 입력해주세요.');
+      return;
+    } else if (!startTime || !endTime) {
+      toast.error('시작 시간과 종료 시간을 입력해주세요.');
+      return;
+    }
+    if (startTime && endTime && startTime >= endTime) {
+      toast.error('시작 시간은 종료 시간보다 이전이어야 합니다.');
+      return;
+    }
+
+    const mergedData = {
+      centerNo: member.centerNo,
+      memberNo: member.memberNo,
+      title,
+      description,
+      selectedDate,
+      startTime,
+      endTime,
+      type,
+    };
+
+    try {
+      await useScheduleService.createSchedule(mergedData);
+      toast.success('일정이 등록되었습니다.');
+      onClose();
+
+      if (onSuccess) {
+        onSuccess(selectedDate);
+      }
+    } catch (error) {
+      console.error('일정 등록 실패:', error.message);
+      toast.error('일정 등록 중 오류가 발생했습니다.');
+    }
+  };
+
+  const handleUpdateSubmit = () => {
+    if (!title) {
+      toast.error('제목을 입력해주세요.');
+      return;
+    } else if (!startTime || !endTime) {
+      toast.error('시작 시간과 종료 시간을 입력해주세요.');
+      return;
+    }
+    if (startTime && endTime && startTime >= endTime) {
+      toast.error('시작 시간은 종료 시간보다 이전이어야 합니다.');
+      return;
+    }
+
+    const mergedData = {
+      scheduleNo: initialData.schedule_no,
+      title,
+      description,
+      startTime,
+      endTime,
+    };
+
+    useScheduleService
+      .updateSchedule(mergedData)
+      .then(() => {
+        toast.success('일정이 수정되었습니다.');
+        onClose();
+        if (onSuccess) {
+          onSuccess(selectedDate);
+        }
+      })
+      .catch((error) => {
+        console.error('일정 수정 실패:', error.message);
+        toast.error('일정 수정 중 오류가 발생했습니다.');
+      });
   };
 
   if (!isOpen) return null;
@@ -56,9 +129,9 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData }) => {
                   <Span>시간 :</Span>
                 </InfoTimeLeft>
                 <InfoTimeRight>
-                  <TimeInput value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+                  <TimeInput type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
                   <Span>-</Span>
-                  <TimeInput value={endTime} onChange={(e) => setEndTime(e.target.value)} />
+                  <TimeInput type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
                 </InfoTimeRight>
               </ModalInfoTime>
             </ModalInfo>
@@ -76,11 +149,11 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData }) => {
         </ModalContent>
         <ModalFooter>
           {initialData ? (
-            <Button className="edit" onClick={handleSubmit}>
+            <Button className="edit" onClick={handleUpdateSubmit}>
               수정
             </Button>
           ) : (
-            <Button className="add" onClick={handleSubmit}>
+            <Button className="add" onClick={handleAddSubmit}>
               등록
             </Button>
           )}

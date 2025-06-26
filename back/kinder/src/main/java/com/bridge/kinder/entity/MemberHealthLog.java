@@ -47,4 +47,11 @@ public class MemberHealthLog {// 멤버 건강 기록
     private Member member;
     //멤버
 
+
+    //---------------------------------------------------------------------------------------------
+    @PrePersist
+    protected void onCreate() {
+        createDate = LocalDateTime.now();
+    }
+
 }

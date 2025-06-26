@@ -94,4 +94,10 @@ public class Center {// 시설
         }
     }
 
+
+    //---------------------------------------------------------------------------------------------
+    public void changeCenterStatus(CommonEnums.AdmissionStatus newStatus) {
+        this.status = newStatus;
+    }
+
 }

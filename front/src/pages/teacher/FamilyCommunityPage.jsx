@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import BoardTable from '../../components/Board/BoardTable';
 import theme from "../../styles/theme";
 import ContentHeader from '../../components/Common/ContentHeader';
+import { useNavigate } from 'react-router-dom';
 
 const columns = [
   {
@@ -52,6 +53,8 @@ const tableInfo = {
 }
 
 const FamilyCommunityPage = () => {
+  const navigate = useNavigate();
+
   return (
     <PageContainer>
       <ContentHeader
@@ -59,7 +62,11 @@ const FamilyCommunityPage = () => {
         Color={'green'}
         // 교사면 버튼 추가, 학부모면 없음.
         ButtonProps={[
-          { Title: '작성하기', func: () => alert('작성하기 페이지 이동~') },
+          { Title: '작성하기', 
+            func: () => {
+              navigate("/familycommunity/write", { state: { category: "familycommunity" }, })
+            } 
+          },
         ]}
       ></ContentHeader>
       <BoardContainer>

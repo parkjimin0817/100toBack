@@ -1,18 +1,26 @@
 package com.bridge.kinder.service;
 
+import com.bridge.kinder.dto.ChildDto;
 import com.bridge.kinder.dto.CreateManagerDto;
 import com.bridge.kinder.dto.MemberChildDto;
 import com.bridge.kinder.dto.MemberDto;
 import com.bridge.kinder.dto.MemberDto.PhoneAccess;
 import com.bridge.kinder.dto.MemberDto.PwdUpdate;
 import com.bridge.kinder.dto.MemberDto.DetailMemberDto;
+import com.bridge.kinder.dto.MemberDto.modalResponse;
+import com.bridge.kinder.dto.MemberDto.teacherListResponse;
+import com.bridge.kinder.dto.MemberDto.updateClass;
 import com.bridge.kinder.dto.MemberTeacherDto;
 import com.bridge.kinder.dto.MypageDto;
 import com.bridge.kinder.entity.*;
+import com.bridge.kinder.enums.CommonEnums;
+import com.bridge.kinder.enums.CommonEnums.AdmissionStatus;
 import com.bridge.kinder.repository.*;
 import com.bridge.kinder.util.SmsUtil;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +31,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +57,7 @@ public class MemberServiceImpl implements MemberService {
     public String createManager(CreateManagerDto dto) throws IOException {
         Center center = dto.getCenter().toEntity();
         Center savedCenter = centerRepository.save(center);
+        System.out.println(savedCenter);
 
         String originName = null;
         String profilePath = null;
@@ -198,6 +208,10 @@ public class MemberServiceImpl implements MemberService {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
 
+        if(member.getStatus().equals(AdmissionStatus.PENDING) || member.getStatus().equals(AdmissionStatus.REJECTED)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "승인되지 않은 계정입니다.");
+        }
+
         return MemberDto.LoginResponse.toDto(member);
     }
 
@@ -210,11 +224,21 @@ public class MemberServiceImpl implements MemberService {
                 .collect(Collectors.toList());
     }
 
+    //시설 별 교사 목록 (목록 페이지)
     @Override
     public List<MemberDto.DetailMemberDto> findDetailedTeachersByCenterNo(int centerNo) {
         return memberRepository.findTeacherByCenterNo(centerNo).stream()
                 .map(MemberDto.DetailMemberDto::from)
                 .collect(Collectors.toList());
+    }
+
+    //memberNo으로 교사 조회
+    @Override
+    public MemberDto.DetailMemberDto findTeacherByMemberNo(int memberNo) {
+        Member member =  memberRepository.findMemberByMemberNo(memberNo)
+                .orElseThrow(() -> new RuntimeException("해당 교사가 존재하지 않습니다."));
+
+        return MemberDto.DetailMemberDto.from(member);
     }
 
     //멤버 ID 찾기(이름, 생년월일)
@@ -279,5 +303,26 @@ public class MemberServiceImpl implements MemberService {
             member.changeMemberPwd(dto.getMember_pwd());
             return MemberDto.PwdUpdate.toDto("비밀번호를 성공적으로 변경하였습니다.");
         }
+    }
+
+    @Override
+    public List<MemberDto.teacherListResponse> managerTeacherList(int centerNo) {
+        return memberRepository.findByCenterNo(centerNo).stream()
+                .map(MemberDto.teacherListResponse::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public MemberDto.modalResponse getMember(int member_no) {
+        Member member = memberRepository.getByMemberNo(member_no)
+                .orElseThrow(() -> new EntityNotFoundException("해당 멤버가 존재하지 않습니다."));
+        return MemberDto.modalResponse.toDto(member);
+    }
+
+    @Override
+    public updateClass updateClass(int member_no, int class_no) {
+        Member member = memberRepository.updateClass(member_no,class_no)
+                .orElseThrow(() -> new EntityNotFoundException("정상적으로 수정되지 않았습니다."));
+        return MemberDto.updateClass.toDto(member);
     }
 }

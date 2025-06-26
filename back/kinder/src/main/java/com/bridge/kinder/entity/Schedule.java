@@ -1,5 +1,6 @@
 package com.bridge.kinder.entity;
 
+import com.bridge.kinder.dto.ScheduleDto;
 import com.bridge.kinder.enums.CommonEnums;
 import jakarta.persistence.*;
 import java.time.LocalDate;
@@ -22,7 +23,7 @@ public class Schedule {// 일정
     private int scheduleNo;
     //일정 번호
 
-    @Column(name = "ITLE", length = 50, nullable = false)
+    @Column(name = "TITLE", length = 50, nullable = false)
     private String title;
     //제목
 
@@ -74,4 +75,28 @@ public class Schedule {// 일정
     protected void onCreate() {
         this.createDate = LocalDateTime.now();
     }
+
+
+    //---------------------------------------------------------------------------------------------
+    public void updateTitle(String title) {
+        if(title != null && !title.isEmpty()) {
+            this.title = title;
+        }
+    }
+    public void updateDescription(String description) {
+        if(description != null && !description.isEmpty()) {
+            this.description = description;
+        }
+    }
+    public void updateStartTime(LocalTime startTime) {
+        if(startTime != null) {
+            this.startTime = startTime;
+        }
+    }
+    public void updateEndTime(LocalTime endTime) {
+        if(endTime != null) {
+            this.endTime = endTime;
+        }
+    }
+
 }

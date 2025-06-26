@@ -1,6 +1,7 @@
 package com.bridge.kinder.repository;
 
 import com.bridge.kinder.dto.MypageDto;
+import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.enums.CommonEnums;
 import jakarta.persistence.EntityManager;
@@ -63,6 +64,17 @@ public class MemberRepositoryImpl implements MemberRepository {
         return Optional.ofNullable(member);
     }
 
+    @Override
+    public Optional<Member> findMemberByMemberNo(int memberNo) {
+        String jpql = "SELECT m FROM Member m WHERE m.memberNo = :memberNo";
+        Member member = em.createQuery(jpql, Member.class)
+                .setParameter("memberNo", memberNo)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+        return Optional.ofNullable(member);
+    }
+
     //시설 별 교사 불러오기 (for 셀렉트바 / 간단)
     @Override
     public List<Member> findTeacherByCenterNo(int centerNo) {
@@ -89,6 +101,7 @@ public class MemberRepositoryImpl implements MemberRepository {
                 .setParameter("memberBirth", memberBirth)
                 .getSingleResult());
     }
+
 
     //멤버 PWD 찾기(아이디)
     @Override
@@ -124,6 +137,45 @@ public class MemberRepositoryImpl implements MemberRepository {
             Member member = em.createQuery(
                             "SELECT m FROM Member m WHERE m.memberNo = :memberNo", Member.class)
                     .setParameter("memberNo", String.valueOf(id))
+                    .getSingleResult();
+            return Optional.of(member);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public List<Member> findByCenterNo(int centerNo) {
+        return em.createQuery(
+                        "SELECT m FROM Member m WHERE m.center.centerNo = :centerNo AND m.memberType = :memberType",
+                        Member.class)
+                .setParameter("centerNo", centerNo)
+                .setParameter("memberType", CommonEnums.MemberType.TEACHER)
+                .getResultList();
+    }
+
+    //멤버 번호로 멤버 찾기
+    @Override
+    public Optional<Member> getByMemberNo(int member_no) {
+        Member member = em.createQuery("SELECT m FROM Member m WHERE m.memberNo = :member_no", Member.class)
+                .setParameter("member_no", member_no)
+                .getSingleResult();
+        return Optional.ofNullable(member);
+    }
+
+    //멤버번호와 반 번호로 반 수정(시설장)
+    @Override
+    public Optional<Member> updateClass(int member_no, int class_no) {
+        String jpql = "UPDATE Member m SET m.classRoom.classNo = :class_no WHERE m.memberNo = :member_no";
+        int updated = em.createQuery(jpql)
+                .setParameter("class_no", class_no)
+                .setParameter("member_no", member_no)
+                .executeUpdate();
+        // JPQL UPDATE는 반환값이 없음 → 다시 조회해서 Optional로 감싸야 함
+        if (updated > 0) {
+            Member member = em.createQuery(
+                            "SELECT m FROM Member m WHERE m.memberNo = :member_no", Member.class)
+                    .setParameter("member_no", member_no)
                     .getSingleResult();
             return Optional.of(member);
         } else {

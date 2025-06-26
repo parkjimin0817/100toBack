@@ -2,6 +2,7 @@ package com.bridge.kinder.repository;
 
 import com.bridge.kinder.entity.Approval;
 import com.bridge.kinder.enums.CommonEnums;
+import com.bridge.kinder.enums.CommonEnums.AdmissionStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
@@ -15,9 +16,22 @@ public class ApprovalRepositoryImpl implements ApprovalRepository {
     @PersistenceContext
     EntityManager em;
 
+    @Override
+    public List<Approval> findCenterApprovals() {
+        return em.createQuery(
+                        "SELECT a FROM Approval a " +
+                                "WHERE a.center.status = :centerStatus " +
+                                "AND a.member.status = :memberStatus " +
+                                "AND a.status = :status", Approval.class)
+                .setParameter("centerStatus", AdmissionStatus.PENDING)
+                .setParameter("memberStatus", AdmissionStatus.PENDING)
+                .setParameter("status", CommonEnums.AdmissionStatus.PENDING)
+                .getResultList();
+    }
+
     //승인 대기 리스트
     @Override
-    public List<Approval> findAllApprovals(int centerNo) {
+    public List<Approval> findMemberApprovals(int centerNo) {
         return em.createQuery(
                         "SELECT a FROM Approval a " +
                                 "WHERE a.center.centerNo = :centerNo " +
