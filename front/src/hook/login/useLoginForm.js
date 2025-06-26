@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { useLoginStore } from '../../store/loginStore';
 import { memberService } from '../../api/member';
 import { toast } from 'react-toastify';
+import { attendanceService } from '../../api/attendance';
+import useAttendanceStore from '../../store/attendanceStore';
 
 const loginSchema = yup.object().shape({
   memberId: yup.string().required('아이디를 입력해주세요.'),
@@ -18,6 +20,7 @@ export const useLoginForm = () => {
   const { login } = useLoginStore();
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { setAttendance } = useAttendanceStore();
 
   const {
     register,
@@ -41,6 +44,9 @@ export const useLoginForm = () => {
       if (memberData.memberType === 'MANAGER') {
         navigator('/teacher/main');
       } else if (memberData.memberType === 'TEACHER') {
+        //교사용 오늘 출퇴근 기록
+        const attendance = await attendanceService.getTodayAttendance(memberData.memberNo);
+        setAttendance(attendance);
         navigator('/teacher/main');
       } else if (memberData.memberType === 'PARENT') {
         navigator('/parent/main');

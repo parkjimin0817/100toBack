@@ -5,6 +5,8 @@ import userProfile from '../../assets/img/userProfile.png';
 import { IoCallOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import useLoginStore from '../../store/loginStore';
+import AttendanceButton from './AttendanceButton';
+import useAttendanceStore from '../../store/attendanceStore';
 
 const Header = ({ member }) => {
   //헤더 정보
@@ -36,10 +38,12 @@ const Header = ({ member }) => {
 
   //로그아웃
   const logout = useLoginStore((state) => state.logout);
+  const resetAttendance = useAttendanceStore((state) => state.resetAttendance);
   const handleLogout = () => {
     navigate('/');
     setTimeout(() => {
       logout();
+      resetAttendance();
     }, 500);
   };
 
@@ -53,11 +57,7 @@ const Header = ({ member }) => {
         <p>{centerTel}</p>
       </HeaderLeftBox>
       <HeaderRightBox>
-        {type === '교사' && (
-          <AttendanceBox>
-            <AttendanceButton>출근</AttendanceButton>
-          </AttendanceBox>
-        )}
+        {type === '교사' && <AttendanceButton member={member} />}
         <UserProfile ref={dropdownRef} onClick={() => setIsOpen(!isOpen)}>
           <Img src={userProfile} alt="사용자 프로필" />
           <UserNameAndRole>
@@ -147,24 +147,6 @@ const DropdownItem = styled.div`
 `;
 
 const Img = styled.img`
-  cursor: pointer;
-`;
-
-const AttendanceBox = styled.div`
-  border: 1px solid black;
-  margin: 0 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const AttendanceButton = styled.div`
-  background-color: ${({ theme }) => theme.colors.green};
-  width: 50px;
-  border-radius: ${({ theme }) => theme.spacing[2]};
-  color: ${({ theme }) => theme.colors.white};
-  font-size: ${({ theme }) => theme.fontSizes.base};
-  font-weight: ${({ theme }) => theme.fontWeights.bold};
   cursor: pointer;
 `;
 
