@@ -55,4 +55,9 @@ export const API_ENDPOINTS = {
     //시설장이 교사 별 근태 조회
     TEACHERATTENDANCE: (memberNo) => `/api/attendance/teacher/${memberNo}`,
   },
+  CHILDS: {
+    BASE: '/api/childs',
+    GETALL: '/api/childs/all',
+    GET: '/api/childs/get',
+  },
 };

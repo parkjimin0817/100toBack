@@ -17,6 +17,7 @@ export const useLoginStore = create(
             memberProfile: memberData.memberProfile,
             memberType: memberData.memberType,
             centerNo: memberData.centerNo,
+            classNo: memberData.classNo,
             centerTel: memberData.centerTel,
           },
           isAuthenticated: true,
