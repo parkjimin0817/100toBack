@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from "react-router-dom";
 import BoardEditor from '../components/Board/BoardEditor';
 import ContentHeader from '../components/Common/ContentHeader';
 import styled from 'styled-components';
 import BoardDetail from '../components/Board/BoardDetail';
 import content from "../components/Board/content.json";
+import { boardService } from '../api/boards';
 
 const categoryName = {
   letterhome : "가정통신문",
@@ -19,6 +20,23 @@ const BoardDetailPage = () => {
   const location = useLocation();
   const pathSegments = location.pathname.split("/").filter(Boolean);
   const category = pathSegments[0]; // 현재 들어온 게시판 확인 가능.
+  const boardNo = pathSegments[1];
+  const [boardContent, setBoardContent] = useState(null);
+
+  useEffect(() => {
+      const getPost = async () => {
+        try {
+          const responseData = await boardService.boardDetail(boardNo);
+          console.log(responseData);
+          setBoardContent(responseData);
+          // alert("게시글 조회 성공");
+        } catch (error) {
+          console.error("게시글 조회 실패 : ", error);
+          alert("게시글 조회 실패");
+        }
+      }
+      getPost();
+    }, [boardNo]);
 
   // 상태관리 : 수정중인가 아닌가, 수정중이라면, PostEditor를 보이게하며, 수정 페이지로.
 
@@ -36,8 +54,9 @@ const BoardDetailPage = () => {
       {/* 공통 에디터 컴포넌트 */}
       {/* <BoardEditor category={category} /> */}
 
-      {/* 더미데이터를 사용했으므로, 추후 수정해야함. */}
-      <BoardDetail category={content.Post[1].type} post={content.Post[1]}></BoardDetail>
+      {boardContent && (
+        <BoardDetail category={category} post={boardContent}></BoardDetail>
+      )}
     </PageContainer>
   );
 }
