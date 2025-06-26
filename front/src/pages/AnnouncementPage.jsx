@@ -1,43 +1,44 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import BoardTable from '../components/Board/BoardTable';
 import theme from "../styles/theme";
 import ContentHeader from '../components/Common/ContentHeader';
 import { useNavigate } from 'react-router-dom';
+import { boardService } from '../api/boards';
+import Pagination from '../components/Common/Pagenation';
 
 const columns = [
   {
     label: '번호',
-    key: 'id',
+    key: 'boardNo',
     width: '100px',
     align: 'center'
   },
   {
     label: '파일',
-    key: 'file',
+    key: 'attachment',
     width: '120px',
   },
   {
-    label: '등록자',
-    key: 'writer',
+    label: '작성자',
+    key: 'writerName',
     width: '120px',
   },
   {
     label: '제목',
     key: 'title',
+    width: "100%",
   },
   {
-    label: '생성 날짜',
-    key: 'created_Date',
+    label: '작성일',
+    key: 'createDate',
     width: '160px',
   },
-];
-
-const BoardData = [
-  { id : 1, title : "[공지사항] 6월1주차", writer : "정형일", file: "", created_Date : "2025-06-03"},
-  { id : 2, title : "[공지사항] 6월2주차", writer : "정형일", file: "", created_Date : "2025-06-10"},
-  { id : 3, title : "[공지사항] 6월3주차", writer : "정형일", file: "", created_Date : "2025-06-17"},
-  { id : 4, title : "[공지사항] 6월4주차", writer : "정형일", file: "", created_Date : "2025-06-24"},
+  {
+    label: '조회수',
+    key: "views",
+    width: "100px",
+  }
 ];
 
 const tableInfo = {
@@ -48,7 +49,28 @@ const tableInfo = {
 }
 
 const AnnouncementPage = () => {
+  const [data, setData] = useState(null);
+  const [page, setPage] = useState(1); // 1부터 시작
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const getPostList = async () => {
+      try {
+        const responseData = await boardService.typeBoardList("NOTICE", page);
+        console.log(responseData);
+        setData(responseData);
+        // alert("게시글 조회 성공");
+      } catch (error) {
+        console.error("게시글 조회 실패 : ", error);
+        alert("게시글 조회 실패");
+      }
+    }
+    getPostList();
+  }, [page]);
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
 
   return (
     <PageContainer>
@@ -59,18 +81,27 @@ const AnnouncementPage = () => {
         ButtonProps={[
           { Title: '작성하기', 
             func: () => {
-              navigate("/announcement/write", { state: { category: "announcement" }, })
+              navigate("/notice/write", { state: { category: "notice" }, })
             } 
           },
         ]}
       ></ContentHeader>
-      <BoardContainer>
-        <BoardTable 
-          tableInfo={tableInfo}
-          columns={columns}
-          boardData={BoardData}
+      {data && (
+        <BoardContainer>
+          <BoardTable 
+            tableInfo={tableInfo}
+            columns={columns}
+            boardData={data.content}
+          />
+        </BoardContainer>
+      )}
+      {data && (
+        <Pagination
+          currentPage={data.number + 1}
+          totalPages={data.totalPages}
+          onPageChange={handlePageChange}
         />
-      </BoardContainer>
+      )}
     </PageContainer>
   )
 }
