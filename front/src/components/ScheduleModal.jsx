@@ -28,6 +28,18 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData, type, onSuc
   }, [isOpen, initialData]);
 
   const handleAddSubmit = async () => {
+    if (!title) {
+      toast.error('제목을 입력해주세요.');
+      return;
+    } else if (!startTime || !endTime) {
+      toast.error('시작 시간과 종료 시간을 입력해주세요.');
+      return;
+    }
+    if (startTime && endTime && startTime >= endTime) {
+      toast.error('시작 시간은 종료 시간보다 이전이어야 합니다.');
+      return;
+    }
+
     const mergedData = {
       centerNo: member.centerNo,
       memberNo: member.memberNo,
@@ -54,6 +66,18 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData, type, onSuc
   };
 
   const handleUpdateSubmit = () => {
+    if (!title) {
+      toast.error('제목을 입력해주세요.');
+      return;
+    } else if (!startTime || !endTime) {
+      toast.error('시작 시간과 종료 시간을 입력해주세요.');
+      return;
+    }
+    if (startTime && endTime && startTime >= endTime) {
+      toast.error('시작 시간은 종료 시간보다 이전이어야 합니다.');
+      return;
+    }
+
     const mergedData = {
       scheduleNo: initialData.schedule_no,
       title,
@@ -105,9 +129,9 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData, type, onSuc
                   <Span>시간 :</Span>
                 </InfoTimeLeft>
                 <InfoTimeRight>
-                  <TimeInput value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+                  <TimeInput type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
                   <Span>-</Span>
-                  <TimeInput value={endTime} onChange={(e) => setEndTime(e.target.value)} />
+                  <TimeInput type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
                 </InfoTimeRight>
               </ModalInfoTime>
             </ModalInfo>

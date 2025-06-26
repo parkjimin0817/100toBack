@@ -9,11 +9,10 @@ import { toast } from 'react-toastify';
 
 const ApprovalListAdmin = () => {
   const [dataAll, setDataAll] = useState([]);
-  const { member } = useLoginStore();
 
   const fetchPendingList = async () => {
     try {
-      const data = await approvalListService.getPendingList(member.centerNo);
+      const data = await approvalListService.getCenterPendingList();
       data.forEach((item) => {
         switch (item.center_type) {
           case 'DAYCARE':
@@ -42,11 +41,10 @@ const ApprovalListAdmin = () => {
     fetchPendingList();
   }, []);
 
-  const managerList = dataAll.filter((item) => item.member_type === 'MANAGER' && item.status === 'PENDING');
-
   const handleApprovalAction = async (item, status) => {
+    console.log(item, status);
     try {
-      await approvalListService.updateMemberApprovalStatus(item.approval_no, status, item.member_no);
+      await approvalListService.updateCenterApprovalStatus(item.approval_no, status, item.center_no, item.member_no);
 
       toast.success(`${status === 'APPROVED' ? '승인' : '거절'} 처리되었습니다.`);
       fetchPendingList();
@@ -84,7 +82,7 @@ const ApprovalListAdmin = () => {
               </tr>
             </thead>
             <tbody>
-              {managerList.map((item, index) => (
+              {dataAll.map((item, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{item.center_name}</td>
