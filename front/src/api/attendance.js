@@ -51,10 +51,10 @@ export const attendanceService = {
       throw new Error('서버 통신 불량' + error.message);
     }
   },
-  //교사 근태 목록 불러오기 (시설장)
-  teacherAttendance: async (memberNo) => {
+  //교사 근태 달별 목록 불러오기 (시설장)
+  teacherAttendance: async (memberNo, year, month) => {
     try {
-      const { data } = await api.get(API_ENDPOINTS.ATTENDANCE.TEACHERATTENDANCE(memberNo));
+      const { data } = await api.get(API_ENDPOINTS.ATTENDANCE.TEACHERATTENDANCE(memberNo, year, month));
       return data;
     } catch (error) {
       throw new Error('서버 통신 불량: ' + error.message);

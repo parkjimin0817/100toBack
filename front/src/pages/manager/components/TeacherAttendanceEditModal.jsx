@@ -1,7 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const TeacherAttendanceEditModal = ({ onClose, onEdit }) => {
+const TeacherAttendanceEditModal = ({ onClose, onEdit, status, attendance }) => {
+  //출퇴근 시간
+  const inTime = attendance?.in_time
+    ? new Date(attendance.in_time).toLocaleTimeString('ko-KR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      })
+    : '-';
+  const outTime = attendance?.out_time
+    ? new Date(attendance.out_time).toLocaleTimeString('ko-KR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      })
+    : '-';
+
   return (
     <Overlay onClick={onClose}>
       <Card onClick={(e) => e.stopPropagation()}>
@@ -15,21 +31,20 @@ const TeacherAttendanceEditModal = ({ onClose, onEdit }) => {
           >
             <Label>
               상태:
-              <Select name="status">
+              <Select name="status" value={status}>
                 <option value="출근">출근</option>
                 <option value="결근">결근</option>
-                <option value="지각">지각</option>
               </Select>
             </Label>
             <br />
             <Label>
               출근시간:
-              <Input type="time" name="startTime" defaultValue="09:00" onChange={(e) => e.target.blur()} />
+              <Input type="time" name="startTime" value={inTime} onChange={(e) => e.target.blur()} />
             </Label>
             <br />
             <Label>
               퇴근시간:
-              <Input type="time" name="endTime" defaultValue="18:00" onChange={(e) => e.target.blur()} />
+              <Input type="time" name="endTime" value={outTime} onChange={(e) => e.target.blur()} />
             </Label>
             <br />
             <ButtonGroup>

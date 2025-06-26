@@ -3,6 +3,7 @@ package com.bridge.kinder.dto;
 import com.bridge.kinder.dto.ChildDto.modalResponse;
 import com.bridge.kinder.dto.ChildDto.updateClass;
 import com.bridge.kinder.entity.Center;
+import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.enums.CommonEnums;
@@ -117,17 +118,21 @@ public class MemberDto {
     public static class DetailMemberDto {
         private int member_no;
         private String member_name;
+        private String member_profile;
         private int center_no;
-        private int class_no;
+        private Integer class_no;
         private String class_name;
 
         public static DetailMemberDto from(Member member) {
+            ClassRoom classRoom = member.getClassRoom();
+
             return DetailMemberDto.builder()
                     .member_no(member.getMemberNo())
                     .member_name(member.getMemberName())
+                    .member_profile(member.getMemberProfile())
                     .center_no(member.getCenter().getCenterNo())
-                    .class_no(member.getClassRoom().getClassNo())
-                    .class_name(member.getClassRoom().getClassName())
+                    .class_no(classRoom != null ? member.getClassRoom().getClassNo() : null)
+                    .class_name(classRoom != null ? member.getClassRoom().getClassName() : "미배정")
                     .build();
         }
     }

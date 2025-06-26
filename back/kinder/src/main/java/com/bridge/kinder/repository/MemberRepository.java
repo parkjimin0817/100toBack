@@ -29,12 +29,14 @@ public interface MemberRepository  {
 
     //시설별 교사 목록(for셀렉트바 / 간단)
     List<Member> findTeacherByCenterNo(int centerNo);
+    //클래스no으로 담당 교사 찾기
+    Optional<Member> findTeacherByClassNo(int classNo);
+    //memberNo으로 교사 찾기
+    Optional<Member> findMemberByMemberNo(int memberNo);
 
     //멤버no으로 한명 찾기
     Optional<Member> findByMemberNo(int memberNo);
 
-    //클래스no으로 담당 교사 찾기
-    Optional<Member> findTeacherByClassNo(int classNo);
 
     //마이페이지 정보 수정
     Optional<Member> myPageUpdate(int id, MypageDto.Update dto);

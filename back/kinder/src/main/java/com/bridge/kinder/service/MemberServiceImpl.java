@@ -224,11 +224,21 @@ public class MemberServiceImpl implements MemberService {
                 .collect(Collectors.toList());
     }
 
+    //시설 별 교사 목록 (목록 페이지)
     @Override
     public List<MemberDto.DetailMemberDto> findDetailedTeachersByCenterNo(int centerNo) {
         return memberRepository.findTeacherByCenterNo(centerNo).stream()
                 .map(MemberDto.DetailMemberDto::from)
                 .collect(Collectors.toList());
+    }
+
+    //memberNo으로 교사 조회
+    @Override
+    public MemberDto.DetailMemberDto findTeacherByMemberNo(int memberNo) {
+        Member member =  memberRepository.findMemberByMemberNo(memberNo)
+                .orElseThrow(() -> new RuntimeException("해당 교사가 존재하지 않습니다."));
+
+        return MemberDto.DetailMemberDto.from(member);
     }
 
     //멤버 ID 찾기(이름, 생년월일)
