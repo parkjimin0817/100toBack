@@ -16,4 +16,8 @@ public interface ChildService {
     String linkChild(ChildDto.LinkChildRequest dto) throws IOException;
     //시설장 아동목록 조회(전부)
     List<ChildDto.childListResponse> managerChildList(int centerNo);
+    //반 배정 모달 아동 조회
+    ChildDto.modalResponse getChild(int child_no);
+    //아동 번호로 반 배정
+    ChildDto.updateClass updateClass(int child_no,int class_no);
 }

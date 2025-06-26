@@ -1,11 +1,14 @@
 package com.bridge.kinder.repository;
 
+import com.bridge.kinder.entity.Board;
 import com.bridge.kinder.entity.ClassRoom;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
+import java.util.Optional;
 
 @Repository
 public class ClassRoomRepositoryImpl implements ClassRoomRepository {
@@ -24,6 +27,11 @@ public class ClassRoomRepositoryImpl implements ClassRoomRepository {
                 .setParameter("centerNo", centerNo)
                 .getResultList();
 
+    }
+
+    @Override
+    public Optional<ClassRoom> findById(int classRoomNo) {
+        return Optional.ofNullable(em.find(ClassRoom.class, classRoomNo));
     }
 
 }

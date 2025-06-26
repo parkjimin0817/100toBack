@@ -1,17 +1,77 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { List } from '../components/ChildDummyData';
+import axios from 'axios';
 
-const ScheduleModal = ({ isOpen, onClose, selectedDate, id }) => {
-  const handleSubmit = () => {
-    onClose();
+const ClassPlacementModal = ({ isOpen, onClose, selectedDate, selectedItem, centerNo }) => {
+  const [person, setPerson] = useState(null);
+  const [classOptions, setClassOptions] = useState([]);
+  const [selectedClass, setSelectedClass] = useState(0);
+
+  const { id, role } = selectedItem || {};
+
+  useEffect(() => {
+    if (!isOpen || !id || !role) return;
+
+    const fetchData = async () => {
+      try {
+        let res;
+        if (role === 'child') {
+          res = await axios.get(`http://localhost:8888/api/childs/get`, {
+            params: { child_no: id },
+          });
+        } else if (role === 'teacher') {
+          res = await axios.get(`http://localhost:8888/api/members/get`, {
+            params: { member_no: id },
+          });
+        }
+
+        const personData = res?.data;
+        setPerson(personData);
+
+        const classListRes = await axios.get(`http://localhost:8888/api/classroom/list/${centerNo}`);
+        const classList = classListRes?.data?.map((cls) => cls.class_name);
+        setClassOptions(classListRes.data);
+
+        // 🔥 className이 있는 경우만 selectedClass로 지정
+        if (personData?.class_name) {
+          const matched = classListRes.data.find((cls) => cls.class_name === personData.class_name);
+          if (matched) {
+            setSelectedClass(matched.class_no); // ✅ 정확한 반 번호로 설정
+          } else {
+            setSelectedClass(0); // 미배정
+          }
+        } else {
+          setSelectedClass(0); // 미배정
+        }
+      } catch (err) {
+        console.error('모달 데이터 로드 실패:', err);
+      }
+    };
+
+    fetchData();
+  }, [isOpen, id, role, centerNo]);
+
+  const handleSubmit = async () => {
+    try {
+      const endpoint =
+        role === 'child'
+          ? `http://localhost:8888/api/childs/updateclass`
+          : `http://localhost:8888/api/members/updateclass`;
+
+      await axios.patch(endpoint, null, {
+        params:
+          role === 'child' ? { child_no: id, class_no: selectedClass } : { member_no: id, class_no: selectedClass },
+      });
+
+      alert('반 배정이 완료되었습니다.');
+      onClose();
+    } catch (err) {
+      alert('반 배정 실패');
+      console.error(err);
+    }
   };
 
-  const person = List.find((item) => item.id === id);
-
-  const classOptions = [...new Set(List.map((item) => item.className).filter(Boolean))];
-
-  if (!isOpen) return null;
+  if (!isOpen || !person) return null;
 
   return (
     <Backdrop onClick={onClose}>
@@ -33,18 +93,18 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, id }) => {
             </ColumnLine>
             <ResultLine style={{ gap: '38px' }}>
               <Result>
-                <Dropdown defaultValue={person.className || '미배정'}>
-                  <option value="미배정">미배정</option>
-                  {classOptions.map((className) => (
-                    <option key={className} value={className}>
-                      {className}
+                <Dropdown value={selectedClass} onChange={(e) => setSelectedClass(Number(e.target.value))}>
+                  <option value={0}>미배정</option>
+                  {classOptions.map((cls) => (
+                    <option key={cls.class_no} value={cls.class_no}>
+                      {cls.class_name}
                     </option>
                   ))}
                 </Dropdown>
               </Result>
-              <Result>{person.name}</Result>
-              <Result>{person.createDate}</Result>
-              <Result>{person.role === 'child' ? '아동' : person.role === 'teacher' ? '교사' : '직위 없음'}</Result>
+              <Result>{person.child_name || person.member_name || '이름 없음'}</Result>
+              <Result>{person.create_date?.substring(0, 10)}</Result>
+              <Result>{role === 'child' ? '아동' : role === 'teacher' ? '교사' : '직위 없음'}</Result>
             </ResultLine>
           </ModalMain>
         </ModalContent>
@@ -58,6 +118,9 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, id }) => {
     </Backdrop>
   );
 };
+
+export default ClassPlacementModal;
+
 const Backdrop = styled.div`
   position: fixed;
   top: 0;
@@ -206,5 +269,3 @@ const Button = styled.button`
     background: ${({ theme }) => theme.colors.orange};
   }
 `;
-
-export default ScheduleModal;

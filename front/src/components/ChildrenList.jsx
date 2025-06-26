@@ -1,14 +1,9 @@
-import styled from 'styled-components';
-import { css } from 'styled-components';
-import ChildImg from '../assets/Child.png';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { List } from './ChildDummyData';
-import { useState } from 'react';
-import useLoginStore from '../store/loginStore';
+import axios from 'axios';
+import styled from 'styled-components';
+import ChildImg from '../assets/Child.png';
 
-// 하드코딩된 예시 데이터
-
-// ChildrenList.jsx 내부
 const ChildrenList = ({
   showAll,
   sortBy,
@@ -17,62 +12,97 @@ const ChildrenList = ({
   Color,
   nameFilter,
   classPlacement,
-  selectedId,
-  setSelectedId,
+  selectedItem,
+  setSelectedItem,
+  centerNo,
 }) => {
-  const member = useLoginStore((state) => state.member);
   const navigate = useNavigate();
-  let list = [...List];
+  const [list, setList] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let res;
+        if (roleBy === 'child') {
+          if (classFilter) {
+            res = await axios.get(`http://localhost:8888/api/childs`, {
+              params: { classNo: classFilter },
+            });
+          } else {
+            res = await axios.get(`http://localhost:8888/api/childs/all`, {
+              params: { centerNo },
+            });
+          }
+        } else if (roleBy === 'teacher') {
+          res = await axios.get(`http://localhost:8888/api/members/getteacher`, {
+            params: { id: centerNo },
+          });
+        }
+        if (res?.data) setList(res.data);
+      } catch (err) {
+        console.error('데이터 조회 실패:', err);
+      }
+    };
+    fetchData();
+  }, [roleBy, classFilter, centerNo]);
+
+  let filtered = [...list];
 
   if (!showAll) {
-    list = list.filter((child) => !child.className);
+    filtered = filtered.filter((item) => !item.class_name);
   }
 
   if (sortBy === 'class') {
-    list.sort((a, b) => a.className.localeCompare(b.className));
+    filtered.sort((a, b) => a.class_name?.localeCompare(b.class_name));
   } else if (sortBy === 'name') {
-    list.sort((a, b) => a.name.localeCompare(b.name));
+    filtered.sort((a, b) => (a.child_name || a.member_name)?.localeCompare(b.child_name || b.member_name));
   } else if (sortBy === 'createDate') {
-    list.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
-  }
-
-  // 역할(role) 필터링: 'child' 또는 'teacher'만 필터링
-  if (roleBy === 'child' || roleBy === 'teacher') {
-    list = list.filter((item) => item.role === roleBy);
-  }
-
-  if (classFilter) {
-    list = list.filter((item) => item.className === classFilter);
+    filtered.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
   }
 
   if (nameFilter) {
-    list = list.filter((item) => item.name.toLowerCase().includes(nameFilter.toLowerCase()));
+    filtered = filtered.filter((item) =>
+      (item.child_name || item.member_name)?.toLowerCase().includes(nameFilter.toLowerCase())
+    );
   }
 
   return (
     <Container>
       <CardLine>
-        {list.map((child) => (
-          <Card
-            key={child.id}
-            className={classPlacement && selectedId === child.id ? 'selected' : ''}
-            onClick={() => {
-              if (child.role === 'child') {
-                navigate(`/child/detail/${child.id}`);
-              } else if (child.role === 'teacher') {
-                navigate(`/manager/teacherattendance/${child.id}`);
-              }
-            }}
-          >
-            <PictureBox color={Color}>
-              <ChildPic src={ChildImg} alt="아이사진" />
-            </PictureBox>
-            <NameBox color={Color}>
-              <NameLine>{child.name}</NameLine>
-              <ClassLine>{child.className || '미배정'}</ClassLine>
-            </NameBox>
-          </Card>
-        ))}
+        {filtered.map((item, index) => {
+          const id = item.child_no || item.member_no || index;
+          const name = item.child_name || item.member_name || '이름 없음';
+          const className = item.class_name || '미배정';
+          const role = roleBy;
+
+          return (
+            <Card
+              key={id}
+              className={classPlacement && selectedItem?.id === id && selectedItem?.role === role ? 'selected' : ''}
+              onClick={() => {
+                const id = item.child_no || item.member_no;
+                if (classPlacement) {
+                  const classNo = item.class_no || 0;
+                  setSelectedItem({ id, role, class_no: classNo });
+                } else {
+                  if (role === 'child') {
+                    navigate(`/child/detail/${id}`);
+                  } else if (role === 'teacher') {
+                    navigate(`/manager/teacherattendance/${id}`);
+                  }
+                }
+              }}
+            >
+              <PictureBox color={Color}>
+                <ChildPic src={ChildImg} alt="아이사진" />
+              </PictureBox>
+              <NameBox color={Color}>
+                <NameLine>{name}</NameLine>
+                <ClassLine>{className}</ClassLine>
+              </NameBox>
+            </Card>
+          );
+        })}
       </CardLine>
     </Container>
   );
@@ -103,7 +133,8 @@ const Card = styled.div`
     box-shadow 0.2s ease;
 
   &.selected {
-    transform: translateY(-15px);
+    transform: translateY(-5px); // 위로 살짝 띄우기
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4); // 강조
   }
 `;
 

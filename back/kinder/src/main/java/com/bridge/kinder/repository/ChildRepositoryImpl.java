@@ -1,6 +1,7 @@
 package com.bridge.kinder.repository;
 
 import com.bridge.kinder.entity.Child;
+import com.bridge.kinder.entity.Member;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
@@ -59,5 +60,34 @@ public class ChildRepositoryImpl implements ChildRepository {
                 .getSingleResult();
 
        return count.intValue();
+    }
+
+    //child_no로 아동 찾기
+    @Override
+    public Optional<Child> getByChildNo(int child_no) {
+        Child child = em.createQuery("SELECT c FROM Child c WHERE c.childNo = :child_no", Child.class)
+                .setParameter("child_no", child_no)
+                .getSingleResult();
+        return Optional.ofNullable(child);
+    }
+
+    //아동번호와 반 번호로 반 수정(시설장)
+    @Override
+    public Optional<Child> updateClass(int child_no, int class_no) {
+        String jpql = "UPDATE Child c SET c.classRoom.classNo = :class_no WHERE c.childNo = :child_no";
+        int updated = em.createQuery(jpql)
+                .setParameter("class_no", class_no)
+                .setParameter("child_no", child_no)
+                .executeUpdate();
+        // JPQL UPDATE는 반환값이 없음 → 다시 조회해서 Optional로 감싸야 함
+        if (updated > 0) {
+            Child child = em.createQuery(
+                            "SELECT c FROM Child c WHERE c.childNo = :child_no", Child.class)
+                    .setParameter("child_no", child_no)
+                    .getSingleResult();
+            return Optional.of(child);
+        } else {
+            return Optional.empty();
+        }
     }
 }

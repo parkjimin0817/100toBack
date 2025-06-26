@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import BoardTable from '../../components/Board/BoardTable';
-import theme from "../../styles/theme";
-import ContentHeader from '../../components/Common/ContentHeader';
 import { useNavigate } from 'react-router-dom';
+import BoardTable from '../components/Board/BoardTable';
+import theme from "../styles/theme";
+import ContentHeader from '../components/Common/ContentHeader';
 
 const columns = [
   {
@@ -11,11 +11,6 @@ const columns = [
     key: 'id',
     width: '100px',
     align: 'center'
-  },
-  {
-    label: '반',
-    key: 'class',
-    width: '100px',
   },
   {
     label: '파일',
@@ -39,10 +34,10 @@ const columns = [
 ];
 
 const BoardData = [
-  { id : 1, title : "[가정통신문] 6월1주차", writer : "정형일", class: "햇님", file: "", created_Date : "2025-06-03"},
-  { id : 2, title : "[가정통신문] 6월2주차", writer : "정형일", class: "햇님", file: "", created_Date : "2025-06-10"},
-  { id : 3, title : "[가정통신문] 6월3주차", writer : "정형일", class: "햇님", file: "", created_Date : "2025-06-17"},
-  { id : 4, title : "[가정통신문] 6월4주차", writer : "정형일", class: "햇님", file: "", created_Date : "2025-06-24"},
+  { id : 1, title : "[공지사항] 6월1주차", writer : "정형일", file: "", created_Date : "2025-06-03"},
+  { id : 2, title : "[공지사항] 6월2주차", writer : "정형일", file: "", created_Date : "2025-06-10"},
+  { id : 3, title : "[공지사항] 6월3주차", writer : "정형일", file: "", created_Date : "2025-06-17"},
+  { id : 4, title : "[공지사항] 6월4주차", writer : "정형일", file: "", created_Date : "2025-06-24"},
 ];
 
 const tableInfo = {
@@ -52,19 +47,19 @@ const tableInfo = {
   tbFontSize : theme.fontSizes.base,
 }
 
-const FamilyCommunityPage = () => {
+const AlbumPage = () => {
   const navigate = useNavigate();
 
   return (
     <PageContainer>
       <ContentHeader
-        Title={'가정통신문'}
+        Title={'사진 게시판'}
         Color={'green'}
         // 교사면 버튼 추가, 학부모면 없음.
         ButtonProps={[
           { Title: '작성하기', 
             func: () => {
-              navigate("/familycommunity/write", { state: { category: "familycommunity" }, })
+              navigate("/album/write", { state: { category: "album" }, })
             } 
           },
         ]}
@@ -94,4 +89,4 @@ const BoardContainer = styled.div`
   margin-top: 50px;
 `;
 
-export default FamilyCommunityPage
+export default AlbumPage;
