@@ -64,4 +64,16 @@ export const API_ENDPOINTS = {
     TEACHERATTENDANCE: (memberNo, year, month) =>
       `/api/attendance/teacher?memberNo=${memberNo}&year=${year}&month=${month}`,
   },
+  CHILDS: {
+    BASE: '/api/childs',
+    GETALL: '/api/childs/all',
+    GET: '/api/childs/get',
+  },
+  BOARDS: {
+    BASE: '/api/boards',
+    ADD : '/api/boards',
+    DETAIL : (id) => `/api/boards/${id}`,
+    DELETE : (id) => `/api/boards/${id}`,
+    TYPE : (type, page) => `/api/boards/type/${type}?page=${page}&size=1`,
+  }
 };

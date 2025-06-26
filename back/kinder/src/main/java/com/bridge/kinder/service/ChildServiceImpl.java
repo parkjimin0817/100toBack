@@ -2,6 +2,8 @@ package com.bridge.kinder.service;
 
 import com.bridge.kinder.dto.ChildDto;
 import com.bridge.kinder.dto.ChildDto.childListResponse;
+import com.bridge.kinder.dto.ChildDto.modalResponse;
+import com.bridge.kinder.dto.ChildDto.updateClass;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.Member;
@@ -10,6 +12,7 @@ import com.bridge.kinder.repository.CenterRepository;
 import com.bridge.kinder.repository.ChildRepository;
 import com.bridge.kinder.repository.MemberChildRepository;
 import com.bridge.kinder.repository.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -103,5 +106,20 @@ public class ChildServiceImpl implements ChildService {
         return childRepository.findByCenterNo(centerNo).stream()
                 .map(ChildDto.childListResponse::toDto)
                 .collect(Collectors.toList());
+    }
+
+    //아동 번호로 아동 찾아오기
+    @Override
+    public ChildDto.modalResponse getChild(int child_no) {
+        Child child = childRepository.getByChildNo(child_no)
+                .orElseThrow(() -> new EntityNotFoundException("해당 아동이 존재하지 않습니다."));
+        return ChildDto.modalResponse.toDto(child);
+    }
+
+    @Override
+    public ChildDto.updateClass updateClass(int child_no, int class_no) {
+        Child child = childRepository.updateClass(child_no,class_no)
+                .orElseThrow(() -> new EntityNotFoundException("정상적으로 수정되지 않았습니다."));
+        return ChildDto.updateClass.toDto(child);
     }
 }

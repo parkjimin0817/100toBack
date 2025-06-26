@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import List from '../../components/ChildrenList';
 import ContentHeader from '../../components/Common/ContentHeader';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import useLoginStore from '../../store/loginStore';
 
 const ChildList = () => {
+  const member = useLoginStore((state) => state.member);
+  const classNo = member.classNo;
+  const centerNo = member.centerNo;
+  const memberType = member.memberType;
   const navigator = useNavigate();
+
   const buttons = [{ Title: '반 목록', func: () => navigator('/classlist') }];
+
   return (
     <Content>
       <ContentHeader Title="아동 목록" Color="orange" ButtonProps={buttons} />
@@ -15,8 +22,8 @@ const ChildList = () => {
         showAll={true}
         sortBy="createDate"
         roleBy="child"
-        classFilter="햇님반"
-        // 여기 classFilter에다가 세션에 있는 교사의 소속 반 변수를 넣으면 필터링되어 아동목록이 나타남
+        classFilter={memberType === 'MANAGER' ? null : classNo} // MANAGER일 때는 필터 없음
+        centerNo={centerNo} // 추가 필요
       />
     </Content>
   );

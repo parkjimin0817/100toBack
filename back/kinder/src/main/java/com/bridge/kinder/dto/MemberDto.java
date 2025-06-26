@@ -1,7 +1,10 @@
 package com.bridge.kinder.dto;
 
+import com.bridge.kinder.dto.ChildDto.modalResponse;
+import com.bridge.kinder.dto.ChildDto.updateClass;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.ClassRoom;
+import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.enums.CommonEnums;
 import lombok.*;
@@ -68,6 +71,7 @@ public class MemberDto {
         //만약 멤버정보 필요한거 있으시면 그냥 추가하시면 됩니다.
         private String center_tel;
         private int center_no;
+        private int class_no;
 
         public static LoginResponse toDto(Member member) {
             return LoginResponse.builder()
@@ -77,6 +81,7 @@ public class MemberDto {
                     .member_type(member.getMemberType())
                     .center_no(member.getCenter().getCenterNo())
                     .center_tel(member.getCenter().getCenterTel())
+                    .class_no(member.getClassRoom() != null ? member.getClassRoom().getClassNo() : 0) // (시설장 혹은 반 미배정 교사는 로그인 시 반 번호가 null이기 때문에 임의로 지정)
                     .build();
         }
     }
@@ -233,6 +238,64 @@ public class MemberDto {
                     .center_tel(center.getCenterTel())
                     .center_address(center.getCenterAddress())
                     .center_type(center.getCenterType())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class teacherListResponse{
+        private int member_no;
+        private String member_name;
+        private String class_name;
+
+        public static teacherListResponse toDto(Member member) {
+            return teacherListResponse.builder()
+                    .member_no(member.getMemberNo())
+                    .member_name(member.getMemberName())
+                    .class_name(member.getClassRoom().getClassName())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class modalResponse {
+        private String class_name;
+        private String member_name;
+        private LocalDateTime create_date;
+
+        public static modalResponse toDto(Member member) {
+            return modalResponse.builder()
+                    .class_name(member.getClassRoom().getClassName())
+                    .member_name(member.getMemberName())
+                    .create_date(member.getCreateDate())
+                    .build();
+        }
+
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class updateClass {
+        private int member_no;
+        private String member_name;
+        private String class_name;
+
+        public static MemberDto.updateClass toDto(Member member){
+            return MemberDto.updateClass.builder()
+                    .member_no(member.getMemberNo())
+                    .member_name(member.getMemberName())
+                    .class_name(member.getClassRoom().getClassName())
                     .build();
         }
     }
