@@ -45,6 +45,7 @@ public class ChildRepositoryImpl implements ChildRepository {
                 .getResultList();
     }
 
+    //시설 번호로 아동들 전부 조회
     @Override
     public List<Child> findByCenterNo(int centerNo) {
         return em.createQuery("SELECT c FROM Child c WHERE c.center.centerNo  = :centerNo", Child.class)

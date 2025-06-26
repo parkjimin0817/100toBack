@@ -251,10 +251,15 @@ public class MemberDto {
             return teacherListResponse.builder()
                     .member_no(member.getMemberNo())
                     .member_name(member.getMemberName())
-                    .class_name(member.getClassRoom().getClassName())
+                    .class_name(
+                            member.getClassRoom() != null
+                                    ? member.getClassRoom().getClassName()
+                                    : "미배정"
+                    )
                     .build();
         }
     }
+
 
     @Getter
     @Setter
@@ -268,7 +273,11 @@ public class MemberDto {
 
         public static modalResponse toDto(Member member) {
             return modalResponse.builder()
-                    .class_name(member.getClassRoom().getClassName())
+                    .class_name(
+                            member.getClassRoom() != null
+                                    ? member.getClassRoom().getClassName()
+                                    : "미배정"
+                    )
                     .member_name(member.getMemberName())
                     .create_date(member.getCreateDate())
                     .build();
@@ -290,7 +299,11 @@ public class MemberDto {
             return MemberDto.updateClass.builder()
                     .member_no(member.getMemberNo())
                     .member_name(member.getMemberName())
-                    .class_name(member.getClassRoom().getClassName())
+                    .class_name(
+                            member.getClassRoom() != null
+                                    ? member.getClassRoom().getClassName()
+                                    : "미배정"
+                    )
                     .build();
         }
     }
