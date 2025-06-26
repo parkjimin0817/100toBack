@@ -52,5 +52,6 @@ export const API_ENDPOINTS = {
     //교사가 자신 근태 기록 조회
     //시설장이 교사 별 근태 조회
     TEACHERATTENDANCE: (memberNo) => `/api/attendance/teacher/${memberNo}`,
+    CHILDATTENDANCE: `/api/attendance/child`,
   },
 };

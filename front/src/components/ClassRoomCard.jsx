@@ -20,14 +20,14 @@ const ClassRoomCard = ({ classrooms, address }) => {
       <FlexContainer>
         {classrooms.map((classroom) => (
           <ClassList
-            key={classroom.classroom_no}
+            key={classroom.class_no}
             img={classroom.class_image}
             className={classroom.class_name}
             mateCount={classroom.child_count} //정원 세야함
             capacity={classroom.capacity}
             teacher={classroom.member_name}
             classColor={classroom.color}
-            //address={address + `/${classroom.classroom_no}`}
+            address={address + `/${classroom.class_no}`}
           />
         ))}
       </FlexContainer>
@@ -39,8 +39,9 @@ const FlexContainer = styled.div`
   place-items: center;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  padding: ${({ theme }) => theme.spacing[10]};
+  /* padding: ${({ theme }) => theme.spacing[10]}; */
   gap: 60px;
+  width: 100%;
 `;
 
 export default ClassRoomCard;

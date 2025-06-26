@@ -16,8 +16,8 @@ const initialData = [
   { name: '정의철', status: '출석' },
 ];
 
-const AttendanceList = ({ selectedDate }) => {
-  const [data, setData] = useState(initialData);
+const AttendanceList = ({ selectedDate, attendanceInfo }) => {
+  const [data, setData] = useState(attendanceInfo);
   const [selectedStatus, setSelectedStatus] = useState('전체');
 
   const handleStatusChange = (index, newStatus) => {
@@ -27,14 +27,14 @@ const AttendanceList = ({ selectedDate }) => {
 
   const filteredData = selectedStatus === '전체' ? data : data.filter((item) => item.status === selectedStatus);
 
-  const totalCount = initialData.length;
-  const attendCount = initialData.filter((item) => item.status === '출석').length;
-  const absentCount = initialData.filter((item) => item.status === '결석').length;
-  const lateCount = initialData.filter((item) => item.status === '지각').length;
+  const totalCount = attendanceInfo.length;
+  const attendCount = attendanceInfo.filter((item) => item.status === '출석').length;
+  const absentCount = attendanceInfo.filter((item) => item.status === '결석').length;
+  const lateCount = attendanceInfo.filter((item) => item.status === '지각').length;
 
   return (
     <Wrapper>
-      <ContentHeader Title="땡땡반 출석 현황" Color="orange" FontSize="base" />
+      <ContentHeader Title={`${attendanceInfo}반 출석 현황`} Color="orange" FontSize="base" />
       <DateRow>
         {selectedDate.toLocaleDateString('ko-KR', {
           year: 'numeric',

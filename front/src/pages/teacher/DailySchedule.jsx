@@ -49,7 +49,7 @@ const DailySchedule = () => {
   return (
     <Content>
       <ContentHeader Title={'일과표'} Color={'purple'} />
-      <ClassRoomCard rooms={thermeData} address={`/dailyDetail`} />
+      <ClassRoomCard classrooms={thermeData} address={`/dailyDetail`} />
     </Content>
   );
 };

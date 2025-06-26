@@ -117,10 +117,9 @@ function App() {
              * 5. 시설장 교사 휴가 / 워케이션 관리 페이지
              * 6. 시설장 교사 근태 관리 페이지
              * 7. 시설장 교사 소개 및 조회 페이지
+             * 8. 시설장 반 목록 / 생성 모달
              *
-             * 8. 시설장 교사 상세보기 페이지(만들어야함)
-             *
-             * 9. 시설장 반 목록 / 생성 모달
+             *    시설장 교사 상세보기 페이지(만들어야함)
              *
              *  */}
             <Route path="/manager/mypage" element={<TeacherMyPage />} />
@@ -154,7 +153,7 @@ function App() {
             <Route path="/dailyDetail/:schedule_no" element={<DailyScheduleDetail />} />
             <Route path="/child/detail/:id" element={<ChildDetail />} />
             <Route path="/teacher/workcation" element={<MyVacation />} />
-            <Route path="/childattendance/:id" element={<AttendancePage />} />
+            <Route path="/childattendance/:class_no" element={<AttendancePage />} />
 
             {/**
              * 공용

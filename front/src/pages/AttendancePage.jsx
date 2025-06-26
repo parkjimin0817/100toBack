@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ContentHeader from '../components/Common/ContentHeader';
 import styled from 'styled-components';
 import AttendanceList from '../components/Common/AttendanceList';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import CustomCalendar from '../components/CustomCalendar';
 import { useState } from 'react';
+import { classService } from '../api/class';
 
 const data = [
   { name: '박지민', child_no: '1', class_no: '1', create_date: '2025-06-18', status: 'present' },
@@ -17,7 +18,22 @@ const data = [
 
 const AttendancePage = () => {
   const navigate = useNavigate();
+  const { class_no } = useParams();
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [attendanceInfo, setAttendanceInfo] = useState([]);
+
+  console.log(selectedDate);
+
+  useEffect(() => {
+    classService
+      .classAttendance(class_no, selectedDate)
+      .then((data) => setAttendanceInfo(data))
+      .catch((err) => console.error('반 목록 불러오기 실패 : ', err));
+  }, []);
+
+  const onSubmit = (date) => {
+    setSelectedDate(date);
+  };
 
   return (
     <Wrapper>
@@ -28,10 +44,10 @@ const AttendancePage = () => {
       />
       <Content>
         <Div1>
-          <CustomCalendar onDateClick={(date) => setSelectedDate(date)} />
+          <CustomCalendar onDateClick={(date) => onSubmit(date)} />
         </Div1>
         <Div2>
-          <AttendanceList selectedDate={selectedDate} />
+          <AttendanceList selectedDate={selectedDate} attendanceInfo={attendanceInfo} />
         </Div2>
       </Content>
     </Wrapper>
