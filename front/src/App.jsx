@@ -107,21 +107,22 @@ function App() {
             <Route path="/child/detail" element={<ChildDetail />} />
 
             {/* 교사 가정통신문 페이지 */}
-            <Route path="/familycommunity">
+            <Route path="/family_notice">
               {/* 교사 가정통신문 게시글 목록 페이지 */}
               <Route path="list" element={<FamilyCommunityPage />} />
               {/* 교사 가정통신문 게시글 목록 페이지 */}
               <Route path="write" element={<BoardWritePage />} />
             </Route>
             {/* 공지사항 페이지 */}
-            <Route path="/announcement">
+            <Route path="/notice">
               {/* 공지사항 게시글 목록 페이지 */}
               <Route path="list" element={<AnnouncementPage />} />
               {/* 공지사항 게시글 작성 페이지 */}
               <Route path="write" element={<BoardWritePage />} />
+              <Route path=':id' element={<BoardDetailPage />} />
             </Route>
             {/* 알림장 페이지 */}
-            <Route path="/notice">
+            <Route path="/note">
               {/* 알림장 게시글 목록 페이지 */}
               <Route path="list" element={<NoticePage />} />
               {/* 알림장 게시글 작성 페이지 */}
@@ -226,7 +227,8 @@ function App() {
              * 3. 아동 생활 리스트 페이지
              *
              *  */}
-            <Route path="/familycommunity/list" element={<FamilyCommunityPage />} />
+             {/* 중복임. */}
+            {/* <Route path="/familycommunity/list" element={<FamilyCommunityPage />} /> */}
             <Route path="/child/healthlist" element={<PersonalHealth />} />
             <Route path="/child/lifelist" element={<PersonalLife />} />
           </Route>
