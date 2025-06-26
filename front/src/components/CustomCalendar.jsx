@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
-const CustomCalendar = ({ onDateClick, onMonthChange }) => {
+const CustomCalendar = ({ onDateClick, onMonthChange, disableFuture = false }) => {
+  const today = new Date();
   return (
     <StyledCalendar
       calendarType="gregory"
@@ -17,6 +18,7 @@ const CustomCalendar = ({ onDateClick, onMonthChange }) => {
       onActiveStartDateChange={({ activeStartDate }) => {
         onMonthChange?.(activeStartDate);
       }}
+      tileDisabled={({ date, view }) => disableFuture && view === 'month' && date > today}
       tileClassName={({ date, view }) => {
         if (view === 'month' && date.getDay() === 0) {
           return 'sunday';

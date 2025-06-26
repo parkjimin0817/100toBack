@@ -118,10 +118,11 @@ public class ChildDto {
         private String class_name;
 
         public static childListResponse toDto(Child child){
+
             return childListResponse.builder()
                     .child_no(child.getChildNo())
                     .child_name(child.getChildName())
-                    .class_name(child.getClassRoom().getClassName())
+                    .class_name(child.getClassRoom() != null ? child.getClassRoom().getClassName() : null)
                     .build();
         }
     }

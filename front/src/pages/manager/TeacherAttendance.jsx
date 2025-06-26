@@ -55,6 +55,7 @@ const TeacherAttendance = () => {
             onDateClick={(date) => setSelectedDate(date)}
             onMonthChange={(date) => setCurrentMonth(date)}
             monthlyAttendanceList={attendances}
+            disableFuture={true}
           />
         </Div1>
         <Div2>

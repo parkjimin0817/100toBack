@@ -11,7 +11,7 @@ const TeacherProfilePhoto = ({ teacher }) => {
         </PictureBox>
         <NameBox>
           <NameLine>{teacher.member_name}</NameLine>
-          <ClassLine>{teacher.class_name}</ClassLine>
+          <ClassLine>{teacher.class_name}반</ClassLine>
         </NameBox>
       </Card>
     </CardLine>

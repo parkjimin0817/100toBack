@@ -98,7 +98,7 @@ const ChildrenList = ({
               </PictureBox>
               <NameBox color={Color}>
                 <NameLine>{name}</NameLine>
-                <ClassLine>{className}</ClassLine>
+                <ClassLine>{className}반</ClassLine>
               </NameBox>
             </Card>
           );

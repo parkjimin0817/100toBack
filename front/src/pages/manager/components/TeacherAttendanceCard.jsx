@@ -9,8 +9,6 @@ const TeacherAttendanceCard = ({ selectedDate, teacher, currentMonth, attendance
   const month = currentMonth.getMonth() + 1;
   const title = `${month}월 근태 관리`;
 
-  console.log(attendance);
-
   //출퇴근 시간
   const inTime = attendance?.in_time
     ? new Date(attendance.in_time).toLocaleTimeString('ko-KR', {
@@ -84,6 +82,8 @@ const TeacherAttendanceCard = ({ selectedDate, teacher, currentMonth, attendance
       </BottomContent>
       {openModal && (
         <TeacherAttendanceEditModal
+          status={status}
+          attendance={attendance}
           onClose={() => setOpenModal(false)}
           onEdit={(data) => {
             console.log(data);
