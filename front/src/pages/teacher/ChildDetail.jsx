@@ -199,7 +199,6 @@ const ChildDetail = () => {
                     </tbody>
                   </FooterTable>
                 </FooterBox>
-
                 <FooterBox>
                   <FooterTitle>예방접종</FooterTitle>
                   <FooterTable>
@@ -215,7 +214,6 @@ const ChildDetail = () => {
                     </tbody>
                   </FooterTable>
                 </FooterBox>
-
                 <FooterBox>
                   <FooterTitle>알레르기</FooterTitle>
                   <FooterTable>

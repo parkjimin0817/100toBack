@@ -2,16 +2,39 @@ import api from './axios';
 import { API_ENDPOINTS } from './config';
 
 export const approvalListService = {
-  //승인 대기 목록 조회
-  getPendingList: async (centerNo) => {
+  //시설 승인 대기 목록 조회
+  getCenterPendingList: async () => {
     try {
-      const { data } = await api.get(API_ENDPOINTS.APPLOVALLIST.PENDINGLIST(centerNo));
+      const { data } = await api.get(API_ENDPOINTS.APPLOVALLIST.CENTERPENDINGLIST);
       return data;
     } catch (error) {
       throw new Error(error, '서버 통신 불량');
     }
   },
-  //시설장, 교사, 학부모 승인거절
+  //시설, 시설장 승인거절
+  updateCenterApprovalStatus: async (approvalNo, status, centerNo, memberNo) => {
+    try {
+      const { data } = await api.patch(API_ENDPOINTS.APPLOVALLIST.DECISIONCENTER, {
+        approval_no: approvalNo,
+        status: status,
+        center_no: centerNo,
+        member_no: memberNo,
+      });
+      return data;
+    } catch (error) {
+      throw new Error(error, '서버 통신 불량');
+    }
+  },
+  //멤버 승인 대기 목록 조회
+  getMemberPendingList: async (centerNo) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.APPLOVALLIST.MEMBERPENDINGLIST(centerNo));
+      return data;
+    } catch (error) {
+      throw new Error(error, '서버 통신 불량');
+    }
+  },
+  //교사, 학부모 승인거절
   updateMemberApprovalStatus: async (approvalNo, status, memberNo) => {
     try {
       const { data } = await api.patch(API_ENDPOINTS.APPLOVALLIST.DECISIONMEMBER, {

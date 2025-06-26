@@ -21,7 +21,7 @@ public class ChildActivityData {// 아동 생활 정보
     private String likeFood;
     //좋아하는 음식
 
-    @Column(name = "DISLIKE_FOOK", length = 100)
+    @Column(name = "DISLIKE_FOOD", length = 100)
     private String dislikeFood;
     //싫어하는 음식
 
@@ -33,8 +33,8 @@ public class ChildActivityData {// 아동 생활 정보
     private String mealMemo;
     //식습관 메모
 
-    @Column(name = "CLOSE_FRIEND")
-    private boolean closeFriend;
+    @Column(name = "CLOSE_FRIEND", length = 100)
+    private String closeFriend;
     //친한 친구
 
     @Column(name = "LIKE_PLAY")

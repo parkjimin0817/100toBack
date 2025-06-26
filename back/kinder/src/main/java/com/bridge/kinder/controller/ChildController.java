@@ -57,5 +57,11 @@ public class ChildController {
         return ResponseEntity.ok(childService.updateClass(child_no,class_no));
     }
 
+    //아동 상세보기
+    @GetMapping("/detail")
+    public ResponseEntity<ChildDto.detail> detail(@RequestParam int child_no){
+//        ResponseEntity.ok(childService.detail(child_no))
+        return null;
+    }
 
 }

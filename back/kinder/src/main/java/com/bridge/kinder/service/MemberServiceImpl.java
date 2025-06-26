@@ -57,6 +57,7 @@ public class MemberServiceImpl implements MemberService {
     public String createManager(CreateManagerDto dto) throws IOException {
         Center center = dto.getCenter().toEntity();
         Center savedCenter = centerRepository.save(center);
+        System.out.println(savedCenter);
 
         String originName = null;
         String profilePath = null;

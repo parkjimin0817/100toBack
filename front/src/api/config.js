@@ -37,8 +37,10 @@ export const API_ENDPOINTS = {
     TEACHER_DETAIL: (memberNo) => `/api/members/teacher/${memberNo}`,
   },
   APPLOVALLIST: {
-    BASE: 'api/approvalList',
-    PENDINGLIST: (centerNo) => `api/approval/lists/${centerNo}`,
+    BASE: 'api/approval',
+    CENTERPENDINGLIST: `api/approval/lists`,
+    MEMBERPENDINGLIST: (centerNo) => `api/approval/lists/${centerNo}`,
+    DECISIONCENTER: `api/approval/decision/center`,
     DECISIONMEMBER: `api/approval/decision/member`,
     DECISIONCHILD: `api/approval/decision/child`,
   },
@@ -64,6 +66,13 @@ export const API_ENDPOINTS = {
     TEACHERATTENDANCE: (memberNo, year, month) =>
       `/api/attendance/teacher?memberNo=${memberNo}&year=${year}&month=${month}`,
   },
+  MEMBER_HEALTH: {
+    BASE: '/api/memberHealth',
+    CREATE: '/api/memberHealth/create',
+    LISTS: (memberNo) => `/api/memberHealth/lists/${memberNo}`,
+    DETAIL: (healthNo) => `/api/memberHealth/detail/${healthNo}`,
+    UPDATE: '/api/memberHealth/update',
+  },
   CHILDS: {
     BASE: '/api/childs',
     GETALL: '/api/childs/all',
@@ -71,9 +80,9 @@ export const API_ENDPOINTS = {
   },
   BOARDS: {
     BASE: '/api/boards',
-    ADD : '/api/boards',
-    DETAIL : (id) => `/api/boards/${id}`,
-    DELETE : (id) => `/api/boards/${id}`,
-    TYPE : (type, page) => `/api/boards/type/${type}?page=${page}&size=1`,
-  }
+    ADD: '/api/boards',
+    DETAIL: (id) => `/api/boards/${id}`,
+    DELETE: (id) => `/api/boards/${id}`,
+    TYPE: (type, page) => `/api/boards/type/${type}?page=${page}&size=1`,
+  },
 };

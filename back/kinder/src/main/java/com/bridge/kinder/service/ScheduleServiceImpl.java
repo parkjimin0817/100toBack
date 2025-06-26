@@ -18,8 +18,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +40,11 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Member member = memberRepository.findByMemberNo(dto.getMember_no())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
+
+//        if (dto.getStart_time() != null && dto.getEnd_time() != null &&
+//                dto.getEnd_time().isBefore(dto.getStart_time())) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "종료 시간이 시작 시간보다 빠를 수 없습니다.");
+//        }
 
         Schedule schedule = dto.toEntity(center, member);
 
@@ -73,9 +80,15 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .collect(Collectors.toList());
     }
 
+    //스케줄 수정
     @Override
     public String updateSchedule(ScheduleUpdateDto dto) {
         Schedule schedule = scheduleRepository.findScheduleByScheduleNo(dto.getSchedule_no());
+
+//        if (dto.getStart_time() != null && dto.getEnd_time() != null &&
+//                dto.getEnd_time().isBefore(dto.getStart_time())) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "종료 시간이 시작 시간보다 빠를 수 없습니다.");
+//        }
 
         schedule.updateTitle(dto.getTitle());
         schedule.updateDescription(dto.getDescription());
@@ -85,6 +98,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         return dto.toDto(schedule).toString();
     }
 
+    //스케줄 삭제
     @Override
     public void deleteSchedule(int scheduleNo) {
         Schedule schedule = scheduleRepository.findScheduleByScheduleNo(scheduleNo);
