@@ -34,6 +34,7 @@ export const API_ENDPOINTS = {
     PWDUPDATE: `/api/members/pwdUpdate`,
     TEACHERLIST: (centerNo) => `/api/members/teacher/select/${centerNo}`,
     TEACHER_DETAIL_LIST: (centerNo) => `/api/members/teacher/list/${centerNo}`,
+    TEACHER_DETAIL: (memberNo) => `/api/members/teacher/${memberNo}`,
   },
   APPLOVALLIST: {
     BASE: 'api/approvalList',
@@ -60,6 +61,7 @@ export const API_ENDPOINTS = {
     //교사가 자신 근태 기록 조회
     //MYATTENDANCE:
     //시설장이 교사 별 근태 조회
-    TEACHERATTENDANCE: (memberNo) => `/api/attendance/teacher/${memberNo}`,
+    TEACHERATTENDANCE: (memberNo, year, month) =>
+      `/api/attendance/teacher?memberNo=${memberNo}&year=${year}&month=${month}`,
   },
 };

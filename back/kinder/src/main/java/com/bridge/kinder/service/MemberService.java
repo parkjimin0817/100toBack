@@ -34,6 +34,8 @@ public interface MemberService {
     List<MemberDto.SimpleDto> findTeachersByCenterNo(int centerNo);
     //교사 목록 (시설별 for 목록페이지)
     List<MemberDto.DetailMemberDto> findDetailedTeachersByCenterNo(int centerNo);
+    //교사 조회
+    MemberDto.DetailMemberDto findTeacherByMemberNo(int memberNo);
 
     //마이페이지
     MemberDto.MyPageResponse getMyInfo(int memberNo);

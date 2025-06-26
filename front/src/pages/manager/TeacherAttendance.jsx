@@ -5,31 +5,66 @@ import TeacherAttendanceCard from './components/TeacherAttendanceCard';
 import CustomCalendar from '../../components/CustomCalendar';
 import { useParams } from 'react-router-dom';
 import { attendanceService } from '../../api/attendance';
+import { memberService } from '../../api/member';
 
 const TeacherAttendance = () => {
   const { memberNo } = useParams();
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [teacher, setTeacher] = useState({});
   const [attendances, setAttendances] = useState([]);
 
+  //월별 데이터 불러오기
+  useEffect(() => {
+    if (!memberNo || !currentMonth) return;
+
+    const year = currentMonth.getFullYear(); //2025
+    const month = currentMonth.getMonth() + 1; //0부터 시작해서 +1
+
+    attendanceService
+      .teacherAttendance(memberNo, year, month)
+      .then((data) => setAttendances(data))
+      .catch((err) => console.error('교사 근태 달별 목록 불러오기 실패', err));
+  }, [memberNo, currentMonth]);
+
+  //고른 날짜 근태 데이터
+  const selectedRecord = attendances.find((attendance) => {
+    const date = new Date(attendance.in_time).toDateString(); //inTime에서 날짜만 꺼내기
+    const selected = selectedDate.toDateString(); //선택 날짜에서 날짜만 꺼내기
+    return date === selected;
+  });
+
+  console.log(attendances);
+
+  //교사 데이터
   useEffect(() => {
     if (!memberNo) return;
 
-    attendanceService
-      .teacherAttendance(memberNo)
-      .then((data) => setAttendances(data))
-      .catch((err) => console.error('교사 근태 목록 불러오기 실패', err));
+    memberService
+      .getTeacherDetail(memberNo)
+      .then((data) => setTeacher(data))
+      .catch((err) => console.error('교사 상세 정보 불러오기 실패', err));
   }, [memberNo]);
-
-  const [selectedDate, setSelectedDate] = useState(new Date());
 
   return (
     <Wrapper>
       <ContentHeader Title={'교사 근태 관리'} Color={'blue'} />
       <Content>
         <Div1>
-          <CustomCalendar onDateClick={(date) => setSelectedDate(date)} />
+          <CustomCalendar
+            onDateClick={(date) => setSelectedDate(date)}
+            onMonthChange={(date) => setCurrentMonth(date)}
+            monthlyAttendanceList={attendances}
+          />
         </Div1>
         <Div2>
-          <TeacherAttendanceCard selectedDate={selectedDate} />
+          <TeacherAttendanceCard
+            selectedDate={selectedDate}
+            currentMonth={currentMonth}
+            monthAttendance={attendances}
+            attendance={selectedRecord}
+            teacher={teacher}
+          />
         </Div2>
       </Content>
     </Wrapper>

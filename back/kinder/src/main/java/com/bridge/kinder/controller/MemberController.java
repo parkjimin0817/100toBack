@@ -72,6 +72,12 @@ public class MemberController {
         return ResponseEntity.ok(memberService.findDetailedTeachersByCenterNo(centerNo));
     }
 
+    //교사 조회 memberNo으로
+    @GetMapping("/teacher/{memberNo}")
+    public ResponseEntity<MemberDto.DetailMemberDto> findDetailTeacher(@PathVariable int memberNo){
+        return ResponseEntity.ok(memberService.findTeacherByMemberNo(memberNo));
+    }
+
     //멤버 ID 조회(이름, 생년월일)
     @PostMapping("/searchId")
     public ResponseEntity<MemberDto.SearchId> searchId(@RequestBody MemberDto.SearchId dto){
@@ -114,4 +120,5 @@ public class MemberController {
     public ResponseEntity<MemberDto.PwdUpdate> updatePwd(@RequestBody MemberDto.PwdUpdate dto){
         return ResponseEntity.ok(memberService.updatePwd(dto));
     }
+
 }

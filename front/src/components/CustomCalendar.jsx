@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
-const CustomCalendar = ({ onDateClick }) => {
+const CustomCalendar = ({ onDateClick, onMonthChange }) => {
   return (
     <StyledCalendar
       calendarType="gregory"
@@ -13,6 +13,10 @@ const CustomCalendar = ({ onDateClick }) => {
       minDetail="year"
       maxDetail="month"
       onClickDay={onDateClick}
+      //onActiveStartDateChange : 보여주는 달이 바뀔 때 실행되는 react-calendar의 props
+      onActiveStartDateChange={({ activeStartDate }) => {
+        onMonthChange?.(activeStartDate);
+      }}
       tileClassName={({ date, view }) => {
         if (view === 'month' && date.getDay() === 0) {
           return 'sunday';
