@@ -57,9 +57,40 @@ public class ChildController {
         return ResponseEntity.ok(childService.updateClass(child_no,class_no));
     }
 
+    //아동 번호로 건강 로그 가져오기
+    @GetMapping("/healthlog")
+    public ResponseEntity<List<ChildDto.healthLog>> healthLog(@RequestParam int childNo){
+        return ResponseEntity.ok(childService.healthLog(childNo));
+    }
+
+    //아동 번호로 건강 데이터 가져오기
+    @GetMapping("/health")
+    public ResponseEntity<ChildDto.health> health(@RequestParam int childNo){
+        return ResponseEntity.ok(childService.health(childNo));
+    }
+
+    //아동 번호로 생활 로그 가져오기
+    @GetMapping("/activitylog")
+    public ResponseEntity<List<ChildDto.activityLog>> activityLog(@RequestParam int childNo){
+        return ResponseEntity.ok(childService.activityLog(childNo));
+    }
+
+    //아동 번호로 건강 데이터 가져오기
+    @GetMapping("/activity")
+    public ResponseEntity<ChildDto.activity> activity(@RequestParam int childNo){
+        return ResponseEntity.ok(childService.activity(childNo));
+    }
+
+    //아동 번호로 출석 데이터 가져오기
+    @GetMapping("/attendance")
+    public ResponseEntity<List<ChildDto.attendance>> attendance(@RequestParam int childNo) {
+        return ResponseEntity.ok(childService.attendance(childNo));
+    }
+
+
     //아동 상세보기
     @GetMapping("/detail")
-    public ResponseEntity<ChildDto.detail> detail(@RequestParam int child_no){
+    public ResponseEntity<ChildDto.detail> detail(@RequestParam int childNo){
 //        ResponseEntity.ok(childService.detail(child_no))
         return null;
     }

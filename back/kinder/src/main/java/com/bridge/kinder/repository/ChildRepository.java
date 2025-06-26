@@ -2,6 +2,11 @@ package com.bridge.kinder.repository;
 
 import com.bridge.kinder.entity.Child;
 
+import com.bridge.kinder.entity.ChildActivityData;
+import com.bridge.kinder.entity.ChildActivityLog;
+import com.bridge.kinder.entity.ChildAttendance;
+import com.bridge.kinder.entity.ChildHealthData;
+import com.bridge.kinder.entity.ChildHealthLog;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,5 +27,15 @@ public interface ChildRepository {
     Optional<Child> getByChildNo(int child_no);
     //아동 번호로 반 수정하기
     Optional<Child> updateClass(int child_no,int class_no);
+    //아동 번호로 건강 로그 조회하기
+    List<ChildHealthLog> healthLog(int childNo);
+    //아동 번호로 건강 데이터 조회하기
+    Optional<ChildHealthData> health(int childNo);
+    //아동 번호로 생활 로그 조회하기
+    List<ChildActivityLog> activityLog(int childNo);
+    //아동 번호로 생활 데이터 조회하기
+    Optional<ChildActivityData> activity(int childNo);
+    //아동 번호로 아동 출석 조회
+    List<ChildAttendance> attendance(int childNo);
 
 }
