@@ -31,4 +31,11 @@ export const API_ENDPOINTS = {
   CENTERS: {
     BASE: '/api/center',
   },
+  BOARDS: {
+    BASE: '/api/boards',
+    ADD : '/api/boards',
+    DETAIL : (id) => `/api/boards/${id}`,
+    DELETE : (id) => `/api/boards/${id}`,
+    TYPE : (type, page) => `/api/boards/type/${type}?page=${page}&size=1`,
+  }
 };
