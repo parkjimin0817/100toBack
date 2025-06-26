@@ -33,7 +33,7 @@ public class ChildActivityData {// 아동 생활 정보
     private String mealMemo;
     //식습관 메모
 
-    @Column(name = "CLOSE_FRIEND")
+    @Column(name = "CLOSE_FRIEND", length = 100)
     private String closeFriend;
     //친한 친구
 
