@@ -121,7 +121,11 @@ public class ChildDto {
             return childListResponse.builder()
                     .child_no(child.getChildNo())
                     .child_name(child.getChildName())
-                    .class_name(child.getClassRoom().getClassName())
+                    .class_name(
+                            child.getClassRoom() != null
+                                    ? child.getClassRoom().getClassName()
+                                    : "미배정"
+                    )
                     .build();
         }
     }
@@ -138,7 +142,11 @@ public class ChildDto {
 
         public static modalResponse toDto(Child child){
             return modalResponse.builder()
-                    .class_name(child.getClassRoom().getClassName())
+                    .class_name(
+                            child.getClassRoom() != null
+                                    ? child.getClassRoom().getClassName()
+                                    : "미배정"
+                    )
                     .child_name(child.getChildName())
                     .create_date(child.getCreateDate())
                     .build();
@@ -160,8 +168,23 @@ public class ChildDto {
             return updateClass.builder()
                     .child_no(child.getChildNo())
                     .child_name(child.getChildName())
-                    .class_name(child.getClassRoom().getClassName())
+                    .class_name(
+                            child.getClassRoom() != null
+                                    ? child.getClassRoom().getClassName()
+                                    : "미배정"
+                    )
                     .build();
         }
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class detail{
+        private String child_name;
+        private String child_birth;
+        private String child_address;
     }
 }
