@@ -3,43 +3,57 @@ import styled from 'styled-components';
 import { IoDownloadOutline } from "react-icons/io5";
 
 const BoardDetail = ({ category, post }) => {
+  const formatKoreanDate = (isoString) => {
+    if (!isoString) return '';
+
+    const date = new Date(isoString);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    return `${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분`;
+  };
+
   return (
     <DetailContainer>
       {/* 게시글 타이틀 */}
       <PostTitle>{post.title}</PostTitle>
       <PostDescriptionBox>
-        <PostDescription>{post.create_date}</PostDescription>
+        <PostDescription>{formatKoreanDate(post.createDate)}</PostDescription>
         <PostDescriptionBox>
-          {(category === "note" || category === "letterhome") && (
+          {(category === "NOTE" || category === "LETTERHOME") && (
             <>
               <PostLabel>반 이름</PostLabel>
               <PostDescription>{post.class.name}</PostDescription>
             </>
           )}
           <PostLabel>작성자</PostLabel>
-          <PostDescription>{post.member.name}</PostDescription>
+          <PostDescription>{post.memberName}</PostDescription>
         </PostDescriptionBox>
       </PostDescriptionBox>
       {/* 게시글 내용 */}
       <PostContentList>
-        {post.contents && post.contents.map((content) => (
+        {post.boardContents && post.boardContents.map((content) => (
           <PostContentBox>
             {content.type === "TEXT" ?
             (
-              <div dangerouslySetInnerHTML={{__html : content.content}}></div>
+              <div dangerouslySetInnerHTML={{__html : content.contentText}}></div>
             ) : (
-              <PostImg src={content.content}></PostImg>
+              <PostImg src={content.contentFile}></PostImg>
             )}
           </PostContentBox>
         ))}
       </PostContentList>
       {/* 파일이 있는 경우에만 나오도록. */}
-      {(post && post.file) && (
+      {(post && post.attachment) && (
         <>
           <AttachmentLabel>첨부파일</AttachmentLabel>
           <AttachmentBox>
             <IoDownloadOutline />
-            <FileLink href={post && post.file ? post.file.url : ""} download>{post && post.file ? post.file.name : ""}</FileLink>
+            <FileLink href={post && post.attachment ? post.attachment : ""} download>{post && post.attachment ? post.attachment : ""}</FileLink>
           </AttachmentBox>
         </>
       )}
