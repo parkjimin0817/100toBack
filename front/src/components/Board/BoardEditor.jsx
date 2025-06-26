@@ -4,77 +4,90 @@ import TextInputBlock from './TextInputBlock';
 import styled from 'styled-components';
 import { FaMinus, FaPlus } from 'react-icons/fa';
 
-const BoardEditor = ({ category }) => {
-  const [blocks, setBlocks] = useState([]);
-  const [title, setTitle] = useState("");
+const BoardEditor = (
+  { category, 
+    formState, 
+    updateFormField, 
+    addBlock, 
+    updateBlock, 
+    selectBlock, 
+    deleteBlock }
+) => {
+  // const [blocks, setBlocks] = useState([]);
+  // const [title, setTitle] = useState("");
+  // const [className, setClassName] = useState("");
+  // const [file, setFile] = useState("");
+  // const [writer, setWriter] = useState("");
 
-  const addBlock = () => {
-    const newBlock = {
-      id: Date.now(),
-      type : "default",
-      content_text: "",
-    };
-    setBlocks([...blocks, newBlock]);
-  };
+  // const addBlock = () => {
+  //   const newBlock = {
+  //     id: Date.now(),
+  //     type : "default",
+  //     content_text: "",
+  //   };
+  //   setBlocks([...blocks, newBlock]);
+  // };
 
-  const selectBlock = (type, id) => {
-    setBlocks((prev) =>
-      prev.map((block) =>
-        block.id === id ? { ...block, type : type } : block
-      )
-    );
-  }
+  // const selectBlock = (type, id) => {
+  //   setBlocks((prev) =>
+  //     prev.map((block) =>
+  //       block.id === id ? { ...block, type : type } : block
+  //     )
+  //   );
+  // }
 
-  const updateBlockContent = (id, value) => {
-    setBlocks((prev) =>
-      prev.map((block) =>
-        block.id === id ? { ...block, content: value } : block
-      )
-    );
-  };
+  // const updateBlockContent = (id, value) => {
+  //   setBlocks((prev) =>
+  //     prev.map((block) =>
+  //       block.id === id ? { ...block, content: value } : block
+  //     )
+  //   );
+  // };
 
-  const deleteBlock = (id) => {
-    setBlocks((prev) =>
-      prev.filter((block) =>
-        block.id !== id
-      )
-    );
-  }
+  // const deleteBlock = (id) => {
+  //   setBlocks((prev) =>
+  //     prev.filter((block) =>
+  //       block.id !== id
+  //     )
+  //   );
+  // }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("전송할 데이터:", blocks);
-    // 서버 전송 로직 작성 가능
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log("전송할 데이터:", blocks);
+  //   // 서버 전송 로직 작성 가능
+  // };
 
   return (
     <FormContainer>
-      <form onSubmit={handleSubmit}>
+      {/* <form onSubmit={handleSubmit}> */}
+      <div>
         <HeadBlock>
           <HeadLabel htmlFor='title'>제 목</HeadLabel>
-          <HeadInput id='title' type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+          <HeadInput id='title' type="text" value={formState?.title} onChange={(e) => updateFormField("title", e.target.value)} />
         </HeadBlock>
         <HeadBlock>
-        {(category === 'familycommunity' ||
-          category === 'notice') && (
+        {(category === 'family_notice' ||
+          category === 'note') && (
           <>
+          {/* 로딩시, api 호출해서 옵션을 채울 예정  */}
             <HeadLabel htmlFor='title'>반 선택</HeadLabel>
-            <HeadInput id='title' type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+            <HeadInput id='title' type="text" value={formState?.classRoom} onChange={(e) => updateFormField("classRoom",e.target.value)} />
           </>
           )
         }
-          <HeadLabel htmlFor='title'>작성자</HeadLabel>
-          <HeadInput id='title' type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+          <HeadLabel htmlFor='writer'>작성자</HeadLabel>
+          <HeadInput id='writer' type="text" value={formState?.memberName} onChange={(e) => updateFormField("memberName", e.target.value)} />
         </HeadBlock>
         {category !== 'gallery' && (
           <HeadBlock>
-            <HeadLabel htmlFor='title'>첨부 파일</HeadLabel>
-            <HeadInput id='title' type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+            <HeadLabel htmlFor='file'>첨부 파일</HeadLabel>
+            <HeadInput id='file' type="file" onChange={(e) => updateFormField("file", e.target.files[0])} />
           </HeadBlock>
         )}
 
         <div style={{ marginTop: "1rem" }}>
-          {blocks.map((block) => (
+          {formState?.contents.map((block) => (
             <div key={block.id} style={{ marginBottom: "1rem" }}>
               {block.type === "default" ? (
                 <ButtonBox>
@@ -88,16 +101,16 @@ const BoardEditor = ({ category }) => {
                     <FaMinus></FaMinus>
                   </AddBlockButton>
                 </ButtonBox>
-              ) : block.type === "text" ? (
+              ) : block.type === "TEXT" ? (
                 <TextInputBlock
                   key={block.id}
-                  onChange={(value) => updateBlockContent(block.id, value)}
+                  onChange={(value) => updateBlock(block.id, value)}
                 />
               ) : (
                 <ImageInputBlock
                   id={block.id}
-                  value={block.content}
-                  onChange={updateBlockContent}
+                  value={block.contentFile}
+                  onChange={updateBlock}
                 />
               )}
             </div>
@@ -108,7 +121,7 @@ const BoardEditor = ({ category }) => {
         </div>
 
         <button type="submit">작성 완료</button>
-      </form>
+      </div>
     </FormContainer>
   );
 };
