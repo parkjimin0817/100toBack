@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const HealthSummaryBox = ({ data }) => {
   const generateSummary = (data) => {
     const result = [];
-    const temp = parseFloat(data.temp);
+    const temp = parseFloat(data.temperature);
     if (temp >= 36 && temp <= 37.5) {
       result.push(`정상 체온입니다. (${temp}℃)`);
     } else if (temp > 37.5) {
@@ -35,7 +35,7 @@ const HealthSummaryBox = ({ data }) => {
       result.push(`수면이 많이 부족해요. (${sleep}시간) 건강에 무리가 갈 수 있어요!`);
     }
 
-    result.push(data.symptom ? `현재 증상 : ${data.symptom}` : '오늘 아프신 곳은 없으시네요. 잘 관리되고 있습니다.');
+    result.push(data.symptoms ? `증상 : ${data.symptoms}` : '오늘 아프신 곳은 없으시네요. 잘 관리되고 있습니다.');
 
     return result;
   };

@@ -36,8 +36,10 @@ export const API_ENDPOINTS = {
     TEACHER_DETAIL_LIST: (centerNo) => `/api/members/teacher/list/${centerNo}`,
   },
   APPLOVALLIST: {
-    BASE: 'api/approvalList',
-    PENDINGLIST: (centerNo) => `api/approval/lists/${centerNo}`,
+    BASE: 'api/approval',
+    CENTERPENDINGLIST: `api/approval/lists`,
+    MEMBERPENDINGLIST: (centerNo) => `api/approval/lists/${centerNo}`,
+    DECISIONCENTER: `api/approval/decision/center`,
     DECISIONMEMBER: `api/approval/decision/member`,
     DECISIONCHILD: `api/approval/decision/child`,
   },
@@ -54,5 +56,12 @@ export const API_ENDPOINTS = {
     //교사가 자신 근태 기록 조회
     //시설장이 교사 별 근태 조회
     TEACHERATTENDANCE: (memberNo) => `/api/attendance/teacher/${memberNo}`,
+  },
+  MEMBER_HEALTH: {
+    BASE: '/api/memberHealth',
+    CREATE: '/api/memberHealth/create',
+    LISTS: (memberNo) => `/api/memberHealth/lists/${memberNo}`,
+    DETAIL: (healthNo) => `/api/memberHealth/detail/${healthNo}`,
+    UPDATE: '/api/memberHealth/update',
   },
 };

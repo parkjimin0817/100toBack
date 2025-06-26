@@ -14,7 +14,7 @@ const ApprovalList = () => {
 
   const fetchPendingList = async () => {
     try {
-      const data = await approvalListService.getPendingList(member.centerNo);
+      const data = await approvalListService.getMemberPendingList(member.centerNo);
       setDataAll(data || []);
     } catch (error) {
       console.error('승인 대기 목록 로딩 실패:', error.message);

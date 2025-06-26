@@ -41,10 +41,10 @@ public class ScheduleServiceImpl implements ScheduleService {
         Member member = memberRepository.findByMemberNo(dto.getMember_no())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
 
-        if (dto.getStart_time() != null && dto.getEnd_time() != null &&
-                dto.getEnd_time().isBefore(dto.getStart_time())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "종료 시간이 시작 시간보다 빠를 수 없습니다.");
-        }
+//        if (dto.getStart_time() != null && dto.getEnd_time() != null &&
+//                dto.getEnd_time().isBefore(dto.getStart_time())) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "종료 시간이 시작 시간보다 빠를 수 없습니다.");
+//        }
 
         Schedule schedule = dto.toEntity(center, member);
 
@@ -85,10 +85,10 @@ public class ScheduleServiceImpl implements ScheduleService {
     public String updateSchedule(ScheduleUpdateDto dto) {
         Schedule schedule = scheduleRepository.findScheduleByScheduleNo(dto.getSchedule_no());
 
-        if (dto.getStart_time() != null && dto.getEnd_time() != null &&
-                dto.getEnd_time().isBefore(dto.getStart_time())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "종료 시간이 시작 시간보다 빠를 수 없습니다.");
-        }
+//        if (dto.getStart_time() != null && dto.getEnd_time() != null &&
+//                dto.getEnd_time().isBefore(dto.getStart_time())) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "종료 시간이 시작 시간보다 빠를 수 없습니다.");
+//        }
 
         schedule.updateTitle(dto.getTitle());
         schedule.updateDescription(dto.getDescription());
