@@ -2,6 +2,7 @@ package com.bridge.kinder.dto;
 
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Child;
+import java.time.LocalDateTime;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -102,6 +103,64 @@ public class ChildDto {
                     .child_no(child.getChildNo())
                     .child_name(child.getChildName())
                     .class_no(child.getClassRoom().getClassNo())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class childListResponse {
+        private int child_no;
+        private String child_name;
+        private String class_name;
+
+        public static childListResponse toDto(Child child){
+            return childListResponse.builder()
+                    .child_no(child.getChildNo())
+                    .child_name(child.getChildName())
+                    .class_name(child.getClassRoom().getClassName())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class modalResponse {
+        private String class_name;
+        private String child_name;
+        private LocalDateTime create_date;
+
+        public static modalResponse toDto(Child child){
+            return modalResponse.builder()
+                    .class_name(child.getClassRoom().getClassName())
+                    .child_name(child.getChildName())
+                    .create_date(child.getCreateDate())
+                    .build();
+        }
+
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class updateClass {
+        private int child_no;
+        private String child_name;
+        private String class_name;
+
+        public static updateClass toDto(Child child){
+            return updateClass.builder()
+                    .child_no(child.getChildNo())
+                    .child_name(child.getChildName())
+                    .class_name(child.getClassRoom().getClassName())
                     .build();
         }
     }

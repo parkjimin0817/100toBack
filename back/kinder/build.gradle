@@ -38,6 +38,7 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 
 	implementation 'net.nurigo:sdk:4.3.0'
+
 }
 
 tasks.named('test') {

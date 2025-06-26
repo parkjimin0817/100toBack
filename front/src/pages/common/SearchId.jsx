@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import CommonFind from '../../components/Common/CommonFind';
@@ -6,13 +6,24 @@ import { ContentArea, SearchIdForm } from '../../styles/Common/Container';
 import SearchFormNav from '../../components/Common/SearchFormNav';
 import { Button } from '../../styles/Common/Button';
 import { useNavigate } from 'react-router-dom';
+import { useSearchIdForm } from '../../hook/searchForm/useSearchIdForm';
 
 const SearchId = () => {
-  const navigator = useNavigate();
+  const {
+    navigator,
+    BIRTHDAY_YEAR_LIST,
+    BIRTHDAY_MONTH_LIST,
+    BIRTHDAY_DAY_LIST,
+    name,
+    choiceYear,
+    choiceMonth,
+    choiceDay,
+    handleChange,
+    handleSubmit,
+    error,
+    isLoading,
+  } = useSearchIdForm();
 
-  const BIRTHDAY_YEAR_LIST = Array.from({ length: 36 }, (_, i) => `${i + 1990}년`);
-  const BIRTHDAY_MONTH_LIST = Array.from({ length: 12 }, (_, i) => `${i + 1}월`);
-  const BIRTHDAY_DAY_LIST = Array.from({ length: 31 }, (_, i) => `${i + 1}일`);
   return (
     <>
       <CommonFind />
@@ -22,38 +33,58 @@ const SearchId = () => {
         <ContentArea>
           <h2>아이디 찾기</h2>
           <Content>
-            <Smalltext>이름과 생년월일을 입력해주세요.</Smalltext>
-            <form>
+            {error ? <SmalltextError>{error}</SmalltextError> : <Smalltext>이름과 생년월일을 입력해주세요.</Smalltext>}
+
+            <form onSubmit={handleSubmit}>
               <ContentInner>
                 <h3>이름</h3>
-                <Input type="text" placeholder="이름을 입력해주세요." />
+                <Input
+                  type="text"
+                  name="name"
+                  placeholder="이름을 입력해주세요."
+                  value={name}
+                  onChange={handleChange}
+                />
               </ContentInner>
               <ContentInner>
                 <h3>생년월일</h3>
                 <ContentDiv>
-                  <SelectBar>
+                  <SelectBar name="year" value={choiceYear} onChange={handleChange}>
+                    <option value="" disabled>
+                      년
+                    </option>
                     {BIRTHDAY_YEAR_LIST.map((year, index) => (
-                      <option key={index}>{year}</option>
+                      <option key={index} value={year}>
+                        {year}
+                      </option>
                     ))}
                   </SelectBar>
-                  <SelectBar>
+                  <SelectBar name="month" value={choiceMonth} onChange={handleChange}>
+                    <option value="" disabled>
+                      월
+                    </option>
                     {BIRTHDAY_MONTH_LIST.map((month, index) => (
-                      <option key={index}>{month}</option>
+                      <option key={index} value={month}>
+                        {month}
+                      </option>
                     ))}
                   </SelectBar>
-                  <SelectBar>
+                  <SelectBar name="day" value={choiceDay} onChange={handleChange}>
+                    <option value="" disabled>
+                      일
+                    </option>
                     {BIRTHDAY_DAY_LIST.map((day, index) => (
-                      <option key={index}>{day}</option>
+                      <option key={index} value={day}>
+                        {day}
+                      </option>
                     ))}
                   </SelectBar>
                 </ContentDiv>
               </ContentInner>
 
               <ButtonArea>
-                <Button1 type="submit" onClick={() => navigator('/findidsuccess')}>
-                  완료
-                </Button1>
-                <Button1 type="button" onClick={() => navigator('/login')}>
+                <Button1 type="submit">{isLoading ? '아이디 찾는중 ...' : '완료'}</Button1>
+                <Button1 type="button" onClick={() => navigator('/')}>
                   돌아가기
                 </Button1>
               </ButtonArea>
@@ -82,6 +113,11 @@ const Smalltext = styled.span`
   color: ${({ theme }) => theme.colors.gray[400]};
 `;
 
+const SmalltextError = styled.span`
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.orange};
+`;
+
 const ButtonArea = styled.div`
   display: flex;
   justify-content: center;
@@ -91,11 +127,8 @@ const ButtonArea = styled.div`
 `;
 
 const Button1 = styled(Button)`
+  width: 100%;
   background-color: ${({ theme }) => theme.colors.lightblue};
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.green};
-  }
 `;
 
 const ContentFooter = styled.div`
@@ -115,6 +148,7 @@ const ContentDiv = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: ${({ theme }) => theme.spacing[1]};
 `;
 
 const SelectBar = styled.select`
@@ -134,6 +168,7 @@ const Input = styled.input`
   border-radius: ${({ theme }) => theme.borderRadius.md};
   padding: ${({ theme }) => theme.spacing[2]};
   outline: none;
+  margin-top: ${({ theme }) => theme.spacing[1]};
 `;
 
 export default SearchId;

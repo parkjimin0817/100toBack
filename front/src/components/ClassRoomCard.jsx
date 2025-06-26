@@ -14,20 +14,20 @@ import styled from 'styled-components';
  * address 부분은 페이지마다 다르게 들어가야합니다.
  */
 
-const ClassRoomCard = ({ rooms, address }) => {
+const ClassRoomCard = ({ classrooms, address }) => {
   return (
     <>
       <FlexContainer>
-        {rooms.map((room) => (
+        {classrooms.map((classroom) => (
           <ClassList
-            key={room.id}
-            img={room.class_image}
-            className={room.class_name}
-            mateCount={room.mate_count}
-            capacity={room.capacity}
-            teacher={room.teacher}
-            classColor={room.class_color}
-            address={address + `/${room.id}`}
+            key={classroom.classroom_no}
+            img={classroom.class_image}
+            className={classroom.class_name}
+            mateCount={classroom.child_count} //정원 세야함
+            capacity={classroom.capacity}
+            teacher={classroom.member_name}
+            classColor={classroom.color}
+            //address={address + `/${classroom.classroom_no}`}
           />
         ))}
       </FlexContainer>
@@ -36,10 +36,9 @@ const ClassRoomCard = ({ rooms, address }) => {
 };
 
 const FlexContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
+  place-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   padding: ${({ theme }) => theme.spacing[10]};
   gap: 60px;
 `;

@@ -1,34 +1,129 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Form from '../../components/Common/SearchFormNav';
-import { SearchIdForm } from '../../styles/Common/Container';
+import { ContentArea, SearchIdForm } from '../../styles/Common/Container';
 import styled from 'styled-components';
 import CommonFind from '../../components/Common/CommonFind';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '../../styles/Common/Button';
+import SearchFormNav from '../../components/Common/SearchFormNav';
+import axios from 'axios';
+import { memberService } from '../../api/member';
+import useSearchIdStore from '../../store/searchStore';
+import { toast } from 'react-toastify';
+import { useSearchPwdForm1 } from '../../hook/searchForm/useSearchPwdForm1';
 
 const SearchPassword = () => {
-  const navigator = useNavigate();
+  const { navigator, id, error, isLoading, handleChange, onSubmit } = useSearchPwdForm1();
+
   return (
-    <Container>
-      <CommonFind></CommonFind>
-      <Contents>
-        <Form></Form>
-        <Title>비밀번호 찾기</Title>
-        <Info>비밀번호 재설정을 위해 사용자 확인을 진행합니다.</Info>
-        <Input placeholder="아이디를 입력해주세요." />
-        <Button onClick={() => navigator('/authenticationuser')}>다음</Button>
-        <FooterLine>
-          <Foot style={{ marginLeft: '410px' }}>고객센터</Foot>
-          <Foot>1:1문의</Foot>
-        </FooterLine>
-      </Contents>
-      <div style={{ marginTop: '10px' }}>
+    <>
+      <CommonFind />
+
+      <SearchIdForm>
+        <SearchFormNav />
+        <ContentArea>
+          <h2>비밀번호 찾기</h2>
+          <Content>
+            {error ? (
+              <SmalltextError>{error}</SmalltextError>
+            ) : (
+              <Smalltext>비밀번호 재설정을 위해 사용자 확인을 진행합니다.</Smalltext>
+            )}
+
+            <form onSubmit={onSubmit}>
+              <ContentInner>
+                <h3>아이디</h3>
+                <Input type="text" name="id" placeholder="아이디를 입력해주세요." value={id} onChange={handleChange} />
+              </ContentInner>
+              <ButtonArea>
+                <Button1 type="submit">{isLoading ? '아이디 찾는중 ...' : '완료'}</Button1>
+                <Button1 type="button" onClick={() => navigator('/')}>
+                  돌아가기
+                </Button1>
+              </ButtonArea>
+            </form>
+            <ContentFooter>
+              <div>고객센터</div>
+              <div>1 : 1 문의하기</div>
+            </ContentFooter>
+          </Content>
+        </ContentArea>
+      </SearchIdForm>
+      <div>
         <span>@KB Corp</span>
       </div>
-    </Container>
+    </>
   );
 };
 
 export default SearchPassword;
+
+const Content = styled.div`
+  padding: ${({ theme }) => theme.spacing[8]} 0;
+  padding-bottom: 0;
+`;
+
+const Smalltext = styled.span`
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.gray[400]};
+`;
+
+const SmalltextError = styled.span`
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.orange};
+`;
+
+const ButtonArea = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: ${({ theme }) => theme.spacing[3]} 0;
+`;
+
+const Button1 = styled(Button)`
+  width: 100%;
+  background-color: ${({ theme }) => theme.colors.lightblue};
+`;
+
+const ContentFooter = styled.div`
+  padding-top: ${({ theme }) => theme.spacing[16]};
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  gap: 15px;
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+`;
+
+const ContentInner = styled.div`
+  padding: ${({ theme }) => theme.spacing[2]} 0;
+`;
+
+const ContentDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const SelectBar = styled.select`
+  width: 30%;
+  height: 40px;
+  text-align: center;
+  font-size: ${({ theme }) => theme.fontSizes.base};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border: 1px solid ${({ theme }) => theme.colors.gray[400]};
+  outline: none;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  height: 40px;
+  border: 1px solid ${({ theme }) => theme.colors.gray[400]};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: ${({ theme }) => theme.spacing[2]};
+  outline: none;
+  margin-top: ${({ theme }) => theme.spacing[1]};
+`;
 
 const Container = styled.div`
   display: flex;
@@ -59,50 +154,7 @@ const Info = styled.div`
   display: flex;
   align-items: flex-start;
   margin-left: 55px;
-  font-size: 14px;
+  font-size: ${({ theme }) => theme.fontSizes.xs};
   color: #b5b5b5;
   height: 30px;
-`;
-
-const Input = styled.input`
-  display: flex;
-  align-items: flex-start;
-  margin-left: 55px;
-  margin-top: 15px;
-  width: 450px;
-  height: 50px;
-  border: 0.8px solid #bdbcbc;
-  border-radius: 5px;
-  padding-left: 10px;
-`;
-
-const Button = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 55px;
-  margin-top: 15px;
-  width: 450px;
-  height: 50px;
-  background-color: #bae8f5;
-  border-radius: 8px;
-  font-weight: bold;
-
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-const FooterLine = styled.div`
-  margin-top: 130px;
-  display: flex;
-  flex-direction: row;
-`;
-
-const Foot = styled.div`
-  font-size: 12px;
-  margin-right: 15px;
-  &:hover {
-    cursor: pointer;
-  }
 `;

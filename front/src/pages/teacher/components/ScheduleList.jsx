@@ -3,8 +3,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { TbEdit } from 'react-icons/tb';
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import useLoginStore from '../../../store/loginStore';
 
-const ScheduleList = ({ schedules, emptyMessage = '일정이 없습니다.', onEditClick }) => {
+const ScheduleList = ({ schedules, emptyMessage = '일정이 없습니다.', onEditClick, onDeleteClick }) => {
+  const { member } = useLoginStore();
   if (!schedules || schedules.length === 0) {
     return <Message>{emptyMessage}</Message>;
   }
@@ -12,20 +14,24 @@ const ScheduleList = ({ schedules, emptyMessage = '일정이 없습니다.', onE
   return (
     <>
       {schedules.map((item) => (
-        <Box key={item.id}>
+        <Box key={item.schedule_no}>
           <BoxLeft>
             <BoxTime>
-              {item.start_time} ~ {item.end_time}
+              {item.start_time?.substring(0, 5)} ~ {item.end_time?.substring(0, 5)}
             </BoxTime>
             <BoxSchedule>{item.title}</BoxSchedule>
           </BoxLeft>
           <BoxRight>
-            <BoxButton>
-              <EditButton onClick={() => onEditClick(item)} />
-            </BoxButton>
-            <BoxButton>
-              <DeleteButton />
-            </BoxButton>
+            {item.member_no === member.memberNo && (
+              <>
+                <BoxButton>
+                  <EditButton onClick={() => onEditClick(item)} />
+                </BoxButton>
+                <BoxButton>
+                  <DeleteButton onClick={() => onDeleteClick(item.schedule_no)} />
+                </BoxButton>
+              </>
+            )}
           </BoxRight>
         </Box>
       ))}

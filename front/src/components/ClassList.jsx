@@ -16,12 +16,20 @@ import { GiRialtoBridge } from 'react-icons/gi';
 
 const ClassList = ({ img, className, mateCount, capacity, teacher, classColor, address }) => {
   const navigate = useNavigate();
+
+  console.log('🧾 클래스 props', {
+    img,
+    className,
+    mateCount,
+    capacity,
+    teacher,
+    classColor,
+    address,
+  });
   return (
     <Card $Color={classColor} onClick={() => navigate(address)}>
       <CardInfo>
-        <div>
-          <CardImg>{img === null ? <Icon /> : <img src={img} alt="사진" />}</CardImg>
-        </div>
+        <div>{/* <CardImg>{img === null ? <Icon /> : <img src={img} alt="사진" />}</CardImg> */}</div>
         <CardInner>
           <h3>{className}반</h3>
           <Cardinnerinner>
@@ -43,7 +51,7 @@ const Card = styled.div`
   padding: ${({ theme }) => theme.spacing[4]};
   border-radius: 10px;
   width: 240px;
-  background-color: ${({ theme, $Color }) => theme.colors[$Color]};
+  background-color: ${({ $Color }) => $Color};
   color: ${({ theme }) => theme.colors.white};
   gap: 5px;
   box-shadow: ${({ theme }) => theme.shadows.md};

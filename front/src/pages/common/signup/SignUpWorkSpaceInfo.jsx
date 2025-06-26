@@ -28,12 +28,12 @@ const SignUpWorkSpaceInfo = () => {
   const navigate = useNavigate();
   const type = useSignUpStore((state) => state.type);
   const basicInfo = useSignUpStore((state) => state.basicInfo);
-
   const { centers, loading } = useCenterList();
 
   const { handleSubmit, setValue, errors, isSubmitting } = useTeacherInfoForm();
 
   const onSubmit = async (data) => {
+    console.log('넘어온 데이터', basicInfo);
     const mergedData = {
       member_name: basicInfo.memberName,
       member_id: basicInfo.memberId,
@@ -46,6 +46,8 @@ const SignUpWorkSpaceInfo = () => {
       center_no: data.centerNo,
     };
     console.log('데이터 최종 : ', mergedData);
+    console.log('교사 mergedData:', mergedData);
+    console.log('basicInfo.birthdate 타입:', typeof basicInfo.birthdate, basicInfo.birthdate);
     try {
       await memberService.signUp(mergedData);
     } catch (err) {

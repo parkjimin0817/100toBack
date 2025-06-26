@@ -1,13 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import CommonFind from '../../components/Common/CommonFind';
 import { SearchIdForm } from '../../styles/Common/Container';
 import SearchFormNav from '../../components/Common/SearchFormNav';
 import styled from 'styled-components';
 import { Button } from '../../styles/Common/Button';
 import { useNavigate } from 'react-router-dom';
+import useSearchIdStore from '../../store/searchStore';
 
 const SeachIdSuccess = () => {
   const navigator = useNavigate();
+  const { member, reset } = useSearchIdStore();
+
+  useEffect(() => {
+    if (member.member_id === '') {
+      alert('잘못된 접근입니다.');
+      navigator('/findid');
+    }
+  });
+
+  const navLogin = (data) => {
+    navigator(data);
+    reset('member');
+  };
   return (
     <>
       <CommonFind />
@@ -21,13 +35,13 @@ const SeachIdSuccess = () => {
 
             <ContentForm>
               <Info>
-                고객님의 아이디는 <UserID>user01</UserID>입니다.
+                고객님의 아이디는 <UserID>{member.member_id}</UserID>입니다.
               </Info>
             </ContentForm>
 
             <ButtonArea>
-              <Button1 onClick={() => navigator('/login')}>로그인하기</Button1>
-              <Button1 onClick={() => navigator('/authenticationuser')}>비밀번호 찾기</Button1>
+              <Button1 onClick={() => navLogin('/')}>로그인하기</Button1>
+              <Button1 onClick={() => navLogin('/authenticationuser')}>비밀번호 찾기</Button1>
             </ButtonArea>
 
             <ContentFooter>

@@ -1,22 +1,22 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 
-const SideBar = ({ role }) => {
+const SideBar = ({ type }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [openMenus, setOpenMenus] = useState({});
   const sidebarRef = useRef(null);
+
+  const sidebarByType = {
+    TEACHER: teacherSidebar,
+    MANAGER: managerSidebar,
+    PARENT: parentSidebar,
+  };
 
   const handleMenuToggle = (menuId) => {
     setOpenMenus((prev) => ({ ...prev, [menuId]: !prev[menuId] }));
   };
 
-  const sidebarByRole = {
-    teacher: teacherSidebar,
-    manager: managerSidebar,
-    parent: parentSidebar,
-  };
-
-  const sidebarMenus = sidebarByRole[role] || [];
+  const sidebarMenus = sidebarByType[type] || [];
 
   return (
     <SidebarContainer
@@ -71,6 +71,7 @@ import { RiHealthBookLine } from 'react-icons/ri';
 import { NavLink } from 'react-router-dom';
 import { IoPeopleOutline } from 'react-icons/io5';
 import { FaSchoolFlag } from 'react-icons/fa6';
+import useLoginStore from '../../store/loginStore';
 
 const teacherSidebar = [
   {
@@ -150,7 +151,7 @@ const managerSidebar = [
     icon: <FaRegCalendarAlt />,
     color: 'purple',
     subItems: [
-      { label: '유치원 일정', link: '*' },
+      { label: '유치원 일정', link: '/manager/schedule' },
       { label: '반 별 일과표', link: '/daily' },
       { label: '학부모 상담 일정', link: '*' },
     ],

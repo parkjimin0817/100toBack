@@ -1,52 +1,61 @@
 // src/pages/manager/ClassPlacement.jsx
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import ContentHeader from '../../components/Common/ContentHeader';
 import ChildrenList from '../../components/ChildrenList';
 import Modal from '../../components/ClassPlacementModal';
+import useLoginStore from '../../store/loginStore';
+import { useEffect, useState } from 'react';
 
 const ClassPlacement = () => {
+  const member = useLoginStore((state) => state.member);
   const navigate = useNavigate();
-  const headerButtons = [{ Title: '반 목록', func: () => navigate('/classlist') }];
 
-  // true → 전체, false → 미배정
+  const [accessDenied, setAccessDenied] = useState(false);
+
+  useEffect(() => {
+    if (!member) {
+      alert('로그인이 필요합니다.');
+      navigate('/login'); // 로그인 페이지로 이동
+      return;
+    }
+
+    if (member.memberType === 'TEACHER' || member.memberType === 'PARENT') {
+      alert('접근 권한이 없습니다.');
+      setAccessDenied(true);
+      navigate(-1);
+    }
+  }, [member, navigate]);
+
+  if (!member || accessDenied) return null; // ❗️렌더링 차단
+
+  const centerNo = member.centerNo;
+  const headerButtons = [{ Title: '반 목록', func: () => navigate('/manager/classmanage') }];
+
   const [showAll, setShowAll] = useState(true);
-
   const [openModal, setOpenModal] = useState(false);
-
-  // 정렬 초기값을 등록순으로
   const [sort, setSort] = useState('createDate');
-
   const [role, setRole] = useState('child');
-
-  const today = new Date().toISOString().split('T')[0]; // "2025-06-20"
-
+  const today = new Date().toISOString().split('T')[0];
   const [selectedDate, setSelectedDate] = useState(today);
+  const [selectedItem, setSelectedItem] = useState(null);
 
-  const [selectedId, setSelectedId] = useState(null);
-
-  const handleSort = (e) => {
-    setSort(e.target.value);
-  };
-
-  const handleRole = (e) => {
-    setRole(e.target.value);
-  };
+  const handleSort = (e) => setSort(e.target.value);
+  const handleRole = (e) => setRole(e.target.value);
 
   return (
     <>
       <Content>
         <ContentHeader Title="반 배정" Color="blue" ButtonProps={headerButtons} />
-
         <ButtonLine>
           <ToggleButton $active={showAll} onClick={() => setShowAll(true)}>
             전체
           </ToggleButton>
-
           <ToggleButton $active={!showAll} onClick={() => setShowAll(false)}>
             미배정
           </ToggleButton>
+
           <DropdownLine>
             <P>대상</P>
             <Dropdown value={role} onChange={handleRole}>
@@ -54,6 +63,7 @@ const ClassPlacement = () => {
               <option value="teacher">교사</option>
             </Dropdown>
           </DropdownLine>
+
           <DropdownLine style={{ marginLeft: '0px' }}>
             <P>정렬</P>
             <Dropdown value={sort} onChange={handleSort}>
@@ -62,19 +72,29 @@ const ClassPlacement = () => {
               <option value="name">이름순</option>
             </Dropdown>
           </DropdownLine>
+
           <PlacementButton onClick={() => setOpenModal(true)}>반 배정</PlacementButton>
         </ButtonLine>
+
         <ChildrenList
           Color="blue"
           showAll={showAll}
           sortBy={sort}
           roleBy={role}
           classPlacement={true}
-          setSelectedId={setSelectedId}
-          selectedId={selectedId}
+          selectedItem={selectedItem}
+          setSelectedItem={setSelectedItem}
+          centerNo={centerNo}
         />
       </Content>
-      <Modal isOpen={openModal} onClose={() => setOpenModal(false)} selectedDate={selectedDate} id={selectedId} />
+
+      <Modal
+        isOpen={openModal}
+        onClose={() => setOpenModal(false)}
+        selectedDate={selectedDate}
+        selectedItem={selectedItem}
+        centerNo={centerNo}
+      />
     </>
   );
 };

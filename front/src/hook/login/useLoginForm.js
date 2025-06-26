@@ -5,24 +5,22 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
 import { useLoginStore } from '../../store/loginStore';
 import { memberService } from '../../api/member';
+import { toast } from 'react-toastify';
+import { attendanceService } from '../../api/attendance';
+import useAttendanceStore from '../../store/attendanceStore';
 
 const loginSchema = yup.object().shape({
-  memberId: yup
-    .string()
-    .min(6, '6자 이상 입력해주세요.')
-    .matches(/^[가-힣a-zA-Z][^!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\s]*$/, '특수문자와 숫자가 없어야합니다.')
-    .required('아이디를 입력해주세요.'),
-  memberPwd: yup
-    .string()
-    .min(8, '8자 이상 입력해주세요.')
-    .matches(/^[가-힣a-zA-Z][^!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\s]*$/, '특수문자와 숫자가 없어야합니다.')
-    .required('비밀번호를 입력해주세요.'),
+  memberId: yup.string().required('아이디를 입력해주세요.'),
+  memberPwd: yup.string().required('비밀번호를 입력해주세요.'),
 });
 
 export const useLoginForm = () => {
   const [checked, setChecked] = useState(false);
   const navigator = useNavigate();
   const { login } = useLoginStore();
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const { setAttendance } = useAttendanceStore();
 
   const {
     register,
@@ -33,21 +31,34 @@ export const useLoginForm = () => {
   });
 
   const onSubmit = async (formData) => {
+    setIsLoading(true);
+    setError('');
     try {
       const { memberId, memberPwd } = formData;
 
       const memberData = await memberService.login(memberId, memberPwd);
       login(memberData);
 
+      toast.success('로그인 성공하였습니다.');
+
       if (memberData.memberType === 'MANAGER') {
-        navigator('/manager/mypage');
+        navigator('/teacher/main');
       } else if (memberData.memberType === 'TEACHER') {
+        //교사용 오늘 출퇴근 기록
+        const attendance = await attendanceService.getTodayAttendance(memberData.memberNo);
+        setAttendance(attendance);
         navigator('/teacher/main');
       } else if (memberData.memberType === 'PARENT') {
         navigator('/parent/main');
+      } else if (memberData.memberType === 'ADMIN') {
+        navigator('/approvalListAdmin');
       }
     } catch (err) {
+      toast.error('로그인 실패하였습니다.');
+      setError('로그인 실패하였습니다.');
       console.error('로그인 에러:', err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -58,5 +69,7 @@ export const useLoginForm = () => {
     errors,
     checked,
     setChecked,
+    error,
+    isLoading,
   };
 };

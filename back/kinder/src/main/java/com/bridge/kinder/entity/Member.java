@@ -3,6 +3,7 @@ package com.bridge.kinder.entity;
 import com.bridge.kinder.enums.CommonEnums;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Table(name = "MEMBER")
+@Setter
 public class Member {// 멤버
     
     @Id
@@ -136,5 +138,9 @@ public class Member {// 멤버
     //---------------------------------------------------------------------------------------------
     public void changeMemberStatus(CommonEnums.AdmissionStatus newStatus) {
         this.status = newStatus;
+    }
+
+    public void changeMemberPwd(String newPwd) {
+        this.memberPwd = newPwd;
     }
 }

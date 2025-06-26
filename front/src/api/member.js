@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import api from './axios';
 import { API_ENDPOINTS } from './config';
 
@@ -30,8 +31,7 @@ export const memberService = {
         default:
           throw new Error('알 수 없는 사용자 유형입니다.');
       }
-      console.log(mergedData.member_profile);
-      console.log(mergedData.child_profile);
+
       const formData = new FormData();
 
       //멤버 공통 정보
@@ -41,6 +41,7 @@ export const memberService = {
       formData.append('member.member_phone', mergedData.member_phone);
       formData.append('member.member_birth', mergedData.member_birth); // yyyy-MM-dd
       formData.append('member.member_type', mergedData.member_type);
+      formData.append('member.address', mergedData.address);
       if (mergedData.member_profile instanceof FileList || Array.isArray(mergedData.member_profile)) {
         formData.append('member.member_profile', mergedData.member_profile[0]);
       } else if (mergedData.member_profile instanceof File) {
@@ -49,7 +50,7 @@ export const memberService = {
 
       //교사 추가 정보
       if (mergedData.member_type === 'TEACHER') {
-        formData.append('center_no', mergedData.center_no);
+        formData.append('member.center_no', mergedData.center_no);
       }
 
       //학부모 추가 정보
@@ -84,7 +85,13 @@ export const memberService = {
       });
 
       return data;
-    } catch (error) {}
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.message || '회원가입에 실패했습니다.';
+        throw new Error(errorMessage);
+      }
+      throw new Error('서버와의 통신에 실패했습니다.');
+    }
   },
 
   //로그인
@@ -98,12 +105,113 @@ export const memberService = {
         memberId: data.member_id,
         memberType: data.member_type,
         centerNo: data.center_no,
+        classNo: data.class_no,
+        centerTel: data.center_tel,
       };
 
       return camelData;
     } catch (error) {
       if (error.response) {
         const errorMessage = error.response.data.message || '로그인에 실패했습니다.';
+        // throw new Error(errorMessage);
+        toast.error(errorMessage);
+      }
+      throw new Error('서버와의 통신에 실패했습니다.');
+    }
+  },
+
+  //교사 간단 목록 불러오기
+  teacherlist: async (centerNo) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.MEMBERS.TEACHERLIST(centerNo));
+      return data;
+    } catch (error) {
+      throw new Error('서버 통신 불량: ' + error.message);
+    }
+  },
+
+  //비밀번호 찾기
+  searchPwd: async (member_id) => {
+    try {
+      const { data } = await api.post(API_ENDPOINTS.MEMBERS.PWDSEARCHID, { member_id });
+      return data;
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.message || '비밀번호 찾기에 실패했습니다.';
+        throw new Error(errorMessage);
+      }
+      throw new Error('서버와의 통신에 실패했습니다.');
+    }
+  },
+
+  //전화번호 인증 요청
+  phoneAccess: async (phone_number) => {
+    try {
+      const { data } = await api.post(API_ENDPOINTS.MEMBERS.PHONEACCESS, { phone_number });
+      return data;
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.message || '인증 번호 전송 실패했습니다.';
+        throw new Error(errorMessage);
+      }
+      throw new Error('서버와의 통신에 실패했습니다.');
+    }
+  },
+
+  //비밀번호 변경
+  pwdUpdate: async (member_id, member_pwd) => {
+    try {
+      const { data } = await api.patch(API_ENDPOINTS.MEMBERS.PWDUPDATE, { member_id, member_pwd });
+      return data;
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.message || '비밀번호 변경 실패했습니다.';
+        throw new Error(errorMessage);
+      }
+      throw new Error('서버와의 통신에 실패했습니다.');
+    }
+  },
+
+  //교사 상세 목록 불러오기
+  teacherDetailList: async (centerNo) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.MEMBERS.TEACHER_DETAIL_LIST(centerNo));
+      return data;
+    } catch (error) {
+      throw new Error('서버 통신 불량: ' + error.message);
+    }
+  },
+
+  //마이페이지
+  Mypage: async (memberNo) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.MEMBERS.MYPAGE(memberNo));
+
+      const camelData = {
+        memberName: data.member_name,
+        memberBirth: data.member_birth,
+        memberType: data.member_type,
+        centerName: data.center_name,
+        centerTel: data.center_tel,
+        centerAddress: data.center_address,
+        centerType: data.center_type,
+      };
+
+      return camelData;
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || '정보를 불러오는데 실패했습니다.';
+      throw new Error(errorMessage);
+    }
+  },
+
+  //아이디 찾기
+  searchId: async (member_name, member_birth) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.MEMBERS.SEARCHID(member_name, member_birth));
+      return data;
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.message || '아이디 찾기에 실패했습니다.';
         throw new Error(errorMessage);
       }
       throw new Error('서버와의 통신에 실패했습니다.');

@@ -57,4 +57,5 @@ public class CommonEnums {
         TEXT,           //텍스트
         IMG,           //이미지
     }
+
 }
