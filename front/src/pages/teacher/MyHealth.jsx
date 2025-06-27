@@ -3,8 +3,10 @@ import ContentHeader from '../../components/Common/ContentHeader';
 import styled from 'styled-components';
 import MyHealthList from './components/MyHealthList';
 import { useNavigate } from 'react-router-dom';
+import useLoginStore from '../../store/loginStore';
 
 const MyHealth = () => {
+  const { member } = useLoginStore();
   const navigate = useNavigate();
   return (
     <Wrapper>
@@ -13,7 +15,7 @@ const MyHealth = () => {
         Color="yellow"
         ButtonProps={[{ Title: '작성하기', func: () => navigate('/teacherhealth/write') }]}
       />
-      <MyHealthList />
+      <MyHealthList memberNo={member.memberNo} />
     </Wrapper>
   );
 };

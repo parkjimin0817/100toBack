@@ -54,4 +54,19 @@ public class MemberHealthLog {// 멤버 건강 기록
         createDate = LocalDateTime.now();
     }
 
+
+    //---------------------------------------------------------------------------------------------
+    public void changeTemperature(BigDecimal temperature) {
+        this.temperature = temperature;
+    }
+    public void changeStress(int stress) {
+        this.stress = stress;
+    }
+    public void changeSleep(int sleep) {
+        this.sleep = sleep;
+    }
+    public void changeSymptoms(String symptoms) {
+        this.symptoms = symptoms;
+    }
+
 }
