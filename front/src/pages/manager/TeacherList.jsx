@@ -13,29 +13,32 @@ const TeacherList = () => {
   const { member } = useLoginStore();
   const centerNo = member?.centerNo;
 
+  // 교사 리스트에서 반 배정 같은 거 하려면 필요함
+  const [selectedItem, setSelectedItem] = useState(null);
+
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredName, setFilteredName] = useState('');
 
-  // true → 전체, false → 미배정
-  const [showAll, setShowAll] = useState(true);
+  // // true → 전체, false → 미배정
+  // const [showAll, setShowAll] = useState(true);
 
-  // 정렬 초기값을 등록순으로
-  const [sort, setSort] = useState('createDate');
+  // // 정렬 초기값을 등록순으로
+  // const [sort, setSort] = useState('createDate');
 
-  const [role, setRole] = useState('child');
+  // const [role, setRole] = useState('child');
 
-  //교사 목록 불러오기
-  const [teachers, setTeachers] = useState([]);
-  useEffect(() => {
-    if (!centerNo) return;
+  // //교사 목록 불러오기
+  // const [teachers, setTeachers] = useState([]);
+  // useEffect(() => {
+  //   if (!centerNo) return;
 
-    memberService
-      .teacherDetailList(centerNo)
-      .then((data) => setTeachers(data))
-      .catch((err) => console.error('교사 목록 불러오기 실패 : ', err));
-  }, [centerNo]);
+  //   memberService
+  //     .teacherDetailList(centerNo)
+  //     .then((data) => setTeachers(data))
+  //     .catch((err) => console.error('교사 목록 불러오기 실패 : ', err));
+  // }, [centerNo]);
 
-  console.log(teachers);
+  //console.log(teachers);
 
   return (
     <Content>
@@ -66,11 +69,14 @@ const TeacherList = () => {
       </SearchLine>
       <ChildrenList
         Color="blue"
-        showAll={showAll}
-        sortBy={sort}
-        roleBy={'teacher'}
+        showAll={true}
+        sortBy="createDate"
+        roleBy="teacher"
+        classPlacement={false}
+        selectedItem={selectedItem}
+        setSelectedItem={setSelectedItem}
+        centerNo={centerNo}
         nameFilter={filteredName}
-        data={teachers}
       />
     </Content>
   );

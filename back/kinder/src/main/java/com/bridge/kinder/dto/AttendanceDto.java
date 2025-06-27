@@ -22,6 +22,7 @@ public class AttendanceDto {
         private LocalDateTime in_time;
         private LocalDateTime out_time;
         private int member_no;
+        private int center_no;
 
         public static Response toDto(Attendance attendance){
             return Response.builder()
@@ -29,6 +30,7 @@ public class AttendanceDto {
                     .in_time(attendance.getInTime())
                     .out_time(attendance.getOutTime())
                     .member_no(attendance.getMember().getMemberNo())
+                    .center_no(attendance.getMember().getCenter().getCenterNo())
                     .build();
         }
     }

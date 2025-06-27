@@ -1,6 +1,9 @@
 package com.bridge.kinder.service;
 
 import com.bridge.kinder.dto.AttendanceDto;
+import com.bridge.kinder.dto.AttendanceDto.Response;
+import java.time.LocalDate;
+import java.util.List;
 
 public interface AttendanceService {
     //당일 출퇴근 기록 불러오기
@@ -9,4 +12,6 @@ public interface AttendanceService {
     AttendanceDto.Response recordWorkIn(int memberNo);
     //퇴근 기록하기
     AttendanceDto.Response recordWorkOut(int memberNo);
+    //교사 월별 기록
+    List<Response> getTeacherMonthlyAttendance(int memberNo, int year, int month);
 }

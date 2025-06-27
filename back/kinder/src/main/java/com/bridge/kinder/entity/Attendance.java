@@ -29,6 +29,8 @@ public class Attendance {// 근태
     //퇴근시간
 
 
+
+
     //---------------------------------------------------------------------------------------------
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CENTER_NO")
