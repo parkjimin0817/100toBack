@@ -7,10 +7,12 @@ import com.bridge.kinder.entity.Approval;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.Member;
+import com.bridge.kinder.entity.Resign;
 import com.bridge.kinder.repository.ApprovalRepository;
 import com.bridge.kinder.repository.CenterRepository;
 import com.bridge.kinder.repository.ChildRepository;
 import com.bridge.kinder.repository.MemberRepository;
+import com.bridge.kinder.repository.ResignRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,7 @@ public class ApprovalServiceImpl implements ApprovalService {
     private final CenterRepository centerRepository;
     private final MemberRepository memberRepository;
     private final ChildRepository childRepository;
+    private final ResignRepository resignRepository;
 
     //시설, 시설장 승인 대기 리스트
     @Override
@@ -75,7 +78,15 @@ public class ApprovalServiceImpl implements ApprovalService {
         Member member = memberRepository.findByParentNo(dto.getMember_no())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
 
-        //멤버 정보 가져와서 status 바꿔줘야함
+        Center center = centerRepository.findById(member.getCenter().getCenterNo())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
+
+        Resign resign = Resign.builder()
+                .center(center)
+                .member(member)
+                .build();
+
+        resignRepository.save(resign);
 
         approval.changeApprovalStatus(dto.getStatus());
         member.changeMemberStatus(dto.getStatus());
