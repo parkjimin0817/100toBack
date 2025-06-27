@@ -87,6 +87,7 @@ function App() {
              * */}
             <Route path="/parent/main" element={<ParentMainPage />} />
             <Route path="/parent/mychild" element={<ParentChildList />} />
+            <Route path="/parent/mypage" element={<ParentMyPage />} />
 
             {/**
              * 교사
@@ -170,7 +171,7 @@ function App() {
             <Route path="/notice">
               <Route path="list" element={<AnnouncementPage />} />
               <Route path="write" element={<BoardWritePage />} />
-              <Route path=':id' element={<BoardDetailPage />} />
+              <Route path=":id" element={<BoardDetailPage />} />
             </Route>
 
             {/**
@@ -196,7 +197,7 @@ function App() {
             <Route path="/note">
               <Route path="list" element={<NoticePage />} />
               <Route path="write" element={<BoardWritePage />} />
-              <Route path=':id' element={<BoardDetailPage />} />
+              <Route path=":id" element={<BoardDetailPage />} />
             </Route>
           </Route>
 
