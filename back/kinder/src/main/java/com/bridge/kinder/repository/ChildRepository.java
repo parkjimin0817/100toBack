@@ -37,5 +37,7 @@ public interface ChildRepository {
     Optional<ChildActivityData> activity(int childNo);
     //아동 번호로 아동 출석 조회
     List<ChildAttendance> attendance(int childNo);
+    //아동 번호로 아동 키,몸무게 조회
+    Optional<ChildHealthLog> recentPhysicalInfo(int childNo);
 
 }
