@@ -1,30 +1,53 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ContentHeader from '../../components/Common/ContentHeader';
 import styled from 'styled-components';
 import MyHealthDetailCard from './components/MyHealthDetailCard';
 import HealthSummaryBox from './components/HealthSummaryBox';
 import { useNavigate, useParams } from 'react-router-dom';
-
-const data = {
-  createDate: '2025-07-29',
-  temperature: '24',
-  stress: '5',
-  sleep: '5',
-  symptoms: '두통',
-};
+import useLoginStore from '../../store/loginStore';
+import { memberHealthLogService } from '../../api/memberHealthLog';
+import { toast } from 'react-toastify';
 
 const MyHealthDetail = () => {
-  const { id } = useParams(); //url에서 id 추출
+  const { healthLogNo } = useParams();
   const navigate = useNavigate();
+  const { member } = useLoginStore();
+  const [data, setData] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      const result = await memberHealthLogService.getHealthLogDetail(healthLogNo);
+      setData(result);
+    } catch (error) {
+      console.error('건강 기록 조회 실패:', error);
+      alert('건강 기록을 불러오는 데 실패했습니다.');
+      navigate('/teacherhealth');
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [healthLogNo]);
 
   const handleEdit = () => {
-    navigate(`/myhealth/edit/${id}`);
+    navigate(`/myhealth/edit/${healthLogNo}`);
   };
 
-  const handleDelete = () => {
-    alert('삭제하시겠습니까?');
-    navigate(`/myhealth`);
+  const handleDelete = async () => {
+    if (window.confirm('삭제하시겠습니까?')) {
+      try {
+        await memberHealthLogService.deleteHealthLog(healthLogNo);
+        toast.success('건강 기록이 삭제되었습니다.');
+        navigate('/teacherhealth');
+      } catch (error) {
+        console.error('삭제 실패:', error);
+        toast.error('삭제에 실패했습니다.');
+      }
+    }
   };
+
+  if (!data) return <div>로딩 중...</div>;
+
   return (
     <>
       <ContentHeader
@@ -38,12 +61,12 @@ const MyHealthDetail = () => {
       <Wrapper>
         <DateRow>
           <Text>작성 날짜</Text>
-          <Date>{data.createDate}</Date>
+          <Date>{data.create_date?.split('T')[0] || 'N/A'}</Date>
         </DateRow>
         <Content>
-          <MyHealthDetailCard label="체온" value={`${data.temperature} ℃`} />
-          <MyHealthDetailCard label="스트레스 지수" value={data.stress} />
-          <MyHealthDetailCard label="수면시간" value={`${data.sleep}시간`} />
+          <MyHealthDetailCard label="체온" value={`${data.temperature ?? '-'} ℃`} />
+          <MyHealthDetailCard label="스트레스 지수" value={data.stress ?? '-'} />
+          <MyHealthDetailCard label="수면시간" value={`${data.sleep ?? '-'} 시간`} />
           <MyHealthDetailCard label="증상" value={data.symptoms || '없음'} />
         </Content>
         <SecondContent>
