@@ -8,9 +8,11 @@ import { useNavigate } from 'react-router-dom';
 import ChildPicture from './components/childpic.png';
 import AddImage from './components/addsquare.png';
 import SearchImage from './components/search.png';
+import { useLoginStore } from '../../store/loginStore';
 
 const ParentMyPage = () => {
   const [isEditMode, setIsEditMode] = useState(false);
+  const { member } = useLoginStore();
   const hanldeEditClick = () => {
     setIsEditMode((prev) => !prev);
   };
@@ -19,7 +21,7 @@ const ParentMyPage = () => {
     <Content>
       <ContentHeader
         Title={'마이페이지'}
-        Color={'blue'}
+        Color={'orange'}
         FontSize="xl"
         ButtonProps={[{ Title: isEditMode ? '저장하기' : '수정하기', func: hanldeEditClick }]}
       />
@@ -29,7 +31,7 @@ const ParentMyPage = () => {
             <MyPageProfileImage isEditMode={isEditMode} />
           </ProfileImgBox>
           <MyInfoBox>
-            <MyPageMyInfo isEditMode={isEditMode} />
+            <MyPageMyInfo isEditMode={isEditMode} memberNo={member.meberNo} />
           </MyInfoBox>
           <CenterInfoBox>
             <MyPageCenterInfo isEditMode={isEditMode} />
