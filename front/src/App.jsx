@@ -87,6 +87,7 @@ function App() {
              * */}
             <Route path="/parent/main" element={<ParentMainPage />} />
             <Route path="/parent/mychild" element={<ParentChildList />} />
+            <Route path="/parent/mypage" element={<ParentMyPage />} />
 
             {/**
              * 교사

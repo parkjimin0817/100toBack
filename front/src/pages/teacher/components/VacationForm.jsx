@@ -2,94 +2,65 @@ import React from 'react';
 import styled from 'styled-components';
 import ContentHeader from '../../../components/Common/ContentHeader';
 import { useRef, useState } from 'react';
+import { useVacationForm } from '../../../hook/vacation/useVacationForm';
 
 const VacationForm = () => {
-  //휴가/워케이션 셀렉트 바
-  const [mainType, setMainType] = useState('');
-  const [subType, setSubType] = useState('');
-  const [customInput, setCustomInput] = useState('');
-
-  const vacationOptions = [
-    { value: '연차', label: '연차' },
-    { value: '병가', label: '병가' },
-    { value: '경조', label: '경조' },
-    { value: '반차', label: '반차' },
-    { value: '기타', label: '기타 (직접 입력)' },
-  ];
-
-  const workcationOptions = [
-    { value: '사전답사', label: '사전답사' },
-    { value: '세미나 참석', label: '세미나 참석' },
-    { value: '기타', label: '기타 (직접 입력)' },
-  ];
-
-  const handleMainChange = (e) => {
-    setMainType(e.target.value);
-    setSubType('');
-    setCustomInput('');
-  };
-
-  const handleSubChange = (e) => {
-    setSubType(e.target.value);
-    if (e.target.value !== '기타') {
-      setCustomInput('');
-    }
-  };
-
-  const getSubOptions = () => {
-    if (mainType === '휴가') return vacationOptions;
-    if (mainType == '워케이션') return workcationOptions;
-  };
-
-  //파일 업로드
-  const fileInputRef = useRef(null);
-  const [fileNames, setFileNames] = useState([]);
-
-  const handleButtonClick = () => {
-    fileInputRef.current.click();
-  };
-
-  const handleFileChange = (e) => {
-    const files = Array.from(e.target.files);
-    const names = files.map((file) => file.name);
-    setFileNames(names);
-  };
+  const {
+    type,
+    typeDetail,
+    customDetail,
+    fileNames,
+    fileInputRef,
+    startDate,
+    endDate,
+    reason,
+    getDetailOptions,
+    handleTypeChange,
+    handleDetailChange,
+    handleFileChange,
+    handleButtonClick,
+    handleSubmit,
+    setCustomDetail,
+    setStartDate,
+    setEndDate,
+    setReason,
+  } = useVacationForm();
 
   return (
     <Wrapper>
       <ContentHeader Title="휴가 / 워케이션 신청하기" Color="blue" FontSize="lg" />
-      <Form onSubmit={(e) => e.preventDefault()}>
+      <Form onSubmit={handleSubmit}>
         <InputRow>
           <Label>종류 : </Label>
-          <Select value={mainType} onChange={handleMainChange}>
+          <Select value={type} onChange={handleTypeChange}>
             <option value="">선택하세요</option>
             <option value="휴가">휴가</option>
             <option value="워케이션">워케이션</option>
           </Select>
-          <Select value={subType} onChange={handleSubChange} disabled={!mainType}>
+          <Select value={typeDetail} onChange={handleDetailChange} disabled={!type}>
             <option value="">선택하세요</option>
-            {(getSubOptions() || []).map((option) => (
+            {(getDetailOptions() || []).map((option) => (
               <option value={option.value}>{option.label}</option>
             ))}
           </Select>
-          {subType === '기타' && (
+          {typeDetail === '기타' && (
             <Input
               type="text"
               placeholder="직접입력"
-              value={customInput}
-              onChange={(e) => setCustomInput(e.target.value)}
+              value={customDetail}
+              onChange={(e) => setCustomDetail(e.target.value)}
             />
           )}
         </InputRow>
         <InputRow>
           <Label>날짜 : </Label>
-          <Input type="date" />
+          <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
           <Text>-</Text>
-          <Input type="date" />
+          <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
         </InputRow>
         <InputRow>
           <Label>사유 : </Label>
-          <InputTextArea />
+          <InputTextArea value={reason} onChange={(e) => setReason(e.target.value)} />
         </InputRow>
         <InputRow>
           <Label>첨부파일 : </Label>
