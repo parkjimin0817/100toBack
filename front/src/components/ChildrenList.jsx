@@ -49,7 +49,7 @@ const ChildrenList = ({
   let filtered = [...list];
 
   if (!showAll) {
-    filtered = filtered.filter((item) => !item.class_name);
+    filtered = filtered.filter((item) => item.class_name === '미배정');
   }
 
   if (sortBy === 'class') {
