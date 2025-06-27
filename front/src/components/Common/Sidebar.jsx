@@ -6,14 +6,23 @@ const SideBar = ({ type }) => {
   const [openMenus, setOpenMenus] = useState({});
   const sidebarRef = useRef(null);
 
+  const closeTimeoutRef = useRef(null);
+
   const sidebarByType = {
     TEACHER: teacherSidebar,
     MANAGER: managerSidebar,
     PARENT: parentSidebar,
   };
 
-  const handleMenuToggle = (menuId) => {
-    setOpenMenus((prev) => ({ ...prev, [menuId]: !prev[menuId] }));
+  const handleMouseEnter = (menuId) => {
+    if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+    setOpenMenus({ [menuId]: true });
+  };
+
+  const handleMouseLeave = (menuId) => {
+    closeTimeoutRef.current = setTimeout(() => {
+      setOpenMenus((prev) => ({ ...prev, [menuId]: false }));
+    }, 300); // 300ms 후 닫힘
   };
 
   const sidebarMenus = sidebarByType[type] || [];
@@ -21,10 +30,15 @@ const SideBar = ({ type }) => {
   return (
     <SidebarContainer
       ref={sidebarRef}
-      onMouseEnter={() => setIsExpanded(true)}
+      onMouseEnter={() => {
+        setIsExpanded(true);
+        if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+      }}
       onMouseLeave={() => {
-        setIsExpanded(false);
-        setOpenMenus({});
+        closeTimeoutRef.current = setTimeout(() => {
+          setIsExpanded(false);
+          setOpenMenus({});
+        }, 300);
       }}
       $isExpanded={isExpanded}
     >
@@ -33,19 +47,20 @@ const SideBar = ({ type }) => {
           <SidebarItem
             key={menu.id}
             $SidebarColor={menu.color}
-            onMouseLeave={() => setOpenMenus((prev) => ({ ...prev, [menu.id]: false }))}
+            onMouseEnter={() => handleMouseEnter(menu.id)}
+            onMouseLeave={() => handleMouseLeave(menu.id)}
           >
-            <SidebarItemButton
-              $SidebarColor={menu.color}
-              $isExpanded={isExpanded}
-              onMouseEnter={() => handleMenuToggle(menu.id)}
-            >
+            <SidebarItemButton $SidebarColor={menu.color} $isExpanded={isExpanded}>
               {menu.icon}
               <p>{menu.label}</p>
             </SidebarItemButton>
 
             {openMenus[menu.id] && isExpanded && (
-              <SidebarSublist $SidebarColor={menu.color}>
+              <SidebarSublist
+                $SidebarColor={menu.color}
+                onMouseEnter={() => clearTimeout(closeTimeoutRef.current)}
+                onMouseLeave={() => handleMouseLeave(menu.id)}
+              >
                 {menu.subItems.map((item, idx) => (
                   <NavLink to={item.link} key={idx}>
                     <SidebarSubItem key={idx} $SidebarColor={menu.color}>
@@ -103,11 +118,12 @@ const teacherSidebar = [
     icon: <MdFilterFrames />,
     color: 'green',
     subItems: [
-      {label : "공지사항", link : "/notice/list"}, 
-      {label : "가정통신문", link : "/family_notice/list"}, 
-      {label : "식단표", link : ""}, 
-      {label : "알림장", link : "/note/list"}, 
-      {label : "사진 게시판", link : ""}],
+      { label: '공지사항', link: '/notice/list' },
+      { label: '가정통신문', link: '/family_notice/list' },
+      { label: '식단표', link: '' },
+      { label: '알림장', link: '/note/list' },
+      { label: '사진 게시판', link: '' },
+    ],
   },
   {
     id: 'menu4',
