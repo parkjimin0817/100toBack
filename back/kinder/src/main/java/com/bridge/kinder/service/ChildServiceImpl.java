@@ -1,11 +1,18 @@
 package com.bridge.kinder.service;
 
 import com.bridge.kinder.dto.ChildDto;
+import com.bridge.kinder.dto.ChildDto.activity;
+import com.bridge.kinder.dto.ChildDto.activityLog;
+import com.bridge.kinder.dto.ChildDto.attendance;
 import com.bridge.kinder.dto.ChildDto.childListResponse;
+import com.bridge.kinder.dto.ChildDto.health;
+import com.bridge.kinder.dto.ChildDto.healthLog;
 import com.bridge.kinder.dto.ChildDto.modalResponse;
 import com.bridge.kinder.dto.ChildDto.updateClass;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Child;
+import com.bridge.kinder.entity.ChildActivityData;
+import com.bridge.kinder.entity.ChildHealthData;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.entity.MemberChild;
 import com.bridge.kinder.repository.CenterRepository;
@@ -121,5 +128,41 @@ public class ChildServiceImpl implements ChildService {
         Child child = childRepository.updateClass(child_no,class_no)
                 .orElseThrow(() -> new EntityNotFoundException("정상적으로 수정되지 않았습니다."));
         return ChildDto.updateClass.toDto(child);
+    }
+
+    @Override
+    public List<ChildDto.healthLog> healthLog(int childNo) {
+        return childRepository.healthLog(childNo).stream()
+                .map(ChildDto.healthLog::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public health health(int childNo) {
+        ChildHealthData health = childRepository.health(childNo)
+                .orElseThrow(() -> new EntityNotFoundException("건강 데이터를 불러오지 못 했습니다."));
+        return ChildDto.health.toDto(health);
+    }
+
+    @Override
+    public List<ChildDto.activityLog> activityLog(int childNo) {
+        return childRepository.activityLog(childNo).stream()
+                .map(ChildDto.activityLog::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public activity activity(int childNo) {
+        ChildActivityData activity = childRepository.activity(childNo)
+                .orElseThrow(() -> new EntityNotFoundException("생활 데이터를 불러오지 못 했습니다."));
+
+        return ChildDto.activity.toDto(activity);
+    }
+
+    @Override
+    public List<ChildDto.attendance> attendance(int childNo) {
+        return childRepository.attendance(childNo).stream()
+                .map(ChildDto.attendance::toDto)
+                .collect(Collectors.toList());
     }
 }
