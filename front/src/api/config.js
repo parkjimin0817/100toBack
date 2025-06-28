@@ -72,11 +72,12 @@ export const API_ENDPOINTS = {
     UPDATECHILDATTENDANCE: `/api/attendance/updateAttendance`,
   },
   MEMBER_HEALTH: {
-    BASE: '/api/memberHealth',
-    CREATE: '/api/memberHealth/create',
-    LISTS: (memberNo) => `/api/memberHealth/lists/${memberNo}`,
-    DETAIL: (healthNo) => `/api/memberHealth/detail/${healthNo}`,
-    UPDATE: '/api/memberHealth/update',
+    BASE: '/api/members/health',
+    CREATE: '/api/members/health/create',
+    LIST: (memberNo) => `/api/members/health/list?memberNo=${memberNo}`,
+    DETAIL: (memberHealthLogNo) => `/api/members/health/detail?memberHealthLogNo=${memberHealthLogNo}`,
+    EDIT: `/api/members/health/edit`,
+    DELETE: `/api/members/health/delete`,
   },
   CHILDS: {
     BASE: '/api/childs',

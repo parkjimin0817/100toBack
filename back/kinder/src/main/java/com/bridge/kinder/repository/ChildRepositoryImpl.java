@@ -1,6 +1,11 @@
 package com.bridge.kinder.repository;
 
 import com.bridge.kinder.entity.Child;
+import com.bridge.kinder.entity.ChildActivityData;
+import com.bridge.kinder.entity.ChildActivityLog;
+import com.bridge.kinder.entity.ChildAttendance;
+import com.bridge.kinder.entity.ChildHealthData;
+import com.bridge.kinder.entity.ChildHealthLog;
 import com.bridge.kinder.entity.Member;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -98,6 +103,45 @@ public class ChildRepositoryImpl implements ChildRepository {
         return em.createQuery("SELECT c FROM Child c WHERE c.childNo = :classNo AND c.center.centerNo = :centerNo", Child.class)
                 .setParameter("classNo", classNo)
                 .setParameter("centerNo",centerNo)
+                .getResultList();
+    }
+
+    @Override
+    public List<ChildHealthLog> healthLog(int childNo) {
+        return em.createQuery("SELECT c FROM ChildHealthLog c WHERE c.child.childNo  = :childNo", ChildHealthLog.class)
+                .setParameter("childNo", childNo)
+                .getResultList();
+    }
+
+    @Override
+    public Optional<ChildHealthData> health(int childNo) {
+        ChildHealthData health = em.createQuery("SELECT c FROM ChildHealthData c WHERE c.child.childNo = :childNo", ChildHealthData.class)
+                .setParameter("childNo", childNo)
+                .getSingleResult();
+
+        return Optional.ofNullable(health);
+    }
+
+    @Override
+    public List<ChildActivityLog> activityLog(int childNo) {
+        return em.createQuery("SELECT c FROM ChildActivityLog c WHERE c.child.childNo  = :childNo", ChildActivityLog.class)
+                .setParameter("childNo", childNo)
+                .getResultList();
+    }
+
+    @Override
+    public Optional<ChildActivityData> activity(int childNo) {
+        ChildActivityData activity = em.createQuery("SELECT c FROM ChildActivityData c WHERE c.child.childNo = :childNo", ChildActivityData.class)
+                .setParameter("childNo", childNo)
+                .getSingleResult();
+        return Optional.ofNullable(activity);
+
+    }
+
+    @Override
+    public List<ChildAttendance> attendance(int childNo) {
+        return em.createQuery("SELECT c FROM ChildAttendance c WHERE c.child.childNo  = :childNo", ChildAttendance.class)
+                .setParameter("childNo", childNo)
                 .getResultList();
     }
 }

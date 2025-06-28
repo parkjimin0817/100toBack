@@ -87,6 +87,7 @@ function App() {
              * */}
             <Route path="/parent/main" element={<ParentMainPage />} />
             <Route path="/parent/mychild" element={<ParentChildList />} />
+            <Route path="/parent/mypage" element={<ParentMyPage />} />
 
             {/**
              * 교사
@@ -104,9 +105,9 @@ function App() {
              * */}
             <Route path="/teacher/main" element={<TeacherMainPage />} />
             <Route path="/teacherhealth" element={<MyHealth />} />
-            <Route path="/myhealth/:id" element={<MyHealthDetail />} />
+            <Route path="/myhealth/:healthLogNo" element={<MyHealthDetail />} />
             <Route path="/teacherhealth/write" element={<MyHealthForm />} />
-            <Route path="/myhealth/edit/:id" element={<MyHealthForm />} />
+            <Route path="/myhealth/edit/:healthLogNo" element={<MyHealthForm />} />
             <Route path="/teacher/parentcontactinfo" element={<ParentContact />} />
             <Route path="/scheduleTeacher" element={<ScheduleTeacher />} />
             <Route path="/teacher/myattendance" element={<MyAttendance />} />

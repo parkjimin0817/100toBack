@@ -55,7 +55,18 @@ public class CommonEnums {
 
     public enum BoardContentType {
         TEXT,           //텍스트
-        IMG,           //이미지
+        IMG,            //이미지
     }
+
+    public enum TeacherAttendanceStatus {
+        ABSENT,        //결근
+        PRESENT,       //정상 출근
+        WORKING,       //출근 중
+        HOLIDAY,       //공휴일
+        WEEKEND,       //주말
+        VACATION,      //휴가
+        WORKCATION,    //워케이션
+    }
+
 
 }

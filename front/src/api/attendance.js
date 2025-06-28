@@ -13,6 +13,7 @@ export const attendanceService = {
         outTime: data.out_time,
         memberNo: data.member_no,
       };
+      console.log(camelData);
       return camelData;
     } catch (error) {
       throw new Error('서버 통신 불량' + error.message);

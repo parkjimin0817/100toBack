@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import TeacherAttendanceCard from './components/TeacherAttendanceCard';
-import CustomCalendar from '../../components/CustomCalendar';
+import TeacherAttendanceCalendar from '../../components/Common/TeacherAttendanceCalendar';
 import { useParams } from 'react-router-dom';
 import { attendanceService } from '../../api/attendance';
 import { memberService } from '../../api/member';
@@ -51,7 +51,7 @@ const TeacherAttendance = () => {
       <ContentHeader Title={'교사 근태 관리'} Color={'blue'} />
       <Content>
         <Div1>
-          <CustomCalendar
+          <TeacherAttendanceCalendar
             onDateClick={(date) => setSelectedDate(date)}
             onMonthChange={(date) => setCurrentMonth(date)}
             monthlyAttendanceList={attendances}

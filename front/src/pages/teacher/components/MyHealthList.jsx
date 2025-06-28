@@ -1,29 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-
-const data = [
-  {
-    name: '박지민',
-    createDate: '2025.06.23',
-    symptom: '감기',
-  },
-  {
-    name: '박지민',
-    createDate: '2025.06.23',
-    symptom: '감기',
-  },
-  {
-    name: '박지민',
-    createDate: '2025.06.23',
-    symptom: '감기',
-  },
-];
+import { memberHealthLogService } from '../../../api/memberHealthLog';
+import useLoginStore from '../../../store/loginStore';
+import { useLocation } from 'react-router-dom';
 
 const MyHealthList = () => {
   const navigate = useNavigate();
-  const handleClick = (index) => {
-    navigate(`/myhealth/${index + 1}`); //나중에 id로 고치기
+  const location = useLocation();
+  const [data, setData] = useState([]);
+  const { member } = useLoginStore();
+
+  const fetchData = async () => {
+    try {
+      const result = await memberHealthLogService.getHealthLogList(member.memberNo);
+      setData(result.reverse());
+    } catch (error) {
+      console.error('건강 기록 조회 실패:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [location.state]);
+
+  const handleClick = (healthLogNo) => {
+    navigate(`/myhealth/${healthLogNo}`);
   };
 
   return (
@@ -39,11 +41,11 @@ const MyHealthList = () => {
         </thead>
         <tbody>
           {data.map((item, index) => (
-            <tr key={index} onClick={() => handleClick(index)}>
-              <td>{index + 1}</td>
-              <td>{item.name}</td>
-              <td>{item.symptom}</td>
-              <td>{item.createDate}</td>
+            <tr key={item.health_log_no} onClick={() => handleClick(item.health_log_no)}>
+              <td>{data.length - index}</td>
+              <td>{item.member_name}</td>
+              <td>{item.symptoms ? item.symptoms : '증상 없음'}</td>
+              <td>{item.create_date.split('T')[0]}</td>
             </tr>
           ))}
         </tbody>
