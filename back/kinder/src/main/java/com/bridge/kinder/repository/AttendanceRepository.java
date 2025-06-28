@@ -1,6 +1,9 @@
 package com.bridge.kinder.repository;
 
 import com.bridge.kinder.entity.Attendance;
+import com.bridge.kinder.entity.ChildAttendance;
+import com.bridge.kinder.enums.CommonEnums;
+import com.bridge.kinder.enums.CommonEnums.ChildAttendanceStatus;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,4 +17,8 @@ public interface AttendanceRepository {
     Attendance save(Attendance attendance);
     //월별 출근 기록
     List<Attendance> findByMemberNoAndDateRange(int memberNo, LocalDateTime startDate, LocalDateTime endDate);
+    //아동 출결 상태 조회
+    List<ChildAttendance> findByChildNoCenterNoCreateDate(int classNo, LocalDate createDate);
+    //아동 출결 해당 조회
+    ChildAttendance getChildAttendance(int classNo, int childNo, LocalDate createDate);
 }

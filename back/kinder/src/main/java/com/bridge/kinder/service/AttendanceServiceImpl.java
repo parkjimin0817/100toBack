@@ -1,16 +1,26 @@
 package com.bridge.kinder.service;
 
 import com.bridge.kinder.dto.AttendanceDto;
+import com.bridge.kinder.dto.AttendanceDto.ClassAttendance;
 import com.bridge.kinder.dto.AttendanceDto.Response;
+import com.bridge.kinder.dto.AttendanceDto.UpdateAttendance;
+import com.bridge.kinder.dto.ChildDto;
 import com.bridge.kinder.entity.Attendance;
 import com.bridge.kinder.entity.Center;
+import com.bridge.kinder.entity.Child;
+import com.bridge.kinder.entity.ChildAttendance;
 import com.bridge.kinder.entity.Member;
+import com.bridge.kinder.enums.CommonEnums;
+import com.bridge.kinder.enums.CommonEnums.ChildAttendanceStatus;
 import com.bridge.kinder.repository.AttendanceRepository;
 import com.bridge.kinder.repository.CenterRepository;
+import com.bridge.kinder.repository.ChildRepository;
 import com.bridge.kinder.repository.MemberRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -120,5 +130,26 @@ public class AttendanceServiceImpl implements AttendanceService {
         return monthlyList.stream()
                 .map(AttendanceDto.Response::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AttendanceDto.ClassAttendance> getChildAttendanceList(int classNo, LocalDate createDate) {
+
+        return attendanceRepository.findByChildNoCenterNoCreateDate(classNo, createDate)
+                .stream()
+                .map(AttendanceDto.ClassAttendance::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public AttendanceDto.UpdateAttendance updateChildAttendance(UpdateAttendance updateDto) {
+        int classNo = updateDto.getClass_no();
+        int childNo = updateDto.getChild_no();
+        LocalDate createDate = updateDto.getCreate_date();
+        CommonEnums.ChildAttendanceStatus status = updateDto.getStatus();
+
+        ChildAttendance attendance = attendanceRepository.getChildAttendance(classNo, childNo, createDate);
+        attendance.updateAttendance(status);
+        return AttendanceDto.UpdateAttendance.toDto(attendance);
     }
 }

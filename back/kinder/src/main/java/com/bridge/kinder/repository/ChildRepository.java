@@ -22,5 +22,6 @@ public interface ChildRepository {
     Optional<Child> getByChildNo(int child_no);
     //아동 번호로 반 수정하기
     Optional<Child> updateClass(int child_no,int class_no);
-
+    //아동 번호, 시설 번호로 아동 찾아오기
+    List<Child> findByChildNoCenterNo(int classNo, int centerNo);
 }

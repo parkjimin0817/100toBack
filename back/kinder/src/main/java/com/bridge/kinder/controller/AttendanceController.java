@@ -2,6 +2,7 @@ package com.bridge.kinder.controller;
 
 import com.bridge.kinder.dto.AttendanceDto;
 import com.bridge.kinder.dto.AttendanceDto.Response;
+import com.bridge.kinder.enums.CommonEnums;
 import com.bridge.kinder.service.AttendanceService;
 import java.time.LocalDate;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,5 +50,15 @@ public class AttendanceController {
         return ResponseEntity.ok(attendanceService.getTeacherMonthlyAttendance(memberNo, year, month));
     }
 
+    //반 번호, 해당 날짜로 출결 리스트 가져오기
+    @GetMapping("/child")
+    public ResponseEntity<List<AttendanceDto.ClassAttendance>> GetAttendance(@RequestParam int classNo, LocalDate createDate) {
+        return ResponseEntity.ok(attendanceService.getChildAttendanceList(classNo, createDate));
+    }
 
+    //반 출결 상태를 변경
+    @PatchMapping("/updateAttendance")
+    public ResponseEntity<AttendanceDto.UpdateAttendance> updateAttendance(@RequestBody AttendanceDto.UpdateAttendance updateDto) {
+        return ResponseEntity.ok(attendanceService.updateChildAttendance(updateDto));
+    }
 }

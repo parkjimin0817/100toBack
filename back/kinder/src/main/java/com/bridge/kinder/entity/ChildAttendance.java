@@ -47,4 +47,10 @@ public class ChildAttendance {// 아동 출석체크
     protected void onCreate() {
         this.createDate = LocalDate.now();
     }
+
+
+    //---------------------------------------------------------------------------------------------
+    public void updateAttendance(CommonEnums.ChildAttendanceStatus status){
+        this.status = status;
+    }
 }

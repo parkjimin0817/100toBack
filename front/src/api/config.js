@@ -64,9 +64,12 @@ export const API_ENDPOINTS = {
     //MYATTENDANCE:
     //시설장이 교사 별 근태 조회
     TEACHERATTENDANCE: (memberNo) => `/api/attendance/teacher/${memberNo}`,
-    CHILDATTENDANCE: `/api/attendance/child`,
     TEACHERATTENDANCE: (memberNo, year, month) =>
       `/api/attendance/teacher?memberNo=${memberNo}&year=${year}&month=${month}`,
+    //아동 출결 관리
+    CHILDATTENDANCE: (classNo, createDate) => `/api/attendance/child?classNo=${classNo}&createDate=${createDate}`,
+    //아동 출결 수정
+    UPDATECHILDATTENDANCE: `/api/attendance/updateAttendance`,
   },
   MEMBER_HEALTH: {
     BASE: '/api/memberHealth',

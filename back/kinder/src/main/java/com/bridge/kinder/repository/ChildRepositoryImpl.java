@@ -91,4 +91,13 @@ public class ChildRepositoryImpl implements ChildRepository {
             return Optional.empty();
         }
     }
+
+    @Override
+    public List<Child> findByChildNoCenterNo(int classNo, int centerNo) {
+
+        return em.createQuery("SELECT c FROM Child c WHERE c.childNo = :classNo AND c.center.centerNo = :centerNo", Child.class)
+                .setParameter("classNo", classNo)
+                .setParameter("centerNo",centerNo)
+                .getResultList();
+    }
 }

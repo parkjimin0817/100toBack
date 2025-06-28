@@ -1,48 +1,56 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import ContentHeader from './ContentHeader';
 import { useState } from 'react';
+import { attendanceService } from '../../api/attendance';
+import { toast } from 'react-toastify';
 
-const initialData = [
-  { name: '김승기', status: '출석' },
-  { name: '박지민', status: '결석' },
-  { name: '양동민', status: '지각' },
-  { name: '정형일', status: '출석' },
-  { name: '정의철', status: '출석' },
-  { name: '오오옹', status: '출석' },
-  { name: '박지민', status: '결석' },
-  { name: '디디디', status: '지각' },
-  { name: '정형일', status: '출석' },
-  { name: '정의철', status: '출석' },
-];
-
-const AttendanceList = ({ selectedDate, attendanceInfo }) => {
-  const [data, setData] = useState(attendanceInfo);
+const AttendanceList = ({ class_no, create_date, selectedDate, attendanceInfo, refetch }) => {
   const [selectedStatus, setSelectedStatus] = useState('전체');
+  const [childNo, setChildNo] = useState('');
+  const [status, setStatus] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleStatusChange = (index, newStatus) => {
-    const updated = data.map((item, i) => (i === index ? { ...item, status: newStatus } : item));
-    setData(updated);
+  const handleStatusChange = (child_no, status) => {
+    setChildNo(child_no);
+    setStatus(status);
   };
 
-  const filteredData = selectedStatus === '전체' ? data : data.filter((item) => item.status === selectedStatus);
+  const filteredDatas =
+    selectedStatus === '전체' ? attendanceInfo : attendanceInfo.filter((item) => item.status === selectedStatus);
 
   const totalCount = attendanceInfo.length;
-  const attendCount = attendanceInfo.filter((item) => item.status === '출석').length;
-  const absentCount = attendanceInfo.filter((item) => item.status === '결석').length;
-  const lateCount = attendanceInfo.filter((item) => item.status === '지각').length;
+  const attendCount = attendanceInfo.filter((item) => item.status === 'PRESENT').length;
+  const absentCount = attendanceInfo.filter((item) => item.status === 'ABSENT').length;
+  const lateCount = attendanceInfo.filter((item) => item.status === 'HALF').length;
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      setIsLoading(true);
+      setError('');
+
+      const updateStatus = await attendanceService.updateChildAttendance(childNo, class_no, create_date, status);
+      if (!updateStatus) {
+        throw new Error('출결 상태 변경에 실패했습니다.');
+      }
+      toast.success('변경 성공');
+
+      await refetch();
+    } catch (error) {
+      setError('출결 상태 변경에 실패했습니다.');
+      toast.error('출결 상태 변경에 실패했습니다.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Wrapper>
-      <ContentHeader Title={`${attendanceInfo}반 출석 현황`} Color="orange" FontSize="base" />
-      <DateRow>
-        {selectedDate.toLocaleDateString('ko-KR', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          weekday: 'short',
-        })}
-      </DateRow>
+      <ContentHeader Title={`반 출석 현황`} Color="orange" FontSize="base" />
+      <DateRow>{selectedDate}</DateRow>
       <Div>
         <AttendanceCount>
           <Name>전체</Name>
@@ -64,9 +72,9 @@ const AttendanceList = ({ selectedDate, attendanceInfo }) => {
       <SelectDiv>
         <Select name="" id="" value={selectedStatus} onChange={(e) => setSelectedStatus(e.target.value)}>
           <option value="전체">전체</option>
-          <option value="출석">출석</option>
-          <option value="결석">결석</option>
-          <option value="지각">지각</option>
+          <option value="PRESENT">출석</option>
+          <option value="ABSENT">결석</option>
+          <option value="HALF">지각</option>
         </Select>
       </SelectDiv>
       <TableWrapper>
@@ -81,31 +89,36 @@ const AttendanceList = ({ selectedDate, attendanceInfo }) => {
         <TbodyWrapper>
           <Table>
             <Tbody>
-              {filteredData.map((item, index) => (
+              {filteredDatas.map((item, index) => (
                 <Tr key={index}>
-                  <Td>{item.name}</Td>
+                  <Td>{item.child_name}</Td>
                   <Td>
-                    <Button
-                      $status="출석"
-                      $active={item.status === '출석'}
-                      onClick={() => handleStatusChange(index, '출석')}
-                    >
-                      출석
-                    </Button>
-                    <Button
-                      $status="결석"
-                      $active={item.status === '결석'}
-                      onClick={() => handleStatusChange(index, '결석')}
-                    >
-                      결석
-                    </Button>
-                    <Button
-                      $status="지각"
-                      $active={item.status === '지각'}
-                      onClick={() => handleStatusChange(index, '지각')}
-                    >
-                      지각
-                    </Button>
+                    <form onSubmit={onSubmit}>
+                      <Button
+                        onClick={() => handleStatusChange(item.child_no, 'PRESENT')}
+                        $status="PRESENT"
+                        $active={item.status === 'PRESENT'}
+                        type="submit"
+                      >
+                        출석
+                      </Button>
+                      <Button
+                        onClick={() => handleStatusChange(item.child_no, 'ABSENT')}
+                        $status="ABSENT"
+                        $active={item.status === 'ABSENT'}
+                        type="submit"
+                      >
+                        결석
+                      </Button>
+                      <Button
+                        onClick={() => handleStatusChange(item.child_no, 'HALF')}
+                        $status="HALF"
+                        $active={item.status === 'HALF'}
+                        type="submit"
+                      >
+                        지각
+                      </Button>
+                    </form>
                   </Td>
                 </Tr>
               ))}
@@ -252,11 +265,11 @@ const Button = styled.button`
   background-color: ${({ $status, $active }) => {
     if (!$active) return '#e0e0e0';
     switch ($status) {
-      case '출석':
+      case 'PRESENT':
         return '#4caf50'; // 초록
-      case '결석':
+      case 'ABSENT':
         return '#f44336'; // 빨강
-      case '지각':
+      case 'HALF':
         return '#ffc107'; // 노랑
       default:
         return '#e0e0e0';

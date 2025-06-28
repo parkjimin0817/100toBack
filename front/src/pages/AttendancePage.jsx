@@ -5,36 +5,41 @@ import AttendanceList from '../components/Common/AttendanceList';
 import { useNavigate, useParams } from 'react-router-dom';
 import CustomCalendar from '../components/CustomCalendar';
 import { useState } from 'react';
-import { classService } from '../api/class';
+import { attendanceService } from '../api/attendance';
 
-const data = [
-  { name: '박지민', child_no: '1', class_no: '1', create_date: '2025-06-18', status: 'present' },
-  { name: '김승기', child_no: '2', class_no: '1', create_date: '2025-06-18', status: 'absent' },
-  { name: '양동민', child_no: '3', class_no: '1', create_date: '2025-06-18', status: 'half' },
-  { name: '정형일', child_no: '4', class_no: '1', create_date: '2025-06-18', status: 'present' },
-  { name: '정의철', child_no: '5', class_no: '1', create_date: '2025-06-18', status: 'present' },
-  { name: '지피티', child_no: '6', class_no: '1', create_date: '2025-06-18', status: 'present' },
-];
+import dayjs from 'dayjs';
+import 'dayjs/locale/ko';
+
+dayjs.locale('ko');
 
 const AttendancePage = () => {
   const navigate = useNavigate();
   const { class_no } = useParams();
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(dayjs().format('YYYY-MM-DD (ddd)'));
   const [attendanceInfo, setAttendanceInfo] = useState([]);
 
-  console.log(selectedDate);
+  const formatDate = dayjs(selectedDate).format('YYYY-MM-DD');
 
-  useEffect(() => {
-    classService
-      .classAttendance(class_no, selectedDate)
-      .then((data) => setAttendanceInfo(data))
-      .catch((err) => console.error('반 목록 불러오기 실패 : ', err));
-  }, []);
+  const fetchData = async () => {
+    try {
+      const attendaceData = await attendanceService.classAttendance(class_no, formatDate);
 
-  const onSubmit = (date) => {
-    setSelectedDate(date);
+      setAttendanceInfo(attendaceData);
+    } catch (error) {
+      console.error('출결 정보 조회 실패 :', error.message);
+    }
   };
 
+  useEffect(() => {
+    if (class_no) {
+      fetchData();
+    }
+  }, [selectedDate, class_no]);
+
+  const handleDateClick = (date) => {
+    const formatted = dayjs(date).format('YYYY-MM-DD (ddd)');
+    setSelectedDate(formatted);
+  };
   return (
     <Wrapper>
       <ContentHeader
@@ -44,10 +49,16 @@ const AttendancePage = () => {
       />
       <Content>
         <Div1>
-          <CustomCalendar onDateClick={(date) => onSubmit(date)} />
+          <CustomCalendar onDateClick={(date) => handleDateClick(date)} />
         </Div1>
         <Div2>
-          <AttendanceList selectedDate={selectedDate} attendanceInfo={attendanceInfo} />
+          <AttendanceList
+            class_no={class_no}
+            create_date={formatDate}
+            selectedDate={selectedDate}
+            attendanceInfo={attendanceInfo}
+            refetch={fetchData}
+          />
         </Div2>
       </Content>
     </Wrapper>
