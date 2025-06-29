@@ -3,30 +3,36 @@ import ContentHeader from '../../components/Common/ContentHeader';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import MyHealthInputCard from './components/MyHealthInputCard';
-
-const prevData = {
-  temp: '36.5',
-  stress: '6',
-  sleep: '7',
-  symptom: '두통',
-};
+import useLoginStore from '../../store/loginStore';
+import { memberHealthLogService } from '../../api/memberHealthLog';
+import { toast } from 'react-toastify';
 
 const MyHealthForm = () => {
-  const { id } = useParams(); //수정이면 id가 있음
-  const isEdit = Boolean(id); //id가 있으면 isEdit : true
+  const { healthLogNo } = useParams();
+  const isEdit = Boolean(healthLogNo);
   const navigate = useNavigate();
+  const { member } = useLoginStore();
 
   const [form, setForm] = useState({
-    temp: '',
+    temperature: '',
     stress: '',
     sleep: '',
-    symptom: '',
+    symptoms: '',
   });
 
   //수정 시 기존 데이터
   useEffect(() => {
     if (isEdit) {
-      setForm(prevData);
+      const fetchData = async () => {
+        const result = await memberHealthLogService.getHealthLogDetail(healthLogNo);
+        setForm({
+          temperature: result.temperature,
+          stress: result.stress,
+          sleep: result.sleep,
+          symptoms: result.symptoms,
+        });
+      };
+      fetchData();
     }
   }, [isEdit]);
 
@@ -38,20 +44,32 @@ const MyHealthForm = () => {
     }));
   };
 
-  const handleStressChange = (val) => {
-    setForm((prev) => ({
-      ...prev,
-      stress: String(val),
-    }));
-  };
+  const handleSave = async () => {
+    try {
+      if (isEdit) {
+        const mergedData = {
+          healthLogNo: healthLogNo,
+          memberNo: member.memberNo,
+          temperature: form.temperature,
+          stress: form.stress,
+          sleep: form.sleep,
+          symptoms: form.symptoms,
+        };
 
-  const handleSave = () => {
-    if (isEdit) {
-      console.log('수정요청', form);
-    } else {
-      console.log('저장요청', form);
+        await memberHealthLogService.updateHealthLog(mergedData);
+        toast.success('건강 정보가 수정되었습니다.');
+      } else {
+        await memberHealthLogService.createHealthLog({
+          ...form,
+          memberNo: member.memberNo,
+        });
+        toast.success('건강 정보가 저장되었습니다.');
+      }
+      navigate('/teacherhealth', { state: { refreshed: true } });
+    } catch (error) {
+      console.error('저장 실패:', error);
+      toast.error('저장에 실패했습니다. 다시 시도해주세요.');
     }
-    navigate('/myhealth');
   };
   return (
     <Content>
@@ -65,8 +83,8 @@ const MyHealthForm = () => {
         <MyHealthInputCard
           text="체온을 입력해주세요."
           label="체온"
-          name="temp"
-          value={form.temp}
+          name="temperature"
+          value={form.temperature}
           unit="℃"
           onChange={handleChange}
         />
@@ -89,8 +107,8 @@ const MyHealthForm = () => {
         <MyHealthInputCard
           text="오늘 아프거나 불편한 곳이 있나요?"
           label="증상"
-          name="symptom"
-          value={form.symptom}
+          name="symptoms"
+          value={form.symptoms}
           onChange={handleChange}
         />
       </Wrapper>

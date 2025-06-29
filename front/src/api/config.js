@@ -34,10 +34,13 @@ export const API_ENDPOINTS = {
     PWDUPDATE: `/api/members/pwdUpdate`,
     TEACHERLIST: (centerNo) => `/api/members/teacher/select/${centerNo}`,
     TEACHER_DETAIL_LIST: (centerNo) => `/api/members/teacher/list/${centerNo}`,
+    TEACHER_DETAIL: (memberNo) => `/api/members/teacher/${memberNo}`,
   },
   APPLOVALLIST: {
-    BASE: 'api/approvalList',
-    PENDINGLIST: (centerNo) => `api/approval/lists/${centerNo}`,
+    BASE: 'api/approval',
+    CENTERPENDINGLIST: `api/approval/lists`,
+    MEMBERPENDINGLIST: (centerNo) => `api/approval/lists/${centerNo}`,
+    DECISIONCENTER: `api/approval/decision/center`,
     DECISIONMEMBER: `api/approval/decision/member`,
     DECISIONCHILD: `api/approval/decision/child`,
   },
@@ -60,7 +63,16 @@ export const API_ENDPOINTS = {
     //교사가 자신 근태 기록 조회
     //MYATTENDANCE:
     //시설장이 교사 별 근태 조회
-    TEACHERATTENDANCE: (memberNo) => `/api/attendance/teacher/${memberNo}`,
+    TEACHERATTENDANCE: (memberNo, centerNo, year, month) =>
+      `/api/attendance/teacher?memberNo=${memberNo}&centerNo=${centerNo}&year=${year}&month=${month}`,
+  },
+  MEMBER_HEALTH: {
+    BASE: '/api/members/health',
+    CREATE: '/api/members/health/create',
+    LIST: (memberNo) => `/api/members/health/list?memberNo=${memberNo}`,
+    DETAIL: (memberHealthLogNo) => `/api/members/health/detail?memberHealthLogNo=${memberHealthLogNo}`,
+    EDIT: `/api/members/health/edit`,
+    DELETE: `/api/members/health/delete`,
   },
   CHILDS: {
     BASE: '/api/childs',

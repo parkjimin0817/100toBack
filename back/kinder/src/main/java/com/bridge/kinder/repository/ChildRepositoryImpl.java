@@ -1,6 +1,12 @@
 package com.bridge.kinder.repository;
 
 import com.bridge.kinder.entity.Child;
+import com.bridge.kinder.entity.ChildActivityData;
+import com.bridge.kinder.entity.ChildActivityLog;
+import com.bridge.kinder.entity.ChildAttendance;
+import com.bridge.kinder.entity.ChildHealthData;
+import com.bridge.kinder.entity.ChildHealthLog;
+import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.entity.Member;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -45,6 +51,7 @@ public class ChildRepositoryImpl implements ChildRepository {
                 .getResultList();
     }
 
+    //시설 번호로 아동들 전부 조회
     @Override
     public List<Child> findByCenterNo(int centerNo) {
         return em.createQuery("SELECT c FROM Child c WHERE c.center.centerNo  = :centerNo", Child.class)
@@ -64,30 +71,89 @@ public class ChildRepositoryImpl implements ChildRepository {
 
     //child_no로 아동 찾기
     @Override
-    public Optional<Child> getByChildNo(int child_no) {
+    public Optional<Child> getByChildNo(int childNo) {
+        System.out.println("전달된 childNo: " + childNo);
         Child child = em.createQuery("SELECT c FROM Child c WHERE c.childNo = :child_no", Child.class)
-                .setParameter("child_no", child_no)
+                .setParameter("child_no", childNo)
                 .getSingleResult();
         return Optional.ofNullable(child);
     }
 
     //아동번호와 반 번호로 반 수정(시설장)
     @Override
-    public Optional<Child> updateClass(int child_no, int class_no) {
-        String jpql = "UPDATE Child c SET c.classRoom.classNo = :class_no WHERE c.childNo = :child_no";
-        int updated = em.createQuery(jpql)
-                .setParameter("class_no", class_no)
-                .setParameter("child_no", child_no)
-                .executeUpdate();
-        // JPQL UPDATE는 반환값이 없음 → 다시 조회해서 Optional로 감싸야 함
-        if (updated > 0) {
-            Child child = em.createQuery(
-                            "SELECT c FROM Child c WHERE c.childNo = :child_no", Child.class)
-                    .setParameter("child_no", child_no)
-                    .getSingleResult();
-            return Optional.of(child);
+    public Optional<Child> updateClass(int childNo, int classNo) {
+        Child child = em.find(Child.class, childNo);
+        if (child == null) return Optional.empty();
+
+        if (classNo == 0) {
+            child.setClassRoom(null); //  미배정으로 선택할 경우
         } else {
-            return Optional.empty();
+            ClassRoom classRoom = em.find(ClassRoom.class, classNo);
+            if (classRoom == null) return Optional.empty();
+            child.setClassRoom(classRoom); //  반 배정
         }
+
+        return Optional.of(child); //  반영된 child 반환
+    }
+
+    //아동 번호로 해당 아동의 건강 로그 데이터 불러오기(매일 적는 거)
+    @Override
+    public List<ChildHealthLog> healthLog(int childNo) {
+        return em.createQuery("SELECT c FROM ChildHealthLog c WHERE c.child.childNo  = :childNo", ChildHealthLog.class)
+                .setParameter("childNo", childNo)
+                .getResultList();
+    }
+
+    //아동 번호로 해당 아동의 건강 데이터 불러오기(복약정보,예방접종,알레르기)
+    @Override
+    public Optional<ChildHealthData> health(int childNo) {
+        List<ChildHealthData> results = em.createQuery(
+                        "SELECT c FROM ChildHealthData c WHERE c.child.childNo = :childNo", ChildHealthData.class)
+                .setParameter("childNo", childNo)
+                .getResultList();
+
+        return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
+    }
+
+
+    //아동 번호로 해당 아동의 행동 로그 데이터 불러오기(매일 적는 거)
+    @Override
+    public List<ChildActivityLog> activityLog(int childNo) {
+        return em.createQuery("SELECT c FROM ChildActivityLog c WHERE c.child.childNo  = :childNo", ChildActivityLog.class)
+                .setParameter("childNo", childNo)
+                .getResultList();
+    }
+
+    //아동 번호로 해당 아동의 생활 데이터 불러오기
+    @Override
+    public Optional<ChildActivityData> activity(int childNo) {
+        List<ChildActivityData> results = em.createQuery(
+                        "SELECT c FROM ChildActivityData c WHERE c.child.childNo = :childNo", ChildActivityData.class)
+                .setParameter("childNo", childNo)
+                .getResultList();
+
+        return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
+    }
+
+
+    //아동 번호로 해당 아동의 출석 내역 리스트 불러오기
+    @Override
+    public List<ChildAttendance> attendance(int childNo) {
+        return em.createQuery("SELECT c FROM ChildAttendance c WHERE c.child.childNo  = :childNo", ChildAttendance.class)
+                .setParameter("childNo", childNo)
+                .getResultList();
+    }
+
+    //아동 번호로 해당 아동의 제일 최근 건강 로그 데이터 가져오기
+    @Override
+    public Optional<ChildHealthLog> recentPhysicalInfo(int childNo) {
+        List<ChildHealthLog> results = em.createQuery(
+                        "SELECT c FROM ChildHealthLog c WHERE c.child.childNo = :childNo ORDER BY c.createDate DESC",
+                        ChildHealthLog.class)
+                .setParameter("childNo", childNo)
+                .setMaxResults(1)
+                .getResultList();
+
+        return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
     }
 }

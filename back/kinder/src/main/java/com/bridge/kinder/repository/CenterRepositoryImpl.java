@@ -4,12 +4,14 @@ import com.bridge.kinder.dto.MypageDto;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.enums.CommonEnums;
+import com.bridge.kinder.enums.CommonEnums.AdmissionStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class CenterRepositoryImpl implements CenterRepository {
@@ -39,6 +41,7 @@ public class CenterRepositoryImpl implements CenterRepository {
                 .getResultList();
     }
 
+    //마이페이지 시설정보 수정
     @Override
     public Optional<Center> myPageUpdate(int id, MypageDto.Update dto) {
         // 1. memberNo → Member 조회

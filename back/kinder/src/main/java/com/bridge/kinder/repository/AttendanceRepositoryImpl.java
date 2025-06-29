@@ -5,7 +5,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
@@ -18,26 +17,37 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
     private EntityManager em;
 
 
-    @Override
-    public Optional<Attendance> findByMemberNoAndDate(int memberNo) {
-        LocalDate today = LocalDate.now();
-        LocalDateTime startOfDay = today.atStartOfDay(); //2025-01-01T00:00:00
-        LocalDateTime endOfDay = today.atTime(LocalTime.MAX); //2025-01-01T23:59:59.999
+//    //당일 출근 기록
+//    @Override
+//    public Optional<Attendance> findByMemberNoAndDate(int memberNo, LocalDateTime startOfDay, LocalDateTime endOfDay) {
+//        String jpql = "SELECT a FROM Attendance a WHERE a.member.memberNo = :memberNo AND (a.inTime BETWEEN :start AND :end)";
+//
+//        List<Attendance> result = em.createQuery(jpql, Attendance.class)
+//                .setParameter("memberNo", memberNo)
+//                .setParameter("start", startOfDay)
+//                .setParameter("end", endOfDay)
+//                .getResultList();
+//
+//        return result.stream().findFirst();
+//    }
 
-        String jpql = "SELECT a FROM Attendance a WHERE a.member.memberNo = :memberNo AND (a.inTime BETWEEN :start AND :end)";
-
-        List<Attendance> result = em.createQuery(jpql, Attendance.class)
-                .setParameter("memberNo", memberNo)
-                .setParameter("start", startOfDay)
-                .setParameter("end", endOfDay)
-                .getResultList();
-
-        return result.stream().findFirst();
-    }
-
+    //기록 저장
     @Override
     public Attendance save(Attendance attendance) {
         em.persist(attendance);
         return attendance;
+    }
+
+    //달별 출근 기록
+    @Override
+    public List<Attendance> findByMemberNoAndDateRange(int memberNo, int centerNo, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        String jpql = "SELECT a FROM Attendance a WHERE a.member.memberNo =:memberNo AND a.center.centerNo =: centerNo AND (a.inTime BETWEEN :start AND :end)";
+
+        return em.createQuery(jpql, Attendance.class)
+                .setParameter("memberNo", memberNo)
+                .setParameter("centerNo", centerNo)
+                .setParameter("start", startDateTime)
+                .setParameter("end", endDateTime)
+                .getResultList();
     }
 }

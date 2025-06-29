@@ -119,17 +119,6 @@ export const memberService = {
       throw new Error('서버와의 통신에 실패했습니다.');
     }
   },
-
-  //교사 간단 목록 불러오기
-  teacherlist: async (centerNo) => {
-    try {
-      const { data } = await api.get(API_ENDPOINTS.MEMBERS.TEACHERLIST(centerNo));
-      return data;
-    } catch (error) {
-      throw new Error('서버 통신 불량: ' + error.message);
-    }
-  },
-
   //비밀번호 찾기
   searchPwd: async (member_id) => {
     try {
@@ -172,16 +161,6 @@ export const memberService = {
     }
   },
 
-  //교사 상세 목록 불러오기
-  teacherDetailList: async (centerNo) => {
-    try {
-      const { data } = await api.get(API_ENDPOINTS.MEMBERS.TEACHER_DETAIL_LIST(centerNo));
-      return data;
-    } catch (error) {
-      throw new Error('서버 통신 불량: ' + error.message);
-    }
-  },
-
   //마이페이지
   Mypage: async (memberNo) => {
     try {
@@ -215,6 +194,34 @@ export const memberService = {
         throw new Error(errorMessage);
       }
       throw new Error('서버와의 통신에 실패했습니다.');
+    }
+  },
+
+  //교사 상세 목록 불러오기
+  teacherDetailList: async (centerNo) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.MEMBERS.TEACHER_DETAIL_LIST(centerNo));
+      return data;
+    } catch (error) {
+      throw new Error('서버 통신 불량: ' + error.message);
+    }
+  },
+  //교사 간단 목록 불러오기
+  teacherlist: async (centerNo) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.MEMBERS.TEACHERLIST(centerNo));
+      return data;
+    } catch (error) {
+      throw new Error('서버 통신 불량: ' + error.message);
+    }
+  },
+  //교사 개별 상세 불러오기 (memberNo)
+  getTeacherDetail: async (memberNo) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.MEMBERS.TEACHER_DETAIL(memberNo));
+      return data;
+    } catch (error) {
+      throw new Error('서버 통신 불량: ' + error.message);
     }
   },
 };

@@ -1,6 +1,8 @@
 package com.bridge.kinder.service;
 
 import com.bridge.kinder.dto.ApprovalDto;
+import com.bridge.kinder.dto.ApprovalDto.CenterApprovalResponse;
+import com.bridge.kinder.dto.ApprovalDto.CenterApprovalUpdate;
 import com.bridge.kinder.entity.Approval;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Child;
@@ -26,21 +28,49 @@ public class ApprovalServiceImpl implements ApprovalService {
     private final MemberRepository memberRepository;
     private final ChildRepository childRepository;
 
-    //승인 대기 리스트
+    //시설, 시설장 승인 대기 리스트
+    @Override
+    public List<CenterApprovalResponse> findCenterApprovals() {
+        return approvalRepository.findCenterApprovals()
+                .stream()
+                .map(ApprovalDto.CenterApprovalResponse::toDto)
+                .collect(Collectors.toList());
+    }
+
+    //시설, 시설장 승인거절 결정
+    @Override
+    public String updateCenterApprovals(CenterApprovalUpdate dto) {
+        Approval approval = approvalRepository.findByApprovalNo(dto.getApproval_no())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 승인요청입니다."));
+
+        Center center = centerRepository.findById(dto.getCenter_no())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 센터입니다."));
+
+        Member member = memberRepository.findByMemberNo(dto.getMember_no())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
+
+        approval.changeApprovalStatus(dto.getStatus());
+        center.changeCenterStatus(dto.getStatus());
+        member.changeMemberStatus(dto.getStatus());
+
+        return dto.toDto(center, member).toString();
+    }
+
+    //멤버 승인 대기 리스트
     @Transactional(readOnly = true)
     @Override
-    public List<ApprovalDto.MemberApprovalResponse> findAllApprovals(int centerNo) {
-        return approvalRepository.findAllApprovals(centerNo)
+    public List<ApprovalDto.MemberApprovalResponse> findMemberApprovals(int centerNo) {
+        return approvalRepository.findMemberApprovals(centerNo)
                 .stream()
                 .map(ApprovalDto.MemberApprovalResponse::toDto)
                 .collect(Collectors.toList());
     }
 
-    //시설장, 교사, 학부모 승인거절 결정
+    //교사, 학부모 승인거절 결정
     @Override
     public String updateMemberApprovals(ApprovalDto.MemberApprovalUpdate dto) {
         Approval approval = approvalRepository.findByApprovalNo(dto.getApproval_no())
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 승인 요청입니다."));
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 승인 청입니다."));
 
         Member member = memberRepository.findByParentNo(dto.getMember_no())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
@@ -57,7 +87,7 @@ public class ApprovalServiceImpl implements ApprovalService {
     @Override
     public String updateChildApprovals(ApprovalDto.ChildApprovalUpdate dto) {
         Approval approval = approvalRepository.findByApprovalNo(dto.getApproval_no())
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 승인 요청입니다."));
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 승인요청입니다."));
 
         Child child = childRepository.findByChildNo(dto.getChild_no())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 아동입니다."));

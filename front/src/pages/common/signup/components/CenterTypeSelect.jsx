@@ -9,7 +9,7 @@ const CenterTypeSelect = ({ error, ...rest }) => {
         <option value="">선택해주세요</option>
         <option value="DAYCARE">어린이집</option>
         <option value="KINDERGARTEN">유치원</option>
-        <option value="CHILD_CENTERE">지역아동센터</option>
+        <option value="CHILD_CENTER">지역아동센터</option>
         <option value="ETC">기타</option>
       </SelectCenter>
       {error && <ErrorMessage>{error}</ErrorMessage>}

@@ -19,11 +19,11 @@ public class Schedule {// 일정
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "SCHADULE_NO")
+    @Column(name = "SCHEDULE_NO")
     private int scheduleNo;
     //일정 번호
 
-    @Column(name = "ITLE", length = 50, nullable = false)
+    @Column(name = "TITLE", length = 50, nullable = false)
     private String title;
     //제목
 

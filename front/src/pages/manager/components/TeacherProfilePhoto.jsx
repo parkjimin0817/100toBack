@@ -2,16 +2,16 @@ import React from 'react';
 import styled from 'styled-components';
 import defaultImg from '../../../assets/defaultImg.png';
 
-const TeacherProfilePhoto = () => {
+const TeacherProfilePhoto = ({ teacher }) => {
   return (
     <CardLine>
       <Card>
         <PictureBox>
-          <Pic src={defaultImg} alt="아이사진" />
+          <Pic src={teacher.member_profile || defaultImg} alt="교사사진" />
         </PictureBox>
         <NameBox>
-          <NameLine>이선생</NameLine>
-          <ClassLine>햇님반</ClassLine>
+          <NameLine>{teacher.member_name}</NameLine>
+          <ClassLine>{teacher.class_name}반</ClassLine>
         </NameBox>
       </Card>
     </CardLine>

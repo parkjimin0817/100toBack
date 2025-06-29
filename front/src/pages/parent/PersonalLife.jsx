@@ -1,22 +1,31 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import ContentHeader from '../../components/Common/ContentHeader';
 import styled from 'styled-components';
-import { List } from '../../components/ChildDummyData'; // ✅ named import → 정상 작동
+import axios from 'axios';
 import { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
 
 const PersonalLife = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const id = searchParams.get('id');
 
-  const [child, setChild] = useState(null);
+  const [logs, setLogs] = useState([]);
 
   useEffect(() => {
-    const found = List.find((item) => item.id === parseInt(id));
-    if (found) setChild(found);
+    const fetchChildDetail = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8888/api/childs/activitylog?childNo=${id}`);
+        setLogs(response.data);
+      } catch (error) {
+        console.error('아동 생활로그 불러오기 실패:', error);
+      }
+    };
+
+    fetchChildDetail();
   }, [id]);
 
-  if (!child) return <div>로딩중...</div>;
+  if (logs.length === 0) return <div>로딩중...</div>;
 
   return (
     <Container>
@@ -25,9 +34,9 @@ const PersonalLife = () => {
         Color={'orange'}
         ButtonProps={[{ Title: '뒤로가기', func: () => navigate(-1) }]}
       />
-      <Name>{child.name}</Name>
+      <Name>{logs[0].child_name}</Name>
       <Table>
-        <thead>
+        <THead>
           <tr>
             <th>날짜</th>
             <th>식사</th>
@@ -36,18 +45,18 @@ const PersonalLife = () => {
             <th>교우관계</th>
             <th>메모</th>
           </tr>
-        </thead>
+        </THead>
         <tbody>
-          {[...child.lifeRecords]
-            .sort((a, b) => new Date(b.date) - new Date(a.date))
+          {[...logs]
+            .sort((a, b) => new Date(b.create_date) - new Date(a.create_date))
             .map((item, index) => (
               <tr key={index}>
-                <td>{item.date}</td>
-                <td>{item.meal}</td>
-                <td>{item.napTime}</td>
-                <td>{item.play}</td>
-                <td>{item.social}</td>
-                <td>{item.memo}</td>
+                <td>{dayjs(item.create_date).format('YYYY-MM-DD')}</td>
+                <td>{item.dailyMeal_amount}</td>
+                <td>{`${item.napStart_time?.substring(0, 5)} ~ ${item.napEnd_time?.substring(0, 5)}`}</td>
+                <td>{item.play_participation}</td>
+                <td>{item.daily_friendship}</td>
+                <td>{item.activity_log_memo}</td>
               </tr>
             ))}
         </tbody>
@@ -77,6 +86,7 @@ const Table = styled.table`
   width: 90%;
   margin: 30px auto;
   border-collapse: collapse;
+  border-spacing: 0;
   font-size: 15px;
 
   th,
@@ -88,5 +98,18 @@ const Table = styled.table`
 
   th {
     font-weight: bold;
+  }
+`;
+
+const THead = styled.thead`
+  background: ${({ theme }) => theme.colors.orange};
+  color: ${({ theme }) => theme.colors.white};
+
+  th:first-child {
+    border-top-left-radius: ${({ theme }) => theme.borderRadius.lg};
+  }
+
+  th:last-child {
+    border-top-right-radius: ${({ theme }) => theme.borderRadius.lg};
   }
 `;

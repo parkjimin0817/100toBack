@@ -75,7 +75,6 @@ const ClassPlacement = () => {
 
           <PlacementButton onClick={() => setOpenModal(true)}>반 배정</PlacementButton>
         </ButtonLine>
-
         <ChildrenList
           Color="blue"
           showAll={showAll}

@@ -1,5 +1,6 @@
 package com.bridge.kinder.entity;
 
+import com.bridge.kinder.enums.CommonEnums;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +12,11 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @Getter
-@Table(name = "ATTENDANCE")
+@Table(name = "ATTENDANCE",
+//하루 중 중복 출근 방지 제약 조건
+uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"MEMBER_NO", "ATTENDANCE_DATE"})
+})
 public class Attendance {// 근태
 
     @Id
@@ -27,6 +32,14 @@ public class Attendance {// 근태
     @Column(name = "OUT_TIME")
     private LocalDateTime outTime;
     //퇴근시간
+
+    @Column(name = "ATTENDANCE_DATE")
+    private LocalDate attendanceDate;
+
+    @Column(name = "STATUS")
+    @Enumerated(EnumType.STRING)
+    private CommonEnums.TeacherAttendanceStatus status;
+    //출근 상태 (결근, 출근, 출근중, 공휴일, 주말, 휴가, 워케이션)
 
 
     //---------------------------------------------------------------------------------------------
@@ -44,6 +57,15 @@ public class Attendance {// 근태
 
     public void updateOutTime(LocalDateTime outTime) {
         this.outTime = outTime;
+    }
+
+    //-----------------------------------------------------------------------------------------------
+
+    @PrePersist
+    public void setAttendanceDate() {
+        if(this.attendanceDate == null){
+            this.attendanceDate = LocalDate.now();
+        }
     }
 
 

@@ -49,7 +49,7 @@ const ChildrenList = ({
   let filtered = [...list];
 
   if (!showAll) {
-    filtered = filtered.filter((item) => !item.class_name);
+    filtered = filtered.filter((item) => item.class_name === '미배정');
   }
 
   if (sortBy === 'class') {
@@ -134,7 +134,7 @@ const Card = styled.div`
 
   &.selected {
     transform: translateY(-5px); // 위로 살짝 띄우기
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4); // 강조
+    box-shadow: 0 8px 24px rgba(0, 123, 255, 0.4); // 강조
   }
 `;
 
@@ -149,7 +149,7 @@ const PictureBox = styled.div`
   transition: border 0.2s ease;
   &:hover {
     cursor: pointer;
-    border: solid 5px ${({ theme }) => theme.colors.blue};
+    border: solid 5px ${({ theme, color }) => theme.colors[color]};
   }
 `;
 
@@ -174,12 +174,12 @@ const NameBox = styled.div`
 `;
 
 const NameLine = styled.div`
-  font-size: 16px;
+  font-size: ${({ theme }) => theme.fontSizes.base};
   font-weight: bold;
   color: white;
 `;
 
 const ClassLine = styled.div`
-  font-size: 10px;
+  font-size: ${({ theme }) => theme.fontSizes.xs};
   color: white;
 `;

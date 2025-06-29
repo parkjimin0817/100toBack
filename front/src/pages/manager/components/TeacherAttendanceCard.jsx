@@ -3,25 +3,52 @@ import ContentHeader from '../../../components/Common/ContentHeader';
 import styled from 'styled-components';
 import TeacherProfilePhoto from './TeacherProfilePhoto';
 import TeacherAttendanceEditModal from './TeacherAttendanceEditModal';
+import { attendanceStatusToKorean } from '../../../constants/attendanceStatusMap';
 
-const TeacherAttendanceCard = ({ selectedDate }) => {
+const TeacherAttendanceCard = ({ selectedDate, teacher, currentMonth, attendance, monthAttendance }) => {
   const [openModal, setOpenModal] = useState(false);
+  const month = currentMonth.getMonth() + 1;
+  const title = `${month}월 근태 관리`;
+
+  console.log(attendance);
+
+  //출퇴근 시간
+  const inTime = attendance?.inTime
+    ? new Date(attendance.inTime).toLocaleTimeString('ko-KR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      })
+    : '-';
+  const outTime = attendance?.outTime
+    ? new Date(attendance.outTime).toLocaleTimeString('ko-KR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      })
+    : '-';
+
+  console.log(Array.isArray(monthAttendance));
+  console.log(monthAttendance);
+
+  //const workDayCount = monthAttendance.filter((att) => att.status === 'PRESENT');
+  //const absentCount = monthAttendance.filter((att) => att.status === 'ABSENT');
 
   return (
     <>
-      <ContentHeader Title="근태 관리" Color={'blue'} FontSize={'sm'} />
+      <ContentHeader Title={title} Color={'blue'} FontSize={'sm'} />
       <TopContent>
         <ProfileDiv>
-          <TeacherProfilePhoto />
+          <TeacherProfilePhoto teacher={teacher} />
         </ProfileDiv>
         <AttendanceCountBox>
           <AttendanceCount>
             <Name>출근</Name>
-            <Count>7</Count>
+            <Count>수정중</Count>
           </AttendanceCount>
           <AttendanceCount>
             <Name>결근</Name>
-            <Count>7</Count>
+            <Count>수정중</Count>
           </AttendanceCount>
         </AttendanceCountBox>
       </TopContent>
@@ -43,15 +70,16 @@ const TeacherAttendanceCard = ({ selectedDate }) => {
               <tbody>
                 <tr>
                   <th>상태:</th>
-                  <td>출근</td>
+                  {/* {attendanceStatusToKorean[attendance.status] || '알 수 없음'} */}
+                  <td>수정중</td>
                 </tr>
                 <tr>
                   <th>출근시간: </th>
-                  <td>09:00</td>
+                  <td>{inTime}</td>
                 </tr>
                 <tr>
                   <th>퇴근시간: </th>
-                  <td>18:00</td>
+                  <td>{outTime}</td>
                 </tr>
               </tbody>
             </Table>
@@ -60,6 +88,8 @@ const TeacherAttendanceCard = ({ selectedDate }) => {
       </BottomContent>
       {openModal && (
         <TeacherAttendanceEditModal
+          status={status}
+          attendance={attendance}
           onClose={() => setOpenModal(false)}
           onEdit={(data) => {
             console.log(data);
@@ -172,6 +202,7 @@ const DetailContent = styled.div`
 
 const Table = styled.table`
   width: 50%;
+  table-layout: fixed;
   margin: 0 auto;
   border-collapse: collapse;
   border-spacing: 0;
@@ -181,6 +212,7 @@ const Table = styled.table`
     padding: 8px;
     text-align: center;
     border: none;
+    word-break: keep-all;
   }
 
   tbody > tr:first-child {
