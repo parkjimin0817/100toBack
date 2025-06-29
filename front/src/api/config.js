@@ -72,6 +72,6 @@ export const API_ENDPOINTS = {
     ADD : '/api/boards',
     DETAIL : (id) => `/api/boards/${id}`,
     DELETE : (id) => `/api/boards/${id}`,
-    TYPE : (type, page) => `/api/boards/type/${type}?page=${page}&size=1`,
+    TYPE : (type, page) => `/api/boards/type/${type}?page=${page}`,
   }
 };
