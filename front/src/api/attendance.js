@@ -53,10 +53,20 @@ export const attendanceService = {
     }
   },
   //교사 근태 달별 목록 불러오기 (시설장)
-  teacherAttendance: async (memberNo, year, month) => {
+  teacherAttendance: async (memberNo, centerNo, year, month) => {
     try {
-      const { data } = await api.get(API_ENDPOINTS.ATTENDANCE.TEACHERATTENDANCE(memberNo, year, month));
-      return data;
+      const { data } = await api.get(API_ENDPOINTS.ATTENDANCE.TEACHERATTENDANCE(memberNo, centerNo, year, month));
+
+      const camelDataList = data.map((a) => ({
+        attendanceNo: a.attendance_no,
+        attendanceDate: a.attendance_date,
+        inTime: a.in_time,
+        outTime: a.out_time,
+        memberNo: a.member_no,
+        status: a.status,
+      }));
+
+      return camelDataList;
     } catch (error) {
       throw new Error('서버 통신 불량: ' + error.message);
     }
