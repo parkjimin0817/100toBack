@@ -7,10 +7,21 @@ import useLoginStore from '../../store/loginStore';
 
 const ChildList = () => {
   const member = useLoginStore((state) => state.member);
+  const navigator = useNavigate();
+
+  useEffect(() => {
+    if (!member) {
+      alert('로그인이 필요합니다.');
+      navigator('/'); // 로그인 페이지로 이동
+    }
+  }, [member, navigator]);
+
+  // 로그인 되기 전에는 화면 렌더링하지 않도록
+  if (!member) return null;
+
   const classNo = member.classNo;
   const centerNo = member.centerNo;
   const memberType = member.memberType;
-  const navigator = useNavigate();
 
   const buttons = [{ Title: '반 목록', func: () => navigator('/classlist') }];
 
@@ -22,8 +33,8 @@ const ChildList = () => {
         showAll={true}
         sortBy="createDate"
         roleBy="child"
-        classFilter={memberType === 'MANAGER' ? null : classNo} // MANAGER일 때는 필터 없음
-        centerNo={centerNo} // 추가 필요
+        classFilter={memberType === 'MANAGER' ? null : classNo}
+        centerNo={centerNo}
       />
     </Content>
   );

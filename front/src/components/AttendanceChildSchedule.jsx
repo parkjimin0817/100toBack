@@ -8,6 +8,14 @@ const AttendanceChildSchedule = ({ data }) => {
   const formatData = data.map((item) => ({
     ...item,
     create_date: dayjs(item.create_date).format('YYYY-MM-DD'),
+    status:
+      item.status === 'PRESENT'
+        ? 'present'
+        : item.status === 'ABSENT'
+          ? 'absent'
+          : item.status === 'HALF'
+            ? 'half'
+            : '',
   }));
 
   return (
@@ -25,9 +33,7 @@ const AttendanceChildSchedule = ({ data }) => {
         const match = formatData.find((d) => d.create_date === dateStr);
 
         if (match) {
-          if (match.status === 'present') return 'present';
-          if (match.status === 'absent') return 'absent';
-          if (match.status === 'half') return 'half';
+          return match.status;
         }
 
         if (date.getDay() === 0) return 'sunday';

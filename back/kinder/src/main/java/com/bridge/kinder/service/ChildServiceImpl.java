@@ -5,6 +5,7 @@ import com.bridge.kinder.dto.ChildDto.activity;
 import com.bridge.kinder.dto.ChildDto.activityLog;
 import com.bridge.kinder.dto.ChildDto.attendance;
 import com.bridge.kinder.dto.ChildDto.childListResponse;
+import com.bridge.kinder.dto.ChildDto.detail;
 import com.bridge.kinder.dto.ChildDto.health;
 import com.bridge.kinder.dto.ChildDto.healthLog;
 import com.bridge.kinder.dto.ChildDto.modalResponse;
@@ -12,7 +13,10 @@ import com.bridge.kinder.dto.ChildDto.updateClass;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.ChildActivityData;
+import com.bridge.kinder.entity.ChildActivityLog;
+import com.bridge.kinder.entity.ChildAttendance;
 import com.bridge.kinder.entity.ChildHealthData;
+import com.bridge.kinder.entity.ChildHealthLog;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.entity.MemberChild;
 import com.bridge.kinder.repository.CenterRepository;
@@ -20,6 +24,7 @@ import com.bridge.kinder.repository.ChildRepository;
 import com.bridge.kinder.repository.MemberChildRepository;
 import com.bridge.kinder.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -123,6 +128,7 @@ public class ChildServiceImpl implements ChildService {
         return ChildDto.modalResponse.toDto(child);
     }
 
+    //아동번호와 반 번호로 반 수정(시설장)
     @Override
     public ChildDto.updateClass updateClass(int child_no, int class_no) {
         Child child = childRepository.updateClass(child_no,class_no)
@@ -130,39 +136,84 @@ public class ChildServiceImpl implements ChildService {
         return ChildDto.updateClass.toDto(child);
     }
 
+
+    //아동 번호로 해당 아동의 건강 로그 데이터 리스트 불러오기(매일 기록하는거)
     @Override
     public List<ChildDto.healthLog> healthLog(int childNo) {
+        Child child = childRepository.getByChildNo(childNo)
+                .orElseThrow(() -> new EntityNotFoundException("해당 아동이 존재하지 않습니다."));
         return childRepository.healthLog(childNo).stream()
                 .map(ChildDto.healthLog::toDto)
+                .peek(dto -> dto.setChild_name(child.getChildName())) //아동 이름도 보내주기
                 .collect(Collectors.toList());
     }
 
+    //아동 번호로 해당 아동의 건강 데이터 불러오기(복약정보,예방접종,알레르기)
     @Override
     public health health(int childNo) {
-        ChildHealthData health = childRepository.health(childNo)
-                .orElseThrow(() -> new EntityNotFoundException("건강 데이터를 불러오지 못 했습니다."));
-        return ChildDto.health.toDto(health);
+        Optional<ChildHealthData> optional = childRepository.health(childNo);
+
+        // null이면 빈 DTO로 대체하거나 null 반환
+        return optional.map(ChildDto.health::toDto)
+                .orElse(ChildDto.health.builder().build()); // 빈 객체로 대체
     }
 
+    //아동 번호로 해당 아동의 행동 로그 데이터 불러오기(매일 적는 거)
     @Override
     public List<ChildDto.activityLog> activityLog(int childNo) {
+        Child child = childRepository.getByChildNo(childNo)
+                .orElseThrow(() -> new EntityNotFoundException("해당 아동이 존재하지 않습니다."));
         return childRepository.activityLog(childNo).stream()
                 .map(ChildDto.activityLog::toDto)
+                .peek(dto -> dto.setChild_name(child.getChildName())) //아동 이름도 보내주기
                 .collect(Collectors.toList());
     }
 
+    //아동 번호로 해당 아동의 생활 데이터 불러오기
     @Override
-    public activity activity(int childNo) {
-        ChildActivityData activity = childRepository.activity(childNo)
-                .orElseThrow(() -> new EntityNotFoundException("생활 데이터를 불러오지 못 했습니다."));
-
-        return ChildDto.activity.toDto(activity);
+    public ChildDto.activity activity(int childNo) {
+        return childRepository.activity(childNo)
+                .map(ChildDto.activity::toDto)
+                .orElse(ChildDto.activity.toDto(null)); // 내부에서 null 처리
     }
 
+    //아동 번호로 해당 아동의 출석 내역 리스트 불러오기
     @Override
     public List<ChildDto.attendance> attendance(int childNo) {
         return childRepository.attendance(childNo).stream()
                 .map(ChildDto.attendance::toDto)
                 .collect(Collectors.toList());
+    }
+
+    //아동 상세보기에 필요한 모든 것들 가져오기
+    @Override
+    public detail detail(int childNo) {
+        List<ChildHealthLog> healthLogEntities = childRepository.healthLog(childNo);
+        ChildHealthData healthEntity = childRepository.health(childNo).orElse(null); // 예외 안 던짐
+
+        List<ChildActivityLog> activityLogEntities = childRepository.activityLog(childNo);
+        ChildActivityData activityEntity = childRepository.activity(childNo).orElse(null); // 예외 안 던짐
+
+        List<ChildAttendance> attendanceEntities = childRepository.attendance(childNo);
+
+        Child child = childRepository.getByChildNo(childNo)
+                .orElseThrow(() -> new EntityNotFoundException("해당 아동이 존재하지 않습니다."));
+
+        ChildHealthLog physicalInfo = childRepository.recentPhysicalInfo(childNo).orElse(null); // 예외 안 던짐
+
+        int parentNo = memberChildRepository.findByChildNo(childNo);
+
+        Member member = memberRepository.findByMemberNo(parentNo).orElse(null); // 예외 안 던짐
+
+        return ChildDto.detail.toDto(
+                healthLogEntities,
+                healthEntity,
+                activityLogEntities,
+                activityEntity,
+                attendanceEntities,
+                child,
+                physicalInfo,
+                member
+        );
     }
 }
