@@ -1,5 +1,6 @@
 package com.bridge.kinder.entity;
 
+import com.bridge.kinder.dto.ChildDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -51,4 +52,16 @@ public class ChildActivityData {// 아동 생활 정보
     @JoinColumn(name = "CHILD_NO")
     private Child child;
     //아동
+
+    //---------------------------------------------------------------------------------------------
+    public void updateFromDto(ChildDto.activity dto) {
+        this.likeFood = dto.getLike_food();
+        this.dislikeFood = dto.getDislike_food();
+        this.mealAmount = dto.getMeal_amount();
+        this.mealMemo = dto.getMeal_memo();
+        this.closeFriend = dto.getClose_friend();
+        this.likePlay = dto.getLike_play();
+        this.friendMemo = dto.getFriend_memo();
+
+    }
 }
