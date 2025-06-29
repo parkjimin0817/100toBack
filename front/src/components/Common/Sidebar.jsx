@@ -162,10 +162,10 @@ const managerSidebar = [
     icon: <MdFilterFrames />,
     color: 'green',
     subItems: [
-      { label: '공지사항', link: '*' },
+      { label: '공지사항', link: '/notice/list' },
       { label: '가정통신문', link: '/family_notice/list' },
       { label: '식단표', link: '*' },
-      { label: '알림장', link: '*' },
+      {label : "알림장", link : "/note/list"},
       { label: '사진 게시판', link: '*' },
     ],
   },
@@ -223,10 +223,10 @@ const parentSidebar = [
     icon: <MdFilterFrames />,
     color: 'purple',
     subItems: [
-      { label: '공지사항', link: '*' },
+      { label: '공지사항', link: '/notice/list' },
       { label: '가정통신문', link: '/family_notice/list' },
       { label: '식단표', link: '*' },
-      { label: '알림장', link: '*' },
+      {label : "알림장", link : "/note/list"},
     ],
   },
   {
