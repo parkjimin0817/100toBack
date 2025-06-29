@@ -4,6 +4,7 @@ import ContentHeader from './ContentHeader';
 import { useState } from 'react';
 import { attendanceService } from '../../api/attendance';
 import { toast } from 'react-toastify';
+import useLoginStore from '../../store/loginStore';
 
 const AttendanceList = ({ class_no, create_date, selectedDate, attendanceInfo, refetch }) => {
   const [selectedStatus, setSelectedStatus] = useState('전체');
@@ -11,11 +12,16 @@ const AttendanceList = ({ class_no, create_date, selectedDate, attendanceInfo, r
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { member } = useLoginStore();
 
   const handleStatusChange = (child_no, status) => {
     setChildNo(child_no);
     setStatus(status);
   };
+  if (member.memberType !== 'TEACHER' && member.memberType !== 'MANAGER') {
+    toast.warn('권한이 없습니다.');
+    return;
+  }
 
   const filteredDatas =
     selectedStatus === '전체' ? attendanceInfo : attendanceInfo.filter((item) => item.status === selectedStatus);
@@ -27,6 +33,11 @@ const AttendanceList = ({ class_no, create_date, selectedDate, attendanceInfo, r
 
   const onSubmit = async (e) => {
     e.preventDefault();
+
+    if (member.classNo.toString() !== class_no) {
+      toast.warn('변경 권한이 없습니다.');
+      return;
+    }
 
     try {
       setIsLoading(true);
@@ -89,39 +100,45 @@ const AttendanceList = ({ class_no, create_date, selectedDate, attendanceInfo, r
         <TbodyWrapper>
           <Table>
             <Tbody>
-              {filteredDatas.map((item, index) => (
-                <Tr key={index}>
-                  <Td>{item.child_name}</Td>
-                  <Td>
-                    <form onSubmit={onSubmit}>
-                      <Button
-                        onClick={() => handleStatusChange(item.child_no, 'PRESENT')}
-                        $status="PRESENT"
-                        $active={item.status === 'PRESENT'}
-                        type="submit"
-                      >
-                        출석
-                      </Button>
-                      <Button
-                        onClick={() => handleStatusChange(item.child_no, 'ABSENT')}
-                        $status="ABSENT"
-                        $active={item.status === 'ABSENT'}
-                        type="submit"
-                      >
-                        결석
-                      </Button>
-                      <Button
-                        onClick={() => handleStatusChange(item.child_no, 'HALF')}
-                        $status="HALF"
-                        $active={item.status === 'HALF'}
-                        type="submit"
-                      >
-                        지각
-                      </Button>
-                    </form>
-                  </Td>
+              {isLoading ? (
+                <Tr>
+                  <Td>불러오는 중...</Td>
                 </Tr>
-              ))}
+              ) : (
+                filteredDatas.map((item) => (
+                  <Tr key={item.child_no}>
+                    <Td>{item.child_name}</Td>
+                    <Td>
+                      <form onSubmit={onSubmit}>
+                        <Button
+                          onClick={() => handleStatusChange(item.child_no, 'PRESENT')}
+                          $status="PRESENT"
+                          $active={item.status === 'PRESENT'}
+                          type="submit"
+                        >
+                          출석
+                        </Button>
+                        <Button
+                          onClick={() => handleStatusChange(item.child_no, 'ABSENT')}
+                          $status="ABSENT"
+                          $active={item.status === 'ABSENT'}
+                          type="submit"
+                        >
+                          결석
+                        </Button>
+                        <Button
+                          onClick={() => handleStatusChange(item.child_no, 'HALF')}
+                          $status="HALF"
+                          $active={item.status === 'HALF'}
+                          type="submit"
+                        >
+                          지각
+                        </Button>
+                      </form>
+                    </Td>
+                  </Tr>
+                ))
+              )}
             </Tbody>
           </Table>
         </TbodyWrapper>

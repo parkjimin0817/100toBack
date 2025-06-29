@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import sun from '../assets/img/sun.png';
 import ClassList from './ClassList';
 import styled from 'styled-components';
+import useLoginStore from '../store/loginStore';
+import { toast } from 'react-toastify';
 
 /**
  * 반별 카드 컴포넌트 입니다.
@@ -23,7 +25,7 @@ const ClassRoomCard = ({ classrooms, address }) => {
             key={classroom.class_no}
             img={classroom.class_image}
             className={classroom.class_name}
-            mateCount={classroom.child_count} //정원 세야함
+            mateCount={classroom.child_count}
             capacity={classroom.capacity}
             teacher={classroom.member_name}
             classColor={classroom.color}

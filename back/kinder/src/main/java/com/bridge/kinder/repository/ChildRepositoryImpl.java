@@ -6,6 +6,7 @@ import com.bridge.kinder.entity.ChildActivityLog;
 import com.bridge.kinder.entity.ChildAttendance;
 import com.bridge.kinder.entity.ChildHealthData;
 import com.bridge.kinder.entity.ChildHealthLog;
+import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.entity.Member;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -68,6 +69,15 @@ public class ChildRepositoryImpl implements ChildRepository {
        return count.intValue();
     }
 
+    //반에 속한 아동 조회
+    @Override
+    public List<Child> findByClassRoom(ClassRoom classRoom) {
+        int classNo = classRoom.getClassNo();
+        return em.createQuery("SELECT c FROM Child c WHERE c.classRoom.classNo  = :classNo", Child.class)
+                .setParameter("classNo", classNo)
+                .getResultList();
+    }
+
     //child_no로 아동 찾기
     @Override
     public Optional<Child> getByChildNo(int child_no) {
@@ -97,14 +107,7 @@ public class ChildRepositoryImpl implements ChildRepository {
         }
     }
 
-    @Override
-    public List<Child> findByChildNoCenterNo(int classNo, int centerNo) {
 
-        return em.createQuery("SELECT c FROM Child c WHERE c.childNo = :classNo AND c.center.centerNo = :centerNo", Child.class)
-                .setParameter("classNo", classNo)
-                .setParameter("centerNo",centerNo)
-                .getResultList();
-    }
 
     @Override
     public List<ChildHealthLog> healthLog(int childNo) {

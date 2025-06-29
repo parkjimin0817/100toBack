@@ -63,9 +63,9 @@ export const attendanceService = {
   },
 
   //해당 반 출결 정보 가져오기
-  classAttendance: async (classNo, createDate) => {
+  classAttendance: async (class_no, create_date) => {
     try {
-      const { data } = await api.get(API_ENDPOINTS.ATTENDANCE.CHILDATTENDANCE(classNo, createDate));
+      const { data } = await api.post(API_ENDPOINTS.ATTENDANCE.CHILDATTENDANCE, { class_no, create_date });
       return data;
     } catch (error) {
       if (error.response) {

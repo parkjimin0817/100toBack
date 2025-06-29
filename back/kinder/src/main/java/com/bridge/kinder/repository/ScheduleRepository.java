@@ -4,6 +4,7 @@ import com.bridge.kinder.dto.ScheduleDto.CreateScheduleDto;
 import com.bridge.kinder.entity.Schedule;
 import com.bridge.kinder.enums.CommonEnums;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ScheduleRepository {
@@ -21,5 +22,11 @@ public interface ScheduleRepository {
 
     //스케줄 삭제
     void deleteSchedule(Schedule schedule);
+
+    //반 일과표 생성
+    void saveDailySchedule(List<Schedule> schedules);
+
+    //반 일과표 조회
+    List<Schedule> findDailyList(int centerNo, int memberNo, int classNo, LocalDate scheduleDate);
 
 }

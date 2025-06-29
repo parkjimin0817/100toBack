@@ -40,22 +40,26 @@ public class AttendanceDto {
         }
     }
 
-
     @Getter
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class ClassAttendance{
+    public static class CreateAttendance{
+        private int class_no;
+
         private String child_name; //아동 이름
         private CommonEnums.ChildAttendanceStatus status; //아동 출결 상태
+        private String class_name; //반 이름
+        private LocalDate create_date; //생성일
+        private int child_no; //아동 번호
 
-        private int child_no;
-
-        public static ClassAttendance toDto(ChildAttendance childAttendance) {
-            return ClassAttendance.builder()
+        public static CreateAttendance toDto(ChildAttendance childAttendance) {
+            return CreateAttendance.builder()
                     .child_no(childAttendance.getChild().getChildNo())
                     .child_name(childAttendance.getChild().getChildName())
+                    .class_name(childAttendance.getClassRoom().getClassName())
+                    .create_date(childAttendance.getCreateDate())
                     .status(childAttendance.getStatus())
                     .build();
         }

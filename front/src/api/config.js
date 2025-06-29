@@ -67,7 +67,7 @@ export const API_ENDPOINTS = {
     TEACHERATTENDANCE: (memberNo, year, month) =>
       `/api/attendance/teacher?memberNo=${memberNo}&year=${year}&month=${month}`,
     //아동 출결 관리
-    CHILDATTENDANCE: (classNo, createDate) => `/api/attendance/child?classNo=${classNo}&createDate=${createDate}`,
+    CHILDATTENDANCE: `/api/attendance/createChildAttendance`,
     //아동 출결 수정
     UPDATECHILDATTENDANCE: `/api/attendance/updateAttendance`,
   },

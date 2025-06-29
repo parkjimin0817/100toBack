@@ -65,6 +65,7 @@ const Hint = styled.h2`
   font-size: ${({ theme }) => theme.fontSizes.base};
   text-align: left;
   padding-left: ${({ theme }) => theme.spacing[8]};
+  padding-bottom: ${({ theme }) => theme.spacing[8]};
 `;
 const Content = styled.div`
   width: 100%;

@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import useLoginStore from '../../store/loginStore';
 import { classService } from '../../api/class';
 import { ImInfo } from 'react-icons/im';
+import { toast } from 'react-toastify';
 
 //출석 체크 시 반별 페이지(모든 반이 나옴)
 const AttendanceClassList = () => {
@@ -52,6 +53,7 @@ const Hint = styled.h2`
   font-size: ${({ theme }) => theme.fontSizes.base};
   text-align: left;
   padding-left: ${({ theme }) => theme.spacing[8]};
+  padding-bottom: ${({ theme }) => theme.spacing[8]};
 `;
 
 const Content = styled.div`

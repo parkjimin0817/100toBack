@@ -18,13 +18,18 @@ const AttendancePage = () => {
   const [selectedDate, setSelectedDate] = useState(dayjs().format('YYYY-MM-DD (ddd)'));
   const [attendanceInfo, setAttendanceInfo] = useState([]);
 
+  //선택된 날짜
   const formatDate = dayjs(selectedDate).format('YYYY-MM-DD');
 
   const fetchData = async () => {
     try {
-      const attendaceData = await attendanceService.classAttendance(class_no, formatDate);
+      const attendanceData = await attendanceService.classAttendance(class_no, formatDate);
 
-      setAttendanceInfo(attendaceData);
+      if (Array.isArray(attendanceData)) {
+        setAttendanceInfo(attendanceData);
+      } else {
+        setAttendanceInfo([attendanceData]);
+      }
     } catch (error) {
       console.error('출결 정보 조회 실패 :', error.message);
     }

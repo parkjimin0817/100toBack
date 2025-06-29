@@ -50,11 +50,13 @@ public class AttendanceController {
         return ResponseEntity.ok(attendanceService.getTeacherMonthlyAttendance(memberNo, year, month));
     }
 
-    //반 번호, 해당 날짜로 출결 리스트 가져오기
-    @GetMapping("/child")
-    public ResponseEntity<List<AttendanceDto.ClassAttendance>> GetAttendance(@RequestParam int classNo, LocalDate createDate) {
-        return ResponseEntity.ok(attendanceService.getChildAttendanceList(classNo, createDate));
+    //반 번호로 출결 상태 생성
+    @PostMapping("/createChildAttendance")
+    public ResponseEntity<List<AttendanceDto.CreateAttendance>> createChildAttendance(@RequestBody AttendanceDto.CreateAttendance dto) {
+        return ResponseEntity.ok(attendanceService.createChildAttendance(dto));
+
     }
+
 
     //반 출결 상태를 변경
     @PatchMapping("/updateAttendance")
