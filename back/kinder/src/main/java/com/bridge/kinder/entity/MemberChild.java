@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Table(name = "MEMBER_CHILD")
-public class MemberChild {// 멤버-아동 중계
+public class    MemberChild {// 멤버-아동 중계
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,7 @@
 package com.bridge.kinder.dto;
 
+import com.bridge.kinder.dto.ChildDto.activity;
+import com.bridge.kinder.dto.ChildDto.health;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.ChildActivityData;
@@ -7,11 +9,14 @@ import com.bridge.kinder.entity.ChildActivityLog;
 import com.bridge.kinder.entity.ChildAttendance;
 import com.bridge.kinder.entity.ChildHealthData;
 import com.bridge.kinder.entity.ChildHealthLog;
+import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.enums.CommonEnums;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -111,6 +116,11 @@ public class ChildDto {
         private String class_name;
         private String child_name;
         private LocalDateTime create_date;
+        private String child_birth;
+        private String mother_name;
+        private String father_name;
+        private String mother_phone;
+        private String father_phone;
 
         public static modalResponse toDto(Child child){
             return modalResponse.builder()
@@ -121,6 +131,11 @@ public class ChildDto {
                     )
                     .child_name(child.getChildName())
                     .create_date(child.getCreateDate())
+                    .child_birth(child.getChildResidentNo().substring(0, 6))
+                    .mother_name(child.getMParentsName())
+                    .father_name(child.getFParentsName())
+                    .mother_phone(child.getMParentsPhone())
+                    .father_phone(child.getFParentsPhone())
                     .build();
         }
 
@@ -149,6 +164,7 @@ public class ChildDto {
         }
     }
 
+    //아동 개인의 건강 로그 데이터(매일 체크하는 데이터)
     @Getter
     @Setter
     @NoArgsConstructor
@@ -161,6 +177,7 @@ public class ChildDto {
         private BigDecimal weight;
         private String symptoms;
         private String healthLogMemo;
+        private String child_name;
 
         public static healthLog toDto(ChildHealthLog log){
             return healthLog.builder()
@@ -193,6 +210,10 @@ public class ChildDto {
         private String allergy_memo;
 
         public static health toDto(ChildHealthData healthData){
+            if (healthData == null) {
+                return ChildDto.health.builder().build(); // 또는 기본값 설정도 가능
+            }
+
             return health.builder()
                     .medication_name(healthData.getMedicationName())
                     .medication_amount(healthData.getMedicationAmount())
@@ -223,6 +244,7 @@ public class ChildDto {
         private String play_participation;
         private String daily_friendship;
         private String activity_log_memo;
+        private String child_name;
 
         public static activityLog toDto(ChildActivityLog activitylog){
             return activityLog.builder()
@@ -253,6 +275,10 @@ public class ChildDto {
         private String friend_memo;
 
         public static activity toDto(ChildActivityData activityData){
+            if (activityData == null) {
+                return activity.builder().build(); // 또는 기본값 채워도 됨
+            }
+
             return activity.builder()
                     .like_food(activityData.getLikeFood())
                     .dislike_food(activityData.getDislikeFood())
@@ -285,16 +311,66 @@ public class ChildDto {
     }
 
     @Getter
-    @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    public static class detail{
-        private ChildDto.healthLog health_log;
+    public static class detail {
+        private List<ChildDto.healthLog> healthLogs;
         private ChildDto.health health;
-        private ChildDto.activityLog activityLog;
+        private List<ChildDto.activityLog> activityLogs;
         private ChildDto.activity activity;
-        private ChildDto.attendance attendance;
+        private List<ChildDto.attendance> attendanceLogs;
+        private String child_name;
+        private String child_birthday;
+        private String class_name;
+        private String mother_name;
+        private String mother_phone;
+        private String father_name;
+        private String father_phone;
+        private BigDecimal child_height;
+        private BigDecimal child_weight;
+        private String child_address;
 
+        public static detail toDto(
+                List<ChildHealthLog> healthLogs,
+                ChildHealthData health,
+                List<ChildActivityLog> activityLogs,
+                ChildActivityData activity,
+                List<ChildAttendance> attendances,
+                Child child,
+                ChildHealthLog physicalInfo,
+                Member member
+        ) {
+            return detail.builder()
+                    .healthLogs(
+                            healthLogs.stream()
+                                    .map(healthLog::toDto)
+                                    .collect(Collectors.toList())
+                    )
+                    .health(ChildDto.health.toDto(health))
+                    .activityLogs(
+                            activityLogs.stream()
+                                    .map(activityLog::toDto)
+                                    .collect(Collectors.toList())
+                    )
+                    .activity(ChildDto.activity.toDto(activity))
+                    .attendanceLogs(
+                            attendances.stream()
+                                    .map(attendance::toDto)
+                                    .collect(Collectors.toList())
+                    )
+                    .child_name(modalResponse.toDto(child).getChild_name())
+                    .child_birthday(modalResponse.toDto(child).getChild_birth())
+                    .class_name(modalResponse.toDto(child).getClass_name())
+                    .mother_name(modalResponse.toDto(child).getMother_name())
+                    .mother_phone(modalResponse.toDto(child).getMother_phone())
+                    .father_name(modalResponse.toDto(child).getFather_name())
+                    .father_phone(modalResponse.toDto(child).getFather_phone())
+                    .child_height(physicalInfo != null ? physicalInfo.getHeight() : null)
+                    .child_weight(physicalInfo != null ? physicalInfo.getWeight() : null)
+                    .child_address(member.getAddress())
+                    .build();
+        }
     }
+
 }

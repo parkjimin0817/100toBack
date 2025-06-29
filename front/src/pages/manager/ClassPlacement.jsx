@@ -6,8 +6,7 @@ import ContentHeader from '../../components/Common/ContentHeader';
 import ChildrenList from '../../components/ChildrenList';
 import Modal from '../../components/ClassPlacementModal';
 import useLoginStore from '../../store/loginStore';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const ClassPlacement = () => {
   const member = useLoginStore((state) => state.member);
@@ -76,7 +75,6 @@ const ClassPlacement = () => {
 
           <PlacementButton onClick={() => setOpenModal(true)}>반 배정</PlacementButton>
         </ButtonLine>
-
         <ChildrenList
           Color="blue"
           showAll={showAll}
