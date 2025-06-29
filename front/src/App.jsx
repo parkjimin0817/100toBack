@@ -193,6 +193,8 @@ function App() {
             <Route path="/family_notice">
               <Route path="list" element={<FamilyNoticePage />} />
               <Route path="write" element={<BoardWritePage />} />
+              <Route path=':id' element={<BoardDetailPage />} />
+              <Route path='update/:id' element={<BoardUpdatePage />} />
             </Route>
             <Route path="/child/healthlist" element={<PersonalHealth />} />
             <Route path="/child/lifelist" element={<PersonalLife />} />
@@ -200,6 +202,7 @@ function App() {
               <Route path="list" element={<NotePage />} />
               <Route path="write" element={<BoardWritePage />} />
               <Route path=":id" element={<BoardDetailPage />} />
+              <Route path='update/:id' element={<BoardUpdatePage />} />
             </Route>
           </Route>
 
