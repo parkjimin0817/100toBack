@@ -18,10 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,57 +35,6 @@ public class BoardServiceImpl implements BoardService {
 
     private final String UPLOAD_PATH = "C://test_upload/";
 
-//    @Override
-//    public int createBoard(BoardDto.Create dto) {
-//        // 🟡 필수 값 조회
-//        Member member = memberRepository.findByParentNo(dto.getMemberId())
-//                .orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
-//
-//        Center center = centerRepository.findById(dto.getCenterId())
-//                .orElseThrow(() -> new RuntimeException("존재하지 않는 센터입니다."));
-//
-//        // 🟡 선택 값(classRoom)은 null 허용
-//        ClassRoom classRoom = null;
-//        if (dto.getClassRoomId() != null) {
-//            classRoom = classRoomRepository.findById(dto.getClassRoomId())
-//                    .orElseThrow(() -> new RuntimeException("존재하지 않는 반입니다."));
-//        }
-//
-//        // ✅ 파일 업로드 처리
-//        MultipartFile file = dto.getFile();
-//        if (file != null && !file.isEmpty()) {
-//            String originName = file.getOriginalFilename();
-//            String savedName = UUID.randomUUID().toString() + "_board_" + originName;
-//
-//            File uploadDir = new File(UPLOAD_PATH);
-//            if (!uploadDir.exists()) uploadDir.mkdirs();
-//
-//            try {
-//                file.transferTo(new File(UPLOAD_PATH + savedName));
-//                dto.setAttachment(savedName); // 저장된 경로를 attachment 필드에 주입
-//            } catch (IOException e) {
-//                throw new RuntimeException("파일 업로드 실패: " + e.getMessage());
-//            }
-//        }
-//
-//        // 🟢 Board 엔티티 생성
-//        Board board = dto.toEntity(center, member, classRoom);
-//
-//        // 정렬 순서 카운터
-//        AtomicInteger order = new AtomicInteger(0);
-//
-//        // BoardContent 리스트 생성 및 Board에 추가
-//        List<BoardContent> contents = dto.getContents().stream()
-//                .map(contentDto -> contentDto.toEntity(board, order.getAndIncrement()))
-//                .collect(Collectors.toList());
-//
-//        board.getBoardContents().addAll(contents);
-//
-//        // 저장
-//        boardRepository.save(board);
-//
-//        return board.getBoardNo();
-//    }
     @Override
     public int createBoard(BoardDto.Create dto, MultipartFile file, List<MultipartFile> contentFiles) throws IOException {
         Member member = memberRepository.findByParentNo(dto.getMemberId())
@@ -155,7 +103,10 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public void deleteBoard(int boardNo) {
-        boardRepository.deleteById(boardNo);
+        Board board = boardRepository.findById(boardNo)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+
+        boardRepository.deleteById(board.getBoardNo());
     }
 
     @Override
@@ -181,4 +132,119 @@ public class BoardServiceImpl implements BoardService {
         long total = boardRepository.countByType(type);
         return new PageImpl<>(result, PageRequest.of(page - 1, size), total);
     }
+
+    @Override
+    public Page<BoardDto.NoteBoardDto> getNoteBoards(CommonEnums.BoardType type, int page, int size) {
+        int offset = (page - 1) * size;
+        List<Board> boards = boardRepository.findByType(type, offset, size);
+        List<BoardDto.NoteBoardDto> result = boards.stream()
+                .map(BoardDto.NoteBoardDto::fromEntity)
+                .collect(Collectors.toList());
+
+        long total = boardRepository.countByType(type);
+        return new PageImpl<>(result, PageRequest.of(page - 1, size), total);
+    }
+
+    @Override
+    public Page<BoardDto.FamilyNoticeDto> getFamilyNoticeBoards(CommonEnums.BoardType type, int page, int size) {
+        int offset = (page - 1) * size;
+        List<Board> boards = boardRepository.findByType(type, offset, size);
+        List<BoardDto.FamilyNoticeDto> result = boards.stream()
+                .map(BoardDto.FamilyNoticeDto::fromEntity)
+                .collect(Collectors.toList());
+
+        long total = boardRepository.countByType(type);
+        return new PageImpl<>(result, PageRequest.of(page - 1, size), total);
+    }
+
+    @Override
+    public int updateBoard(Integer boardNo, BoardDto.Update dto, MultipartFile file, List<MultipartFile> contentFiles) throws IOException {
+        Board board = boardRepository.findById(boardNo)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+
+        String attachmentPath = null;
+        // 첨부파일 업데이트
+        if (file != null && !file.isEmpty()) {
+            attachmentPath = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            file.transferTo(new File(UPLOAD_PATH + attachmentPath));
+//            dto.setAttachment(attachmentPath);
+        }
+
+        board.update(dto.getTitle(), dto.getType(), attachmentPath);
+
+        // 기존 컨텐츠 매핑
+        Map<Long, BoardContent> existingContentMap = board.getBoardContents().stream()
+                .collect(Collectors.toMap(BoardContent::getBoardContentNo, Function.identity()));
+
+        List<BoardContent> updatedContents = new ArrayList<>(); // 수정 후 컨텐츠 리스트
+        Set<Long> receivedContentIds = new HashSet<>(); // 체크용 셋
+        AtomicInteger order = new AtomicInteger(0);
+        AtomicInteger imageIndex = new AtomicInteger(0);
+
+        for (BoardContentDto.Update contentDto : dto.getContents()) {
+            BoardContent contentEntity;
+
+            if (contentDto.getContentId() != null) { // 기존 컨텐츠인지 판단
+                contentEntity = existingContentMap.get(contentDto.getContentId()); // 수정전 컨텐츠 가져옴
+                if (contentEntity != null) {
+                    String oldFileName = contentEntity.getContentFile();
+
+                    if (contentDto.getType() == CommonEnums.BoardContentType.IMG && contentFiles != null && imageIndex.get() < contentFiles.size()) {
+                        MultipartFile newFile = contentFiles.get(imageIndex.get());
+                        String newFileName = newFile.getOriginalFilename();
+
+                        if (newFile != null && !newFile.isEmpty() &&
+                                (oldFileName == null || !oldFileName.endsWith(newFileName))) {
+                            // 파일 변경 시
+                            String savedPath = UUID.randomUUID() + "_content_" + newFileName;
+                            newFile.transferTo(new File(UPLOAD_PATH + savedPath));
+                            contentDto.setContentFile(savedPath);
+                        }
+                        imageIndex.incrementAndGet();
+                    }
+
+//                    contentDto.setContentText(contentDto.getContentText());
+                    contentDto.setSortOrder(order.getAndIncrement());
+
+                    BoardContent content = contentDto.toEntity(board);
+                    updatedContents.add(content);
+                    receivedContentIds.add(content.getBoardContentNo());
+                }
+            } else {
+                // 신규 컨텐츠
+                String newFilePath = null;
+                if (contentDto.getType() == CommonEnums.BoardContentType.IMG && contentFiles != null && imageIndex.get() < contentFiles.size()) {
+                    MultipartFile newFile = contentFiles.get(imageIndex.getAndIncrement());
+                    if (newFile != null && !newFile.isEmpty()) {
+                        newFilePath = UUID.randomUUID() + "_content_" + newFile.getOriginalFilename();
+                        newFile.transferTo(new File(UPLOAD_PATH + newFilePath));
+                    }
+                }
+//                contentDto.setContentFile(newFilePath);
+//                contentDto.setSortOrder(order.getAndIncrement());
+//                BoardContent newContent = contentDto.toEntity(board);
+                BoardContent newContent = BoardContent.builder()
+                        .board(board)
+                        .type(contentDto.getType())
+                        .contentText(contentDto.getContentText())
+                        .contentFile(newFilePath)
+                        .sortOrder(order.getAndIncrement())
+                        .build();
+                updatedContents.add(newContent);
+            }
+        }
+
+        // 삭제된 콘텐츠 제거
+        List<BoardContent> toRemove = board.getBoardContents().stream()
+                .filter(content -> !receivedContentIds.contains(content.getBoardContentNo()))
+                .collect(Collectors.toList());
+
+        board.getBoardContents().removeAll(toRemove);
+        board.getBoardContents().clear();
+        board.getBoardContents().addAll(updatedContents);
+
+        boardRepository.save(board);
+        return board.getBoardNo();
+    }
+
 }

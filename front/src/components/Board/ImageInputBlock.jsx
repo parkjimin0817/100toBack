@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 
-const ImageInputBlock = ({ id, value, onChange }) => {
+const ImageInputBlock = ({ id, value, onChange, blockDelete }) => {
   const [preview, setPreview] = useState(null);
   const fileInputRef = useRef(null);
 
@@ -45,6 +45,7 @@ const ImageInputBlock = ({ id, value, onChange }) => {
       <button type="button" onClick={handleClickChange}>
         {preview ? "이미지 변경" : "이미지 업로드"}
       </button>
+      <button onClick={() => blockDelete(id)}>delete</button>
     </div>
   );
 };

@@ -60,7 +60,7 @@ public class Board {// 게시판
     private Member member;
     //멤버
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     List<BoardContent> boardContents = new ArrayList<>();
     //게시판 내용
@@ -71,6 +71,16 @@ public class Board {// 게시판
     protected void onCreate() {
         this.createDate = LocalDateTime.now();
         this.views = 0;
+    }
+
+    //---------------------------------------------------------------------------------------------
+
+    public void update(String title, CommonEnums.BoardType type, String attachment) {
+        this.title = title;
+        this.type = type;
+        if (attachment != null) {
+            this.attachment = attachment;
+        }
     }
 
 }

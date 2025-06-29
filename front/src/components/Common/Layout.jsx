@@ -1,15 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Header from './Header';
 import Footer from './Footer';
 import SideBar from './Sidebar';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import useLoginStore from '../../store/loginStore';
 
 const Layout = () => {
   const { member } = useLoginStore();
   const type = member?.memberType;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(member);
+    if (!member) {
+      alert('로그인 후 이용 가능합니다.');
+      navigate('/'); // 로그인 페이지 경로는 실제 프로젝트에 맞게 수정
+    }
+  }, [member]);
+
+  // member가 없을 경우에는 아무것도 렌더링하지 않도록 early return
+  if (!member) return null;
 
   return (
     <>
