@@ -13,6 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @Getter
+@Setter
 @Table(name = "CHILD")
 public class Child {// 아동
 
@@ -119,6 +120,7 @@ public class Child {// 아동
     public void changeChildStatus(CommonEnums.AdmissionStatus newStatus) {
         this.status = newStatus;
     }
+    public void setClassRoom(ClassRoom classRoom) {this.classRoom = classRoom;}
 
 
 }

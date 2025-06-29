@@ -98,7 +98,7 @@ const ChildrenList = ({
               </PictureBox>
               <NameBox color={Color}>
                 <NameLine>{name}</NameLine>
-                <ClassLine>{className}반</ClassLine>
+                <ClassLine>{className}</ClassLine>
               </NameBox>
             </Card>
           );
@@ -174,12 +174,12 @@ const NameBox = styled.div`
 `;
 
 const NameLine = styled.div`
-  font-size: 16px;
+  font-size: ${({ theme }) => theme.fontSizes.base};
   font-weight: bold;
   color: white;
 `;
 
 const ClassLine = styled.div`
-  font-size: 10px;
+  font-size: ${({ theme }) => theme.fontSizes.xs};
   color: white;
 `;
