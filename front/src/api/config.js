@@ -63,8 +63,8 @@ export const API_ENDPOINTS = {
     //교사가 자신 근태 기록 조회
     //MYATTENDANCE:
     //시설장이 교사 별 근태 조회
-    TEACHERATTENDANCE: (memberNo, year, month) =>
-      `/api/attendance/teacher?memberNo=${memberNo}&year=${year}&month=${month}`,
+    TEACHERATTENDANCE: (memberNo, centerNo, year, month) =>
+      `/api/attendance/teacher?memberNo=${memberNo}&centerNo=${centerNo}&year=${year}&month=${month}`,
   },
   MEMBER_HEALTH: {
     BASE: '/api/members/health',
