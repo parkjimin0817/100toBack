@@ -1,33 +1,27 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { useNavigate } from 'react-router-dom';
 import BoardTable from '../components/Board/BoardTable';
 import theme from "../styles/theme";
 import ContentHeader from '../components/Common/ContentHeader';
-import { useNavigate } from 'react-router-dom';
-import { boardService } from '../api/boards';
 import Pagination from '../components/Common/Pagenation';
+import { boardService } from '../api/boards';
 
 const columns = [
   {
     label: '번호',
-    key: 'boardNo',
+    key: 'id',
     width: '100px',
     align: 'center'
   },
   {
-    label: '파일',
-    key: 'attachment',
-    width: '120px',
+    label: '제목',
+    key: 'title',
   },
   {
     label: '작성자',
-    key: 'writerName',
+    key: 'memberName',
     width: '120px',
-  },
-  {
-    label: '제목',
-    key: 'title',
-    width: "100%",
   },
   {
     label: '작성일',
@@ -41,6 +35,13 @@ const columns = [
   }
 ];
 
+const BoardData = [
+  { id : 1, title : "[알림장] 6월1주차", writer : "정형일", created_Date : "2025-06-03"},
+  { id : 2, title : "[알림장] 6월2주차", writer : "정형일", created_Date : "2025-06-10"},
+  { id : 3, title : "[알림장] 6월3주차", writer : "정형일", created_Date : "2025-06-17"},
+  { id : 4, title : "[알림장] 6월4주차", writer : "정형일", created_Date : "2025-06-24"},
+];
+
 const tableInfo = {
   color : theme.colors.white,
   backgroundColor : theme.colors.green,
@@ -48,7 +49,7 @@ const tableInfo = {
   tbFontSize : theme.fontSizes.base,
 }
 
-const AnnouncementPage = () => {
+const NotePage = () => {
   const [data, setData] = useState(null);
   const [page, setPage] = useState(1); // 1부터 시작
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ const AnnouncementPage = () => {
   useEffect(() => {
     const getPostList = async () => {
       try {
-        const responseData = await boardService.typeBoardList("NOTICE", page);
+        const responseData = await boardService.typeBoardList("NOTE", page);
         console.log(responseData);
         setData(responseData);
         // alert("게시글 조회 성공");
@@ -72,12 +73,13 @@ const AnnouncementPage = () => {
     setPage(newPage);
   };
 
+
   return (
     <PageContainer>
       <ContentHeader
-        Title={'공지사항'}
+        Title={'알림장'}
         Color={'green'}
-        // 학부모는 못봄, 교사는 작성하기 못함, 시설장만 가능
+        // 교사면 버튼 추가, 학부모면 없음.
         ButtonProps={[
           { Title: '작성하기', 
             func: () => {
@@ -120,4 +122,4 @@ const BoardContainer = styled.div`
   margin-top: 50px;
 `;
 
-export default AnnouncementPage
+export default NotePage;

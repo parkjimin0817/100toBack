@@ -29,8 +29,9 @@ const Button = ({ onClick, children }) => <button onClick={onClick} style={{ pad
 // 초기 콘텐츠 (JSON 형태 그대로 넣음)
 // import content from "./content.json";
 
-const TextInputBlock = ({ id, onChange }) => {
+const TextInputBlock = ({ id, onChange, content, blockDelete }) => {
   const editor = useEditor({
+    content : content || "",
     editorProps: {
       attributes: {
         autocomplete: "off",
@@ -85,6 +86,7 @@ const TextInputBlock = ({ id, onChange }) => {
           <Button onClick={() => editor.chain().focus().toggleBulletList().run()}>Bullet List</Button>
           <Button onClick={() => editor.chain().focus().toggleOrderedList().run()}>Ordered List</Button>
           <Button onClick={() => editor.chain().focus().toggleCodeBlock().run()}>Code Block</Button>
+          <button type="button" onClick={() => blockDelete()}>Delete</button>
         </Toolbar>
         <EditorContent 
           editor={editor} 

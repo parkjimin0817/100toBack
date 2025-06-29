@@ -55,4 +55,28 @@ public class BoardContentDto {
                     .build();
         }
     }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class Update {
+        private Integer contentId;  // 기존 content 구분용 ID
+        private CommonEnums.BoardContentType type;
+        private String contentText;
+        private String contentFile; // 수정된 경우 경로 저장
+        private int sortOrder;
+
+        public BoardContent toEntity(Board board) {
+            return BoardContent.builder()
+                    .boardContentNo(this.contentId)
+                    .board(board)
+                    .type(this.type)
+                    .contentText(this.contentText)
+                    .contentFile(this.contentFile)
+                    .sortOrder(this.sortOrder)
+                    .build();
+        }
+    }
 }

@@ -40,5 +40,18 @@ export const boardService = {
       }
       throw new Error('서버와의 통신에 실패했습니다.');
     }
+  },
+
+  boardDelete : async (boardNo) => {
+    try {
+      const { data } = await api.delete(API_ENDPOINTS.BOARDS.DELETE(boardNo));
+      return data;
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.message || '게시글 상세 조회에 실패했습니다.';
+        throw new Error(errorMessage);
+      }
+      throw new Error('서버와의 통신에 실패했습니다.');
+    }
   }
 }

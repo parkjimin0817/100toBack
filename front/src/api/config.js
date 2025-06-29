@@ -66,6 +66,8 @@ export const API_ENDPOINTS = {
     TEACHERATTENDANCE: (memberNo) => `/api/attendance/teacher/${memberNo}`,
     TEACHERATTENDANCE: (memberNo, year, month) =>
       `/api/attendance/teacher?memberNo=${memberNo}&year=${year}&month=${month}`,
+    TEACHERATTENDANCE: (memberNo, centerNo, year, month) =>
+      `/api/attendance/teacher?memberNo=${memberNo}&centerNo=${centerNo}&year=${year}&month=${month}`,
     //아동 출결 관리
     CHILDATTENDANCE: `/api/attendance/createChildAttendance`,
     //아동 출결 수정
@@ -89,6 +91,6 @@ export const API_ENDPOINTS = {
     ADD: '/api/boards',
     DETAIL: (id) => `/api/boards/${id}`,
     DELETE: (id) => `/api/boards/${id}`,
-    TYPE: (type, page) => `/api/boards/type/${type}?page=${page}&size=1`,
+    TYPE: (type, page) => `/api/boards/type/${type}?page=${page}`,
   },
 };

@@ -30,4 +30,6 @@ public interface ChildService {
     ChildDto.activity activity(int childNo);
     //아동 번호로 아동 출석 조회
     List<ChildDto.attendance> attendance(int childNo);
+    //아동 상세보기
+    ChildDto.detail detail(int childNo);
 }
