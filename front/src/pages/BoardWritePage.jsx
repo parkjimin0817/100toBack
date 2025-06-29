@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import BoardEditor from '../components/Board/BoardEditor';
 import ContentHeader from '../components/Common/ContentHeader';
 import styled from 'styled-components';
 import useLoginStore from '../store/loginStore';
 import { boardService } from '../api/boards';
 import axios from 'axios';
+import { useBlockNavigation } from '../hook/useBlockNavigation';
 
 const categoryName = {
   family_notice : "가정통신문",
@@ -19,7 +20,7 @@ const categoryName = {
 const BoardWritePage = () => {
   const location = useLocation();
   const category = location.state?.category || "default";
-
+  const navigate = useNavigate();
   const member = useLoginStore((state) => state.member);
 /**
  * 페이지 최상위 컴포넌트에서 상태 관리
@@ -35,44 +36,26 @@ const BoardWritePage = () => {
     contents: [],
   });
 
+  /**
+   * 수정중 페이지 이동 감지시 경고창 띄움.
+   */
+  const [isDirty, setIsDirty] = useState(false); // 내용 변경 여부
+
+  const { allowNavigation } = useBlockNavigation({
+    when: isDirty,
+    message: '작성 중인 내용이 저장되지 않았습니다. 정말 이동하시겠습니까?',
+  });
+
+  const handleGoBack = () => {
+    if (!isDirty || window.confirm('작성 중인 내용이 저장되지 않았습니다. 정말 이동하시겠습니까?')) {
+      navigate(-1);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // 입력 검증
-
-
-    // console.log("전송할 데이터:", formState);
-
-    // try {
-    //   await boardService.createBoard(formState);
-    //   alert("게시글 작성 성공");
-    // } catch (error) {
-    //   console.error("게시글 작성 실패 : ", error);
-    //   alert("게시글 작성 실패");
-    // }
-
-    // 서버 전송 로직 작성 가능
-
-    // const formData = new FormData();
-
-    // const payload = {
-    //   title: formState.title,
-    //   type: formState.type,
-    //   classRoomId: formState.classRoomId,
-    //   centerId: formState.centerId,
-    //   memberId: formState.memberId,
-    //   contents: formState.contents.map((item, index) => ({
-    //     type: item.type,
-    //     contentText: item.contentText || null,
-    //     contentFile: item.contentFile || null,
-    //   }))
-    // };
-
-    // formData.append("data", new Blob([JSON.stringify(payload)], { type: "application/json" }));
-
-    // if (formState.file) {
-    //   formData.append("file", formState.file);
-    // }
 
     const formData = new FormData();
 
@@ -112,6 +95,8 @@ const BoardWritePage = () => {
     await axios.post("http://localhost:8888/api/boards", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
+    allowNavigation();
+    navigate(`/${category}/list`);
   };
 
   const updateFormField = (key, value) => {
@@ -171,13 +156,16 @@ const BoardWritePage = () => {
   };
 
   return (
-    <PageContainer onSubmit={handleSubmit}>
+    <PageContainer 
+      onSubmit={handleSubmit}
+      onChange={() => setIsDirty(true)}
+    >
       <ContentHeader
         Title={categoryName[category]}
         Color={'green'}
         ButtonProps={[
-          { Title: '작성하기', func: () => alert('작성하기 페이지 이동~') },
-          { Title: '뒤로가기', func: () => alert('돌아간다.')},
+          { Title: '작성하기', type : 'submit' },
+          { Title: '뒤로가기', func: () => handleGoBack()},,
         ]}
       ></ContentHeader>
 
