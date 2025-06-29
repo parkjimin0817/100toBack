@@ -2,6 +2,7 @@ package com.bridge.kinder.controller;
 
 import com.bridge.kinder.dto.AttendanceDto;
 import com.bridge.kinder.dto.AttendanceDto.Response;
+import com.bridge.kinder.dto.AttendanceStatusDto;
 import com.bridge.kinder.service.AttendanceService;
 import java.time.LocalDate;
 import java.util.List;
@@ -44,8 +45,8 @@ public class AttendanceController {
 
     //달별 교사 근태 기록 불러오기
     @GetMapping("/teacher")
-    public ResponseEntity<List<AttendanceDto.Response>> getTeacherMonthlyAttendance(@RequestParam int memberNo, @RequestParam int year, @RequestParam int month) {
-        return ResponseEntity.ok(attendanceService.getTeacherMonthlyAttendance(memberNo, year, month));
+    public ResponseEntity<List<AttendanceStatusDto>> getTeacherMonthlyAttendance(@RequestParam int memberNo, @RequestParam int centerNo, @RequestParam int year, @RequestParam int month) {
+        return ResponseEntity.ok(attendanceService.getTeacherMonthlyAttendance(memberNo, centerNo, year, month));
     }
 
 

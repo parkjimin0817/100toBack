@@ -31,7 +31,7 @@ public class Holiday {
     private LocalDate holidayDate;
     //공휴일 날짜
 
-    @Column(name = "HOLIDAY_NAME", nullable = false)
+    @Column(name = "HOLIDAY_NAME", length = 50, nullable = false)
     private String holidayName;
     //공휴일 이름
 

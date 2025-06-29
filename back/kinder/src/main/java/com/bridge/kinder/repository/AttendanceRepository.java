@@ -13,5 +13,5 @@ public interface AttendanceRepository {
     //기록 저장
     Attendance save(Attendance attendance);
     //월별 출근 기록
-    List<Attendance> findByMemberNoAndDateRange(int memberNo, LocalDateTime startDate, LocalDateTime endDate);
+    List<Attendance> findByMemberNoAndDateRange(int memberNo, int centerNo, LocalDateTime startDate, LocalDateTime endDate);
 }

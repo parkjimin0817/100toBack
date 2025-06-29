@@ -6,6 +6,7 @@ import TeacherAttendanceCalendar from '../../components/Common/TeacherAttendance
 import { useParams } from 'react-router-dom';
 import { attendanceService } from '../../api/attendance';
 import { memberService } from '../../api/member';
+import useLoginStore from '../../store/loginStore';
 
 const TeacherAttendance = () => {
   const { memberNo } = useParams();
@@ -13,6 +14,8 @@ const TeacherAttendance = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [teacher, setTeacher] = useState({});
   const [attendances, setAttendances] = useState([]);
+  const { member } = useLoginStore();
+  const centerNo = member?.centerNo;
 
   //월별 데이터 불러오기
   useEffect(() => {
@@ -22,19 +25,17 @@ const TeacherAttendance = () => {
     const month = currentMonth.getMonth() + 1; //0부터 시작해서 +1
 
     attendanceService
-      .teacherAttendance(memberNo, year, month)
+      .teacherAttendance(memberNo, centerNo, year, month)
       .then((data) => setAttendances(data))
       .catch((err) => console.error('교사 근태 달별 목록 불러오기 실패', err));
   }, [memberNo, currentMonth]);
 
   //고른 날짜 근태 데이터
   const selectedRecord = attendances.find((attendance) => {
-    const date = new Date(attendance.in_time).toDateString(); //inTime에서 날짜만 꺼내기
+    const date = new Date(attendance.attendanceDate).toDateString(); // 날짜만 꺼내기
     const selected = selectedDate.toDateString(); //선택 날짜에서 날짜만 꺼내기
     return date === selected;
   });
-
-  console.log(attendances);
 
   //교사 데이터
   useEffect(() => {

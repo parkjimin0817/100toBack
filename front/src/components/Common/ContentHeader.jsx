@@ -9,6 +9,7 @@ import styled from 'styled-components';
  * ! ButtonProps : 버튼의 이름과 클릭시 이벤트 함수를 가지는 배열.
  * ! ButtonProps[n].Title : 버튼의 이름.
  * ! ButtonProps[n].Func : 버튼의 함수.
+ * ! ButtonProps[n].type : 버튼의 타입
  *
  * 실제 예시 :
  * Title={'HOME'}
@@ -33,6 +34,7 @@ const ContentHeader = ({ Title, Color, ButtonProps, FontSize }) => {
               key={index + 'key'} 
               onClick={ButtonProp.func} 
               $HeaderColor={Color}
+              type={ButtonProp.type ? ButtonProp.type : "button"}
             >
               {ButtonProp.Title}
             </HeaderButton>
