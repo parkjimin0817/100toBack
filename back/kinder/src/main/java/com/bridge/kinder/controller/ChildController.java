@@ -2,6 +2,7 @@ package com.bridge.kinder.controller;
 
 import com.bridge.kinder.dto.ChildDto;
 import com.bridge.kinder.entity.Child;
+import com.bridge.kinder.entity.ChildHealthData;
 import com.bridge.kinder.service.ChildService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -94,6 +95,18 @@ public class ChildController {
     @GetMapping("/detail")
     public ResponseEntity<ChildDto.detail> detail(@RequestParam int childNo){
         return ResponseEntity.ok(childService.detail(childNo));
+    }
+
+    //아동 상세보기에서 건강 데이터 수정
+    @PatchMapping("/updatehealthdata")
+    public ResponseEntity<ChildDto.health> updateHealthData(@RequestParam int childNo, @RequestBody ChildDto.health data){
+        return ResponseEntity.ok(childService.updateHealthData(childNo,data));
+    }
+
+    //아동 상세보기에서 생활 데이터 수정
+    @PatchMapping("/updateactivitydata")
+    public ResponseEntity<ChildDto.activity> updateActivityData(@RequestParam int childNo, @RequestBody ChildDto.activity data){
+        return ResponseEntity.ok(childService.updateActivityData(childNo,data));
     }
 
 //    //아동 개인 건강 로그 리스트에 필요한 데이터 가져오기

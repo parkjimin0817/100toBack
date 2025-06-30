@@ -1,5 +1,6 @@
 package com.bridge.kinder.repository;
 
+import com.bridge.kinder.dto.ChildDto;
 import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.ChildActivityData;
 import com.bridge.kinder.entity.ChildActivityLog;
@@ -166,5 +167,63 @@ public class ChildRepositoryImpl implements ChildRepository {
                 .getResultList();
 
         return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
+    }
+
+    //아동 건강 데이터 수정
+    @Override
+    public Optional<ChildHealthData> updateHealthData(int childNo, ChildDto.health dto) {
+        Child child = em.find(Child.class, childNo);
+        if (child == null) return Optional.empty();
+
+        List<ChildHealthData> results = em.createQuery(
+                        "SELECT c FROM ChildHealthData c WHERE c.child.childNo = :childNo", ChildHealthData.class)
+                .setParameter("childNo", childNo)
+                .getResultList();
+
+        ChildHealthData entity;
+
+        if (results.isEmpty()) {
+            // 새로 생성
+            entity = ChildHealthData.builder()
+                    .child(child)
+                    .build();
+            em.persist(entity); // 새 엔티티 저장 (영속 상태 진입)
+        } else {
+            entity = results.get(0);
+        }
+
+        // 공통: 기존이든 신규든 DTO로부터 값 복사
+        entity.updateFromDto(dto);
+
+        return Optional.of(entity);
+    }
+
+    //아동 생활 데이터 수정
+    @Override
+    public Optional<ChildActivityData> updateActivityData(int childNo, ChildDto.activity dto) {
+        Child child = em.find(Child.class, childNo);
+        if (child == null) return Optional.empty();
+
+        List<ChildActivityData> results = em.createQuery(
+                        "SELECT c FROM ChildActivityData c WHERE c.child.childNo = :childNo", ChildActivityData.class)
+                .setParameter("childNo", childNo)
+                .getResultList();
+
+        ChildActivityData entity;
+
+        if (results.isEmpty()) {
+            // 새로 생성
+            entity = ChildActivityData.builder()
+                    .child(child)
+                    .build();
+            em.persist(entity); // 새 엔티티 저장 (영속 상태 진입)
+        } else {
+            entity = results.get(0);
+        }
+
+        // 공통: 기존이든 신규든 DTO로부터 값 복사
+        entity.updateFromDto(dto);
+
+        return Optional.of(entity);
     }
 }
