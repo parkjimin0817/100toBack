@@ -76,7 +76,10 @@ const MyHealthForm = () => {
       <ContentHeader
         Title={isEdit ? '내 건강 정보 수정' : '내 건강 정보 작성'}
         Color="yellow"
-        ButtonProps={[{ Title: '저장하기', func: handleSave }]}
+        ButtonProps={[
+          { Title: '저장하기', func: handleSave },
+          { Title: '뒤로가기', func: () => navigate(-1) },
+        ]}
       />
       <Wrapper>
         <Text>오늘의 건강 상태를 입력해주세요!</Text>
