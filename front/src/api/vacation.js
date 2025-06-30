@@ -1,4 +1,3 @@
-import { ca } from 'date-fns/locale';
 import api from './axios';
 import { API_ENDPOINTS } from './config';
 
