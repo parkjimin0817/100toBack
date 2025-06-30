@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const ClassPlacementModal = ({ isOpen, onClose, selectedDate, selectedItem, centerNo }) => {
   const [person, setPerson] = useState(null);
@@ -63,11 +64,10 @@ const ClassPlacementModal = ({ isOpen, onClose, selectedDate, selectedItem, cent
           role === 'child' ? { child_no: id, class_no: selectedClass } : { member_no: id, class_no: selectedClass },
       });
 
-      alert('반 배정이 완료되었습니다.');
+      toast.success('반 배정이 성공적으로 완료되었습니다.');
       onClose();
     } catch (err) {
-      alert('반 배정 실패');
-      console.error(err);
+      toast.error('반 배정에 실패하였습니다.') + err;
     }
   };
 

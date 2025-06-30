@@ -7,11 +7,13 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AttendanceChildSchedule from '../../components/AttendanceChildSchedule';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const ChildDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams(); // childNo
-  const [select, setSelect] = useState({ //건강 정보를 보냐, 생활 정보를 보냐, 출석을 보냐
+  const [select, setSelect] = useState({
+    //건강 정보를 보냐, 생활 정보를 보냐, 출석을 보냐
     health: true,
     life: false,
     attendance: false,
@@ -82,47 +84,49 @@ const ChildDetail = () => {
 
   // 건강 정보 수정
   const handleEditClick = () => {
-  if (!isEditing) {
-    setEditHealth({ ...child.health });
-    setIsEditing(true);
-  } else {
-    axios.patch(`http://localhost:8888/api/childs/updatehealthdata?childNo=${id}`, editHealth)
-      .then((res) => {
-        setChild((prev) => ({ ...prev, health: res.data }));
-        setIsEditing(false);
-      })
-      .catch((err) => {
-        console.error('건강정보 수정 실패:', err);
-        alert('수정 실패');
-      });
-  }
-};
+    if (!isEditing) {
+      setEditHealth({ ...child.health });
+      setIsEditing(true);
+    } else {
+      axios
+        .patch(`http://localhost:8888/api/childs/updatehealthdata?childNo=${id}`, editHealth)
+        .then((res) => {
+          setChild((prev) => ({ ...prev, health: res.data }));
+          setIsEditing(false);
+          toast.success('건강 정보 수정이 완료되었습니다.');
+        })
+        .catch((err) => {
+          toast.error('건강 정보 수정에 실패했습니다.', err);
+        });
+    }
+  };
 
-const handleInputChange = (field, value) => {
-  setEditHealth((prev) => ({ ...prev, [field]: value }));
-};
+  const handleInputChange = (field, value) => {
+    setEditHealth((prev) => ({ ...prev, [field]: value }));
+  };
 
-// 생활 정보 수정
-const handleLifeEditClick = () => {
-  if (!isLifeEditing) {
-    setEditActivity({ ...child.activity });
-    setIsLifeEditing(true);
-  } else {
-    axios.patch(`http://localhost:8888/api/childs/updateactivitydata?childNo=${id}`, editActivity)
-      .then((res) => {
-        setChild((prev) => ({ ...prev, activity: res.data }));
-        setIsLifeEditing(false);
-      })
-      .catch((err) => {
-        console.error('생활정보 수정 실패:', err);
-        alert('수정 실패');
-      });
-  }
-};
+  // 생활 정보 수정
+  const handleLifeEditClick = () => {
+    if (!isLifeEditing) {
+      setEditActivity({ ...child.activity });
+      setIsLifeEditing(true);
+    } else {
+      axios
+        .patch(`http://localhost:8888/api/childs/updateactivitydata?childNo=${id}`, editActivity)
+        .then((res) => {
+          setChild((prev) => ({ ...prev, activity: res.data }));
+          setIsLifeEditing(false);
+          toast.success('생활 정보 수정이 완료되었습니다.');
+        })
+        .catch((err) => {
+          toast.error('생활 정보 수정에 실패했습니다.', err);
+        });
+    }
+  };
 
-const handleActivityInputChange = (field, value) => {
-  setEditActivity((prev) => ({ ...prev, [field]: value }));
-};
+  const handleActivityInputChange = (field, value) => {
+    setEditActivity((prev) => ({ ...prev, [field]: value }));
+  };
 
   return (
     <>
@@ -392,9 +396,7 @@ const handleActivityInputChange = (field, value) => {
                 )}
               </FooterInfoLine>
 
-              <LoadMoreButton onClick={handleEditClick}>
-                {isEditing ? '수정완료' : '수정'}
-              </LoadMoreButton>
+              <LoadMoreButton onClick={handleEditClick}>{isEditing ? '수정완료' : '수정'}</LoadMoreButton>
             </>
           )}
 
@@ -535,9 +537,7 @@ const handleActivityInputChange = (field, value) => {
                 </FooterBox2>
               </FooterInfoLine>
 
-              <LoadMoreButton onClick={handleLifeEditClick}>
-                {isLifeEditing ? '수정완료' : '수정'}
-              </LoadMoreButton>
+              <LoadMoreButton onClick={handleLifeEditClick}>{isLifeEditing ? '수정완료' : '수정'}</LoadMoreButton>
             </>
           )}
 
