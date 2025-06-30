@@ -54,10 +54,12 @@ const CreateClassModal = ({ onClose, centerNo, onSuccess }) => {
         centerNo,
         classImage,
       });
+
       toast.info(`${className}반 생성이 완료되었습니다.`);
       if (onSuccess) {
         onSuccess(newClassroom);
       }
+
       onClose();
     } catch (error) {
       console.error('반 생성 실패 : ', error);

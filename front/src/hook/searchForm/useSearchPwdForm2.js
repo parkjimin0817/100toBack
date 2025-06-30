@@ -76,8 +76,8 @@ export const useSearchPwdForm2 = () => {
     e.preventDefault();
 
     if (!writePhone || writePhone.length !== 13) {
-      setError('전화번호를 입력하지 않았거나 13자리가 아닙니다.');
-      toast.warning('전화번호를 입력하지 않았거나 13자리가 아닙니다.');
+      setError('전화번호를 입력하지 않았거나 11자리가 아닙니다.');
+      toast.warning('전화번호를 입력하지 않았거나 11자리가 아닙니다.');
       return;
     } else {
       setAccess(true);

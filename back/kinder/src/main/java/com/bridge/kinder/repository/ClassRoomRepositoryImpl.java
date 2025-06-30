@@ -29,6 +29,12 @@ public class ClassRoomRepositoryImpl implements ClassRoomRepository {
 
     }
 
+    //반 번호로 조회
+    @Override
+    public Optional<ClassRoom> findByClassNo(int classNo) {
+        return Optional.ofNullable(em.find(ClassRoom.class, classNo));
+    }
+
     @Override
     public Optional<ClassRoom> findById(int classRoomNo) {
         return Optional.ofNullable(em.find(ClassRoom.class, classRoomNo));

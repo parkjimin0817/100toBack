@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import sun from '../assets/img/sun.png';
 import { useNavigate } from 'react-router-dom';
 import { GiRialtoBridge } from 'react-icons/gi';
+import useLoginStore from '../store/loginStore';
+import { toast } from 'react-toastify';
 
 /**
  * img : 반 별 이미지
@@ -17,19 +19,16 @@ import { GiRialtoBridge } from 'react-icons/gi';
 const ClassList = ({ img, className, mateCount, capacity, teacher, classColor, address }) => {
   const navigate = useNavigate();
 
-  console.log('🧾 클래스 props', {
-    img,
-    className,
-    mateCount,
-    capacity,
-    teacher,
-    classColor,
-    address,
-  });
+  const handleCheck = () => {
+    navigate(address);
+  };
+
   return (
-    <Card $Color={classColor} onClick={() => navigate(address)}>
+    <Card $Color={classColor} onClick={handleCheck}>
       <CardInfo>
-        <div>{/* <CardImg>{img === null ? <Icon /> : <img src={img} alt="사진" />}</CardImg> */}</div>
+        <div>
+          <CardImg>{img === null ? <Icon /> : <Img src={`${img}`} alt="사진" />}</CardImg>
+        </div>
         <CardInner>
           <h3>{className}반</h3>
           <Cardinnerinner>
@@ -42,6 +41,12 @@ const ClassList = ({ img, className, mateCount, capacity, teacher, classColor, a
     </Card>
   );
 };
+
+const Img = styled.img`
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+`;
 
 const Card = styled.div`
   display: flex;

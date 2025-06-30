@@ -1,5 +1,6 @@
 package com.bridge.kinder.entity;
 
+import com.bridge.kinder.dto.ChildDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -67,4 +68,19 @@ public class ChildHealthData {// 건강정보
     @JoinColumn(name = "CHILD_NO")
     private Child child;
     //아동
+
+    //---------------------------------------------------------------------------------------------
+    public void updateFromDto(ChildDto.health dto) {
+        this.medicationName = dto.getMedication_name();
+        this.medicationAmount = dto.getMedication_amount();
+        this.medicationTime = dto.getMedication_time();
+        this.medicationPeriod = dto.getMedication_period();
+        this.medicationPurpose = dto.getMedication_purpose();
+        this.medicationMemo = dto.getMedication_memo();
+        this.vaccination = dto.getVaccination();
+        this.allergy = dto.getAllergy();
+        this.allergyReaction = dto.getAllergy_reaction();
+        this.allergySeverity = dto.getAllergy_severity();
+        this.allergyMemo = dto.getAllergy_memo();
+    }
 }

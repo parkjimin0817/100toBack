@@ -1,58 +1,58 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import sun from '../../assets/img/sun.png';
 import ContentHeader from '../../components/Common/ContentHeader';
 import ClassRoomCard from '../../components/ClassRoomCard';
 import styled from 'styled-components';
+import useLoginStore from '../../store/loginStore';
+import { classService } from '../../api/class';
+import { ImInfo } from 'react-icons/im';
 
 //일과표 반별 리스트 페이지(모든 반이 나옴)
 const DailySchedule = () => {
-  const thermeData = [
-    {
-      id: 1,
-      class_name: '햇님반',
-      mate_count: 10,
-      capacity: 12,
-      teacher: '정의철',
-      class_color: 'orange',
-      class_image: sun,
-    },
-    {
-      id: 2,
-      class_name: '무지개개반',
-      mate_count: 5,
-      capacity: 12,
-      teacher: '정형일',
-      class_color: 'lightblue',
-      class_image: sun,
-    },
-    {
-      id: 3,
-      class_name: '달님반',
-      mate_count: 6,
-      capacity: 20,
-      teacher: '박지민',
-      class_color: 'yellow',
-      class_image: sun,
-    },
-    {
-      id: 4,
-      class_name: '구름반',
-      mate_count: 7,
-      capacity: 12,
-      teacher: '김승기',
-      class_color: 'blue',
-      class_image: sun,
-    },
-  ];
+  const { member } = useLoginStore();
+  const centerNo = member?.centerNo;
+  const [classrooms, setClassrooms] = useState([]);
 
+  useEffect(() => {
+    if (!member) {
+      alert('잘못된 접근입니다.');
+      return;
+    }
+
+    classService
+      .classroomlist(centerNo)
+      .then((data) => setClassrooms(data))
+      .catch((err) => console.error('반 목록 불러오기 실패 : ', err));
+  }, []);
   return (
     <Content>
       <ContentHeader Title={'일과표'} Color={'purple'} />
-      <ClassRoomCard rooms={thermeData} address={`/dailyDetail`} />
+      <Div>
+        <Hint>
+          <ImInfo />
+          해당 반을 선택하시면 일과표가 나옵니다.
+        </Hint>
+        <ClassRoomCard classrooms={classrooms} address={'/dailyDetail'} />
+      </Div>
     </Content>
   );
 };
+
+const Div = styled.div`
+  padding: ${({ theme }) => theme.spacing[10]};
+`;
+
+const Hint = styled.h2`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  font-size: ${({ theme }) => theme.fontSizes.base};
+  text-align: left;
+  padding-left: ${({ theme }) => theme.spacing[8]};
+  padding-bottom: ${({ theme }) => theme.spacing[8]};
+`;
 
 const Content = styled.div`
   width: 100%;

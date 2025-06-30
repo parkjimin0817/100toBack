@@ -1,5 +1,6 @@
 package com.bridge.kinder.repository;
 
+import com.bridge.kinder.dto.ChildDto;
 import com.bridge.kinder.entity.Child;
 
 import com.bridge.kinder.entity.ChildActivityData;
@@ -7,6 +8,7 @@ import com.bridge.kinder.entity.ChildActivityLog;
 import com.bridge.kinder.entity.ChildAttendance;
 import com.bridge.kinder.entity.ChildHealthData;
 import com.bridge.kinder.entity.ChildHealthLog;
+import com.bridge.kinder.entity.ClassRoom;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,12 +23,15 @@ public interface ChildRepository {
     List<Child> findByClassNo(int classNo);
     //반 별 아동 수
     int countChildByClassroom(int classNo);
+    //반에 속한 아동 조회
+    List<Child> findByClassRoom(ClassRoom classRoom);
     //센터번호로 아동 불러오기(해당 시설 아이 전체 조회)
     List<Child> findByCenterNo(int centerNo);
     //아동 번호로 아동 찾아오기
     Optional<Child> getByChildNo(int child_no);
     //아동 번호로 반 수정하기
     Optional<Child> updateClass(int child_no,int class_no);
+
     //아동 번호로 건강 로그 조회하기
     List<ChildHealthLog> healthLog(int childNo);
     //아동 번호로 건강 데이터 조회하기
@@ -39,5 +44,10 @@ public interface ChildRepository {
     List<ChildAttendance> attendance(int childNo);
     //아동 번호로 아동 키,몸무게 조회
     Optional<ChildHealthLog> recentPhysicalInfo(int childNo);
+    //아동 건강 데이터 수정
+    Optional<ChildHealthData> updateHealthData(int childNo, ChildDto.health data);
+    //아동 생활 데이터 수정
+    Optional<ChildActivityData> updateActivityData(int childNo, ChildDto.activity data);
+
 
 }

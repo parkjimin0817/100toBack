@@ -9,6 +9,9 @@ import { useScheduleService } from '../../api/schedule';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import dayjs from 'dayjs';
+import 'dayjs/locale/ko';
+
 const DailyScheduleDetail = () => {
   const { schedule } = useScheduleStore();
   // const {} = useDailyScheduleForm();
@@ -46,30 +49,22 @@ const DailyScheduleDetail = () => {
 
   useEffect(() => {
     setInSchedule(updated);
-    const today = new Date();
-    const todayDay = today.getDay(); // 0 (일요일) ~ 6 (토요일)
 
-    const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - todayDay); // 일요일 기준 시작
+    const today = dayjs();
+    const startOfWeek = today.startOf('week'); // 일요일 시작
 
     const weekdayNames = ['일', '월', '화', '수', '목', '금', '토'];
 
-    const newWeek = [...Array(7)].map((_, i) => {
-      const date = new Date(startOfWeek);
-      date.setDate(startOfWeek.getDate() + i);
-
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1; // 1~12
-      const day = date.getDate();
-      const weekday = date.getDay(); // 요일 (0~6)
+    const newWeek = Array.from({ length: 7 }, (_, i) => {
+      const date = startOfWeek.add(i, 'day');
 
       return {
-        year,
-        month,
-        day,
-        weekday,
-        weekdayNames: weekdayNames[weekday],
-        allDate: year + '.' + month.toString().padStart(2, '0') + '.' + day.toString().padStart(2, '0'),
+        year: date.year(),
+        month: date.month() + 1, // 0-based → +1
+        day: date.date(),
+        weekday: date.day(), // 0 (일) ~ 6 (토)
+        weekdayNames: weekdayNames[date.day()],
+        allDate: date.format('YYYY.MM.DD'),
       };
     });
 

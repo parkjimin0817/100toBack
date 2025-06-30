@@ -2,6 +2,7 @@ import { toast } from 'react-toastify';
 import { memberService } from '../../api/member';
 import useSearchStore from '../../store/searchStore';
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 export const useSearchPwdForm3 = () => {
   const navigator = useNavigate();
@@ -47,9 +48,9 @@ export const useSearchPwdForm3 = () => {
       return;
     }
 
-    if (password.length < 6 || passwordCheck.length < 6) {
-      setError('비밀번호 6자리 이상으로 입력해주세요.');
-      toast.warning('비밀번호 6자리 이상으로 입력해주세요.');
+    if (password.length < 8 || passwordCheck.length < 8) {
+      setError('비밀번호 8자리 이상으로 입력해주세요.');
+      toast.warning('비밀번호 8자리 이상으로 입력해주세요.');
       return;
     }
 
