@@ -2,6 +2,7 @@ package com.bridge.kinder.service;
 
 import com.bridge.kinder.dto.ChildDto;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import java.io.IOException;
@@ -36,4 +37,11 @@ public interface ChildService {
     ChildDto.health updateHealthData(int childNo,ChildDto.health data);
     //아동 상세보기 생활 데이터 수정
     ChildDto.activity updateActivityData(int childNo, ChildDto.activity data);
+    //아동 건강 체크리스트 날짜,반 별로
+    List<ChildDto.healthLog> getHealthLog(int classNo, LocalDate date);
+    //아동 생활 체크리스트 날짜,반 별로
+    List<ChildDto.activityLog> getActivityLog(int classNo, LocalDate date);
+    //아동 생활 로그 데이터 삽입,수정하기
+//    ChildDto.activityLog updateActivityLog(int childNo, LocalDate date, ChildDto.activityLog data);
+
 }

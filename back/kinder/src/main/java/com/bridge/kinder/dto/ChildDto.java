@@ -224,6 +224,7 @@ public class ChildDto {
                     .weight(log.getWeight())
                     .symptoms(log.getSymptoms())
                     .healthLogMemo(log.getHealthLogMemo())
+                    .child_name(log.getChild().getChildName())
                     .build();
         }
     }
@@ -294,6 +295,7 @@ public class ChildDto {
                     .play_participation(activitylog.getPlayParticipation())
                     .daily_friendship(activitylog.getDailyFriendship())
                     .activity_log_memo(activitylog.getActivityLogMemo())
+                    .child_name(activitylog.getChild().getChildName())
                     .build();
         }
 
