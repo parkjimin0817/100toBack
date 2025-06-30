@@ -94,5 +94,6 @@ export const API_ENDPOINTS = {
     REQUEST: (memberNo) => `/api/vacation/request/${memberNo}`,
     GETLIST: (memberNo) => `/api/vacation/${memberNo}`,
     DELETE: (vacationNo) => `/api/vacation/delete/${vacationNo}`,
+    GETLISTALL: (centerNo) => `/api/vacation/all/${centerNo}`,
   },
 };
