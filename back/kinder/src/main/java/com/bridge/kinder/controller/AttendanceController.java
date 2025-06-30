@@ -58,7 +58,6 @@ public class AttendanceController {
 
     }
 
-
     //반 출결 상태를 변경
     @PatchMapping("/updateAttendance")
     public ResponseEntity<AttendanceDto.UpdateAttendance> updateAttendance(@RequestBody AttendanceDto.UpdateAttendance updateDto) {
