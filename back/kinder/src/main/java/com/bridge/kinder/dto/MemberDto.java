@@ -67,6 +67,7 @@ public class MemberDto {
         private String member_name;
         private String member_id;
         private LocalDate member_birth;
+        private String member_phone;
         private CommonEnums.MemberType member_type;
 
         //만약 멤버정보 필요한거 있으시면 그냥 추가하시면 됩니다.
@@ -81,6 +82,7 @@ public class MemberDto {
                     .member_name(member.getMemberName())
                     .member_id(member.getMemberId())
                     .member_birth(member.getMemberBirth())
+                    .member_phone(member.getMemberPhone())
                     .member_type(member.getMemberType())
                     .center_no(member.getCenter().getCenterNo())
                     .center_tel(member.getCenter().getCenterTel())
@@ -313,6 +315,29 @@ public class MemberDto {
                                     : "미배정"
                     )
                     .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class updateParentInfo{
+        private int member_no;
+        private String member_name;
+        private LocalDate member_birth;
+        private String member_phone;
+        private String member_profile;
+
+        public static updateParentInfo toDto(Member member){
+            return updateParentInfo.builder()
+                    .member_no(member.getMemberNo())
+                    .member_name(member.getMemberName())
+                    .member_birth(member.getMemberBirth())
+                    .member_phone(member.getMemberPhone())
+                    .build();
+
         }
     }
 

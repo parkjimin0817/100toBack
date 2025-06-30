@@ -2,21 +2,16 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import useLoginStore from '../../../store/loginStore';
 
-const MyPageMyInfo = ({ isEditMode }) => {
-  const { member } = useLoginStore();
-  const handleChange = (key, value) => {
-    setData((prev) => ({ ...prev, [key]: value }));
-  };
-
+const MyPageMyInfo = ({ isEditMode, editableInfo, onChange }) => {
   return (
     <Wrapper>
       <InfoRow>
         <InfoType>이름 </InfoType>
         <Info>
           {isEditMode ? (
-            <InfoInput value={member.memberName} onChange={(e) => handleChange('name', e.target.value)} />
+            <InfoInput value={editableInfo.memberName} onChange={(e) => onChange('memberName', e.target.value)} />
           ) : (
-            member.memberName
+            editableInfo.memberName
           )}
         </Info>
       </InfoRow>
@@ -26,32 +21,23 @@ const MyPageMyInfo = ({ isEditMode }) => {
           {isEditMode ? (
             <InfoInput
               type="date"
-              value={member.memberBirth}
-              onChange={(e) => handleChange('birthdate', e.target.value)}
+              value={editableInfo.memberBirth}
+              onChange={(e) => onChange('memberBirth', e.target.value)}
             />
           ) : (
-            member.memberBirth
+            editableInfo.memberBirth
           )}
         </Info>
       </InfoRow>
       <InfoRow>
-        <InfoType>관계</InfoType>
+        <InfoType>연락처</InfoType>
         <Info>
-          {/* {isEditMode ? (
-            <Select value={data.role} onChange={(e) => handleChange('role', e.target.value)}>
-              <option value="시설장">시설장</option>
-              <option value="교사">교사</option>
-              <option value="기타">기타</option>
-            </Select>
+          {isEditMode ? (
+            <InfoInput value={editableInfo.memberPhone} onChange={(e) => onChange('memberPhone', e.target.value)} />
           ) : (
-            data.role
-          )} */}
-          모
+            editableInfo.memberPhone
+          )}
         </Info>
-      </InfoRow>
-      <InfoRow>
-        <InfoType>아동</InfoType>
-        <Info>정의철</Info>
       </InfoRow>
     </Wrapper>
   );

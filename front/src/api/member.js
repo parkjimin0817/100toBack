@@ -104,6 +104,7 @@ export const memberService = {
         memberName: data.member_name,
         memberId: data.member_id,
         memberBirth: data.member_birth,
+        memberPhone: data.member_phone,
         memberType: data.member_type,
         centerNo: data.center_no,
         classNo: data.class_no,
@@ -183,6 +184,10 @@ export const memberService = {
       throw new Error(errorMessage);
     }
   },
+  //마이페이지 수정
+  // MypageUpdate: async (memberNo, mergedData) => {
+
+  // },
 
   //아이디 찾기
   searchId: async (member_name, member_birth) => {

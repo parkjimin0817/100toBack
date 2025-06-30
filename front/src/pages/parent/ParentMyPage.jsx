@@ -11,10 +11,19 @@ import SearchImage from './components/search.png';
 import { useLoginStore } from '../../store/loginStore';
 import { childService } from '../../api/child';
 import { childInfo } from '../../api/childInfo';
+import api from '../../api/axios.js';
+import { toast } from 'react-toastify';
 
 const ParentMyPage = () => {
   const [isEditMode, setIsEditMode] = useState(false);
-  const { member } = useLoginStore();
+  // const { member } = useLoginStore();
+  const member = useLoginStore((state) => state.member);
+  const setMember = useLoginStore((state) => state.setMember);
+  const [editableInfo, setEditableInfo] = useState({
+    memberName: member.memberName,
+    memberBirth: member.memberBirth,
+    memberPhone: member.memberPhone,
+  });
   const [childList, setChildList] = useState([]);
   const navigate = useNavigate();
 
@@ -27,12 +36,46 @@ const ParentMyPage = () => {
     }
   };
 
+  const handleEditSubmit = async () => {
+    try {
+      const { data: updatedMember } = await api.patch(`/api/members/mypage/parent`, {
+        member_no: member.memberNo,
+        member_name: editableInfo.memberName,
+        member_birth: editableInfo.memberBirth,
+        member_phone: editableInfo.memberPhone,
+      });
+
+      setMember({
+        ...member,
+        ...updatedMember,
+      });
+
+      setIsEditMode(false);
+    } catch (e) {
+      toast.error('수정 실패: ' + e.message);
+    }
+  };
+
   useEffect(() => {
     fetchChildList();
   }, []);
 
-  const hanldeEditClick = () => {
-    setIsEditMode((prev) => !prev);
+  const handleChange = (key, value) => {
+    setEditableInfo((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleEditClick = () => {
+    if (!isEditMode) {
+      setEditableInfo({
+        memberNo: member.memberNo,
+        memberName: member.memberName,
+        memberBirth: member.memberBirth,
+        memberPhone: member.memberPhone,
+      });
+      setIsEditMode(true);
+    } else {
+      handleEditSubmit();
+    }
   };
 
   return (
@@ -41,7 +84,7 @@ const ParentMyPage = () => {
         Title={'마이페이지'}
         Color={'orange'}
         FontSize="xl"
-        ButtonProps={[{ Title: isEditMode ? '저장하기' : '수정하기', func: hanldeEditClick }]}
+        ButtonProps={[{ Title: isEditMode ? '저장하기' : '수정하기', func: handleEditClick }]}
       />
       <Wrapper>
         <InfoBox>
@@ -49,7 +92,7 @@ const ParentMyPage = () => {
             <MyPageProfileImage isEditMode={isEditMode} />
           </ProfileImgBox>
           <MyInfoBox>
-            <MyPageMyInfo isEditMode={isEditMode} memberNo={member.meberNo} />
+            <MyPageMyInfo isEditMode={isEditMode} editableInfo={editableInfo} onChange={handleChange} />
           </MyInfoBox>
           <CenterInfoBox>
             <MyPageCenterInfo isEditMode={isEditMode} />

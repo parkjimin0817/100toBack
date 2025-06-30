@@ -97,6 +97,13 @@ public class MemberController {
         return ResponseEntity.ok(memberNo);
     }
 
+    //학부모 마이페이지 수정
+    @PatchMapping("/mypage/parent")
+    public ResponseEntity<MemberDto.updateParentInfo> updateParentIfo(@RequestBody MemberDto.updateParentInfo dto){
+        System.out.println(dto.getMember_no());
+        return ResponseEntity.ok(memberService.updateParentInfo(dto));
+    }
+
     //멤버 PWD 찾기(아이디)
     @PostMapping("/pwdSearchId")
     public ResponseEntity<MemberDto.SearchPwd> pwdSearchId(@RequestBody MemberDto.SearchPwd dto){
