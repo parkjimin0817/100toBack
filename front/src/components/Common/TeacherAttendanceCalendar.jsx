@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
-const TeacherAttendanceCalendar = ({ onDateClick, onMonthChange, disableFuture = false }) => {
+const TeacherAttendanceCalendar = ({ onDateClick, onMonthChange, disableFuture = false, maxDate }) => {
   const today = new Date();
   return (
     <StyledCalendar
@@ -26,6 +26,7 @@ const TeacherAttendanceCalendar = ({ onDateClick, onMonthChange, disableFuture =
           return 'saturday';
         }
       }}
+      maxDate={maxDate}
     />
   );
 };

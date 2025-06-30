@@ -72,6 +72,8 @@ import ClassRoomManage from './pages/manager/ClassRoomManage';
 import ScheduleManager from './pages/manager/SceduleManager';
 import BoardDetailPage from './pages/BoardDetailPage';
 import BoardUpdatePage from './pages/BoardUpdatePage';
+import PhotoPage from './pages/PhotoPage';
+import MealPlanPage from './pages/MealPlanPage';
 
 function App() {
   return (
@@ -188,7 +190,18 @@ function App() {
              * 4-1. 목록
              * 4-2. 작성
              * 4-3. 상세
-             *
+             * 4-4. 수정
+             * 5. 사진 게시판 페이지
+             * 5-1. 목록
+             * 5-2. 작성
+             * 5-3. 상세
+             * 5-4. 수정
+             * 6. 식단표 게시판 페이지
+             * 6-1. 목록
+             * 6-2. 작성
+             * 6-3. 상세
+             * 6-4. 수정
+             * 
              *  */}
             <Route path="/family_notice">
               <Route path="list" element={<FamilyNoticePage />} />
@@ -203,6 +216,18 @@ function App() {
               <Route path="write" element={<BoardWritePage />} />
               <Route path=":id" element={<BoardDetailPage />} />
               <Route path="update/:id" element={<BoardUpdatePage />} />
+            </Route>
+            <Route path='/photo'>
+              <Route path="list" element={<PhotoPage />} />
+              <Route path="write" element={<BoardWritePage />} />
+              <Route path=":id" element={<BoardDetailPage />} />
+              <Route path='update/:id' element={<BoardUpdatePage />} />
+            </Route>
+            <Route path='/meal_plan'>
+              <Route path="list" element={<MealPlanPage />} />
+              <Route path="write" element={<BoardWritePage />} />
+              <Route path=":id" element={<BoardDetailPage />} />
+              <Route path='update/:id' element={<BoardUpdatePage />} />
             </Route>
           </Route>
 

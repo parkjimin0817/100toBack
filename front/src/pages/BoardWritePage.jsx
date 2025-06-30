@@ -12,7 +12,7 @@ const categoryName = {
   family_notice : "가정통신문",
   notice : "공지사항",
   note : "알림장",
-  album : "사진 게시판",
+  photo : "사진 게시판",
   foodmenu : "식단표",
   default : "테스트"
 }
@@ -28,7 +28,7 @@ const BoardWritePage = () => {
   const [formState, setFormState] = useState({
     title: "",
     type : String(category).toUpperCase(),
-    classRoomId: null,
+    classRoomNo: null,
     file: null,
     memberName: member.memberName,
     memberId : member.memberNo,
@@ -63,7 +63,7 @@ const BoardWritePage = () => {
     const payload = {
       title: formState.title,
       type: formState.type,
-      classRoomId: formState.classRoomId,
+      classRoomId: formState.classRoomNo,
       centerId: formState.centerId,
       memberId: formState.memberId,
       contents: formState.contents.map((item, index) => ({
@@ -89,7 +89,7 @@ const BoardWritePage = () => {
       }
     });
 
-    console.log("전송할 데이터:", formData);
+    console.log("전송할 데이터:", payload);
 
     // axios 전송 예시
     await axios.post("http://localhost:8888/api/boards", formData, {

@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components';
 import { IoDownloadOutline } from "react-icons/io5";
+import defaultImg from '../../assets/img/img.png';
 
 const BoardDetail = ({ category, post }) => {
   const formatKoreanDate = (isoString) => {
@@ -42,7 +43,7 @@ const BoardDetail = ({ category, post }) => {
             (
               <div dangerouslySetInnerHTML={{__html : content.contentText}}></div>
             ) : (
-              <PostImg src={content.contentFile}></PostImg>
+              <PostImg src={content.contentFile ?? defaultImg} onError={(e) => {e.currentTarget.src = defaultImg}}></PostImg>
             )}
           </PostContentBox>
         ))}
@@ -116,6 +117,7 @@ const PostContentBox = styled.div`
 const PostImg = styled.img`
   max-width: 100%;
   border-radius: 4px;
+  max-height: 500px;
 `;
 
 export default BoardDetail
