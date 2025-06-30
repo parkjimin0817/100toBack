@@ -4,42 +4,43 @@ import { useNavigate } from 'react-router-dom';
 import BoardTable from '../components/Board/BoardTable';
 import theme from "../styles/theme";
 import ContentHeader from '../components/Common/ContentHeader';
-import Pagination from '../components/Common/Pagenation';
+import ImagePost from '../components/Board/ImagePost';
 import { boardService } from '../api/boards';
+import Pagination from '../components/Common/Pagenation';
 
 const columns = [
   {
     label: '번호',
-    key: 'boardNo',
+    key: 'id',
     width: '100px',
     align: 'center'
+  },
+  {
+    label: '파일',
+    key: 'file',
+    width: '120px',
+  },
+  {
+    label: '등록자',
+    key: 'writer',
+    width: '120px',
   },
   {
     label: '제목',
     key: 'title',
   },
   {
-    label: '작성자',
-    key: 'memberName',
-    width: '120px',
-  },
-  {
-    label: '작성일',
-    key: 'createDate',
+    label: '생성 날짜',
+    key: 'created_Date',
     width: '160px',
   },
-  {
-    label: '조회수',
-    key: "views",
-    width: "100px",
-  }
 ];
 
 const BoardData = [
-  { id : 1, title : "[알림장] 6월1주차", writer : "정형일", created_Date : "2025-06-03"},
-  { id : 2, title : "[알림장] 6월2주차", writer : "정형일", created_Date : "2025-06-10"},
-  { id : 3, title : "[알림장] 6월3주차", writer : "정형일", created_Date : "2025-06-17"},
-  { id : 4, title : "[알림장] 6월4주차", writer : "정형일", created_Date : "2025-06-24"},
+  { id : 1, title : "[공지사항] 6월1주차", writer : "정형일", file: "", created_Date : "2025-06-03"},
+  { id : 2, title : "[공지사항] 6월2주차", writer : "정형일", file: "", created_Date : "2025-06-10"},
+  { id : 3, title : "[공지사항] 6월3주차", writer : "정형일", file: "", created_Date : "2025-06-17"},
+  { id : 4, title : "[공지사항] 6월4주차", writer : "정형일", file: "", created_Date : "2025-06-24"},
 ];
 
 const tableInfo = {
@@ -49,7 +50,7 @@ const tableInfo = {
   tbFontSize : theme.fontSizes.base,
 }
 
-const NotePage = () => {
+const PhotoPage = () => {
   const [data, setData] = useState(null);
   const [page, setPage] = useState(1); // 1부터 시작
   const navigate = useNavigate();
@@ -57,7 +58,7 @@ const NotePage = () => {
   useEffect(() => {
     const getPostList = async () => {
       try {
-        const responseData = await boardService.typeBoardList("NOTE", page);
+        const responseData = await boardService.typeBoardList("PHOTO", page);
         console.log(responseData);
         setData(responseData);
         // alert("게시글 조회 성공");
@@ -73,28 +74,31 @@ const NotePage = () => {
     setPage(newPage);
   };
 
+  const handleClick = (boardNo) => {
+    const currentPath = location.pathname;
+    const basePath = currentPath.split('/')[1]; // "notice" 등
+    navigate(`/${basePath}/${boardNo}`);
+  };
 
   return (
     <PageContainer>
       <ContentHeader
-        Title={'알림장'}
+        Title={'사진 게시판'}
         Color={'green'}
         // 교사면 버튼 추가, 학부모면 없음.
         ButtonProps={[
           { Title: '작성하기', 
             func: () => {
-              navigate("/note/write", { state: { category: "note" }, })
+              navigate("/photo/write", { state: { category: "photo" }, })
             } 
           },
         ]}
       ></ContentHeader>
       {data && (
         <BoardContainer>
-          <BoardTable 
-            tableInfo={tableInfo}
-            columns={columns}
-            boardData={data.content}
-          />
+          {data.content.map((post) => (
+            <ImagePost onClick={() => handleClick(post.boardNo)} postData={post}></ImagePost>
+          ))}
         </BoardContainer>
       )}
       {data && (
@@ -118,8 +122,12 @@ const PageContainer = styled.div`
 
 const BoardContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   margin-top: 50px;
+  flex-wrap: wrap;
+  margin-left: 50px;
+  margin-right: 50px;
+  gap: 20px;
 `;
 
-export default NotePage;
+export default PhotoPage;

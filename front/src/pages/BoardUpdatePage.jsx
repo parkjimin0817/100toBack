@@ -29,7 +29,7 @@ const BoardUpdatePage = () => {
   const [formState, setFormState] = useState({
     title: postData.title,
     type : postData.type, 
-    classRoomId: postData.classRoomNo,
+    classRoomNo: postData.classRoomNo,
     file: null,
     memberName: member.memberName,
     memberId : member.memberNo,
@@ -66,7 +66,7 @@ const BoardUpdatePage = () => {
     const payload = {
       title: formState.title,
       type: formState.type,
-      classRoomId: formState.classRoomId,
+      classRoomId: formState.classRoomNo,
       centerId: formState.centerId,
       memberId: formState.memberId,
       contents: formState.contents.map((item, index) => ({

@@ -98,4 +98,24 @@ public class BoardController {
         Page<BoardDto.NoteBoardDto> boardPage = boardService.getNoteBoards(NOTE, page, size);
         return ResponseEntity.ok(boardPage);
     }
+    /**
+     *  사진 게시글 목록 조회
+     */
+    @GetMapping("/type/PHOTO")
+    public ResponseEntity<Page<BoardDto.PhotoBoardDto>> getPhotoBoards(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<BoardDto.PhotoBoardDto> boardPage = boardService.getPhotoBoards(PHOTO, page, size);
+        return ResponseEntity.ok(boardPage);
+    }
+    /**
+     *  식단표 게시글 목록 조회
+     */
+    @GetMapping("/type/MEAL_PLAN")
+    public ResponseEntity<Page<BoardDto.MealPlanBoardDto>> getMealPlanBoards(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<BoardDto.MealPlanBoardDto> boardPage = boardService.getMealPlanBoards(MEAL_PLAN, page, size);
+        return ResponseEntity.ok(boardPage);
+    }
 }
