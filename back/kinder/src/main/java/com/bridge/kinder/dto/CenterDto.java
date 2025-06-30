@@ -37,6 +37,8 @@ public class CenterDto {
         private int center_no;
         private String center_name;
         private String center_address;
+        private String center_tel;
+        private CommonEnums.CenterType center_type;
         private CommonEnums.AdmissionStatus status;
 
         public static Response toDto(Center center) {
@@ -44,6 +46,8 @@ public class CenterDto {
                     .center_no(center.getCenterNo())
                     .center_name(center.getCenterName())
                     .center_address(center.getCenterAddress())
+                    .center_tel(center.getCenterTel())
+                    .center_type(center.getCenterType())
                     .status(center.getStatus())
                     .build();
         }

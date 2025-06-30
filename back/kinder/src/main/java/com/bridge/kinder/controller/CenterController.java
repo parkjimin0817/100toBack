@@ -25,6 +25,12 @@ public class CenterController {
         return ResponseEntity.ok(centerService.findAllCenter());
     }
 
+    //시설 정보 불러오기
+    @GetMapping("/detail")
+    public ResponseEntity<CenterDto.Response> getCenterDetail(int centerNo){
+        return ResponseEntity.ok(centerService.getCenterDetail(centerNo));
+    }
+
 
 
 }
