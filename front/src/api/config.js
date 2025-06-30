@@ -86,4 +86,8 @@ export const API_ENDPOINTS = {
     DELETE: (id) => `/api/boards/${id}`,
     TYPE: (type, page) => `/api/boards/type/${type}?page=${page}&size=1`,
   },
+  VACATION: {
+    BASE: '/api/vacation',
+    REQUEST: (memberNo) => `/api/vacation/request/${memberNo}`,
+  },
 };

@@ -1,0 +1,74 @@
+package com.bridge.kinder.dto;
+
+import com.bridge.kinder.entity.Member;
+import com.bridge.kinder.entity.Vacation;
+import com.bridge.kinder.enums.CommonEnums;
+import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+
+
+public class VacationDto {
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Request {
+        private int member_no;
+        private CommonEnums.VacationType type;
+        private String type_detail;
+        private LocalDate start_date;
+        private LocalDate end_date;
+        private String reason;
+        private MultipartFile attachment;
+
+        public Vacation toEntity(Member member, String attachmentPath) {
+            return Vacation.builder()
+                    .member(member)
+                    .type(type)
+                    .typeDetail(type_detail)
+                    .startDate(start_date)
+                    .endDate(end_date)
+                    .reason(reason)
+                    .attachment(attachmentPath)
+                    .build();
+        }
+    }
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class Response {
+        private int vacation_no;
+        private CommonEnums.VacationType type;
+        private String type_detail;
+        private LocalDate start_date;
+        private LocalDate end_date;
+        private String reason;
+        private String attachment;
+        private CommonEnums.AdmissionStatus status;
+        private int member_no;
+
+        public static Response toDto(Vacation vacation, Member member) {
+            return Response.builder()
+                    .vacation_no(vacation.getVacationNo())
+                    .type(vacation.getType())
+                    .type_detail(vacation.getTypeDetail())
+                    .start_date(vacation.getStartDate())
+                    .end_date(vacation.getEndDate())
+                    .reason(vacation.getReason())
+                    .attachment(vacation.getAttachment())
+                    .status(vacation.getStatus())
+                    .member_no(member.getMemberNo())
+                    .build();
+        }
+
+    }
+
+}

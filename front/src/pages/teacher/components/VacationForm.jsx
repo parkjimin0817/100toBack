@@ -40,7 +40,9 @@ const VacationForm = () => {
           <Select value={typeDetail} onChange={handleDetailChange} disabled={!type}>
             <option value="">선택하세요</option>
             {(getDetailOptions() || []).map((option) => (
-              <option value={option.value}>{option.label}</option>
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
             ))}
           </Select>
           {typeDetail === '기타' && (

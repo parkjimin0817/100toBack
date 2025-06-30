@@ -1,8 +1,7 @@
-import * as yup from 'yup';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { useRef, useState } from 'react';
-import { Form } from 'react-router-dom';
+import { vacationService } from '../../api/vacation';
+import useLoginStore from '../../store/loginStore';
+import { toast } from 'react-toastify';
 
 export const useVacationForm = () => {
   const [type, setType] = useState('');
@@ -13,6 +12,9 @@ export const useVacationForm = () => {
   const [reason, setReason] = useState('');
   const [fileNames, setFileNames] = useState([]); //파일 이름만 보여주려고 파일 이름 저장 값
   const [attachments, setAttachments] = useState([]); //실제로 폼데이터로 전송할 용도
+  const { member } = useLoginStore();
+
+  const memberNo = member?.memberNo;
 
   const fileInputRef = useRef(null);
 
@@ -55,15 +57,15 @@ export const useVacationForm = () => {
 
   const handleButtonClick = () => fileInputRef.current.click();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append('type', type);
-    formData.append('typeDetail', typeDetail === '기타' ? customDetail : typeDetail);
-    formData.append('startDate', startDate);
-    formData.append('endDate', endDate);
+    formData.append('type', type === '휴가' ? 'VACATED' : type === '워케이션' ? 'WORKATION' : '');
+    formData.append('type_detail', typeDetail === '기타' ? customDetail : typeDetail);
+    formData.append('start_date', startDate);
+    formData.append('end_date', endDate);
     formData.append('reason', reason);
-    attachments.forEach((attachment) => formData.append('attachements', attachment));
+    attachments.forEach((attachment) => formData.append('attachment', attachment));
 
     console.log('폼 제출:', {
       type,
@@ -73,6 +75,14 @@ export const useVacationForm = () => {
       reason,
       attachments,
     });
+
+    try {
+      const data = await vacationService.requestVacation(memberNo, formData);
+      return data;
+    } catch (err) {
+      console.error('반 생성 실패 : ', err);
+      toast.error('휴가 신청 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
   };
 
   return {

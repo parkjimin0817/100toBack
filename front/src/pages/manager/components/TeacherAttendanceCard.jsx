@@ -9,9 +9,6 @@ const TeacherAttendanceCard = ({ selectedDate, teacher, currentMonth, attendance
   const [openModal, setOpenModal] = useState(false);
   const month = currentMonth.getMonth() + 1;
   const title = `${month}월 근태 관리`;
-
-  console.log(attendance);
-
   //출퇴근 시간
   const inTime = attendance?.inTime
     ? new Date(attendance.inTime).toLocaleTimeString('ko-KR', {
@@ -27,12 +24,9 @@ const TeacherAttendanceCard = ({ selectedDate, teacher, currentMonth, attendance
         hour12: false,
       })
     : '-';
-
-  console.log(Array.isArray(monthAttendance));
-  console.log(monthAttendance);
-
-  //const workDayCount = monthAttendance.filter((att) => att.status === 'PRESENT');
-  //const absentCount = monthAttendance.filter((att) => att.status === 'ABSENT');
+  //출근 결근 count
+  const workDayCount = monthAttendance.filter((att) => att.status === 'PRESENT').length;
+  const absentCount = monthAttendance.filter((att) => att.status === 'ABSENT').length;
 
   return (
     <>
@@ -44,11 +38,11 @@ const TeacherAttendanceCard = ({ selectedDate, teacher, currentMonth, attendance
         <AttendanceCountBox>
           <AttendanceCount>
             <Name>출근</Name>
-            <Count>수정중</Count>
+            <Count>{workDayCount}</Count>
           </AttendanceCount>
           <AttendanceCount>
             <Name>결근</Name>
-            <Count>수정중</Count>
+            <Count>{absentCount}</Count>
           </AttendanceCount>
         </AttendanceCountBox>
       </TopContent>
@@ -70,8 +64,7 @@ const TeacherAttendanceCard = ({ selectedDate, teacher, currentMonth, attendance
               <tbody>
                 <tr>
                   <th>상태:</th>
-                  {/* {attendanceStatusToKorean[attendance.status] || '알 수 없음'} */}
-                  <td>수정중</td>
+                  <td>{attendanceStatusToKorean[attendance?.status] || '알 수 없음'}</td>
                 </tr>
                 <tr>
                   <th>출근시간: </th>
