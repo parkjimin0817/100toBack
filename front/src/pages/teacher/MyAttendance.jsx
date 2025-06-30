@@ -3,10 +3,8 @@ import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import MyAttendaceCard from './components/MyAttendaceCard';
 import TeacherAttendanceCalendar from '../../components/Common/TeacherAttendanceCalendar';
-import { useParams } from 'react-router-dom';
 import useLoginStore from '../../store/loginStore';
 import { attendanceService } from '../../api/attendance';
-import { lastDayOfMonth } from 'date-fns';
 
 const MyAttendance = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());

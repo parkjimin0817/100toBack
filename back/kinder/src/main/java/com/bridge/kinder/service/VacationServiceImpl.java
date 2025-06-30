@@ -76,4 +76,13 @@ public class VacationServiceImpl implements VacationService {
 
         vacationRepository.deleteById(vacationNo);
     }
+
+    @Override
+    public List<Response> getVacationsByCenter(int centerNo) {
+        List<Vacation> vacations = vacationRepository.findByMember_Center_CenterNo(centerNo);
+
+        return vacations.stream()
+                .map( v -> VacationDto.Response.toDto(v, v.getMember()))
+                .collect(Collectors.toList());
+    }
 }

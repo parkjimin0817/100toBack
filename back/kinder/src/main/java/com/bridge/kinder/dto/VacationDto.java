@@ -53,7 +53,10 @@ public class VacationDto {
         private String reason;
         private String attachment;
         private CommonEnums.AdmissionStatus status;
+        private LocalDate create_date;
+        private LocalDate decision_date;
         private int member_no;
+        private String member_name;
 
         public static Response toDto(Vacation vacation, Member member) {
             return Response.builder()
@@ -65,7 +68,14 @@ public class VacationDto {
                     .reason(vacation.getReason())
                     .attachment(vacation.getAttachment())
                     .status(vacation.getStatus())
+                    .create_date(vacation.getCreateDate().toLocalDate())
+                    .decision_date(
+                            vacation.getDecisionDate() != null
+                                    ? vacation.getDecisionDate().toLocalDate()
+                                    : null
+                    )
                     .member_no(member.getMemberNo())
+                    .member_name(member.getMemberName())
                     .build();
         }
 
