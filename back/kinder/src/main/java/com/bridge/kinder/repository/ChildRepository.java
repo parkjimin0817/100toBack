@@ -1,5 +1,6 @@
 package com.bridge.kinder.repository;
 
+import com.bridge.kinder.dto.ChildDto;
 import com.bridge.kinder.entity.Child;
 
 import com.bridge.kinder.entity.ChildActivityData;
@@ -43,5 +44,10 @@ public interface ChildRepository {
     List<ChildAttendance> attendance(int childNo);
     //아동 번호로 아동 키,몸무게 조회
     Optional<ChildHealthLog> recentPhysicalInfo(int childNo);
+    //아동 건강 데이터 수정
+    Optional<ChildHealthData> updateHealthData(int childNo, ChildDto.health data);
+    //아동 생활 데이터 수정
+    Optional<ChildActivityData> updateActivityData(int childNo, ChildDto.activity data);
+
 
 }

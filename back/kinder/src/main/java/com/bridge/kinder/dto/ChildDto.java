@@ -266,6 +266,8 @@ public class ChildDto {
                     .build();
         }
 
+
+
     }
 
     @Getter
@@ -326,6 +328,7 @@ public class ChildDto {
                     .friend_memo(activityData.getFriendMemo())
                     .build();
         }
+
     }
 
     @Getter
