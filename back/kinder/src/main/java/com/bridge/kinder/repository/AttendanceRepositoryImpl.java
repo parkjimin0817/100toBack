@@ -1,6 +1,9 @@
 package com.bridge.kinder.repository;
 
 import com.bridge.kinder.entity.Attendance;
+import com.bridge.kinder.entity.Child;
+import com.bridge.kinder.entity.ChildAttendance;
+import com.bridge.kinder.enums.CommonEnums.ChildAttendanceStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDate;
@@ -49,5 +52,35 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
                 .setParameter("start", startDateTime)
                 .setParameter("end", endDateTime)
                 .getResultList();
+    }
+
+    //아동 출결 추가
+    @Override
+    public void createChildAttendance(List<ChildAttendance> attendances) {
+        for (ChildAttendance attendance : attendances) {
+            em.persist(attendance);
+        }
+    }
+
+    //아동 출결 해당 반과 해당 날짜 조회
+    @Override
+    public List<ChildAttendance> findByClassNoAndCreateDate(int classNo, LocalDate createDate) {
+        return em.createQuery(
+                "SELECT c FROM ChildAttendance c " +
+                        "WHERE c.classRoom.classNo = :classNo AND c.createDate = :createDate", ChildAttendance.class)
+                .setParameter("classNo", classNo)
+                .setParameter("createDate",createDate)
+                .getResultList();
+    }
+
+
+    @Override
+    public ChildAttendance getChildAttendance(int classNo, int childNo, LocalDate createDate) {
+        String query = "SELECT c FROM ChildAttendance c WHERE c.classRoom.classNo = :classNo AND c.child.childNo = :childNo AND c.createDate = :createDate";
+        return (em.createQuery(query, ChildAttendance.class)
+                .setParameter("classNo",classNo)
+                .setParameter("childNo",childNo)
+                .setParameter("createDate",createDate)
+                .getSingleResult());
     }
 }

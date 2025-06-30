@@ -69,6 +69,15 @@ public class ChildRepositoryImpl implements ChildRepository {
        return count.intValue();
     }
 
+    //반에 속한 아동 조회
+    @Override
+    public List<Child> findByClassRoom(ClassRoom classRoom) {
+        int classNo = classRoom.getClassNo();
+        return em.createQuery("SELECT c FROM Child c WHERE c.classRoom.classNo  = :classNo", Child.class)
+                .setParameter("classNo", classNo)
+                .getResultList();
+    }
+
     //child_no로 아동 찾기
     @Override
     public Optional<Child> getByChildNo(int childNo) {
@@ -95,6 +104,8 @@ public class ChildRepositoryImpl implements ChildRepository {
 
         return Optional.of(child); //  반영된 child 반환
     }
+
+
 
     //아동 번호로 해당 아동의 건강 로그 데이터 불러오기(매일 적는 거)
     @Override

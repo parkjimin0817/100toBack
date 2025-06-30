@@ -1,12 +1,14 @@
 package com.bridge.kinder.dto;
 
 import com.bridge.kinder.entity.Center;
+import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.entity.Schedule;
 import com.bridge.kinder.enums.CommonEnums;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -97,6 +99,68 @@ public class ScheduleDto {
                     .description(description)
                     .startTime(start_time)
                     .endTime(end_time)
+                    .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class DailyScheduleDto {
+        private String title;
+        private LocalDate create_date;
+        private LocalTime start_time;
+        private LocalTime end_time;
+        private CommonEnums.RollType type;
+
+        private int center_no;
+        private int class_no;
+        private int member_no;
+
+        public Schedule toDto(Center center, Member member, ClassRoom classRoom) {
+            return Schedule.builder()
+                    .title(title)
+                    .scheduleDate(create_date)
+                    .startTime(start_time)
+                    .endTime(end_time)
+                    .type(type)
+                    .center(center)
+                    .member(member)
+                    .classRoom(classRoom)
+                    .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class DailyResponse{
+        private int schedule_no;
+        private String title;
+        private LocalDate schedule_date;
+        private LocalDateTime create_date;
+        private LocalTime start_time;
+        private LocalTime end_time;
+        private CommonEnums.RollType type;
+
+        private int center_no;
+        private int member_no;
+
+        public static DailyResponse toDto(Schedule schedule) {
+            return DailyResponse.builder()
+                    .schedule_no(schedule.getScheduleNo())
+                    .title(schedule.getTitle())
+                    .schedule_date(schedule.getScheduleDate())
+                    .create_date(schedule.getCreateDate())
+                    .start_time(schedule.getStartTime())
+                    .end_time(schedule.getEndTime())
+                    .type(schedule.getType())
+                    .center_no(schedule.getCenter().getCenterNo())
+                    .member_no(schedule.getMember().getMemberNo())
                     .build();
         }
     }

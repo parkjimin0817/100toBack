@@ -6,6 +6,7 @@ import com.bridge.kinder.enums.CommonEnums;
 import com.bridge.kinder.enums.CommonEnums.RollType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
@@ -53,5 +54,26 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     @Override
     public void deleteSchedule(Schedule schedule) {
         em.remove(schedule);
+    }
+
+    @Override
+    public void saveDailySchedule(List<Schedule> schedules) {
+        for(Schedule schedule : schedules) {
+            em.persist(schedule);
+        }
+    }
+
+    @Override
+    public List<Schedule> findDailyList(int centerNo, int memberNo, int classNo, LocalDate scheduleDate) {
+        return em.createQuery("select s from Schedule s "
+                        + "where s.center.centerNo = :centerNo"
+                        + " and s.member.memberNo = :memberNo"
+                        + " and s.classRoom.classNo = :classNo"
+                        + " and s.scheduleDate = :scheduleDate", Schedule.class)
+                .setParameter("centerNo", centerNo)
+                .setParameter("memberNo", memberNo)
+                .setParameter("classNo",classNo)
+                .setParameter("scheduleDate", scheduleDate)
+                .getResultList();
     }
 }
