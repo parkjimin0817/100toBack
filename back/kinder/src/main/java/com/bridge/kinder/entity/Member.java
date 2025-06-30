@@ -143,4 +143,20 @@ public class Member {// 멤버
     public void changeMemberPwd(String newPwd) {
         this.memberPwd = newPwd;
     }
+
+    public void changeMemberName(String newName) {
+        this.memberName = newName;
+    }
+
+    public void changeMemberBirth(LocalDate newBirth) {
+        this.memberBirth = newBirth;
+    }
+
+    public void changeMemberProfile(String newProfile) {
+        this.memberProfile = newProfile;
+    }
+
+    public void changeMemberPhone(String newPhone) {
+        this.memberPhone = newPhone;
+    }
 }

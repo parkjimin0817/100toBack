@@ -1,27 +1,17 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import useLoginStore from '../../../store/loginStore';
 
-const infodata = {
-  name: '박지민',
-  birthdate: '1999-08-17',
-  role: '시설장',
-};
-
-const MyPageMyInfo = ({ isEditMode }) => {
-  const [data, setData] = useState(infodata);
-  const handleChange = (key, value) => {
-    setData((prev) => ({ ...prev, [key]: value }));
-  };
-
+const MyPageMyInfo = ({ isEditMode, editableInfo, onChange }) => {
   return (
     <Wrapper>
       <InfoRow>
         <InfoType>이름 </InfoType>
         <Info>
           {isEditMode ? (
-            <InfoInput value={data.name} onChange={(e) => handleChange('name', e.target.value)} />
+            <InfoInput value={editableInfo.memberName} onChange={(e) => onChange('memberName', e.target.value)} />
           ) : (
-            data.name
+            editableInfo.memberName
           )}
         </Info>
       </InfoRow>
@@ -29,30 +19,25 @@ const MyPageMyInfo = ({ isEditMode }) => {
         <InfoType>생년월일</InfoType>
         <Info>
           {isEditMode ? (
-            <InfoInput type="date" value={data.birthdate} onChange={(e) => handleChange('birthdate', e.target.value)} />
+            <InfoInput
+              type="date"
+              value={editableInfo.memberBirth}
+              onChange={(e) => onChange('memberBirth', e.target.value)}
+            />
           ) : (
-            data.birthdate
+            editableInfo.memberBirth
           )}
         </Info>
       </InfoRow>
       <InfoRow>
-        <InfoType>관계</InfoType>
+        <InfoType>연락처</InfoType>
         <Info>
-          {/* {isEditMode ? (
-            <Select value={data.role} onChange={(e) => handleChange('role', e.target.value)}>
-              <option value="시설장">시설장</option>
-              <option value="교사">교사</option>
-              <option value="기타">기타</option>
-            </Select>
+          {isEditMode ? (
+            <InfoInput value={editableInfo.memberPhone} onChange={(e) => onChange('memberPhone', e.target.value)} />
           ) : (
-            data.role
-          )} */}
-          모
+            editableInfo.memberPhone
+          )}
         </Info>
-      </InfoRow>
-      <InfoRow>
-        <InfoType>아동</InfoType>
-        <Info>정의철</Info>
       </InfoRow>
     </Wrapper>
   );

@@ -252,4 +252,12 @@ public class ChildRepositoryImpl implements ChildRepository {
                 .setParameter("end", end)
                 .getResultList();
     }
+
+    @Override
+    public List<Child> findByMemberNo(int memberNo) {
+        return em.createQuery(
+                        "SELECT c FROM MemberChild mc JOIN mc.child c WHERE mc.member.memberNo = :memberNo", Child.class)
+                .setParameter("memberNo", memberNo)
+                .getResultList();
+    }
 }

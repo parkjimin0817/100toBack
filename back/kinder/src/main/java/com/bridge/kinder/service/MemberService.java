@@ -44,6 +44,9 @@ public interface MemberService {
     //마이페이지 수정
     String updateMyPage(int id ,MypageDto.Update dto);
 
+    //학부모 마이페이지 수정
+    MemberDto.updateParentInfo updateParentInfo(MemberDto.updateParentInfo dto);
+
     //시설장 선생 목록 가져오기(시설번호를 받아서)
     List<MemberDto.teacherListResponse> managerTeacherList(int centerNo);
 

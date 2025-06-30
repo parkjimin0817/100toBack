@@ -9,6 +9,7 @@ import com.bridge.kinder.dto.ChildDto.detail;
 import com.bridge.kinder.dto.ChildDto.health;
 import com.bridge.kinder.dto.ChildDto.healthLog;
 import com.bridge.kinder.dto.ChildDto.modalResponse;
+import com.bridge.kinder.dto.ChildDto.myPageChilds;
 import com.bridge.kinder.dto.ChildDto.updateClass;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Child;
@@ -257,4 +258,15 @@ public class ChildServiceImpl implements ChildService {
 //        return ChildDto.health.toDto(healthData);
 //    }
 
+
+    //부모 번호로 해당 연결된 아동 리스트 가져오기
+    @Transactional(readOnly = true)
+    @Override
+    public List<myPageChilds> myPageChilds(int memberNo) {
+
+        return childRepository.findByMemberNo(memberNo)
+                .stream()
+                .map(ChildDto.myPageChilds::toDto)
+                .collect(Collectors.toList());
+    }
 }

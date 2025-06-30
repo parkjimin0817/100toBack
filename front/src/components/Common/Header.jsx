@@ -36,6 +36,17 @@ const Header = ({ member }) => {
 
   const navigate = useNavigate();
 
+  //타입에 따라 다른 마이페이지 이동
+  const handleMyPage = () => {
+    if (type === '교사') {
+      navigate('/teacher/mypage');
+    } else if (type === '시설장') {
+      navigate('/manager/mypage');
+    } else {
+      navigate('/parent/mypage');
+    }
+  };
+
   //로그아웃
   const logout = useLoginStore((state) => state.logout);
   const resetAttendance = useAttendanceStore((state) => state.resetAttendance);
@@ -66,7 +77,7 @@ const Header = ({ member }) => {
           </UserNameAndRole>
           {isOpen && (
             <Dropdown>
-              <DropdownItem onClick={() => navigate('/manager/mypage')}>마이페이지</DropdownItem>
+              <DropdownItem onClick={handleMyPage}>마이페이지</DropdownItem>
               <DropdownItem onClick={handleLogout}>로그아웃</DropdownItem>
             </Dropdown>
           )}

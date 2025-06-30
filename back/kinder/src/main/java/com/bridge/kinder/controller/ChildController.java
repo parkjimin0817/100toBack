@@ -135,5 +135,13 @@ public class ChildController {
 //        return ResponseEntity.ok(childService.updateActivityLog(childNo, date, data));
 //
 //    }
-    
+
+    //부모 번호로 해당 연결된 아동 리스트 가져오기
+    @GetMapping("/parentChild")
+    public ResponseEntity<List<ChildDto.myPageChilds>> myChilds(@RequestParam int memberNo){
+        return ResponseEntity.ok(childService.myPageChilds(memberNo));
+    }
+
+
+
 }
