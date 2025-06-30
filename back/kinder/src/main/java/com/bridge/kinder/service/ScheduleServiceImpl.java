@@ -2,16 +2,21 @@ package com.bridge.kinder.service;
 
 import com.bridge.kinder.dto.ScheduleDto;
 import com.bridge.kinder.dto.ScheduleDto.CreateScheduleDto;
+import com.bridge.kinder.dto.ScheduleDto.DailyResponse;
+import com.bridge.kinder.dto.ScheduleDto.DailyScheduleDto;
 import com.bridge.kinder.dto.ScheduleDto.ScheduleResponse;
 import com.bridge.kinder.dto.ScheduleDto.ScheduleUpdateDto;
 import com.bridge.kinder.entity.Center;
+import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.entity.Schedule;
 import com.bridge.kinder.enums.CommonEnums;
 import com.bridge.kinder.repository.CenterRepository;
+import com.bridge.kinder.repository.ClassRoomRepository;
 import com.bridge.kinder.repository.MemberRepository;
 import com.bridge.kinder.repository.ScheduleRepository;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -31,6 +36,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final CenterRepository centerRepository;
     private final MemberRepository memberRepository;
+    private final ClassRoomRepository classRoomRepository;
 
     //스케줄 생성
     @Override
@@ -103,5 +109,54 @@ public class ScheduleServiceImpl implements ScheduleService {
     public void deleteSchedule(int scheduleNo) {
         Schedule schedule = scheduleRepository.findScheduleByScheduleNo(scheduleNo);
         scheduleRepository.deleteSchedule(schedule);
+    }
+
+    //반 일과표 생성
+    @Override
+    public String createDailySchedule(List<ScheduleDto.DailyScheduleDto> dto) {
+        int centerNo = 0;
+        int memberNo = 0;
+        int classNo = 0;
+
+        List<Schedule> sc = new ArrayList<>();
+
+        for(ScheduleDto.DailyScheduleDto dailyScheduleDto : dto){
+            centerNo = dailyScheduleDto.getCenter_no();
+            memberNo = dailyScheduleDto.getMember_no();
+            classNo = dailyScheduleDto.getClass_no();
+
+            Center center = centerRepository.findById(centerNo)
+                    .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
+
+            Member member = memberRepository.findByMemberNo(memberNo)
+                    .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
+
+            ClassRoom classRoom = classRoomRepository.findByClassNo(classNo)
+                    .orElseThrow(() -> new RuntimeException("존재하지 않는 반입니다."));
+
+            Schedule schedule = dailyScheduleDto.toDto(center, member,classRoom);
+            sc.add(schedule);
+        }
+
+        scheduleRepository.saveDailySchedule(sc);
+        return  String.valueOf(sc.get(0).getScheduleNo());
+    }
+
+    //반 일과표 조회
+    @Override
+    public List<ScheduleDto.DailyResponse> dailyList(int centerNo, int memberNo, int classNo ,LocalDate scheduleDate) {
+        Center center = centerRepository.findById(centerNo)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
+
+        Member member = memberRepository.findByMemberNo(memberNo)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
+
+        ClassRoom classRoom = classRoomRepository.findByClassNo(classNo)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 반입니다."));
+
+
+        return scheduleRepository.findDailyList(center.getCenterNo(), member.getMemberNo(), classRoom.getClassNo(), scheduleDate)
+                .stream().map(ScheduleDto.DailyResponse::toDto)
+                .collect(Collectors.toList());
     }
 }

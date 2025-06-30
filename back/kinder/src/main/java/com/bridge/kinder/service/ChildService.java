@@ -32,6 +32,10 @@ public interface ChildService {
     List<ChildDto.attendance> attendance(int childNo);
     //아동 상세보기
     ChildDto.detail detail(int childNo);
+    //아동 상세보기 건강 데이터 수정
+    ChildDto.health updateHealthData(int childNo,ChildDto.health data);
+    //아동 상세보기 생활 데이터 수정
+    ChildDto.activity updateActivityData(int childNo, ChildDto.activity data);
 
     //부모 번호로 해당 연결된 아동 리스트 가져오기
     List<ChildDto.myPageChilds> myPageChilds(int memberNo);

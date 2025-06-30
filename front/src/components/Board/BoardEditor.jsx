@@ -13,50 +13,6 @@ const BoardEditor = (
     selectBlock, 
     deleteBlock }
 ) => {
-  // const [blocks, setBlocks] = useState([]);
-  // const [title, setTitle] = useState("");
-  // const [className, setClassName] = useState("");
-  // const [file, setFile] = useState("");
-  // const [writer, setWriter] = useState("");
-
-  // const addBlock = () => {
-  //   const newBlock = {
-  //     id: Date.now(),
-  //     type : "default",
-  //     content_text: "",
-  //   };
-  //   setBlocks([...blocks, newBlock]);
-  // };
-
-  // const selectBlock = (type, id) => {
-  //   setBlocks((prev) =>
-  //     prev.map((block) =>
-  //       block.id === id ? { ...block, type : type } : block
-  //     )
-  //   );
-  // }
-
-  // const updateBlockContent = (id, value) => {
-  //   setBlocks((prev) =>
-  //     prev.map((block) =>
-  //       block.id === id ? { ...block, content: value } : block
-  //     )
-  //   );
-  // };
-
-  // const deleteBlock = (id) => {
-  //   setBlocks((prev) =>
-  //     prev.filter((block) =>
-  //       block.id !== id
-  //     )
-  //   );
-  // }
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   console.log("전송할 데이터:", blocks);
-  //   // 서버 전송 로직 작성 가능
-  // };
 
   return (
     <FormContainer>
@@ -105,12 +61,15 @@ const BoardEditor = (
                 <TextInputBlock
                   key={block.id}
                   onChange={(value) => updateBlock(block.id, value)}
+                  content={block.contentText}
+                  blockDelete={() => deleteBlock(block.id)}
                 />
               ) : (
                 <ImageInputBlock
                   id={block.id}
                   value={block.contentFile}
                   onChange={updateBlock}
+                  blockDelete={() => deleteBlock(block.id)}
                 />
               )}
             </div>
@@ -120,7 +79,7 @@ const BoardEditor = (
           </AddBlockButton>
         </div>
 
-        <button type="submit">작성 완료</button>
+        {/* <button type="submit">작성 완료</button> */}
       </div>
     </FormContainer>
   );

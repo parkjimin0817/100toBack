@@ -16,22 +16,28 @@ const MyPageMyInfo = ({ info, onChange, isEditable }) => {
       <InfoRow>
         <InfoType>이름</InfoType>
         <Info>
-          <InfoInput
-            value={info.memberName}
-            onChange={(e) => handleChange('memberName', e.target.value)}
-            disabled={!isEditable}
-          />
+          {isEditable ? (
+            <InfoInput
+              value={info.memberName}
+              onChange={(e) => handleChange('memberName', e.target.value)}
+            />
+          ) : (
+            info.memberName
+          )}
         </Info>
       </InfoRow>
       <InfoRow>
         <InfoType>생년월일</InfoType>
         <Info>
-          <InfoInput
-            type="date"
-            value={info.memberBirth}
-            onChange={(e) => handleChange('memberBirth', e.target.value)}
-            disabled={!isEditable}
-          />
+          {isEditable ? (
+            <InfoInput
+              type="date"
+              value={info.memberBirth}
+              onChange={(e) => handleChange('memberBirth', e.target.value)}
+            />
+          ) : (
+            info.memberBirth
+          )}
         </Info>
       </InfoRow>
       <InfoRow>

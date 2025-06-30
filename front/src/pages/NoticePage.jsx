@@ -1,38 +1,44 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { useNavigate } from 'react-router-dom';
 import BoardTable from '../components/Board/BoardTable';
 import theme from "../styles/theme";
 import ContentHeader from '../components/Common/ContentHeader';
+import { useNavigate } from 'react-router-dom';
+import { boardService } from '../api/boards';
+import Pagination from '../components/Common/Pagenation';
 
 const columns = [
   {
     label: '번호',
-    key: 'id',
+    key: 'boardNo',
     width: '100px',
     align: 'center'
   },
   {
-    label: '제목',
-    key: 'title',
-  },
-  {
-    label: '작성자',
-    key: 'writer',
+    label: '파일',
+    key: 'attachment',
     width: '120px',
   },
   {
-    label: '생성 날짜',
-    key: 'created_Date',
+    label: '작성자',
+    key: 'memberName',
+    width: '120px',
+  },
+  {
+    label: '제목',
+    key: 'title',
+    width: "100%",
+  },
+  {
+    label: '작성일',
+    key: 'createDate',
     width: '160px',
   },
-];
-
-const BoardData = [
-  { id : 1, title : "[알림장] 6월1주차", writer : "정형일", created_Date : "2025-06-03"},
-  { id : 2, title : "[알림장] 6월2주차", writer : "정형일", created_Date : "2025-06-10"},
-  { id : 3, title : "[알림장] 6월3주차", writer : "정형일", created_Date : "2025-06-17"},
-  { id : 4, title : "[알림장] 6월4주차", writer : "정형일", created_Date : "2025-06-24"},
+  {
+    label: '조회수',
+    key: "views",
+    width: "100px",
+  }
 ];
 
 const tableInfo = {
@@ -43,14 +49,35 @@ const tableInfo = {
 }
 
 const NoticePage = () => {
+  const [data, setData] = useState(null);
+  const [page, setPage] = useState(1); // 1부터 시작
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const getPostList = async () => {
+      try {
+        const responseData = await boardService.typeBoardList("NOTICE", page);
+        console.log(responseData);
+        setData(responseData);
+        // alert("게시글 조회 성공");
+      } catch (error) {
+        console.error("게시글 조회 실패 : ", error);
+        alert("게시글 조회 실패");
+      }
+    }
+    getPostList();
+  }, [page]);
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
 
   return (
     <PageContainer>
       <ContentHeader
-        Title={'알림장'}
+        Title={'공지사항'}
         Color={'green'}
-        // 교사면 버튼 추가, 학부모면 없음.
+        // 학부모는 못봄, 교사는 작성하기 못함, 시설장만 가능
         ButtonProps={[
           { Title: '작성하기', 
             func: () => {
@@ -59,13 +86,22 @@ const NoticePage = () => {
           },
         ]}
       ></ContentHeader>
-      <BoardContainer>
-        <BoardTable 
-          tableInfo={tableInfo}
-          columns={columns}
-          boardData={BoardData}
+      {data && (
+        <BoardContainer>
+          <BoardTable 
+            tableInfo={tableInfo}
+            columns={columns}
+            boardData={data.content}
+          />
+        </BoardContainer>
+      )}
+      {data && (
+        <Pagination
+          currentPage={data.number + 1}
+          totalPages={data.totalPages}
+          onPageChange={handlePageChange}
         />
-      </BoardContainer>
+      )}
     </PageContainer>
   )
 }
@@ -84,4 +120,4 @@ const BoardContainer = styled.div`
   margin-top: 50px;
 `;
 
-export default NoticePage;
+export default NoticePage

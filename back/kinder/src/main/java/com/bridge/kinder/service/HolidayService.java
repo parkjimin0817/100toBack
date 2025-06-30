@@ -26,7 +26,7 @@ public class HolidayService {
 
     private final HolidayRepository holidayRepository;
 
-    @Value("${holiday.api.key}")
+//    @Value("${holiday.api.key}")
     private String serviceKey;
 
     //공휴일 가져와서 저장

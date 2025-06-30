@@ -218,6 +218,24 @@ public class ChildServiceImpl implements ChildService {
         );
     }
 
+    //아동 상세보기 건강 데이터 수정
+    @Override
+    public ChildDto.health updateHealthData(int childNo, ChildDto.health data) {
+
+        ChildHealthData healthData = childRepository.updateHealthData(childNo, data)
+                .orElseThrow(() -> new EntityNotFoundException("정상적으로 수정되지 않았습니다."));
+        return ChildDto.health.toDto(healthData);
+    }
+
+    //아동 상세보기 생활 데이터 수정
+    @Override
+    public ChildDto.activity updateActivityData(int childNo, ChildDto.activity data){
+        ChildActivityData activityData = childRepository.updateActivityData(childNo,data)
+                .orElseThrow(() -> new EntityNotFoundException("정상적으로 수정되지 않았습니다."));
+        return ChildDto.activity.toDto(activityData);
+    }
+
+
     //부모 번호로 해당 연결된 아동 리스트 가져오기
     @Transactional(readOnly = true)
     @Override
