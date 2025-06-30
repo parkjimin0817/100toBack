@@ -113,6 +113,7 @@ const MyHealthForm = () => {
           name="symptoms"
           value={form.symptoms}
           onChange={handleChange}
+          longWidth="100%"
         />
       </Wrapper>
     </Content>

@@ -54,4 +54,7 @@ public interface ChildRepository {
     //아동 생활 로그 데이터 날짜,반 필터링해서 불러오기
     List<ChildActivityLog> getActivityLog(int classNo, LocalDate date);
 
+    //부모 번호로 해당 연결된 아동 리스트 가져오기
+    List<Child> findByMemberNo(int memberNo);
+
 }

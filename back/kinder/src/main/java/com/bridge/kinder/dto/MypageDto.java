@@ -18,11 +18,12 @@ public class MypageDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Update {
-        //member 이름,생일
+        //member 이름, 생일, 연락처
         private String memberName;
         private LocalDate memberBirth;
+        private String memberPhone;
 
-        //center 시설명,연락처,주소,유형
+        //center 시설명, 연락처, 주소, 유형
         private String centerName;
         private String centerTel;
         private String centerAddress;

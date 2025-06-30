@@ -28,6 +28,7 @@ export const API_ENDPOINTS = {
     MANAGERSIGNUP: '/api/members/manager',
     LOGIN: `/api/members/login`,
     MYPAGE: (memberNo) => `/api/members/mypage?id=${memberNo}`,
+    UPDATE: (memberNo) => `/api/members/mtpage?id=${memberNo}`,
     SEARCHID: `/api/members/searchId`,
     PWDSEARCHID: `/api/members/pwdSearchId`,
     PHONEACCESS: `/api/members/sendOne`,
@@ -46,6 +47,7 @@ export const API_ENDPOINTS = {
   },
   CENTERS: {
     BASE: '/api/center',
+    DETAIL: (centerNo) => `/api/center/detail?centerNo=${centerNo}`,
   },
   CLASSROOM: {
     BASE: '/api/classroom',
@@ -81,6 +83,7 @@ export const API_ENDPOINTS = {
     BASE: '/api/childs',
     GETALL: '/api/childs/all',
     GET: '/api/childs/get',
+    PARENTCHILDLIST: (memberNo) => `/api/childs/parentChild?memberNo=${memberNo}`,
   },
   BOARDS: {
     BASE: '/api/boards',
@@ -94,5 +97,6 @@ export const API_ENDPOINTS = {
     REQUEST: (memberNo) => `/api/vacation/request/${memberNo}`,
     GETLIST: (memberNo) => `/api/vacation/${memberNo}`,
     DELETE: (vacationNo) => `/api/vacation/delete/${vacationNo}`,
+    GETLISTALL: (centerNo) => `/api/vacation/all/${centerNo}`,
   },
 };

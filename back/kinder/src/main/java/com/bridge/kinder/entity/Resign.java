@@ -60,4 +60,10 @@ public class Resign {// 퇴직
     protected void onUpdate() {
         this.resignDate = LocalDateTime.now();
     }
+
+
+    //---------------------------------------------------------------------------------------------
+    public void updateStatus(CommonEnums.ResignStatus status) {
+        this.status = status;
+    }
 }

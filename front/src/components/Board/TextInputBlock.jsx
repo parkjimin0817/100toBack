@@ -24,7 +24,7 @@ import Underline from "@tiptap/extension-underline";
 
 // import Toolbar 등 커스텀 UI도 아래와 같이 기본 대체 가능
 const Toolbar = ({ children }) => <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', padding: '10px', borderBottom: '1px solid #ddd' }}>{children}</div>;
-const Button = ({ onClick, children }) => <button onClick={onClick} style={{ padding: '4px 8px' }}>{children}</button>;
+const Button = ({ onClick, children }) => <button type="button" onClick={onClick} style={{ padding: '4px 8px' }}>{children}</button>;
 
 // 초기 콘텐츠 (JSON 형태 그대로 넣음)
 // import content from "./content.json";
