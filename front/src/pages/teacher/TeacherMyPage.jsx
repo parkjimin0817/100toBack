@@ -10,11 +10,13 @@ import { RiHealthBookLine } from 'react-icons/ri';
 import { useLoginStore } from '../../store/loginStore';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/axios.js';
+import { toast } from 'react-toastify';
 
 // 생략된 import 및 스타일 코드는 유지되고, 핵심 수정 관련 부분만 보여줍니다
 
 const TeacherMyPage = () => {
   const member = useLoginStore((state) => state.member);
+  const setMember = useLoginStore((state) => state.setMember);
   const navigate = useNavigate();
   const isAuthenticated = useLoginStore((state) => state.isAuthenticated);
 
@@ -71,7 +73,13 @@ const TeacherMyPage = () => {
           centerAddress: centerInfo.centerAddress,
           centerType: centerInfo.centerType,
         });
-        alert('수정 완료!');
+        setMember({
+          ...member,
+          memberName: editableInfo.memberName,
+          memberBirth: editableInfo.memberBirth,
+          memberPhone: editableInfo.memberPhone,
+        });
+        toast.success('수정 완료!');
         setIsEditing(false);
       } catch (e) {
         alert('수정 실패: ' + e.message);

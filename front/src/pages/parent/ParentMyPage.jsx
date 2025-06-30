@@ -38,7 +38,7 @@ const ParentMyPage = () => {
 
   const handleEditSubmit = async () => {
     try {
-      const { data: updatedMember } = await api.patch(`/api/members/mypage/parent`, {
+      const { data } = await api.patch(`/api/members/mypage/parent`, {
         member_no: member.memberNo,
         member_name: editableInfo.memberName,
         member_birth: editableInfo.memberBirth,
@@ -47,7 +47,9 @@ const ParentMyPage = () => {
 
       setMember({
         ...member,
-        ...updatedMember,
+        memberName: editableInfo.memberName,
+        memberBirth: editableInfo.memberBirth,
+        memberPhone: editableInfo.memberPhone,
       });
 
       setIsEditMode(false);
@@ -58,6 +60,7 @@ const ParentMyPage = () => {
 
   useEffect(() => {
     fetchChildList();
+    handleEditSubmit();
   }, []);
 
   const handleChange = (key, value) => {
