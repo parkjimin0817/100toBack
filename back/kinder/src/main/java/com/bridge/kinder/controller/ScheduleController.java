@@ -1,9 +1,11 @@
 package com.bridge.kinder.controller;
 
 import com.bridge.kinder.dto.ScheduleDto;
+import com.bridge.kinder.dto.ScheduleDto.DailyResponse;
 import com.bridge.kinder.entity.Schedule;
 import com.bridge.kinder.enums.CommonEnums;
 import com.bridge.kinder.service.ScheduleService;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +53,18 @@ public class ScheduleController {
     public ResponseEntity<String> deleteSchedule(@RequestParam int scheduleNo) {
         scheduleService.deleteSchedule(scheduleNo);
         return ResponseEntity.ok().build();
+    }
+
+    //반 일과표 생성하기
+    @PostMapping("/dailyCreate")
+    public ResponseEntity<String> createDailySchedule(@RequestBody List<ScheduleDto.DailyScheduleDto> dto){
+        return ResponseEntity.ok(scheduleService.createDailySchedule(dto));
+    }
+
+    //반 일과표 조회
+    @GetMapping("/dailyList")
+    public ResponseEntity<List<ScheduleDto.DailyResponse>> dailyList(@RequestParam int centerNo, int memberNo,int classNo, LocalDate scheduleDate) {
+        return ResponseEntity.ok(scheduleService.dailyList(centerNo,memberNo,classNo,scheduleDate));
     }
 
 }

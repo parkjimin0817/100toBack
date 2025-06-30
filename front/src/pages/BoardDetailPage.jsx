@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import BoardEditor from '../components/Board/BoardEditor';
 import ContentHeader from '../components/Common/ContentHeader';
 import styled from 'styled-components';
 import BoardDetail from '../components/Board/BoardDetail';
 import content from "../components/Board/content.json";
 import { boardService } from '../api/boards';
+import useLoginStore from '../store/loginStore';
 
 const categoryName = {
   letterhome : "가정통신문",
@@ -21,7 +22,13 @@ const BoardDetailPage = () => {
   const pathSegments = location.pathname.split("/").filter(Boolean);
   const category = pathSegments[0]; // 현재 들어온 게시판 확인 가능.
   const boardNo = pathSegments[1];
+  const navigate = useNavigate();
   const [boardContent, setBoardContent] = useState(null);
+  const member = useLoginStore((state) => state.member);
+
+  const handleGoBack = () => {
+    navigate(-1); // 브라우저의 이전 페이지로 이동
+  };
 
   useEffect(() => {
       const getPost = async () => {
@@ -37,6 +44,17 @@ const BoardDetailPage = () => {
       }
       getPost();
     }, [boardNo]);
+  
+  const handleDelete = async () => {
+    try {
+      const responseData = await boardService.boardDelete(boardNo);
+      console.log(responseData);
+      handleGoBack();
+    } catch (error) {
+      console.error("게시글 삭제 실패 : ", error);
+      alert("게시글 삭제 실패");
+    }
+  }
 
   // 상태관리 : 수정중인가 아닌가, 수정중이라면, PostEditor를 보이게하며, 수정 페이지로.
 
@@ -45,10 +63,21 @@ const BoardDetailPage = () => {
       <ContentHeader
         Title={categoryName[category]}
         Color={'green'}
-        ButtonProps={[
-          { Title: '작성하기', func: () => alert('작성하기 페이지 이동~') },
-          { Title: '뒤로가기', func: () => alert('돌아간다.')},
-        ]}
+        ButtonProps={
+          boardContent?.memberNo === member.memberNo ?
+          [
+            { Title: '수정하기', 
+              func: () => {
+                navigate(`/${category}/update/${boardNo}`, { state: { post: boardContent, category : category } })
+              }  },
+            { Title: '삭제하기', func: () => handleDelete()},
+            { Title: '뒤로가기', func: () => handleGoBack()},
+          ]
+          :
+          [
+            { Title: '뒤로가기', func: () => handleGoBack()},
+          ]
+        }
       ></ContentHeader>
 
       {/* 공통 에디터 컴포넌트 */}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import BoardEditor from '../components/Board/BoardEditor';
 import ContentHeader from '../components/Common/ContentHeader';
 import styled from 'styled-components';
@@ -17,25 +17,27 @@ const categoryName = {
   default : "테스트"
 }
 
-const BoardWritePage = () => {
+const BoardUpdatePage = () => {
   const location = useLocation();
+  const postData = location.state?.post || null;
   const category = location.state?.category || "default";
-  const navigate = useNavigate();
+
   const member = useLoginStore((state) => state.member);
 /**
  * 페이지 최상위 컴포넌트에서 상태 관리
  */
   const [formState, setFormState] = useState({
-    title: "",
-    type : String(category).toUpperCase(),
-    classRoomId: null,
+    title: postData.title,
+    type : postData.type, 
+    classRoomId: postData.classRoomNo,
     file: null,
     memberName: member.memberName,
     memberId : member.memberNo,
     centerId : member.centerNo,
-    contents: [],
+    contents: postData.boardContents,
   });
 
+  
   /**
    * 수정중 페이지 이동 감지시 경고창 띄움.
    */
@@ -55,7 +57,8 @@ const BoardWritePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 입력 검증
+    console.log(formState);
+    console.log(postData);
 
     const formData = new FormData();
 
@@ -67,6 +70,7 @@ const BoardWritePage = () => {
       centerId: formState.centerId,
       memberId: formState.memberId,
       contents: formState.contents.map((item, index) => ({
+        contentId: item.boardContentNo || null,
         type: item.type,
         contentText: item.contentText || null,
         contentFileKey: item.contentFile ? `contentFile_${index}` : null,
@@ -83,8 +87,9 @@ const BoardWritePage = () => {
     }
 
     // 📁 contents 내부 이미지 파일들
-    formState.contents.forEach((item) => {
-      if (item.type === 'IMG' && item.contentFile) {
+    formState.contents.forEach((item, index) => {
+      // console.log(postData.boardContents[index].contentFile);
+      if (item.type === 'IMG') {
         formData.append(`contentFiles`, item.contentFile);
       }
     });
@@ -92,11 +97,11 @@ const BoardWritePage = () => {
     console.log("전송할 데이터:", formData);
 
     // axios 전송 예시
-    await axios.post("http://localhost:8888/api/boards", formData, {
+    await axios.put(`http://localhost:8888/api/boards/${postData.boardNo}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     allowNavigation();
-    navigate(`/${category}/list`);
+    navigate(`/${category}/${postData.boardNo}`);
   };
 
   const updateFormField = (key, value) => {
@@ -164,8 +169,8 @@ const BoardWritePage = () => {
         Title={categoryName[category]}
         Color={'green'}
         ButtonProps={[
-          { Title: '작성하기', type : 'submit' },
-          { Title: '뒤로가기', func: () => handleGoBack()},,
+          { Title: '수정완료', type : "submit" },
+          { Title: '뒤로가기', func: () => handleGoBack()},
         ]}
       ></ContentHeader>
 
@@ -191,4 +196,4 @@ const PageContainer = styled.form`
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 `;
 
-export default BoardWritePage;
+export default BoardUpdatePage;

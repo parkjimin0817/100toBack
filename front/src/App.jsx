@@ -41,11 +41,11 @@ import { ToastContainer } from 'react-toastify';
 
 import ChildDetail from './pages/teacher/ChildDetail';
 
-import FamilyCommunityPage from './pages/teacher/FamilyCommunityPage';
+import FamilyNoticePage from './pages/teacher/FamilyNoticePage';
 import ManagerMyPage from './pages/manager/ManagerMyPage';
 import BoardWritePage from './pages/BoardWritePage';
-import AnnouncementPage from './pages/AnnouncementPage';
 import NoticePage from './pages/NoticePage';
+import NotePage from './pages/NotePage';
 import ChildLifeCheck from './pages/teacher/ChildLifeCheck';
 import MyHealth from './pages/teacher/MyHealth';
 import MyHealthDetail from './pages/teacher/MyHealthDetail';
@@ -71,6 +71,7 @@ import ParentChildList from './pages/parent/ParentChildList';
 import ClassRoomManage from './pages/manager/ClassRoomManage';
 import ScheduleManager from './pages/manager/SceduleManager';
 import BoardDetailPage from './pages/BoardDetailPage';
+import BoardUpdatePage from './pages/BoardUpdatePage';
 
 function App() {
   return (
@@ -123,10 +124,9 @@ function App() {
              * 5. 시설장 교사 휴가 / 워케이션 관리 페이지
              * 6. 시설장 교사 근태 관리 페이지
              * 7. 시설장 교사 소개 및 조회 페이지
+             * 8. 시설장 반 목록 / 생성 모달
              *
-             * 8. 시설장 교사 상세보기 페이지(만들어야함)
-             *
-             * 9. 시설장 반 목록 / 생성 모달
+             *    시설장 교사 상세보기 페이지(만들어야함)
              *
              * 10. 시설장 유치원 일정 페이지
              *
@@ -157,6 +157,7 @@ function App() {
              * 10-1. 목록
              * 10-2. 작성
              * 10-3. 상세
+             * 10-4. 수정
              *
              *  */}
             <Route path="/childlist" element={<ChildList />} />
@@ -167,11 +168,12 @@ function App() {
             <Route path="/dailyDetail/:schedule_no" element={<DailyScheduleDetail />} />
             <Route path="/child/detail/:id" element={<ChildDetail />} />
             <Route path="/teacher/workcation" element={<MyVacation />} />
-            <Route path="/childattendance/:id" element={<AttendancePage />} />
+            <Route path="/childattendance/:class_no" element={<AttendancePage />} />
             <Route path="/notice">
-              <Route path="list" element={<AnnouncementPage />} />
+              <Route path="list" element={<NoticePage />} />
               <Route path="write" element={<BoardWritePage />} />
-              <Route path=":id" element={<BoardDetailPage />} />
+              <Route path=':id' element={<BoardDetailPage />} />
+              <Route path='update/:id' element={<BoardUpdatePage />} />
             </Route>
 
             {/**
@@ -189,15 +191,18 @@ function App() {
              *
              *  */}
             <Route path="/family_notice">
-              <Route path="list" element={<FamilyCommunityPage />} />
+              <Route path="list" element={<FamilyNoticePage />} />
               <Route path="write" element={<BoardWritePage />} />
+              <Route path=':id' element={<BoardDetailPage />} />
+              <Route path='update/:id' element={<BoardUpdatePage />} />
             </Route>
             <Route path="/child/healthlist" element={<PersonalHealth />} />
             <Route path="/child/lifelist" element={<PersonalLife />} />
             <Route path="/note">
-              <Route path="list" element={<NoticePage />} />
+              <Route path="list" element={<NotePage />} />
               <Route path="write" element={<BoardWritePage />} />
               <Route path=":id" element={<BoardDetailPage />} />
+              <Route path='update/:id' element={<BoardUpdatePage />} />
             </Route>
           </Route>
 

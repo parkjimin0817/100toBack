@@ -11,6 +11,8 @@ import { useLoginStore } from '../../store/loginStore';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/axios.js';
 
+// 생략된 import 및 스타일 코드는 유지되고, 핵심 수정 관련 부분만 보여줍니다
+
 const TeacherMyPage = () => {
   const member = useLoginStore((state) => state.member);
   const navigate = useNavigate();
@@ -19,6 +21,7 @@ const TeacherMyPage = () => {
   const [myInfo, setMyInfo] = useState(null);
   const [editableInfo, setEditableInfo] = useState(null);
   const [centerInfo, setCenterInfo] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated || !member) {
@@ -56,18 +59,23 @@ const TeacherMyPage = () => {
   if (!member || !editableInfo || !centerInfo) return null;
 
   const handleSave = async () => {
-    try {
-      await api.patch(`/api/members/mypage?id=${member.memberNo}`, {
-        memberName: editableInfo.memberName,
-        memberBirth: editableInfo.memberBirth,
-        centerName: centerInfo.centerName,
-        centerTel: centerInfo.centerTel,
-        centerAddress: centerInfo.centerAddress,
-        centerType: centerInfo.centerType,
-      });
-      alert('수정 완료!');
-    } catch (e) {
-      alert('수정 실패: ' + e.message);
+    if (!isEditing) {
+      setIsEditing(true);
+    } else {
+      try {
+        await api.patch(`/api/members/mypage?id=${member.memberNo}`, {
+          memberName: editableInfo.memberName,
+          memberBirth: editableInfo.memberBirth,
+          centerName: centerInfo.centerName,
+          centerTel: centerInfo.centerTel,
+          centerAddress: centerInfo.centerAddress,
+          centerType: centerInfo.centerType,
+        });
+        alert('수정 완료!');
+        setIsEditing(false);
+      } catch (e) {
+        alert('수정 실패: ' + e.message);
+      }
     }
   };
 
@@ -77,7 +85,7 @@ const TeacherMyPage = () => {
         Title={'마이페이지'}
         Color={'blue'}
         FontSize="xl"
-        ButtonProps={[{ Title: '수정하기', func: handleSave }]}
+        ButtonProps={[{ Title: isEditing ? '수정완료' : '수정하기', func: handleSave }]}
       />
 
       <Wrapper>
@@ -86,12 +94,12 @@ const TeacherMyPage = () => {
             <MyPageProfileImage />
           </ProfileImgBox>
           <MyInfoBox>
-            <MyPageMyInfo info={editableInfo} isEditable={true} onChange={setEditableInfo} />
+            <MyPageMyInfo info={editableInfo} isEditable={isEditing} onChange={setEditableInfo} />
           </MyInfoBox>
           <CenterInfoBox>
             <MyPageCenterInfo
               centerInfo={centerInfo}
-              isEditable={member.memberType === 'MANAGER'}
+              isEditable={isEditing && member.memberType === 'MANAGER'}
               onChange={setCenterInfo}
             />
           </CenterInfoBox>
@@ -135,7 +143,7 @@ const InfoBox = styled.div`
   justify-content: space-between;
   margin: 10px 0;
   box-sizing: border-box;
-  gap: 20px; /* 컴포넌트 사이 간격 */
+  gap: 20px;
 `;
 const ProfileImgBox = styled.div`
   width: 20%;

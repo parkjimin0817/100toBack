@@ -3,6 +3,7 @@ package com.bridge.kinder.service;
 import com.bridge.kinder.dto.AttendanceDto;
 import com.bridge.kinder.dto.AttendanceDto.Response;
 import com.bridge.kinder.dto.AttendanceStatusDto;
+import com.bridge.kinder.enums.CommonEnums;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -15,4 +16,8 @@ public interface AttendanceService {
     AttendanceDto.Response recordWorkOut(int memberNo);
     //교사 월별 기록
     List<AttendanceStatusDto> getTeacherMonthlyAttendance(int memberNo, int centerNo, int year, int month);
+    //아동 출결 생성
+    List<AttendanceDto.CreateAttendance> createChildAttendance(AttendanceDto.CreateAttendance dto);
+    //아동 출결 상태 변경
+    AttendanceDto.UpdateAttendance updateChildAttendance(AttendanceDto.UpdateAttendance updateDto);
 }

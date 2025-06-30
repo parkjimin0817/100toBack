@@ -17,10 +17,10 @@ public class ChildAttendance {// 아동 출석체크
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CHILD_ATTENDANCE_NO")
-    private int childAttendanceNo;
+    private Long childAttendanceNo;
     //아동 출석체크 번호
 
-    @Column(name = "CREATE_DATE")
+    @Column(name = "CREATE_DATE", nullable = false)
     private LocalDate createDate;
     //생성일
 
@@ -43,8 +43,14 @@ public class ChildAttendance {// 아동 출석체크
 
 
     //---------------------------------------------------------------------------------------------
-    @PrePersist
-    protected void onCreate() {
-        this.createDate = LocalDate.now();
+//    @PrePersist
+//    protected void onCreate() {
+//        this.createDate = LocalDate.now();
+//    }
+
+
+    //---------------------------------------------------------------------------------------------
+    public void updateAttendance(CommonEnums.ChildAttendanceStatus status){
+        this.status = status;
     }
 }

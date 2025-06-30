@@ -1,30 +1,32 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import BoardTable from '../../components/Board/BoardTable';
 import theme from "../../styles/theme";
 import ContentHeader from '../../components/Common/ContentHeader';
 import { useNavigate } from 'react-router-dom';
+import { boardService } from '../../api/boards';
+import Pagination from '../../components/Common/Pagenation';
 
 const columns = [
   {
     label: '번호',
-    key: 'id',
+    key: 'boardNo',
     width: '100px',
     align: 'center'
   },
   {
     label: '반',
-    key: 'class',
+    key: 'className',
     width: '100px',
   },
   {
     label: '파일',
-    key: 'file',
+    key: 'attachment',
     width: '120px',
   },
   {
-    label: '등록자',
-    key: 'writer',
+    label: '작성자',
+    key: 'memberName',
     width: '120px',
   },
   {
@@ -32,10 +34,15 @@ const columns = [
     key: 'title',
   },
   {
-    label: '생성 날짜',
-    key: 'created_Date',
+    label: '작성일',
+    key: 'createDate',
     width: '160px',
   },
+  {
+    label: '조회수',
+    key: "views",
+    width: "100px",
+  }
 ];
 
 const BoardData = [
@@ -52,8 +59,30 @@ const tableInfo = {
   tbFontSize : theme.fontSizes.base,
 }
 
-const FamilyCommunityPage = () => {
+const FamilyNoticePage = () => {
+  const [data, setData] = useState(null);
+  const [page, setPage] = useState(1); // 1부터 시작
   const navigate = useNavigate();
+
+  useEffect(() => {
+
+    const getPostList = async () => {
+      try {
+        const responseData = await boardService.typeBoardList("FAMILY_NOTICE", page);
+        console.log(responseData);
+        setData(responseData);
+        // alert("게시글 조회 성공");
+      } catch (error) {
+        console.error("게시글 조회 실패 : ", error);
+        alert("게시글 조회 실패");
+      }
+    }
+    getPostList();
+  }, [page]);
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
 
   return (
     <PageContainer>
@@ -64,18 +93,27 @@ const FamilyCommunityPage = () => {
         ButtonProps={[
           { Title: '작성하기', 
             func: () => {
-              navigate("/familycommunity/write", { state: { category: "familycommunity" }, })
+              navigate("/family_notice/write", { state: { category: "family_notice" }, })
             } 
           },
         ]}
       ></ContentHeader>
-      <BoardContainer>
-        <BoardTable 
-          tableInfo={tableInfo}
-          columns={columns}
-          boardData={BoardData}
+      {data && (
+        <BoardContainer>
+          <BoardTable 
+            tableInfo={tableInfo}
+            columns={columns}
+            boardData={data.content}
+          />
+        </BoardContainer>
+      )}
+      {data && (
+        <Pagination
+          currentPage={data.number + 1}
+          totalPages={data.totalPages}
+          onPageChange={handlePageChange}
         />
-      </BoardContainer>
+      )}
     </PageContainer>
   )
 }
@@ -94,4 +132,4 @@ const BoardContainer = styled.div`
   margin-top: 50px;
 `;
 
-export default FamilyCommunityPage
+export default FamilyNoticePage

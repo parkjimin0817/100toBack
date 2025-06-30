@@ -27,7 +27,7 @@ const BoardDetail = ({ category, post }) => {
           {(category === "NOTE" || category === "LETTERHOME") && (
             <>
               <PostLabel>반 이름</PostLabel>
-              <PostDescription>{post.class.name}</PostDescription>
+              <PostDescription>{post.className}</PostDescription>
             </>
           )}
           <PostLabel>작성자</PostLabel>

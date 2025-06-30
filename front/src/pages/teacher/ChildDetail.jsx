@@ -11,11 +11,15 @@ import axios from 'axios';
 const ChildDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams(); // childNo
-  const [select, setSelect] = useState({
+  const [select, setSelect] = useState({ //건강 정보를 보냐, 생활 정보를 보냐, 출석을 보냐
     health: true,
     life: false,
     attendance: false,
   });
+  const [isEditing, setIsEditing] = useState(false);
+  const [editHealth, setEditHealth] = useState({});
+  const [isLifeEditing, setIsLifeEditing] = useState(false);
+  const [editActivity, setEditActivity] = useState({});
 
   const [child, setChild] = useState(null);
 
@@ -24,6 +28,7 @@ const ChildDetail = () => {
     return datetimeString.split('T')[0]; // '2025-06-26T10:40:47' → '2025-06-26'
   };
 
+  //만 몇 세인지 계산
   const getBirthAndAge = (jumin) => {
     if (!jumin || jumin.length !== 6) return '';
 
@@ -51,6 +56,7 @@ const ChildDetail = () => {
     return `${fullYear}.${String(mm).padStart(2, '0')}.${String(dd).padStart(2, '0')} (만 ${age}세)`;
   };
 
+  //정보 불러오기
   useEffect(() => {
     const fetchChildDetail = async () => {
       try {
@@ -73,6 +79,50 @@ const ChildDetail = () => {
       attendance: tab === 'attendance',
     });
   };
+
+  // 건강 정보 수정
+  const handleEditClick = () => {
+  if (!isEditing) {
+    setEditHealth({ ...child.health });
+    setIsEditing(true);
+  } else {
+    axios.patch(`http://localhost:8888/api/childs/updatehealthdata?childNo=${id}`, editHealth)
+      .then((res) => {
+        setChild((prev) => ({ ...prev, health: res.data }));
+        setIsEditing(false);
+      })
+      .catch((err) => {
+        console.error('건강정보 수정 실패:', err);
+        alert('수정 실패');
+      });
+  }
+};
+
+const handleInputChange = (field, value) => {
+  setEditHealth((prev) => ({ ...prev, [field]: value }));
+};
+
+// 생활 정보 수정
+const handleLifeEditClick = () => {
+  if (!isLifeEditing) {
+    setEditActivity({ ...child.activity });
+    setIsLifeEditing(true);
+  } else {
+    axios.patch(`http://localhost:8888/api/childs/updateactivitydata?childNo=${id}`, editActivity)
+      .then((res) => {
+        setChild((prev) => ({ ...prev, activity: res.data }));
+        setIsLifeEditing(false);
+      })
+      .catch((err) => {
+        console.error('생활정보 수정 실패:', err);
+        alert('수정 실패');
+      });
+  }
+};
+
+const handleActivityInputChange = (field, value) => {
+  setEditActivity((prev) => ({ ...prev, [field]: value }));
+};
 
   return (
     <>
@@ -186,39 +236,81 @@ const ChildDetail = () => {
                         <tbody>
                           <tr>
                             <FooterTd1>약 이름</FooterTd1>
-                            <FooterTd2>{child.health.medication_name}</FooterTd2>
+                            <FooterTd2>
+                              {isEditing ? (
+                                <input
+                                  value={editHealth.medication_name || ''}
+                                  onChange={(e) => handleInputChange('medication_name', e.target.value)}
+                                />
+                              ) : (
+                                child.health.medication_name
+                              )}
+                            </FooterTd2>
                           </tr>
                           <tr>
                             <FooterTd1>복용 용량</FooterTd1>
-                            <FooterTd2>{child.health.medication_amount}</FooterTd2>
+                            <FooterTd2>
+                              {isEditing ? (
+                                <input
+                                  value={editHealth.medication_amount || ''}
+                                  onChange={(e) => handleInputChange('medication_amount', e.target.value)}
+                                />
+                              ) : (
+                                child.health.medication_amount
+                              )}
+                            </FooterTd2>
                           </tr>
                           <tr>
                             <FooterTd1>복용 시간</FooterTd1>
-                            <FooterTd2>{child.health.medication_time}</FooterTd2>
+                            <FooterTd2>
+                              {isEditing ? (
+                                <input
+                                  value={editHealth.medication_time || ''}
+                                  onChange={(e) => handleInputChange('medication_time', e.target.value)}
+                                />
+                              ) : (
+                                child.health.medication_time
+                              )}
+                            </FooterTd2>
                           </tr>
                           <tr>
                             <FooterTd1>복용 기간</FooterTd1>
-                            <FooterTd2>{child.health.medication_period}</FooterTd2>
+                            <FooterTd2>
+                              {isEditing ? (
+                                <input
+                                  value={editHealth.medication_period || ''}
+                                  onChange={(e) => handleInputChange('medication_period', e.target.value)}
+                                />
+                              ) : (
+                                child.health.medication_period
+                              )}
+                            </FooterTd2>
                           </tr>
                           <tr>
                             <FooterTd1>복용 목적</FooterTd1>
-                            <FooterTd2>{child.health.medication_purpose}</FooterTd2>
+                            <FooterTd2>
+                              {isEditing ? (
+                                <input
+                                  value={editHealth.medication_purpose || ''}
+                                  onChange={(e) => handleInputChange('medication_purpose', e.target.value)}
+                                />
+                              ) : (
+                                child.health.medication_purpose
+                              )}
+                            </FooterTd2>
                           </tr>
                           <tr>
                             <FooterTd1>메모</FooterTd1>
-                            <FooterTd2>{child.health.medication_memo}</FooterTd2>
-                          </tr>
-                        </tbody>
-                      </FooterTable>
-                    </FooterBox>
-
-                    <FooterBox>
-                      <FooterTitle>예방접종</FooterTitle>
-                      <FooterTable>
-                        <tbody>
-                          <tr>
-                            <FooterTd1>내용</FooterTd1>
-                            <FooterTd2>{child.health.vaccination}</FooterTd2>
+                            <FooterTd2>
+                              {isEditing ? (
+                                <input
+                                  value={editHealth.medication_memo || ''}
+                                  onChange={(e) => handleInputChange('medication_memo', e.target.value)}
+                                />
+                              ) : (
+                                child.health.medication_memo
+                              )}
+                            </FooterTd2>
                           </tr>
                         </tbody>
                       </FooterTable>
@@ -230,19 +322,68 @@ const ChildDetail = () => {
                         <tbody>
                           <tr>
                             <FooterTd1>알레르기</FooterTd1>
-                            <FooterTd2>{child.health.allergy}</FooterTd2>
+                            <FooterTd2>
+                              {isEditing ? (
+                                <input
+                                  value={editHealth.allergy || ''}
+                                  onChange={(e) => handleInputChange('allergy', e.target.value)}
+                                />
+                              ) : (
+                                child.health.allergy
+                              )}
+                            </FooterTd2>
                           </tr>
                           <tr>
                             <FooterTd1>반응</FooterTd1>
-                            <FooterTd2>{child.health.allergy_reaction}</FooterTd2>
+                            <FooterTd2>
+                              {isEditing ? (
+                                <input
+                                  value={editHealth.allergy_reaction || ''}
+                                  onChange={(e) => handleInputChange('allergy_reaction', e.target.value)}
+                                />
+                              ) : (
+                                child.health.allergy_reaction
+                              )}
+                            </FooterTd2>
                           </tr>
                           <tr>
                             <FooterTd1>심각도</FooterTd1>
-                            <FooterTd2>{child.health.allergy_severity}</FooterTd2>
+                            <FooterTd2>
+                              {isEditing ? (
+                                <input
+                                  value={editHealth.allergy_severity || ''}
+                                  onChange={(e) => handleInputChange('allergy_severity', e.target.value)}
+                                />
+                              ) : (
+                                child.health.allergy_severity
+                              )}
+                            </FooterTd2>
+                          </tr>
+                          <tr>
+                            <FooterTd1>내용</FooterTd1>
+                            <FooterTd2>
+                              {isEditing ? (
+                                <input
+                                  value={editHealth.vaccination || ''}
+                                  onChange={(e) => handleInputChange('vaccination', e.target.value)}
+                                />
+                              ) : (
+                                child.health.vaccination
+                              )}
+                            </FooterTd2>
                           </tr>
                           <tr>
                             <FooterTd1>메모</FooterTd1>
-                            <FooterTd2>{child.health.allergy_memo}</FooterTd2>
+                            <FooterTd2>
+                              {isEditing ? (
+                                <input
+                                  value={editHealth.allergy_memo || ''}
+                                  onChange={(e) => handleInputChange('allergy_memo', e.target.value)}
+                                />
+                              ) : (
+                                child.health.allergy_memo
+                              )}
+                            </FooterTd2>
                           </tr>
                         </tbody>
                       </FooterTable>
@@ -251,7 +392,9 @@ const ChildDetail = () => {
                 )}
               </FooterInfoLine>
 
-              <LoadMoreButton>수정</LoadMoreButton>
+              <LoadMoreButton onClick={handleEditClick}>
+                {isEditing ? '수정완료' : '수정'}
+              </LoadMoreButton>
             </>
           )}
 
@@ -290,19 +433,55 @@ const ChildDetail = () => {
                     <tbody>
                       <tr>
                         <FooterTd1>좋아하는 음식</FooterTd1>
-                        <FooterTd2>{child.activity.like_food}</FooterTd2>
+                        <FooterTd2>
+                          {isLifeEditing ? (
+                            <input
+                              value={editActivity.like_food || ''}
+                              onChange={(e) => handleActivityInputChange('like_food', e.target.value)}
+                            />
+                          ) : (
+                            child.activity.like_food
+                          )}
+                        </FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>싫어하는 음식</FooterTd1>
-                        <FooterTd2>{child.activity.dislike_food}</FooterTd2>
+                        <FooterTd2>
+                          {isLifeEditing ? (
+                            <input
+                              value={editActivity.dislike_food || ''}
+                              onChange={(e) => handleActivityInputChange('dislike_food', e.target.value)}
+                            />
+                          ) : (
+                            child.activity.dislike_food
+                          )}
+                        </FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>식사량</FooterTd1>
-                        <FooterTd2>{child.activity.meal_amount}</FooterTd2>
+                        <FooterTd2>
+                          {isLifeEditing ? (
+                            <input
+                              value={editActivity.meal_amount || ''}
+                              onChange={(e) => handleActivityInputChange('meal_amount', e.target.value)}
+                            />
+                          ) : (
+                            child.activity.meal_amount
+                          )}
+                        </FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>메모</FooterTd1>
-                        <FooterTd2>{child.activity.meal_memo}</FooterTd2>
+                        <FooterTd2>
+                          {isLifeEditing ? (
+                            <input
+                              value={editActivity.meal_memo || ''}
+                              onChange={(e) => handleActivityInputChange('meal_memo', e.target.value)}
+                            />
+                          ) : (
+                            child.activity.meal_memo
+                          )}
+                        </FooterTd2>
                       </tr>
                     </tbody>
                   </FooterTable>
@@ -314,22 +493,51 @@ const ChildDetail = () => {
                     <tbody>
                       <tr>
                         <FooterTd1>친한친구</FooterTd1>
-                        <FooterTd2>{child.activity.close_friend}</FooterTd2>
+                        <FooterTd2>
+                          {isLifeEditing ? (
+                            <input
+                              value={editActivity.close_friend || ''}
+                              onChange={(e) => handleActivityInputChange('close_friend', e.target.value)}
+                            />
+                          ) : (
+                            child.activity.close_friend
+                          )}
+                        </FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>좋아하는 놀이</FooterTd1>
-                        <FooterTd2>{child.activity.like_play}</FooterTd2>
+                        <FooterTd2>
+                          {isLifeEditing ? (
+                            <input
+                              value={editActivity.like_play || ''}
+                              onChange={(e) => handleActivityInputChange('like_play', e.target.value)}
+                            />
+                          ) : (
+                            child.activity.like_play
+                          )}
+                        </FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>메모</FooterTd1>
-                        <FooterTd2>{child.activity.friend_memo}</FooterTd2>
+                        <FooterTd2>
+                          {isLifeEditing ? (
+                            <input
+                              value={editActivity.friend_memo || ''}
+                              onChange={(e) => handleActivityInputChange('friend_memo', e.target.value)}
+                            />
+                          ) : (
+                            child.activity.friend_memo
+                          )}
+                        </FooterTd2>
                       </tr>
                     </tbody>
                   </FooterTable>
                 </FooterBox2>
               </FooterInfoLine>
 
-              <LoadMoreButton>수정</LoadMoreButton>
+              <LoadMoreButton onClick={handleLifeEditClick}>
+                {isLifeEditing ? '수정완료' : '수정'}
+              </LoadMoreButton>
             </>
           )}
 
@@ -423,7 +631,7 @@ const FooterTable = styled.table`
 `;
 
 const FooterTd1 = styled.td`
-  width: 30%;
+  width: 40%;
   text-align: left;
   font-weight: ${({ theme }) => theme.fontWeights.bold};
 `;
@@ -628,7 +836,7 @@ const FooterInfoLine = styled.div`
 const FooterBox = styled.div`
   display: flex;
   flex-direction: column;
-  width: 280px;
+  width: 400px;
   height: 330px;
   background-color: rgba(255, 206, 101, 0.25);
   border-radius: 10px;
