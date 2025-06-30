@@ -98,5 +98,7 @@ export const API_ENDPOINTS = {
     GETLIST: (memberNo) => `/api/vacation/${memberNo}`,
     DELETE: (vacationNo) => `/api/vacation/delete/${vacationNo}`,
     GETLISTALL: (centerNo) => `/api/vacation/all/${centerNo}`,
+    APPROVE: (vacationNo) => `/api/vacation/approve/${vacationNo}`,
+    REJECT: (vacationNo) => `/api/vacation/reject/${vacationNo}`,
   },
 };

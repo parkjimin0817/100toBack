@@ -5,6 +5,7 @@ import { LuSearch } from 'react-icons/lu';
 import Modal from '../manager/components/VacationDetail';
 import useLoginStore from '../../store/loginStore';
 import { vacationService } from '../../api/vacation';
+import { toast } from 'react-toastify';
 
 const ApprovalList = () => {
   const [selectedType, setSelectedType] = useState('전체');
@@ -21,7 +22,10 @@ const ApprovalList = () => {
 
     vacationService
       .getVacationListAll(centerNo)
-      .then((data) => setVacations(data))
+      .then((data) => {
+        const sorted = data.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
+        setVacations(sorted);
+      })
       .catch((err) => console.error('휴가 목록 불러오기 실패 : ', err.message));
   }, [centerNo]);
 
@@ -31,6 +35,30 @@ const ApprovalList = () => {
   };
 
   const filteredData = selectedType === '전체' ? vacations : vacations.filter((v) => TYPE[v.type] === selectedType);
+
+  // 휴가 승인 로직
+  const handleApprove = async (vacationNo) => {
+    try {
+      const updatedVacation = await vacationService.approveVacation(vacationNo);
+      setVacations((prev) => prev.map((v) => (v.vacationNo === vacationNo ? updatedVacation : v)));
+      //console.log('업데이트된 리스트:', updatedList);
+      toast.success('휴가가 승인되었습니다.');
+    } catch (error) {
+      console.error('휴가 승인 실패:', error.message);
+    }
+  };
+
+  //휴가 거절 로직
+  const handleReject = async (vacationNo) => {
+    try {
+      const updatedVacation = await vacationService.rejectVacation(vacationNo);
+      setVacations((prev) => prev.map((v) => (v.vacationNo === vacationNo ? updatedVacation : v)));
+      console.log('업데이트된 : ', vacations);
+      toast.success('휴가가 거절되었습니다.');
+    } catch (error) {
+      console.error('휴가 거절 실패 :', error.message);
+    }
+  };
 
   return (
     <>
@@ -59,6 +87,7 @@ const ApprovalList = () => {
               <thead>
                 <tr>
                   <th>작성일</th>
+                  <th>신청자</th>
                   <th>분류</th>
                   <th>사유</th>
                   <th>첨부파일</th>
@@ -69,12 +98,15 @@ const ApprovalList = () => {
                 {filteredData.map((v, index) => (
                   <tr
                     key={index}
-                    onClick={() => {
+                    onClick={(e) => {
+                      if (e.target.tagName.toLowerCase() === 'button') return;
+                      if (e.target.closest('button')) return;
                       setSelectedData(v);
                       setOpenModal(true);
                     }}
                   >
                     <td>{v.createDate}</td>
+                    <td>{v.memberName}</td>
                     <td>
                       {TYPE[v.type] || v.type} - {v.typeDetail}
                     </td>
@@ -82,15 +114,31 @@ const ApprovalList = () => {
                     {/* <td>{v.attachment}</td> */}
                     <td>파일자리</td>
                     <td>
-                      {v.decision_date === null ? (
+                      {v.status === 'PENDING' ? (
                         <>
-                          <button className="approved">승인</button>
-                          <button className="rejected">거절</button>
+                          <button
+                            className="approved"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleApprove(v.vacationNo);
+                            }}
+                          >
+                            승인
+                          </button>
+                          <button
+                            className="rejected"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleReject(v.vacationNo);
+                            }}
+                          >
+                            거절
+                          </button>
                         </>
                       ) : v.status === 'APPROVED' ? (
-                        <ApprovedDecisionDate>{v.decision_date}</ApprovedDecisionDate>
+                        <ApprovedDecisionDate>{v.decisionDate}</ApprovedDecisionDate>
                       ) : (
-                        <RejectedDecisionDate>{v.decision_date}</RejectedDecisionDate>
+                        <RejectedDecisionDate>{v.decisionDate}</RejectedDecisionDate>
                       )}
                     </td>
                   </tr>
@@ -191,75 +239,76 @@ const TableWrapper = styled.div`
 
 const Table = styled.table`
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+  table-layout: fixed;
+  border-collapse: collapse;
   font-size: ${({ theme }) => theme.fontSizes.base};
 
   thead {
     background-color: ${({ theme }) => theme.colors.blue};
     color: ${({ theme }) => theme.colors.white};
-  }
 
-  th {
-    padding: ${({ theme }) => theme.spacing[3]};
-    text-align: center;
-    font-weight: ${({ theme }) => theme.fontWeights.bold};
-  }
-  th:nth-child(1) {
-    width: 20%;
-  }
-  th:nth-child(2) {
-    width: 20%;
-  }
-  th:nth-child(3) {
-    width: 30%;
-  }
-  th:nth-child(4) {
-    width: 15%;
-  }
-  th:nth-child(5) {
-    width: 20%;
-  }
+    th {
+      padding: ${({ theme }) => theme.spacing[3]};
+      text-align: center;
+      font-weight: ${({ theme }) => theme.fontWeights.bold};
+    }
 
-  tbody > tr {
-    cursor: pointer;
-    transition: background-color 0.3s;
-
-    &:hover {
-      background-color: ${({ theme }) => theme.colors.gray[100]};
+    th:nth-child(1) {
+      width: 14%;
+    }
+    th:nth-child(2) {
+      width: 10%;
+    }
+    th:nth-child(3) {
+      width: 18%;
+    }
+    th:nth-child(4) {
+      width: 28%;
+    }
+    th:nth-child(5) {
+      width: 10%;
+    }
+    th:nth-child(6) {
+      width: 20%;
     }
   }
 
-  td {
-    color: ${({ theme }) => theme.colors.blue};
-    font-weight: ${({ theme }) => theme.fontWeights.bold};
-    padding: ${({ theme }) => theme.spacing[3]};
-    text-align: center;
-    border-bottom: 2px solid ${({ theme }) => theme.colors.gray[400]};
-    min-height: 50px;
-  }
+  tbody {
+    tr {
+      cursor: pointer;
+      transition: background-color 0.2s;
 
-  td:nth-child(5) {
-    border-right: none;
-    display: flex;
-    justify-content: center;
-    gap: ${({ theme }) => theme.spacing[4]};
+      &:hover {
+        background-color: ${({ theme }) => theme.colors.gray[100]};
+      }
+    }
+
+    td {
+      padding: ${({ theme }) => theme.spacing[3]};
+      text-align: center;
+      font-weight: ${({ theme }) => theme.fontWeights.bold};
+      color: ${({ theme }) => theme.colors.blue};
+      border-bottom: 1px solid ${({ theme }) => theme.colors.gray[300]};
+      word-break: break-word;
+    }
   }
 
   button {
     border: none;
-    padding: 0 ${({ theme }) => theme.spacing[6]};
+    width: 70px;
+    height: 30px;
+    margin: 0 4px;
     border-radius: ${({ theme }) => theme.borderRadius.md};
     cursor: pointer;
     font-size: ${({ theme }) => theme.fontSizes.xs};
     color: ${({ theme }) => theme.colors.white};
   }
 
-  button.approved {
+  .approved {
     background-color: ${({ theme }) => theme.colors.green};
   }
 
-  button.rejected {
+  .rejected {
     background-color: ${({ theme }) => theme.colors.orange};
   }
 `;
@@ -267,25 +316,14 @@ const Table = styled.table`
 const ApprovedDecisionDate = styled.span`
   background-color: ${({ theme }) => theme.colors.green};
   color: ${({ theme }) => theme.colors.white};
-  border: none;
-  padding: 0 ${({ theme }) => theme.spacing[6]};
   border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: 4px 10px;
   font-size: ${({ theme }) => theme.fontSizes.xs};
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: inline-block;
 `;
 
-const RejectedDecisionDate = styled.span`
+const RejectedDecisionDate = styled(ApprovedDecisionDate)`
   background-color: ${({ theme }) => theme.colors.orange};
-  color: ${({ theme }) => theme.colors.white};
-  border: none;
-  padding: 0 ${({ theme }) => theme.spacing[6]};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  font-size: ${({ theme }) => theme.fontSizes.xs};
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;
 
 export default ApprovalList;

@@ -5,11 +5,13 @@ import MyAttendaceCard from './components/MyAttendaceCard';
 import TeacherAttendanceCalendar from '../../components/Common/TeacherAttendanceCalendar';
 import useLoginStore from '../../store/loginStore';
 import { attendanceService } from '../../api/attendance';
+import { memberService } from '../../api/member';
 
 const MyAttendance = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [attendances, setAttendances] = useState([]);
+  const [teacher, setTeacher] = useState({});
   const { member } = useLoginStore();
   const centerNo = member?.centerNo;
   const memberNo = member?.memberNo;
@@ -26,6 +28,18 @@ const MyAttendance = () => {
       .then((data) => setAttendances(data))
       .catch((err) => console.error('교사 근태 달별 목록 불러오기 실패', err));
   }, [memberNo, currentMonth]);
+
+  //입사일 가져오기
+  useEffect(() => {
+    if (!memberNo) return;
+
+    memberService
+      .getTeacherDetail(memberNo)
+      .then((data) => setTeacher(data))
+      .catch((err) => console.error('교사 상세 정보 불러오기 실패', err));
+  }, [memberNo]);
+
+  const joinDate = new Date(teacher.decision_date);
 
   //고른 날짜 근태 데이터
   const selectedRecord =
@@ -49,6 +63,7 @@ const MyAttendance = () => {
               onMonthChange={(date) => setCurrentMonth(date)}
               monthlyAttendanceList={attendances}
               disableFuture={true}
+              minDate={joinDate}
               maxDate={lastDateOfMonth}
             />
           </Div1>
@@ -58,6 +73,7 @@ const MyAttendance = () => {
               currentMonth={currentMonth}
               monthAttendance={attendances}
               attendance={selectedRecord}
+              startDate={joinDate}
             />
           </Div2>
         </Content>

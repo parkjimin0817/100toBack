@@ -16,6 +16,7 @@ const TeacherAttendance = () => {
   const [attendances, setAttendances] = useState([]);
   const { member } = useLoginStore();
   const centerNo = member?.centerNo;
+  const startDate = new Date(teacher.decision_date);
 
   //월별 데이터 불러오기
   useEffect(() => {
@@ -47,6 +48,9 @@ const TeacherAttendance = () => {
       .catch((err) => console.error('교사 상세 정보 불러오기 실패', err));
   }, [memberNo]);
 
+  const today = new Date();
+  const lastDateOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
   return (
     <Wrapper>
       <ContentHeader Title={'교사 근태 관리'} Color={'blue'} />
@@ -57,6 +61,8 @@ const TeacherAttendance = () => {
             onMonthChange={(date) => setCurrentMonth(date)}
             monthlyAttendanceList={attendances}
             disableFuture={true}
+            minDate={startDate}
+            maxDate={lastDateOfMonth}
           />
         </Div1>
         <Div2>
