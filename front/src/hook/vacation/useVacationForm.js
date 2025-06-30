@@ -57,7 +57,7 @@ export const useVacationForm = () => {
 
   const handleButtonClick = () => fileInputRef.current.click();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, onSuccess) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append('type', type === '휴가' ? 'VACATED' : type === '워케이션' ? 'WORKATION' : '');
@@ -78,6 +78,9 @@ export const useVacationForm = () => {
 
     try {
       const data = await vacationService.requestVacation(memberNo, formData);
+
+      toast.success('휴가 신청이 완료되었습니다.');
+      if (onSuccess) onSuccess();
       return data;
     } catch (err) {
       console.error('반 생성 실패 : ', err);

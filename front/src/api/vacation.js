@@ -29,4 +29,27 @@ export const vacationService = {
       throw new Error('서버 통신 불량' + error.message);
     }
   },
+
+  //교사별 휴가 조회
+  getVacationList: async (memberNo) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.VACATION.GETLIST(memberNo));
+
+      const camelDataList = data.map((item) => ({
+        vacationNo: item.vacation_no,
+        type: item.type,
+        typeDetail: item.type_detail,
+        startDate: item.start_date,
+        endDate: item.end_date,
+        reason: item.reason,
+        attachment: item.attachment,
+        status: item.status,
+        memberNo: item.member_no,
+      }));
+
+      return camelDataList;
+    } catch (error) {
+      throw new Error('서버 통신 불량' + error.message);
+    }
+  },
 };

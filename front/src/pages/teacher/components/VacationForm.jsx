@@ -4,7 +4,7 @@ import ContentHeader from '../../../components/Common/ContentHeader';
 import { useRef, useState } from 'react';
 import { useVacationForm } from '../../../hook/vacation/useVacationForm';
 
-const VacationForm = () => {
+const VacationForm = ({ onSuccess }) => {
   const {
     type,
     typeDetail,
@@ -29,7 +29,7 @@ const VacationForm = () => {
   return (
     <Wrapper>
       <ContentHeader Title="휴가 / 워케이션 신청하기" Color="blue" FontSize="lg" />
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={(e) => handleSubmit(e, onSuccess)}>
         <InputRow>
           <Label>종류 : </Label>
           <Select value={type} onChange={handleTypeChange}>

@@ -1,37 +1,17 @@
-import React from 'react';
 import styled from 'styled-components';
 
-const data = [
-  {
-    id: 1,
-    type: '휴가-연차',
-    startDate: '2025.06.23',
-    endDate: '2025.06.25',
-    reason: '하와이 갔다오려구요 길게 쓰면 ㅇㄹㅇㄹㅇㄹㅇㄹ어떻게 돼지',
-    file: 'hawai.docx',
-    status: '승인',
-  },
-  {
-    id: 2,
-    type: '병가',
-    startDate: '2025.06.23',
-    endDate: '2025.06.25',
-    reason: '감기몸살',
-    file: '',
-    status: '거절',
-  },
-  {
-    id: 3,
-    type: '병가',
-    startDate: '2025.06.23',
-    endDate: '2025.06.25',
-    reason: '웱',
-    file: '',
-    status: '대기',
-  },
-];
+const MyVacationList = ({ vacations }) => {
+  const TYPE = {
+    VACATED: '휴가',
+    WORKATION: '워케이션',
+  };
 
-const MyVacationList = () => {
+  const STATUS = {
+    PENDING: '대기',
+    APPROVED: '승인',
+    REJECTED: '거절',
+  };
+
   return (
     <Wrapper>
       <VacationTable>
@@ -39,6 +19,7 @@ const MyVacationList = () => {
           <tr>
             <th>번호</th>
             <th>종류</th>
+            <th>상세종류</th>
             <th>날짜</th>
             <th>사유</th>
             <th>첨부파일</th>
@@ -46,10 +27,11 @@ const MyVacationList = () => {
           </tr>
         </thead>
         <tbody>
-          {data.map((vacation, index) => (
-            <tr key={vacation.id}>
+          {vacations.map((vacation, index) => (
+            <tr key={vacation.vacationNo}>
               <td>{index + 1}</td>
-              <td>{vacation.type}</td>
+              <td>{TYPE[vacation.type] || vacation.type}</td>
+              <td>{vacation.typeDetail}</td>
               <td>
                 {vacation.startDate}-{vacation.endDate}
               </td>
@@ -57,7 +39,7 @@ const MyVacationList = () => {
               <td>{vacation.file || ''}</td>
               <td>
                 <Status disabled $status={vacation.status}>
-                  {vacation.status}
+                  {STATUS[vacation.status] || vacation.status}
                 </Status>
               </td>
             </tr>
@@ -94,39 +76,39 @@ const VacationTable = styled.table`
 
   th:nth-child(1),
   td:nth-child(1) {
-    width: 6%;
+    width: 5%;
   }
   th:nth-child(2),
   td:nth-child(2) {
-    width: 12%;
+    width: 10%;
   }
   th:nth-child(3),
   td:nth-child(3) {
-    width: 20%;
+    width: 10%;
   }
   th:nth-child(4),
   td:nth-child(4) {
-    width: 35%;
+    width: 30%;
+  }
+  th:nth-child(5),
+  td:nth-child(5) {
+    width: 20%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  th:nth-child(5),
-  td:nth-child(5) {
-    width: 15%;
-  }
   th:nth-child(6),
   td:nth-child(6) {
-    width: 12%;
+    width: 10%;
   }
 `;
 
 const Status = styled.button`
   width: 50px;
   background-color: ${({ theme, $status }) => {
-    if ($status === '승인') return theme.colors.green; // 초록
-    if ($status === '대기') return theme.colors.gray[500]; // 회색
-    if ($status === '거절') return theme.colors.orange; // 회색
+    if ($status === 'APPROVED') return theme.colors.green; // 초록
+    if ($status === 'PENDING') return theme.colors.gray[500]; // 회색
+    if ($status === 'REJECTED') return theme.colors.orange; // 회색
   }};
   color: ${({ theme }) => theme.colors.white};
   border-radius: ${({ theme }) => theme.borderRadius.lg};

@@ -1,11 +1,14 @@
 package com.bridge.kinder.controller;
 
 import com.bridge.kinder.dto.VacationDto;
+import com.bridge.kinder.dto.VacationDto.Response;
 import com.bridge.kinder.service.VacationService;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +27,12 @@ public class VacationController {
     @PostMapping("/request/{memberNo}")
     public ResponseEntity<VacationDto.Response> requestVacation(@PathVariable int memberNo, @ModelAttribute VacationDto.Request request) throws IOException  {
         return ResponseEntity.ok(vacationService.requestVacation(memberNo, request));
+    }
+
+    //멤버 별 휴가 목록 불러오기
+    @GetMapping("/{memberNo}")
+    public ResponseEntity<List<Response>> getVacation(@PathVariable int memberNo)  {
+        return ResponseEntity.ok(vacationService.getVacationsByMember(memberNo));
     }
 
 

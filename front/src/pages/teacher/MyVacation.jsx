@@ -1,20 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ContentHeader from '../../components/Common/ContentHeader';
 import styled from 'styled-components';
 import VacationForm from './components/VacationForm';
 import VacationDateInfoBox from './components/VacationDateInfoBox';
 import MyVacationList from './components/MyVacationList';
+import { vacationService } from '../../api/vacation';
+import useLoginStore from '../../store/loginStore';
 
 const MyVacation = () => {
+  const { member } = useLoginStore();
+  const memberNo = member?.memberNo;
+  const [vacations, setVacations] = useState([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const data = await vacationService.getVacationList(memberNo);
+    setVacations(data);
+  };
+
+  const hanldeFormSuccess = () => {
+    fetchData();
+  };
   return (
     <Wrapper>
       <ContentHeader Title={'휴가 관리'} Color={'blue'} />
       <Content>
-        <VacationForm />
+        <VacationForm onSuccess={hanldeFormSuccess} />
         <VacationDateInfoBox />
       </Content>
       <Content>
-        <MyVacationList />
+        <MyVacationList vacations={vacations} />
       </Content>
     </Wrapper>
   );

@@ -10,7 +10,9 @@ import com.bridge.kinder.repository.MemberRepository;
 import com.bridge.kinder.repository.VacationRepository;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,5 +53,14 @@ public class VacationServiceImpl implements VacationService {
             vacationRepository.save(vacation);
 
         return VacationDto.Response.toDto(vacation, member);
+    }
+
+    @Override
+    public List<Response> getVacationsByMember(int memberNo) {
+        List<Vacation> vacations = vacationRepository.findByMember_MemberNo(memberNo);
+
+        return vacations.stream()
+                .map( v -> VacationDto.Response.toDto(v, v.getMember()))
+                .collect(Collectors.toList());
     }
 }
