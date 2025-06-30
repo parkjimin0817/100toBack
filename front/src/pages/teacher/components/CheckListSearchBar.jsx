@@ -1,34 +1,38 @@
 import React from 'react';
-import { useState } from 'react';
-import styled, { ThemeConsumer } from 'styled-components';
+import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/locale';
 import { CiCalendar } from 'react-icons/ci';
 import Button from '../../../components/Common/Button';
 import 'react-datepicker/dist/react-datepicker.css';
-import { List } from '../../../components/ChildDummyData'; // 더미데이터 활용
 
-const classList = Array.from(new Set(List.map((child) => child.className).filter(Boolean)));
-
-const CheckListSearchBar = ({ selectedDate, setSelectedDate, selectedClass, setSelectedClass, onSearch }) => {
+const CheckListSearchBar = ({
+  selectedDate,
+  setSelectedDate,
+  selectedClassNo,
+  setSelectedClassNo,
+  onSearch,
+  classList,
+}) => {
   return (
     <SearchBox>
-      <SelectClass value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}>
+      <SelectClass value={selectedClassNo} onChange={(e) => setSelectedClassNo(e.target.value)}>
         <option value="" disabled>
           반 선택
         </option>
-        {classList.map((className) => (
-          <option key={className} value={className}>
-            {className}
-          </option>
-        ))}
+        {Array.isArray(classList) &&
+          classList.map((cls) => (
+            <option key={cls.class_no} value={cls.class_no}>
+              {cls.class_name}
+            </option>
+          ))}
       </SelectClass>
       <DateInputWrapper>
         <StyledDatePicker
           selected={selectedDate}
           onChange={(date) => setSelectedDate(date)}
           locale={ko}
-          dateFormat="yyyy.MM.dd (eee)" // 요일까지 출력!
+          dateFormat="yyyy.MM.dd (eee)"
           placeholderText="날짜 선택"
           maxDate={new Date()}
         />
@@ -42,6 +46,8 @@ const CheckListSearchBar = ({ selectedDate, setSelectedDate, selectedClass, setS
 };
 
 export default CheckListSearchBar;
+
+// 스타일 컴포넌트는 이전 코드 그대로 유지
 
 const SearchBox = styled.div`
   width: 100%;
@@ -69,8 +75,7 @@ const StyledDatePicker = styled(DatePicker)`
   width: 100%;
   height: 30px;
   padding: 8px 12px;
-  outline: none;
-  padding-right: 36px; /* 아이콘 공간 확보 */
+  padding-right: 36px;
   border: 1px solid ${({ theme }) => theme.colors.gray[400]};
   border-radius: 8px;
   font-size: ${({ theme }) => theme.fontSizes.sm};

@@ -4,7 +4,7 @@ import ContentHeader from '../../../components/Common/ContentHeader';
 import { useRef, useState } from 'react';
 import { useVacationForm } from '../../../hook/vacation/useVacationForm';
 
-const VacationForm = () => {
+const VacationForm = ({ onSuccess }) => {
   const {
     type,
     typeDetail,
@@ -24,12 +24,20 @@ const VacationForm = () => {
     setStartDate,
     setEndDate,
     setReason,
+    resetForm,
   } = useVacationForm();
 
   return (
     <Wrapper>
       <ContentHeader Title="휴가 / 워케이션 신청하기" Color="blue" FontSize="lg" />
-      <Form onSubmit={handleSubmit}>
+      <Form
+        onSubmit={(e) => {
+          handleSubmit(e, () => {
+            onSuccess(); // 리스트 리프레시
+            resetForm(); // 폼 초기화
+          });
+        }}
+      >
         <InputRow>
           <Label>종류 : </Label>
           <Select value={type} onChange={handleTypeChange}>
@@ -40,7 +48,9 @@ const VacationForm = () => {
           <Select value={typeDetail} onChange={handleDetailChange} disabled={!type}>
             <option value="">선택하세요</option>
             {(getDetailOptions() || []).map((option) => (
-              <option value={option.value}>{option.label}</option>
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
             ))}
           </Select>
           {typeDetail === '기타' && (
@@ -56,7 +66,7 @@ const VacationForm = () => {
           <Label>날짜 : </Label>
           <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
           <Text>-</Text>
-          <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+          <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} min={startDate} />
         </InputRow>
         <InputRow>
           <Label>사유 : </Label>

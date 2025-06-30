@@ -25,6 +25,7 @@ import com.bridge.kinder.repository.ChildRepository;
 import com.bridge.kinder.repository.MemberChildRepository;
 import com.bridge.kinder.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -234,6 +235,28 @@ public class ChildServiceImpl implements ChildService {
                 .orElseThrow(() -> new EntityNotFoundException("정상적으로 수정되지 않았습니다."));
         return ChildDto.activity.toDto(activityData);
     }
+
+    @Override
+    public List<healthLog> getHealthLog(int classNo, LocalDate date) {
+        return childRepository.getHealthLog(classNo,date).stream()
+                .map(ChildDto.healthLog::toDto)
+                .collect(Collectors.toList());
+    }
+
+    //아동 생활 로그 데이터 날짜,반 필터링해서 불러오기
+    @Override
+    public List<activityLog> getActivityLog(int classNo, LocalDate date) {
+        return childRepository.getActivityLog(classNo,date).stream()
+                .map(ChildDto.activityLog::toDto)
+                .collect(Collectors.toList());
+    }
+
+//    @Override
+//    public activityLog updateActivityLog(int childNo, LocalDate date, activityLog data) {
+//        ChildHealthData healthData = childRepository.updateHealthData(childNo, data)
+//                .orElseThrow(() -> new EntityNotFoundException("정상적으로 수정되지 않았습니다."));
+//        return ChildDto.health.toDto(healthData);
+//    }
 
 
     //부모 번호로 해당 연결된 아동 리스트 가져오기
