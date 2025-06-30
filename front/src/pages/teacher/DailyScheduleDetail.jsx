@@ -8,48 +8,33 @@ import useScheduleStore from '../../store/scheduleStore';
 import { useScheduleService } from '../../api/schedule';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
+import { FaPlus, FaMinus } from 'react-icons/fa';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
+import useLoginStore from '../../store/loginStore';
 
 const DailyScheduleDetail = () => {
-  const { schedule } = useScheduleStore();
   // const {} = useDailyScheduleForm();
+  const { member } = useLoginStore();
 
-  const classNo = useParams();
+  const { class_no } = useParams();
 
-  const [inSchedule, setInSchedule] = useState([
-    { schedule_no: 0, center_no: 0, class_no: 0, member_no: 0, start_time: '09:00', description: '', create_date: '' },
-    { schedule_no: 0, center_no: 0, class_no: 0, member_no: 0, start_time: '10:00', description: '', create_date: '' },
-    { schedule_no: 0, center_no: 0, class_no: 0, member_no: 0, start_time: '11:00', description: '', create_date: '' },
-    { schedule_no: 0, center_no: 0, class_no: 0, member_no: 0, start_time: '12:00', description: '', create_date: '' },
-    { schedule_no: 0, center_no: 0, class_no: 0, member_no: 0, start_time: '13:00', description: '', create_date: '' },
-    { schedule_no: 0, center_no: 0, class_no: 0, member_no: 0, start_time: '14:00', description: '', create_date: '' },
-    { schedule_no: 0, center_no: 0, class_no: 0, member_no: 0, start_time: '15:00', description: '', create_date: '' },
-    { schedule_no: 0, center_no: 0, class_no: 0, member_no: 0, start_time: '16:00', description: '', create_date: '' },
-    { schedule_no: 0, center_no: 0, class_no: 0, member_no: 0, start_time: '17:00', description: '', create_date: '' },
-    { schedule_no: 0, center_no: 0, class_no: 0, member_no: 0, start_time: '18:00', description: '', create_date: '' },
-  ]);
+  //데이터를 모아서 보내줄 useState
+  const [ad, setAd] = useState([]);
 
-  const updated = inSchedule.map((item) => {
-    const match = schedule.find((s) => s.start_time === item.start_time);
-    return {
-      ...item,
-      schedule_no: match ? match.schedule_no : 0,
-      center_no: match ? match.center_no : 0,
-      class_no: match ? match.class_no : 0,
-      member_no: match ? match.member_no : 0,
-      description: match ? match.description : '',
-      create_date: match ? match.create_date : '',
-    };
-  });
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [title, setTitle] = useState('');
+  const [writeAuthority, setWriteAuthority] = useState(false);
+
+  const today = dayjs(); // 오늘 날짜
+  const [thisday, setThisday] = useState(today.format('YYYY-MM-DD'));
 
   //년도, 월, 일, 요일(숫자), 요일(글자)
   const [arWeek, setArWeek] = useState([]);
 
+  //년도, 월, 일, 요일(숫자), 요일(글자) 추가
   useEffect(() => {
-    setInSchedule(updated);
-
     const today = dayjs();
     const startOfWeek = today.startOf('week'); // 일요일 시작
 
@@ -64,67 +49,69 @@ const DailyScheduleDetail = () => {
         day: date.date(),
         weekday: date.day(), // 0 (일) ~ 6 (토)
         weekdayNames: weekdayNames[date.day()],
-        allDate: date.format('YYYY.MM.DD'),
+        allDate: date.format('YYYY-MM-DD'),
       };
     });
 
     setArWeek(newWeek);
   }, []);
 
+  console.log(arWeek);
+
+  //입력 시 상태 변경
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setInSchedule((prev) => prev.map((item) => (item.start_time === name ? { ...item, description: value } : item)));
+    switch (name) {
+      case 'activity':
+        setTitle(value);
+        break;
+      case 'startTime':
+        setStartTime(value);
+        break;
+      case 'endTime':
+        setEndTime(value);
+      default:
+        break;
+    }
   };
 
-  const [writeAuthority, setWriteAuthority] = useState(false);
-
+  //수정 / 등록
   const handleSubmit = (ev) => {
     ev.preventDefault();
 
     setWriteAuthority(false);
   };
 
-  const today = new Date(); // 기준: 오늘
-  const year = today.getFullYear();
-  const month = today.getMonth() + 1; // JS는 0-based
-  const day = today.getDate();
-  const [thisday, setThisday] = useState(
-    year + '.' + month.toString().padStart(2, '0') + '.' + day.toString().padStart(2, '0')
-  );
-
-  //데이터를 모아서 보내줄 useState
-  const [ad, setAd] = useState({
-    center_no: 1,
-    class_no: classNo,
-    member_no: 1,
-    create_date: thisday,
-    type: 'ClassName',
-  });
-
-  const { inputSchedule } = useScheduleStore();
-  const selecthandle = async (s) => {
+  const selecthandle = async (sch) => {
     try {
-      setThisday(s.allDate);
+      setThisday(sch.allDate);
+
+      setAd({
+        title: title,
+        center_no: member.center_no,
+        class_no: class_no,
+        member_no: member.member_no,
+        create_date: thisday,
+        start_time: startTime,
+        end_time: endTime,
+        type: 'CLASSROOM',
+      });
 
       const schedule = await useScheduleService.searchDate(ad);
       if (!schedule) {
         throw new Error('일과표 없음');
       }
 
-      inputSchedule({
-        center_no: schedule.center_no,
-        class_no: schedule.class_no,
-        member_no: schedule.member_no,
-        description: schedule.description,
-        start_time: schedule.start_time,
-      });
-
       toast.success('일과표 불러오기 성공');
     } catch (error) {
       toast.error('일과표 불러오는 중에 문제 발생하였습니다.');
       console.error('불러오기 에러 : ', error);
     }
+  };
+
+  const handleAddButton = () => {
+    setAd();
   };
 
   return (
@@ -148,16 +135,22 @@ const DailyScheduleDetail = () => {
           <WeekDiv>
             <WeekTable>
               <WeekTbody>
-                {arWeek.map((s) => (
+                {arWeek.map((schedule) => (
                   <WeekTr
-                    key={s.day}
+                    key={schedule.day}
                     $thisday={thisday}
-                    $day={s.year + '.' + s.month.toString().padStart(2, '0') + '.' + s.day.toString().padStart(2, '0')}
-                    $weekNumber={s.weekday}
-                    onClick={() => selecthandle(s)}
+                    $day={
+                      schedule.year +
+                      '-' +
+                      schedule.month.toString().padStart(2, '0') +
+                      '-' +
+                      schedule.day.toString().padStart(2, '0')
+                    }
+                    $weekNumber={schedule.weekday}
+                    onClick={() => selecthandle(schedule)}
                   >
-                    <td>{s.weekdayNames}</td>
-                    <td>{s.day}</td>
+                    <td>{schedule.weekdayNames}</td>
+                    <td>{schedule.day}</td>
                   </WeekTr>
                 ))}
               </WeekTbody>
@@ -169,31 +162,64 @@ const DailyScheduleDetail = () => {
           <Form onSubmit={handleSubmit}>
             <Table>
               <Tbody>
-                {inSchedule.map((sc) => (
-                  <Tr key={sc.schedule_no || sc.start_time}>
-                    <Td>
-                      <IconDiv>
-                        <GoDotFill />
-                      </IconDiv>
-                    </Td>
-                    <Td>{sc.start_time}</Td>
-                    <Td>
-                      {writeAuthority === true ? (
-                        <Input
-                          type="text"
-                          name={sc.start_time}
-                          value={sc.description}
-                          onChange={handleChange}
-                          placeholder="활동 입력하기"
-                        />
-                      ) : (
-                        <ActivityTitle>
-                          {sc.description === '' ? <ActivityNone>활동을 등록해주세요.</ActivityNone> : sc.description}
-                        </ActivityTitle>
-                      )}
-                    </Td>
-                  </Tr>
-                ))}
+                <Tr>
+                  <Td>
+                    <IconDiv>
+                      <GoDotFill />
+                    </IconDiv>
+                  </Td>
+                  <Td>
+                    {writeAuthority === true ? (
+                      <TableInput
+                        type="text"
+                        name="startTime"
+                        value={startTime}
+                        onChange={handleChange}
+                        placeholder="시작 시간"
+                      />
+                    ) : (
+                      <ActivityTitle>
+                        {startTime === '' ? <ActivityNone>시작 시간</ActivityNone> : startTime}
+                      </ActivityTitle>
+                    )}
+                  </Td>
+                  <Td>-</Td>
+                  <Td>
+                    {writeAuthority === true ? (
+                      <TableInput
+                        type="text"
+                        name="endTime"
+                        value={endTime}
+                        onChange={handleChange}
+                        placeholder="종료 시간"
+                      />
+                    ) : (
+                      <ActivityTitle>{endTime === '' ? <ActivityNone>종료 시간</ActivityNone> : endTime}</ActivityTitle>
+                    )}
+                  </Td>
+                  <Td>
+                    {writeAuthority === true ? (
+                      <Input
+                        type="text"
+                        name="activity"
+                        value={title}
+                        onChange={handleChange}
+                        placeholder="활동 입력하기"
+                      />
+                    ) : (
+                      <ActivityTitle>
+                        {title === '' ? <ActivityNone>활동을 등록해주세요.</ActivityNone> : title}
+                      </ActivityTitle>
+                    )}
+                  </Td>
+                </Tr>
+                <Tr>
+                  <AddButtonTd>
+                    <AddButton type="button" onClick={handleAddButton}>
+                      <FaPlus />
+                    </AddButton>
+                  </AddButtonTd>
+                </Tr>
               </Tbody>
             </Table>
           </Form>
@@ -202,6 +228,30 @@ const DailyScheduleDetail = () => {
     </Content>
   );
 };
+
+const TableInput = styled.input`
+  width: 70px;
+  border-radius: ${({ theme }) => theme.borderRadius.base};
+  box-shadow: ${({ theme }) => theme.shadows.md};
+  text-align: center;
+`;
+
+const AddButtonTd = styled.td`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const AddButton = styled.button`
+  width: 100%;
+  height: 30px;
+  border: 1px solid ${({ theme }) => theme.colors.gray[400]};
+  border-radius: ${({ theme }) => theme.borderRadius.base};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const Content = styled.div`
   width: 100%;
@@ -259,7 +309,7 @@ const Div = styled.div`
 const Border = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.gray[400]};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
-  width: 420px;
+
   box-shadow: ${({ theme }) => theme.shadows.md};
 `;
 
@@ -308,6 +358,7 @@ const Tr = styled.tr`
   align-items: center;
   height: 33px;
   gap: 10px;
+  width: 100%;
 `;
 
 const ActivityNone = styled.span`
