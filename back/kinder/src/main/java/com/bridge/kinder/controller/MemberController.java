@@ -92,9 +92,16 @@ public class MemberController {
 
     //마이페이지에서 정보 수정(교사일 경우 본인 이름,전화번호만 수정 가능, 시설장일 경우 시설정보까지 수정 가능)
     @PatchMapping("/mypage")
-    public ResponseEntity<String> updateMypage(@RequestParam int id, @RequestBody MypageDto.Update dto){
+    public ResponseEntity<String> updateMyPage(@RequestParam int id, @RequestBody MypageDto.Update dto){
         String memberNo = memberService.updateMyPage(id, dto);
         return ResponseEntity.ok(memberNo);
+    }
+
+    //학부모 마이페이지 수정
+    @PatchMapping("/mypage/parent")
+    public ResponseEntity<MemberDto.updateParentInfo> updateParentIfo(@RequestBody MemberDto.updateParentInfo dto){
+        System.out.println(dto.getMember_no());
+        return ResponseEntity.ok(memberService.updateParentInfo(dto));
     }
 
     //멤버 PWD 찾기(아이디)

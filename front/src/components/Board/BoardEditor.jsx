@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ImageInputBlock from './ImageInputBlock';
 import TextInputBlock from './TextInputBlock';
 import styled from 'styled-components';
 import { FaMinus, FaPlus } from 'react-icons/fa';
+import { classService } from '../../api/class';
 
 const BoardEditor = (
   { category, 
@@ -13,6 +14,21 @@ const BoardEditor = (
     selectBlock, 
     deleteBlock }
 ) => {
+  const [classRoomList, setClassRoomList] = useState([]);
+
+  useEffect(() => {
+    const getClassRoomList = async () => {
+      try {
+        const responseData = await classService.classroomlist(formState.centerId);
+        console.log(responseData);
+        setClassRoomList(responseData);
+      } catch (error) {
+        console.error("반 조회 실패 : ", error);
+          alert("반 조회 실패");
+      }
+    }
+    getClassRoomList();
+  }, [])
 
   return (
     <FormContainer>
@@ -27,8 +43,15 @@ const BoardEditor = (
           category === 'note') && (
           <>
           {/* 로딩시, api 호출해서 옵션을 채울 예정  */}
-            <HeadLabel htmlFor='title'>반 선택</HeadLabel>
-            <HeadInput id='title' type="text" value={formState?.classRoom} onChange={(e) => updateFormField("classRoom",e.target.value)} />
+            <HeadLabel htmlFor='classRoom'>반 선택</HeadLabel>
+            <Select id='classRoom' type="text" value={formState?.classRoomNo} onChange={(e) => updateFormField("classRoomNo",e.target.value)} >
+              <option value="선택">반 선택</option>
+              {classRoomList.map((classRoom) => (
+                <option key={classRoom.class_no} value={classRoom.class_no}>
+                  {classRoom.class_name}
+                </option>
+              ))}
+            </Select>
           </>
           )
         }
@@ -120,6 +143,11 @@ const AddBlockButton = styled.button`
   height: 80px;
   border-radius: 5px;
   border: 1px solid #BEBEBE;
+`;
+const Select = styled.select`
+  flex : 1;
+  border: 1px solid #BEBEBE;
+  padding: 10px;
 `;
 
 export default BoardEditor;

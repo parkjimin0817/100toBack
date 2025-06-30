@@ -105,9 +105,9 @@ const teacherSidebar = [
     subItems: [
       { label: '공지사항', link: '/notice/list' },
       { label: '가정통신문', link: '/family_notice/list' },
-      { label: '식단표', link: '' },
+      { label: '식단표', link: '/meal_plan/list' },
       { label: '알림장', link: '/note/list' },
-      { label: '사진 게시판', link: '' },
+      { label: '사진 게시판', link: '/photo/list' },
     ],
   },
   {
@@ -165,9 +165,9 @@ const managerSidebar = [
     subItems: [
       { label: '공지사항', link: '/notice/list' },
       { label: '가정통신문', link: '/family_notice/list' },
-      { label: '식단표', link: '*' },
+      { label: '식단표', link: '/meal_plan/list' },
       {label : "알림장", link : "/note/list"},
-      { label: '사진 게시판', link: '*' },
+      { label: '사진 게시판', link: '/photo/list' },
     ],
   },
   {
@@ -215,7 +215,7 @@ const parentSidebar = [
     subItems: [
       { label: '유치원 일정', link: '*' },
       { label: '일과표', link: '/daily' },
-      { label: '사진 게시판', link: '*' },
+      { label: '사진 게시판', link: '/photo/list' },
     ],
   },
   {
@@ -226,7 +226,7 @@ const parentSidebar = [
     subItems: [
       { label: '공지사항', link: '/notice/list' },
       { label: '가정통신문', link: '/family_notice/list' },
-      { label: '식단표', link: '*' },
+      { label: '식단표', link: '/meal_plan/list' },
       {label : "알림장", link : "/note/list"},
     ],
   },

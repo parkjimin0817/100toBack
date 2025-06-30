@@ -127,6 +127,23 @@ public class ChildController {
 
     }
 
+//    //아동 생활 로그 데이터 삽입,수정하기
+//    @PatchMapping("/updateactivitylog")
+//    public ResponseEntity<ChildDto.activityLog> updateActivityLog(@RequestParam int childNo,
+//                                                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+//                                                @RequestBody ChildDto.activityLog data) {
+//        return ResponseEntity.ok(childService.updateActivityLog(childNo, date, data));
+//
+//    }
+
+    //부모 번호로 해당 연결된 아동 리스트 가져오기
+    @GetMapping("/parentChild")
+    public ResponseEntity<List<ChildDto.myPageChilds>> myChilds(@RequestParam int memberNo){
+        return ResponseEntity.ok(childService.myPageChilds(memberNo));
+    }
+
+
+
     //아동 건강 로그 체크리스트 수정
 
 

@@ -255,6 +255,14 @@ public class ChildRepositoryImpl implements ChildRepository {
     }
 
     @Override
+    public List<Child> findByMemberNo(int memberNo) {
+        return em.createQuery(
+                        "SELECT c FROM MemberChild mc JOIN mc.child c WHERE mc.member.memberNo = :memberNo", Child.class)
+                .setParameter("memberNo", memberNo)
+                .getResultList();
+    }
+
+    @Override
     public Optional<ChildActivityLog> updateActivityLog(int childNo, LocalDate date, activityLog data) {
         // 날짜 기준 범위 계산
         LocalDateTime start = date.atStartOfDay();

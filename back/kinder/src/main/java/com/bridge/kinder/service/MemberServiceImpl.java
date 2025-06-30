@@ -10,6 +10,7 @@ import com.bridge.kinder.dto.MemberDto.DetailMemberDto;
 import com.bridge.kinder.dto.MemberDto.modalResponse;
 import com.bridge.kinder.dto.MemberDto.teacherListResponse;
 import com.bridge.kinder.dto.MemberDto.updateClass;
+import com.bridge.kinder.dto.MemberDto.updateParentInfo;
 import com.bridge.kinder.dto.MemberTeacherDto;
 import com.bridge.kinder.dto.MypageDto;
 import com.bridge.kinder.entity.*;
@@ -264,6 +265,20 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.myPageUpdate(id, dto).get();
         Center center = centerRepository.myPageUpdate(id, dto).get();
         return "";
+    }
+
+    //학부모 정보 변경
+    @Override
+    public updateParentInfo updateParentInfo(updateParentInfo dto) {
+        Member member = memberRepository.findByMemberNo(dto.getMember_no())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
+
+        member.changeMemberName(dto.getMember_name());
+        member.changeMemberBirth(dto.getMember_birth());
+        member.changeMemberPhone(dto.getMember_phone());
+        member.changeMemberProfile(dto.getMember_profile());
+
+        return updateParentInfo.toDto(member);
     }
 
     @Override

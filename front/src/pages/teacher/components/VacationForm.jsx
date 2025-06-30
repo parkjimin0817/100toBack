@@ -24,12 +24,20 @@ const VacationForm = ({ onSuccess }) => {
     setStartDate,
     setEndDate,
     setReason,
+    resetForm,
   } = useVacationForm();
 
   return (
     <Wrapper>
       <ContentHeader Title="휴가 / 워케이션 신청하기" Color="blue" FontSize="lg" />
-      <Form onSubmit={(e) => handleSubmit(e, onSuccess)}>
+      <Form
+        onSubmit={(e) => {
+          handleSubmit(e, () => {
+            onSuccess(); // 리스트 리프레시
+            resetForm(); // 폼 초기화
+          });
+        }}
+      >
         <InputRow>
           <Label>종류 : </Label>
           <Select value={type} onChange={handleTypeChange}>

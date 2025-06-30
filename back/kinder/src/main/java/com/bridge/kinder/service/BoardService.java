@@ -17,6 +17,8 @@ public interface BoardService {
     Page<BoardDto.NoticeBoardDto> getNoticeBoards(CommonEnums.BoardType type, int page, int size);
     Page<BoardDto.NoteBoardDto> getNoteBoards(CommonEnums.BoardType type, int page, int size);
     Page<BoardDto.FamilyNoticeDto> getFamilyNoticeBoards(CommonEnums.BoardType type, int page, int size);
+    Page<BoardDto.PhotoBoardDto> getPhotoBoards(CommonEnums.BoardType type, int page, int size);
+    Page<BoardDto.MealPlanBoardDto> getMealPlanBoards(CommonEnums.BoardType type, int page, int size);
 
     int updateBoard(Integer boardNo, BoardDto.Update dto, MultipartFile file, List<MultipartFile> contentFiles) throws IOException;
 }
