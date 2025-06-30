@@ -156,6 +156,28 @@ public class BoardServiceImpl implements BoardService {
         long total = boardRepository.countByType(type);
         return new PageImpl<>(result, PageRequest.of(page - 1, size), total);
     }
+    @Override
+    public Page<BoardDto.PhotoBoardDto> getPhotoBoards(CommonEnums.BoardType type, int page, int size) {
+        int offset = (page - 1) * size;
+        List<Board> boards = boardRepository.findByType(type, offset, size);
+        List<BoardDto.PhotoBoardDto> result = boards.stream()
+                .map(BoardDto.PhotoBoardDto::fromEntity)
+                .collect(Collectors.toList());
+
+        long total = boardRepository.countByType(type);
+        return new PageImpl<>(result, PageRequest.of(page - 1, size), total);
+    }
+    @Override
+    public Page<BoardDto.MealPlanBoardDto> getMealPlanBoards(CommonEnums.BoardType type, int page, int size) {
+        int offset = (page - 1) * size;
+        List<Board> boards = boardRepository.findByType(type, offset, size);
+        List<BoardDto.MealPlanBoardDto> result = boards.stream()
+                .map(BoardDto.MealPlanBoardDto::fromEntity)
+                .collect(Collectors.toList());
+
+        long total = boardRepository.countByType(type);
+        return new PageImpl<>(result, PageRequest.of(page - 1, size), total);
+    }
 
     @Override
     public int updateBoard(Integer boardNo, BoardDto.Update dto, MultipartFile file, List<MultipartFile> contentFiles) throws IOException {

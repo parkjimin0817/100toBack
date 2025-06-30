@@ -193,6 +193,7 @@ public class BoardDto {
 
         private int boardNo;                   // 게시물 번호
         private String className;             // 반 이름
+        private Integer classNo;                  // 반 번호
         private String attachment;            // 첨부 파일
         private String memberName;            // 작성자
         private String title;                 // 제목
@@ -204,8 +205,58 @@ public class BoardDto {
             return FamilyNoticeDto.builder()
                     .boardNo(board.getBoardNo())
                     .className(board.getClassRoom() != null ? board.getClassRoom().getClassName() : null)
+                    .classNo(board.getClassRoom() != null ? board.getClassRoom().getClassNo() : null)
                     .attachment(board.getAttachment())
                     .memberName(board.getMember() != null ? board.getMember().getMemberName() : null)
+                    .title(board.getTitle())
+                    .createDate(board.getCreateDate())
+                    .views(board.getViews())
+                    .type(board.getType())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class PhotoBoardDto { // 사진 게시글 DTO
+
+        private int boardNo;                 // 게시물 번호
+        private String title;                // 제목
+        private LocalDateTime createDate;    // 작성일
+        private String attachment;           // 첨부 파일
+        private int views;                   // 조회수
+        private CommonEnums.BoardType type;  // 게시물 타입
+
+        public static PhotoBoardDto fromEntity(Board board) {
+            return PhotoBoardDto.builder()
+                    .boardNo(board.getBoardNo())
+                    .title(board.getTitle())
+                    .createDate(board.getCreateDate())
+                    .views(board.getViews())
+                    .type(board.getType())
+                    .build();
+        }
+    }
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class MealPlanBoardDto { // 식단표 게시글 DTO
+
+        private int boardNo;                 // 게시물 번호
+        private String title;                // 제목
+        private LocalDateTime createDate;    // 작성일
+        private String attachment;           // 첨부 파일
+        private int views;                   // 조회수
+        private CommonEnums.BoardType type;  // 게시물 타입
+
+        public static MealPlanBoardDto fromEntity(Board board) {
+            return MealPlanBoardDto.builder()
+                    .boardNo(board.getBoardNo())
                     .title(board.getTitle())
                     .createDate(board.getCreateDate())
                     .views(board.getViews())
