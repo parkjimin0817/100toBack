@@ -11,21 +11,28 @@ const PersonalLife = () => {
   const id = searchParams.get('id');
 
   const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [child, setChild] = useState([]);
 
   useEffect(() => {
     const fetchChildDetail = async () => {
       try {
         const response = await axios.get(`http://localhost:8888/api/childs/activitylog?childNo=${id}`);
         setLogs(response.data);
+
+        const response2 = await axios.get(`http://localhost:8888/api/childs/get?child_no=${id}`);
+        setChild(response2.data);
       } catch (error) {
         console.error('아동 생활로그 불러오기 실패:', error);
+      } finally {
+        setLoading(false); // ✅ 무조건 로딩 끝
       }
     };
 
     fetchChildDetail();
   }, [id]);
 
-  if (logs.length === 0) return <div>로딩중...</div>;
+  // if (logs.length === 0) return <div>로딩중...</div>;
 
   return (
     <Container>
@@ -34,7 +41,8 @@ const PersonalLife = () => {
         Color={'orange'}
         ButtonProps={[{ Title: '뒤로가기', func: () => navigate(-1) }]}
       />
-      <Name>{logs[0].child_name}</Name>
+      <Name>{child.child_name || '아동 이름 없음'}</Name>
+
       <Table>
         <THead>
           <tr>
@@ -47,18 +55,28 @@ const PersonalLife = () => {
           </tr>
         </THead>
         <tbody>
-          {[...logs]
-            .sort((a, b) => new Date(b.create_date) - new Date(a.create_date))
-            .map((item, index) => (
-              <tr key={index}>
-                <td>{dayjs(item.create_date).format('YYYY-MM-DD')}</td>
-                <td>{item.dailyMeal_amount}</td>
-                <td>{`${item.napStart_time?.substring(0, 5)} ~ ${item.napEnd_time?.substring(0, 5)}`}</td>
-                <td>{item.play_participation}</td>
-                <td>{item.daily_friendship}</td>
-                <td>{item.activity_log_memo}</td>
-              </tr>
-            ))}
+          {loading ? (
+            <tr>
+              <td colSpan={6}>로딩중...</td>
+            </tr>
+          ) : logs.length > 0 ? (
+            [...logs]
+              .sort((a, b) => new Date(b.create_date) - new Date(a.create_date))
+              .map((item, index) => (
+                <tr key={index}>
+                  <td>{dayjs(item.create_date).format('YYYY-MM-DD')}</td>
+                  <td>{item.dailyMeal_amount}</td>
+                  <td>{`${item.napStart_time?.substring(0, 5)} ~ ${item.napEnd_time?.substring(0, 5)}`}</td>
+                  <td>{item.play_participation}</td>
+                  <td>{item.daily_friendship}</td>
+                  <td>{item.activity_log_memo}</td>
+                </tr>
+              ))
+          ) : (
+            <tr>
+              <td colSpan={6}>생활 기록이 없습니다.</td>
+            </tr>
+          )}
         </tbody>
       </Table>
     </Container>

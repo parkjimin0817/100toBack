@@ -11,6 +11,8 @@ import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.entity.Member;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -225,5 +227,29 @@ public class ChildRepositoryImpl implements ChildRepository {
         entity.updateFromDto(dto);
 
         return Optional.of(entity);
+    }
+
+    @Override
+    public List<ChildHealthLog> getHealthLog(int classNo, LocalDate date) {
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.plusDays(1).atStartOfDay();
+
+        return em.createQuery("SELECT c FROM ChildHealthLog c WHERE c.child.classRoom.classNo = :classNo AND c.createDate >= :start AND c.createDate < :end", ChildHealthLog.class)
+                .setParameter("classNo", classNo)
+                .setParameter("start", start)
+                .setParameter("end", end)
+                .getResultList();
+    }
+
+    @Override
+    public List<ChildActivityLog> getActivityLog(int classNo, LocalDate date) {
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.plusDays(1).atStartOfDay();
+
+        return em.createQuery("SELECT c FROM ChildActivityLog c WHERE c.child.classRoom.classNo = :classNo AND c.createDate >= :start AND c.createDate < :end", ChildActivityLog.class)
+                .setParameter("classNo", classNo)
+                .setParameter("start", start)
+                .setParameter("end", end)
+                .getResultList();
     }
 }
