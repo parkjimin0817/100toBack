@@ -373,4 +373,27 @@ public class ChildDto {
         }
     }
 
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class myPageChilds {
+        private int child_no;
+        private String child_name;
+        private String child_resident_no;
+        private String child_profile;
+
+        public static myPageChilds toDto(Child child){
+            return myPageChilds.builder()
+                    .child_no(child.getChildNo())
+                    .child_name(child.getChildName())
+                    .child_resident_no(child.getChildResidentNo())
+                    .child_profile(child.getChildProfile())
+                    .build();
+
+        }
+
+    }
+
 }

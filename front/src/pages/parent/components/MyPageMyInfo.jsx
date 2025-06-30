@@ -1,14 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-
-const infodata = {
-  name: '박지민',
-  birthdate: '1999-08-17',
-  role: '시설장',
-};
+import useLoginStore from '../../../store/loginStore';
 
 const MyPageMyInfo = ({ isEditMode }) => {
-  const [data, setData] = useState(infodata);
+  const { member } = useLoginStore();
   const handleChange = (key, value) => {
     setData((prev) => ({ ...prev, [key]: value }));
   };
@@ -19,9 +14,9 @@ const MyPageMyInfo = ({ isEditMode }) => {
         <InfoType>이름 </InfoType>
         <Info>
           {isEditMode ? (
-            <InfoInput value={data.name} onChange={(e) => handleChange('name', e.target.value)} />
+            <InfoInput value={member.memberName} onChange={(e) => handleChange('name', e.target.value)} />
           ) : (
-            data.name
+            member.memberName
           )}
         </Info>
       </InfoRow>
@@ -29,9 +24,13 @@ const MyPageMyInfo = ({ isEditMode }) => {
         <InfoType>생년월일</InfoType>
         <Info>
           {isEditMode ? (
-            <InfoInput type="date" value={data.birthdate} onChange={(e) => handleChange('birthdate', e.target.value)} />
+            <InfoInput
+              type="date"
+              value={member.memberBirth}
+              onChange={(e) => handleChange('birthdate', e.target.value)}
+            />
           ) : (
-            data.birthdate
+            member.memberBirth
           )}
         </Info>
       </InfoRow>

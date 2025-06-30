@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ContentHeader from '../../components/Common/ContentHeader';
 import styled from 'styled-components';
 import MyPageProfileImage from '../manager/components/MyPageProfileImage';
@@ -9,14 +9,32 @@ import ChildPicture from './components/childpic.png';
 import AddImage from './components/addsquare.png';
 import SearchImage from './components/search.png';
 import { useLoginStore } from '../../store/loginStore';
+import { childService } from '../../api/child';
+import { childInfo } from '../../api/childInfo';
 
 const ParentMyPage = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const { member } = useLoginStore();
+  const [childList, setChildList] = useState([]);
+  const navigate = useNavigate();
+
+  const fetchChildList = async () => {
+    try {
+      const result = await childService.getParentChildList(member.memberNo);
+      setChildList(result);
+    } catch (error) {
+      console.error('자녀 목록을 가져오는 데 실패했습니다:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchChildList();
+  }, []);
+
   const hanldeEditClick = () => {
     setIsEditMode((prev) => !prev);
   };
-  const navigate = useNavigate();
+
   return (
     <Content>
       <ContentHeader
@@ -38,16 +56,23 @@ const ParentMyPage = () => {
           </CenterInfoBox>
         </InfoBox>
         <MenuBox>
-          <Card onClick={() => navigate('/child/detail?id=1')}>
-            <ProfileDiv>
-              <NameDiv> 씩씩한 정형일 </NameDiv>
-              <AgeDiv>(6세/남)</AgeDiv>
-              <BirthDiv> 생일 10.04 </BirthDiv>
-            </ProfileDiv>
-            <ImgDiv>
-              <Img src={ChildPicture} />
-            </ImgDiv>
-          </Card>
+          {childList.map((data) => {
+            const { age, gender, birthday } = childInfo(data.child_resident_no);
+            return (
+              <Card key={data.child_no} onClick={() => navigate(`/child/detail?id=${data.child_no}`)}>
+                <ProfileDiv>
+                  <NameDiv>{data.child_name}</NameDiv>
+                  <AgeDiv>
+                    ({age}세/{gender === '남자' ? '남' : '여'})
+                  </AgeDiv>
+                  <BirthDiv>생일 {birthday}</BirthDiv>
+                </ProfileDiv>
+                <ImgDiv>
+                  <Img src={data.child_profile || ChildPicture} alt="아이 이미지" />
+                </ImgDiv>
+              </Card>
+            );
+          })}
           <AddChild>
             <AddBox onClick={() => navigate('/parent/addchild')}>
               <Plus>아동 추가</Plus>

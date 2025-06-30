@@ -16,6 +16,7 @@ export const useLoginStore = create(
             memberId: memberData.memberId,
             memberName: memberData.memberName,
             memberProfile: memberData.memberProfile,
+            memberBirth: memberData.memberBirth,
             memberType: memberData.memberType,
             centerNo: memberData.centerNo,
             classNo: memberData.classNo,

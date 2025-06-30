@@ -66,6 +66,7 @@ public class MemberDto {
         private int member_no;
         private String member_name;
         private String member_id;
+        private LocalDate member_birth;
         private CommonEnums.MemberType member_type;
 
         //만약 멤버정보 필요한거 있으시면 그냥 추가하시면 됩니다.
@@ -73,11 +74,13 @@ public class MemberDto {
         private int center_no;
         private int class_no;
 
+
         public static LoginResponse toDto(Member member) {
             return LoginResponse.builder()
                     .member_no(member.getMemberNo())
                     .member_name(member.getMemberName())
                     .member_id(member.getMemberId())
+                    .member_birth(member.getMemberBirth())
                     .member_type(member.getMemberType())
                     .center_no(member.getCenter().getCenterNo())
                     .center_tel(member.getCenter().getCenterTel())

@@ -103,6 +103,7 @@ export const memberService = {
         memberNo: data.member_no,
         memberName: data.member_name,
         memberId: data.member_id,
+        memberBirth: data.member_birth,
         memberType: data.member_type,
         centerNo: data.center_no,
         classNo: data.class_no,

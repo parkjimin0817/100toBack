@@ -40,4 +40,7 @@ public interface ChildRepository {
     //아동 번호로 아동 키,몸무게 조회
     Optional<ChildHealthLog> recentPhysicalInfo(int childNo);
 
+    //부모 번호로 해당 연결된 아동 리스트 가져오기
+    List<Child> findByMemberNo(int memberNo);
+
 }
