@@ -24,6 +24,7 @@ const MyVacation = () => {
   const hanldeFormSuccess = () => {
     fetchData();
   };
+
   return (
     <Wrapper>
       <ContentHeader Title={'휴가 관리'} Color={'blue'} />
@@ -32,7 +33,7 @@ const MyVacation = () => {
         <VacationDateInfoBox />
       </Content>
       <Content>
-        <MyVacationList vacations={vacations} />
+        <MyVacationList vacations={vacations} onDeleteSuccess={fetchData} />
       </Content>
     </Wrapper>
   );

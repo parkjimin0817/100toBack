@@ -1,15 +1,30 @@
 import styled from 'styled-components';
+import { vacationService } from '../../../api/vacation';
+import { toast } from 'react-toastify';
 
-const MyVacationList = ({ vacations }) => {
+const MyVacationList = ({ vacations, onDeleteSuccess }) => {
   const TYPE = {
     VACATED: '휴가',
     WORKATION: '워케이션',
   };
 
   const STATUS = {
-    PENDING: '대기',
+    PENDING: '삭제',
     APPROVED: '승인',
     REJECTED: '거절',
+  };
+
+  const handleDelete = async (vacationNo) => {
+    if (!window.confirm('휴가 신청을 삭제하시겠습니까? ')) return;
+
+    try {
+      await vacationService.deleteVacation(vacationNo);
+      toast.success('휴가 신청이 삭제되었습니다.');
+      onDeleteSuccess();
+    } catch (err) {
+      console.error('휴가 삭제 실패 :', err);
+      toast.error('휴가 신청 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
   };
 
   return (
@@ -27,23 +42,27 @@ const MyVacationList = ({ vacations }) => {
           </tr>
         </thead>
         <tbody>
-          {vacations.map((vacation, index) => (
-            <tr key={vacation.vacationNo}>
-              <td>{index + 1}</td>
-              <td>{TYPE[vacation.type] || vacation.type}</td>
-              <td>{vacation.typeDetail}</td>
-              <td>
-                {vacation.startDate}-{vacation.endDate}
-              </td>
-              <td>{vacation.reason}</td>
-              <td>{vacation.file || ''}</td>
-              <td>
-                <Status disabled $status={vacation.status}>
-                  {STATUS[vacation.status] || vacation.status}
-                </Status>
-              </td>
-            </tr>
-          ))}
+          {[...vacations]
+            .sort((a, b) => b.vacationNo - a.vacationNo)
+            .map((vacation, index) => (
+              <tr key={vacation.vacationNo}>
+                <td>{index + 1}</td>
+                <td>{TYPE[vacation.type] || vacation.type}</td>
+                <td>{vacation.typeDetail}</td>
+                <td>
+                  {vacation.startDate}-{vacation.endDate}
+                </td>
+                <td>{vacation.reason}</td>
+                <td>{vacation.file || ''}</td>
+                <td>
+                  {vacation.status === 'PENDING' ? (
+                    <DeleteButton onClick={() => handleDelete(vacation.vacationNo)}>삭제</DeleteButton>
+                  ) : (
+                    <Status $status={vacation.status}>{STATUS[vacation.status] || vacation.status}</Status>
+                  )}
+                </td>
+              </tr>
+            ))}
         </tbody>
       </VacationTable>
     </Wrapper>
@@ -103,14 +122,26 @@ const VacationTable = styled.table`
   }
 `;
 
-const Status = styled.button`
+const Status = styled.div`
   width: 50px;
+  margin: 0 auto;
   background-color: ${({ theme, $status }) => {
-    if ($status === 'APPROVED') return theme.colors.green; // 초록
-    if ($status === 'PENDING') return theme.colors.gray[500]; // 회색
-    if ($status === 'REJECTED') return theme.colors.orange; // 회색
+    if ($status === 'APPROVED') return theme.colors.green; // 승인 초록색
+    if ($status === 'REJECTED') return theme.colors.orange; // 거절 오렌지색
   }};
   color: ${({ theme }) => theme.colors.white};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
-  cursor: default;
+`;
+
+const DeleteButton = styled.button`
+  width: 50px;
+  background-color: red;
+  color: ${({ theme }) => theme.colors.white};
+  border: none;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  cursor: pointer;
+
+  &:hover {
+    outline: 1px solid red;
+  }
 `;

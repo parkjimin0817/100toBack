@@ -6,6 +6,7 @@ import com.bridge.kinder.dto.VacationDto.Request;
 import com.bridge.kinder.dto.VacationDto.Response;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.entity.Vacation;
+import com.bridge.kinder.enums.CommonEnums.AdmissionStatus;
 import com.bridge.kinder.repository.MemberRepository;
 import com.bridge.kinder.repository.VacationRepository;
 import java.io.File;
@@ -62,5 +63,17 @@ public class VacationServiceImpl implements VacationService {
         return vacations.stream()
                 .map( v -> VacationDto.Response.toDto(v, v.getMember()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteVacation(long vacationNo) {
+
+        Vacation vacation = vacationRepository.findById(vacationNo)
+                .orElseThrow(() -> new RuntimeException("해당 휴가 신청이 존재하지 않습니다."));
+        if(!vacation.getStatus().equals(AdmissionStatus.PENDING)) {
+            throw new IllegalArgumentException("승인 대기 중인 휴가만 삭제할 수 있습니다.");
+        }
+
+        vacationRepository.deleteById(vacationNo);
     }
 }

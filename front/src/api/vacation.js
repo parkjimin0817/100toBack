@@ -52,4 +52,12 @@ export const vacationService = {
       throw new Error('서버 통신 불량' + error.message);
     }
   },
+
+  deleteVacation: async (vacationNo) => {
+    try {
+      await api.delete(API_ENDPOINTS.VACATION.DELETE(vacationNo));
+    } catch (error) {
+      throw new Error('서버 통신 불량' + error.message);
+    }
+  },
 };

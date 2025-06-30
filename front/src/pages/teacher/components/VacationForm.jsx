@@ -58,7 +58,7 @@ const VacationForm = ({ onSuccess }) => {
           <Label>날짜 : </Label>
           <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
           <Text>-</Text>
-          <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+          <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} min={startDate} />
         </InputRow>
         <InputRow>
           <Label>사유 : </Label>

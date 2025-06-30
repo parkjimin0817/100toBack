@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,13 @@ public class VacationController {
     @GetMapping("/{memberNo}")
     public ResponseEntity<List<Response>> getVacation(@PathVariable int memberNo)  {
         return ResponseEntity.ok(vacationService.getVacationsByMember(memberNo));
+    }
+
+    //휴가 신청 삭제하기
+    @DeleteMapping("/delete/{vacationNo}")
+    public ResponseEntity<Void> deleteVacation(@PathVariable int vacationNo) {
+        vacationService.deleteVacation(vacationNo);
+        return ResponseEntity.noContent().build();
     }
 
 
