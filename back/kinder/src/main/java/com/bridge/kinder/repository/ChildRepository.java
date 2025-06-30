@@ -53,5 +53,6 @@ public interface ChildRepository {
     List<ChildHealthLog> getHealthLog(int classNo, LocalDate date);
     //아동 생활 로그 데이터 날짜,반 필터링해서 불러오기
     List<ChildActivityLog> getActivityLog(int classNo, LocalDate date);
-
+    //아동 생활 로그 데이터 삽입 혹은 수정하기
+    Optional<ChildActivityLog> updateActivityLog(int childNo, LocalDate date, ChildDto.activityLog data);
 }
