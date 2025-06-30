@@ -67,15 +67,6 @@ export const useVacationForm = () => {
     formData.append('reason', reason);
     attachments.forEach((attachment) => formData.append('attachment', attachment));
 
-    console.log('폼 제출:', {
-      type,
-      typeDetail: typeDetail === '기타' ? customDetail : typeDetail,
-      startDate,
-      endDate,
-      reason,
-      attachments,
-    });
-
     try {
       const data = await vacationService.requestVacation(memberNo, formData);
 
@@ -85,6 +76,20 @@ export const useVacationForm = () => {
     } catch (err) {
       console.error('반 생성 실패 : ', err);
       toast.error('휴가 신청 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  };
+
+  const resetForm = () => {
+    setType('');
+    setTypeDetail('');
+    setCustomDetail('');
+    setStartDate('');
+    setEndDate('');
+    setReason('');
+    setFileNames([]);
+    setAttachments([]);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = null; // 파일 인풋 초기화
     }
   };
 
@@ -107,5 +112,6 @@ export const useVacationForm = () => {
     setStartDate,
     setEndDate,
     setReason,
+    resetForm,
   };
 };
