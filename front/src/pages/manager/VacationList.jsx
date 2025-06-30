@@ -25,14 +25,12 @@ const ApprovalList = () => {
       .catch((err) => console.error('휴가 목록 불러오기 실패 : ', err.message));
   }, [centerNo]);
 
-  console.log('쉿 : ', vacations);
-
   const TYPE = {
     VACATED: '휴가',
     WORKATION: '워케이션',
   };
 
-  //const filteredData = selectedType === '전체' ? data : data.filter((item) => item.type === selectedType);
+  const filteredData = selectedType === '전체' ? vacations : vacations.filter((v) => TYPE[v.type] === selectedType);
 
   return (
     <>
@@ -41,7 +39,7 @@ const ApprovalList = () => {
         <Navigation>
           <NavigationLeft>
             {['전체', '휴가', '워케이션'].map((type) => (
-              <MemberType key={type} isActive={selectedType === type} onClick={() => setSelectedType(type)}>
+              <MemberType key={type} $isActive={selectedType === type} onClick={() => setSelectedType(type)}>
                 {type}
               </MemberType>
             ))}
@@ -68,7 +66,7 @@ const ApprovalList = () => {
                 </tr>
               </thead>
               <tbody>
-                {vacations.map((v, index) => (
+                {filteredData.map((v, index) => (
                   <tr
                     key={index}
                     onClick={() => {
@@ -86,8 +84,8 @@ const ApprovalList = () => {
                     <td>
                       {v.decision_date === null ? (
                         <>
-                          <button className="APPROVED">승인</button>
-                          <button className="REJECTED">거절</button>
+                          <button className="approved">승인</button>
+                          <button className="rejected">거절</button>
                         </>
                       ) : v.status === 'APPROVED' ? (
                         <ApprovedDecisionDate>{v.decision_date}</ApprovedDecisionDate>
@@ -135,7 +133,7 @@ const MemberType = styled.span`
   color: ${({ theme }) => theme.colors.blue};
   transition: color 0.3s;
 
-  border-bottom: ${({ isActive, theme }) => (isActive ? `3px solid ${theme.colors.blue}` : 'none')};
+  border-bottom: ${({ $isActive, theme }) => ($isActive ? `3px solid ${theme.colors.blue}` : 'none')};
 
   &:hover {
     border-bottom: 2px solid ${({ theme }) => theme.colors.blue};

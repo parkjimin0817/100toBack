@@ -56,7 +56,6 @@ export const vacationService = {
   //시설별 휴가 조회
   getVacationListAll: async (centerNo) => {
     try {
-      console.log(API_ENDPOINTS.VACATION.GETLISTALL(centerNo));
       const { data } = await api.get(API_ENDPOINTS.VACATION.GETLISTALL(centerNo));
 
       const camelDataList = data.map((item) => ({
