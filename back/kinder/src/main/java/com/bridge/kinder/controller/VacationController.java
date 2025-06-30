@@ -43,6 +43,11 @@ public class VacationController {
         return ResponseEntity.noContent().build();
     }
 
+    //시설 별 휴가 목록 불러오기
+    @GetMapping("/all/{centerNo}")
+    public ResponseEntity<List<Response>> getVacationAll(@PathVariable int centerNo)  {
+        return ResponseEntity.ok(vacationService.getVacationsByCenter(centerNo));
+    }
 
 
 
