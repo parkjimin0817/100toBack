@@ -1,59 +1,70 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
-const TeacherAttendanceEditModal = ({ onClose, onEdit, status, attendance }) => {
-  //출퇴근 시간
-  const inTime = attendance?.in_time
-    ? new Date(attendance.in_time).toLocaleTimeString('ko-KR', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-      })
-    : '-';
-  const outTime = attendance?.out_time
-    ? new Date(attendance.out_time).toLocaleTimeString('ko-KR', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-      })
-    : '-';
+const TeacherAttendanceEditModal = ({ onClose, onEdit, attendance, memberNo, centerNo }) => {
+  const [status, setStatus] = useState(attendance?.status || '');
+  const [inTime, setInTime] = useState(() => {
+    if (!attendance.inTime) return '';
+    return attendance.inTime.slice(11, 16);
+  });
+  const [outTime, setOutTime] = useState(() => {
+    if (!attendance.outTime) return '';
+    return attendance.outTime.slice(11, 16);
+  });
+
+  //폼 제출
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const fullInTime = inTime ? `${attendance.attendanceDate}T${inTime}` : null;
+    const fullOutTime = outTime ? `${attendance.attendanceDate}T${outTime}` : null;
+
+    onEdit({
+      ...attendance,
+      attendance: attendance.attendanceDate,
+      status,
+      inTime: fullInTime,
+      outTime: fullOutTime,
+      memberNo: memberNo,
+      centerNo: centerNo,
+    });
+    onClose();
+  };
 
   return (
     <Overlay onClick={onClose}>
       <Card onClick={(e) => e.stopPropagation()}>
         <Title>근태 수정하기</Title>
         <Content>
-          <Form
-            onSubmit={(e) => {
-              e.preventDefault();
-              onEdit();
-            }}
-          >
+          <Form onSubmit={handleSubmit}>
             <Label>
               상태:
-              <Select name="status" value={status}>
-                <option value="출근">출근</option>
-                <option value="결근">결근</option>
+              <Select name="status" value={status} onChange={(e) => setStatus(e.target.value)}>
+                <option value="PRESENT">출근</option>
+                <option value="ABSENT">결근</option>
+                <option value="WORKING">근무중</option>
+                <option value="HOLIDAY">공휴일</option>
+                <option value="WEEKEND">주말</option>
+                <option value="VACATION">휴가</option>
+                <option value="WORKCATION">워케이션</option>
               </Select>
             </Label>
             <br />
             <Label>
               출근시간:
-              <Input type="time" name="startTime" value={inTime} onChange={(e) => e.target.blur()} />
+              <Input type="time" name="startTime" value={inTime} onChange={(e) => setInTime(e.target.value)} />
             </Label>
             <br />
             <Label>
               퇴근시간:
-              <Input type="time" name="endTime" value={outTime} onChange={(e) => e.target.blur()} />
+              <Input type="time" name="endTime" value={outTime} onChange={(e) => setOutTime(e.target.value)} />
             </Label>
             <br />
             <ButtonGroup>
               <Button type="close" onClick={onClose}>
                 닫기
               </Button>
-              <Button type="edit" onClick={onEdit}>
-                저장
-              </Button>
+              <Button type="submit">저장</Button>
             </ButtonGroup>
           </Form>
         </Content>

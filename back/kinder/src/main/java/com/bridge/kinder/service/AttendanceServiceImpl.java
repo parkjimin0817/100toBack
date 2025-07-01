@@ -4,6 +4,7 @@ import com.bridge.kinder.dto.AttendanceDto;
 //import com.bridge.kinder.dto.AttendanceDto.ClassAttendance;
 import com.bridge.kinder.dto.AttendanceDto.CreateAttendance;
 import com.bridge.kinder.dto.AttendanceDto.Response;
+import com.bridge.kinder.dto.AttendanceDto.UpdateTeacherAttendance;
 import com.bridge.kinder.dto.AttendanceStatusDto;
 import com.bridge.kinder.dto.AttendanceDto.UpdateAttendance;
 import com.bridge.kinder.dto.ChildDto;
@@ -56,6 +57,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     private final HolidayRepository holidayRepository;
     private final ChildRepository childRepository;
     private final ClassRoomRepository classRoomRepository;
+    private final CenterRepository centerRepository;
 
     //로그인 시 당일 조회
     @Override
@@ -108,6 +110,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                 .inTime(LocalDateTime.now())
                 .outTime(null)
                 .center(center)
+                .status(TeacherAttendanceStatus.WORKING)
                 .build();
 
         Attendance savedAttendance = attendanceRepository.save(newAttendance);
@@ -138,6 +141,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         }
 
         attendance.updateOutTime(LocalDateTime.now());
+        attendance.updateStatus(TeacherAttendanceStatus.PRESENT);
         return AttendanceDto.Response.toDto(attendance);
     }
 
@@ -195,6 +199,39 @@ public class AttendanceServiceImpl implements AttendanceService {
             result.add(dto);
         }
         return result;
+    }
+
+    @Override
+    public void updateTeacherAttendance(int attendanceNo, UpdateTeacherAttendance updateDto) {
+
+        //교사가 출근을 안해서 아예 attendace기록이 없는 경우
+        if(attendanceNo == 0 ){
+            Member member = memberRepository.findByMemberNo(updateDto.getMemberNo())
+                    .orElseThrow(() -> new RuntimeException("존재하지 않는 교사입니다."));
+
+            Center center = centerRepository.findById(updateDto.getCenterNo())
+                    .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
+
+            Attendance newAttendance = Attendance.builder()
+                    .member(member)
+                    .center(center)
+                    .attendanceDate(updateDto.getAttendanceDate())
+                    .status(updateDto.getStatus())
+                    .inTime(updateDto.getInTime())
+                    .outTime(updateDto.getOutTime())
+                    .build();
+
+            attendanceRepository.save(newAttendance);
+        } else {
+            Attendance attendance = attendanceRepository.findById(attendanceNo)
+                    .orElseThrow(() -> new RuntimeException("존재하지 않는 출결입니다."));
+
+            attendance.updateFromDto(updateDto);
+
+            attendanceRepository.save(attendance);
+
+        }
+
     }
 
     //아동 출결 추가 및 정보 불러오기

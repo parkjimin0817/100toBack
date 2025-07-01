@@ -16,6 +16,8 @@ public interface AttendanceRepository {
     //Optional<Attendance> findByMemberNoAndDate(int memberNo, LocalDateTime startOfDay, LocalDateTime endOfDay);
     //기록 저장
     Attendance save(Attendance attendance);
+    //no으로 출결 찾기
+    Optional<Attendance> findById(int attendanceNo);
     //월별 출근 기록
     List<Attendance> findByMemberNoAndDateRange(int memberNo, int centerNo, LocalDateTime startDate, LocalDateTime endDate);
     //아동 출결 추가
@@ -24,4 +26,5 @@ public interface AttendanceRepository {
     List<ChildAttendance> findByClassNoAndCreateDate(int classNo, LocalDate createDate);
     //아동 출결 해당 조회
     ChildAttendance getChildAttendance(int classNo, int childNo, LocalDate createDate);
+
 }

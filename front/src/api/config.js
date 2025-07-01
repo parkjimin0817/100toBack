@@ -62,10 +62,12 @@ export const API_ENDPOINTS = {
     WORKIN: (memberNo) => `/api/attendance/workin/${memberNo}`,
     //퇴근 시간 기록
     WORKOUT: (memberNo) => `/api/attendance/workout/${memberNo}`,
-    //교사가 자신 근태 기록 조회     MYATTENDANCE:
+    //교사가 자신 근태 기록 조회
     //시설장이 교사 별 근태 조회
     TEACHERATTENDANCE: (memberNo, centerNo, year, month) =>
       `/api/attendance/teacher?memberNo=${memberNo}&centerNo=${centerNo}&year=${year}&month=${month}`,
+    //교사 근태 수정
+    UPDATETEACHERATTENDANCE: (attendanceNo) => `/api/attendance/teacher/update/${attendanceNo}`,
     //아동 출결 관리
     CHILDATTENDANCE: `/api/attendance/createChildAttendance`,
     //아동 출결 수정
@@ -98,5 +100,7 @@ export const API_ENDPOINTS = {
     GETLIST: (memberNo) => `/api/vacation/${memberNo}`,
     DELETE: (vacationNo) => `/api/vacation/delete/${vacationNo}`,
     GETLISTALL: (centerNo) => `/api/vacation/all/${centerNo}`,
+    APPROVE: (vacationNo) => `/api/vacation/approve/${vacationNo}`,
+    REJECT: (vacationNo) => `/api/vacation/reject/${vacationNo}`,
   },
 };

@@ -40,6 +40,19 @@ public class AttendanceDto {
         }
     }
 
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateTeacherAttendance {
+        private CommonEnums.TeacherAttendanceStatus status;
+        private LocalDate attendanceDate;
+        private LocalDateTime inTime;
+        private LocalDateTime outTime;
+        private int memberNo;
+        private int centerNo;
+    }
+
 
     @Getter
     @Setter

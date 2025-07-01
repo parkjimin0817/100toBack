@@ -85,4 +85,32 @@ public class VacationServiceImpl implements VacationService {
                 .map( v -> VacationDto.Response.toDto(v, v.getMember()))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Response approveVacation(long vacationNo) {
+        Vacation vacation = vacationRepository.findById(vacationNo)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 휴가 신청입니다."));
+
+        if(!vacation.getStatus().equals(AdmissionStatus.PENDING)) {
+            throw new RuntimeException("이미 처리된 휴가 신청입니다.");
+        }
+
+        vacation.approve();
+        Vacation updated = vacationRepository.save(vacation);
+        return VacationDto.Response.toDto(updated, updated.getMember());
+    }
+
+    @Override
+    public Response rejectVacation(long vacationNo) {
+        Vacation vacation = vacationRepository.findById(vacationNo)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 휴가 신청입니다."));
+
+        if(!vacation.getStatus().equals(AdmissionStatus.PENDING)) {
+            throw new RuntimeException("이미 처리된 휴가 신청입니다.");
+        }
+
+        vacation.reject();
+        Vacation updated = vacationRepository.save(vacation);
+        return VacationDto.Response.toDto(updated, updated.getMember());
+    }
 }

@@ -235,11 +235,18 @@ public class MemberServiceImpl implements MemberService {
 
     //memberNo으로 교사 조회
     @Override
-    public MemberDto.DetailMemberDto findTeacherByMemberNo(int memberNo) {
+    public MemberDto.DetailMemberWithApprovalDto findTeacherByMemberNo(int memberNo) {
         Member member =  memberRepository.findMemberByMemberNo(memberNo)
                 .orElseThrow(() -> new RuntimeException("해당 교사가 존재하지 않습니다."));
 
-        return MemberDto.DetailMemberDto.from(member);
+        Center center = member.getCenter();
+
+        Approval approval = member.getApprovals().stream()
+                .filter(a -> a.getCenter() != null && a.getCenter().getCenterNo() == center.getCenterNo())
+                .findFirst()
+                .orElse(null);
+
+        return MemberDto.DetailMemberWithApprovalDto.from(member, approval);
     }
 
     //멤버 ID 찾기(이름, 생년월일)
