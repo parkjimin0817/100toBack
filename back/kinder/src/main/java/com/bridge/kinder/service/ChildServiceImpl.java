@@ -251,6 +251,15 @@ public class ChildServiceImpl implements ChildService {
                 .collect(Collectors.toList());
     }
 
+    // 아동 건강 로그 데이터 생성, 업데이트
+    @Override
+    public healthLog updateHealthLog(int childNo, LocalDate date, ChildDto.healthLog data) {
+        ChildHealthLog healthLog = childRepository.updateHealthLog(childNo, date, data)
+                .orElseThrow(() -> new EntityNotFoundException("정상적으로 수정되지 않았습니다."));
+        return ChildDto.healthLog.toDto(healthLog);
+    }
+
+    //아동 생활 로그 데이터 생성, 업데이트
     @Override
     public ChildDto.activityLog updateActivityLog(int childNo, LocalDate date, ChildDto.activityLog data) {
         ChildActivityLog activityLog = childRepository.updateActivityLog(childNo, date, data)
