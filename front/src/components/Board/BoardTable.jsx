@@ -71,8 +71,8 @@ const BoardTable = ({ tableInfo, columns, boardData }) => {
             key={rowIndex}
             onClick={() => handleRowClick(row.boardNo)}
           >
-            {columns.map(col => (
-              <BoardTD>
+            {columns.map((col) => (
+              <BoardTD key={rowIndex + col.key}>
                 {col.key === "attachment" ? <FiDownload /> : 
                   col.key === "createDate" ? formatDate(row[col.key]) : 
                   row[col.key]

@@ -1,38 +1,35 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
+import { leaveService } from '../../../api/leave';
 
-const VacationDateInfoBox = () => {
-  const [data, setData] = useState({
-    usedDays: 0,
-    remainDays: 0,
-    leaveDays: 0,
-  });
+const VacationDateInfoBox = ({ memberNo, refreshKey }) => {
+  const [leave, setLeave] = useState({});
 
   useEffect(() => {
-    const mockVacationData = {
-      usedDays: 5,
-      remainDays: 10,
-      leaveDays: 15,
-    };
-    setData(mockVacationData);
-  }, []);
+    if (!memberNo) return;
+
+    leaveService
+      .getLeave(memberNo)
+      .then((data) => setLeave(data))
+      .catch((err) => console.error('연차 정보 불러오기 실패:', err));
+  }, [memberNo, refreshKey]);
 
   return (
     <Box>
       <Title>사용한 연차</Title>
       <TextRow>
-        <Content>{data.usedDays}</Content>
+        <Content>{leave.usedLeave}</Content>
         <Text>&ensp;일</Text>
       </TextRow>
       <Title>남은 연차</Title>
       <TextRow>
-        <Content>{data.remainDays}</Content>
+        <Content>{leave.remainLeave}</Content>
         <Text>&ensp;일</Text>
       </TextRow>
       <Title>총 연차</Title>
       <TextRow>
-        <Content>{data.leaveDays}</Content>
+        <Content>{leave.leaveDays}</Content>
         <Text>&ensp;일</Text>
       </TextRow>
     </Box>

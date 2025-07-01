@@ -11,6 +11,7 @@ const MyVacation = () => {
   const { member } = useLoginStore();
   const memberNo = member?.memberNo;
   const [vacations, setVacations] = useState([]);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     fetchData();
@@ -21,19 +22,20 @@ const MyVacation = () => {
     setVacations(data);
   };
 
-  const hanldeFormSuccess = () => {
+  const handleRefresh = () => {
     fetchData();
+    setRefreshKey((prev) => prev + 1);
   };
 
   return (
     <Wrapper>
       <ContentHeader Title={'휴가 관리'} Color={'blue'} />
       <Content>
-        <VacationForm onSuccess={hanldeFormSuccess} />
-        <VacationDateInfoBox />
+        <VacationForm onSuccess={handleRefresh} />
+        <VacationDateInfoBox memberNo={memberNo} refreshKey={refreshKey} />
       </Content>
       <Content>
-        <MyVacationList vacations={vacations} onDeleteSuccess={fetchData} />
+        <MyVacationList vacations={vacations} onDeleteSuccess={handleRefresh} />
       </Content>
     </Wrapper>
   );

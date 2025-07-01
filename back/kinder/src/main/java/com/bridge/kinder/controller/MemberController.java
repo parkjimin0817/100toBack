@@ -74,7 +74,7 @@ public class MemberController {
 
     //교사 조회 memberNo으로
     @GetMapping("/teacher/{memberNo}")
-    public ResponseEntity<MemberDto.DetailMemberDto> findDetailTeacher(@PathVariable int memberNo){
+    public ResponseEntity<MemberDto.DetailMemberWithApprovalDto> findDetailTeacher(@PathVariable int memberNo){
         return ResponseEntity.ok(memberService.findTeacherByMemberNo(memberNo));
     }
 

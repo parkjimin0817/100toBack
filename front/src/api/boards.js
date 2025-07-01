@@ -16,9 +16,9 @@ export const boardService = {
     }
   },
 
-  typeBoardList: async (type, page) => {
+  typeBoardList: async (type, centerNo, page) => {
     try {
-      const { data } = await api.get(API_ENDPOINTS.BOARDS.TYPE(type, page));
+      const { data } = await api.get(API_ENDPOINTS.BOARDS.TYPE(type, centerNo, page));
       return data;
     } catch (error) {
       if (error.response) {
