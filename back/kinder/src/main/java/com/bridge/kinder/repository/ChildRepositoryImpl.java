@@ -2,6 +2,7 @@ package com.bridge.kinder.repository;
 
 import com.bridge.kinder.dto.ChildDto;
 import com.bridge.kinder.dto.ChildDto.activityLog;
+import com.bridge.kinder.dto.ChildDto.healthLog;
 import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.ChildActivityData;
 import com.bridge.kinder.entity.ChildActivityLog;
@@ -260,6 +261,57 @@ public class ChildRepositoryImpl implements ChildRepository {
                         "SELECT c FROM MemberChild mc JOIN mc.child c WHERE mc.member.memberNo = :memberNo", Child.class)
                 .setParameter("memberNo", memberNo)
                 .getResultList();
+    }
+
+
+
+    @Override
+    public Optional<ChildHealthLog> updateHealthLog(int childNo, LocalDate date, healthLog data) {
+        // 날짜 기준 범위 계산
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.plusDays(1).atStartOfDay();
+
+        // 기존 로그 조회
+        List<ChildHealthLog> logs = em.createQuery(
+                        "SELECT log FROM ChildHealthLog log " +
+                                "WHERE log.child.childNo = :childNo AND log.createDate >= :start AND log.createDate < :end",
+                        ChildHealthLog.class)
+                .setParameter("childNo", childNo)
+                .setParameter("start", start)
+                .setParameter("end", end)
+                .getResultList();
+
+        ChildHealthLog targetLog;
+
+        if (!logs.isEmpty()) {
+            // 기존 로그가 있을 경우 → 수정
+            targetLog = logs.get(0);
+            targetLog.update(
+                    data.getTemperature(),
+                    data.getHeight(),
+                    data.getWeight(),
+                    data.getSymptoms(),
+                    data.getHealthLogMemo()
+            );
+        } else {
+            // 없을 경우 → 새로 생성
+            Child child = em.find(Child.class, childNo); // 자식 엔티티 로드
+            if (child == null) return Optional.empty(); // child가 없으면 실패
+
+            targetLog = ChildHealthLog.builder()
+                    .child(child)
+                    .createDate(start)
+                    .temperature(data.getTemperature())
+                    .height(data.getHeight())
+                    .weight(data.getWeight())
+                    .symptoms(data.getSymptoms())
+                    .healthLogMemo(data.getHealthLogMemo())
+                    .build();
+
+            em.persist(targetLog);
+        }
+
+        return Optional.of(targetLog);
     }
 
     @Override

@@ -41,6 +41,8 @@ public interface ChildService {
     List<ChildDto.healthLog> getHealthLog(int classNo, LocalDate date);
     //아동 생활 체크리스트 날짜,반 별로
     List<ChildDto.activityLog> getActivityLog(int classNo, LocalDate date);
+    //아동 건강 로그 데이터 삽입,수정하기
+    ChildDto.healthLog updateHealthLog(int childNo, LocalDate date, ChildDto.healthLog data);
     //아동 생활 로그 데이터 삽입,수정하기
     ChildDto.activityLog updateActivityLog(int childNo, LocalDate date, ChildDto.activityLog data);
 

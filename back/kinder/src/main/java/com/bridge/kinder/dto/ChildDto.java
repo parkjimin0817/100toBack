@@ -178,6 +178,7 @@ public class ChildDto {
         private String symptoms;
         private String healthLogMemo;
         private String child_name;
+        private int child_no;
 
         public static healthLog toDto(ChildHealthLog log){
             return healthLog.builder()
@@ -188,6 +189,7 @@ public class ChildDto {
                     .symptoms(log.getSymptoms())
                     .healthLogMemo(log.getHealthLogMemo())
                     .child_name(log.getChild().getChildName())
+                    .child_no(log.getChild().getChildNo())
                     .build();
         }
     }
