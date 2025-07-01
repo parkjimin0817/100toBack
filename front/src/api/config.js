@@ -91,6 +91,6 @@ export const API_ENDPOINTS = {
     ADD: '/api/boards',
     DETAIL: (id) => `/api/boards/${id}`,
     DELETE: (id) => `/api/boards/${id}`,
-    TYPE: (type, page) => `/api/boards/type/${type}?page=${page}`,
+    TYPE: (type, centerNo, page) => `/api/boards/type/${type}?centerNo=${centerNo}&page=${page}`,
   },
 };
