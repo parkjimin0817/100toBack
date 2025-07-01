@@ -166,7 +166,7 @@ const managerSidebar = [
       { label: '공지사항', link: '/notice/list' },
       { label: '가정통신문', link: '/family_notice/list' },
       { label: '식단표', link: '/meal_plan/list' },
-      {label : "알림장", link : "/note/list"},
+      { label: '알림장', link: '/note/list' },
       { label: '사진 게시판', link: '/photo/list' },
     ],
   },
@@ -202,7 +202,7 @@ const parentSidebar = [
     icon: <LuBaby />,
     color: 'orange',
     subItems: [
-      { label: '아동 출결', link: '/parent/mychild' },
+      { label: '아동 목록', link: '/parent/mychild' },
       { label: '아동 건강', link: '/childhealthcheck' },
       { label: '아동 생활', link: '/childlifecheck' },
     ],
@@ -227,7 +227,7 @@ const parentSidebar = [
       { label: '공지사항', link: '/notice/list' },
       { label: '가정통신문', link: '/family_notice/list' },
       { label: '식단표', link: '/meal_plan/list' },
-      {label : "알림장", link : "/note/list"},
+      { label: '알림장', link: '/note/list' },
     ],
   },
   {
