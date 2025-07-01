@@ -51,13 +51,19 @@ public class AttendanceController {
         return ResponseEntity.ok(attendanceService.getTeacherMonthlyAttendance(memberNo, centerNo, year, month));
     }
 
+    //교사 근태 정보 수정하기
+    @PatchMapping("/teacher/update/{attendanceNo}")
+    public ResponseEntity<Void> updateTeacherAttendance (@PathVariable int attendanceNo, @RequestBody AttendanceDto.UpdateTeacherAttendance updateDto){
+        attendanceService.updateTeacherAttendance(attendanceNo, updateDto);
+        return ResponseEntity.noContent().build();
+    }
+
     //반 번호로 출결 상태 생성
     @PostMapping("/createChildAttendance")
     public ResponseEntity<List<AttendanceDto.CreateAttendance>> createChildAttendance(@RequestBody AttendanceDto.CreateAttendance dto) {
         return ResponseEntity.ok(attendanceService.createChildAttendance(dto));
 
     }
-
 
     //반 출결 상태를 변경
     @PatchMapping("/updateAttendance")

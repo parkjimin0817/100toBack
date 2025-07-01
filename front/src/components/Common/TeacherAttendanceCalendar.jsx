@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
-const TeacherAttendanceCalendar = ({ onDateClick, onMonthChange, disableFuture = false }) => {
+const TeacherAttendanceCalendar = ({ onDateClick, onMonthChange, disableFuture = false, minDate, maxDate }) => {
   const today = new Date();
   return (
     <StyledCalendar
@@ -26,6 +26,8 @@ const TeacherAttendanceCalendar = ({ onDateClick, onMonthChange, disableFuture =
           return 'saturday';
         }
       }}
+      maxDate={maxDate}
+      minDate={minDate}
     />
   );
 };
@@ -40,11 +42,13 @@ const StyledCalendar = styled(Calendar)`
     background: ${({ theme }) => theme.colors.white};
     border-radius: ${({ theme }) => theme.borderRadius.xl};
     box-shadow: ${({ theme }) => theme.shadows.xl};
+    font-size: 20px;
   }
 
   /* 요일 밑줄 제거 */
   .react-calendar__month-view__weekdays abbr {
     text-decoration: none;
+    font-size: ${({ theme }) => theme.fontSizes.lg};
   }
 
   /* 날짜 셀 영역을 grid로 6행 고정 */
@@ -69,7 +73,6 @@ const StyledCalendar = styled(Calendar)`
   .react-calendar__navigation__next-button {
     border: none;
     background: transparent !important;
-    font-size: 16px;
     width: 36px;
     height: 36px;
     border-radius: 4px;
@@ -106,7 +109,8 @@ const StyledCalendar = styled(Calendar)`
   }
 
   .react-calendar__tile abbr {
-    font-size: ${({ theme }) => theme.fontSizes.xs};
+    font-size: ${({ theme }) => theme.fontSizes.base};
+    font-weight: ${({ theme }) => theme.fontWeights.semibold} !important;
     width: 28px;
     height: 28px;
     display: flex;

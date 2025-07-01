@@ -2,6 +2,7 @@ package com.bridge.kinder.dto;
 
 import com.bridge.kinder.dto.ChildDto.modalResponse;
 import com.bridge.kinder.dto.ChildDto.updateClass;
+import com.bridge.kinder.entity.Approval;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.entity.Child;
@@ -66,6 +67,8 @@ public class MemberDto {
         private int member_no;
         private String member_name;
         private String member_id;
+        private LocalDate member_birth;
+        private String member_phone;
         private CommonEnums.MemberType member_type;
 
         //만약 멤버정보 필요한거 있으시면 그냥 추가하시면 됩니다.
@@ -73,11 +76,14 @@ public class MemberDto {
         private int center_no;
         private int class_no;
 
+
         public static LoginResponse toDto(Member member) {
             return LoginResponse.builder()
                     .member_no(member.getMemberNo())
                     .member_name(member.getMemberName())
                     .member_id(member.getMemberId())
+                    .member_birth(member.getMemberBirth())
+                    .member_phone(member.getMemberPhone())
                     .member_type(member.getMemberType())
                     .center_no(member.getCenter().getCenterNo())
                     .center_tel(member.getCenter().getCenterTel())
@@ -122,9 +128,17 @@ public class MemberDto {
         private int center_no;
         private Integer class_no;
         private String class_name;
+        private LocalDate decision_date;
 
         public static DetailMemberDto from(Member member) {
             ClassRoom classRoom = member.getClassRoom();
+            Center center = member.getCenter();
+
+            Approval approval = member.getApprovals().stream()
+                    .filter(a -> a.getCenter().getCenterNo() == center.getCenterNo())
+                    .findFirst()
+                    .orElse(null);
+
 
             return DetailMemberDto.builder()
                     .member_no(member.getMemberNo())
@@ -133,9 +147,41 @@ public class MemberDto {
                     .center_no(member.getCenter().getCenterNo())
                     .class_no(classRoom != null ? member.getClassRoom().getClassNo() : null)
                     .class_name(classRoom != null ? member.getClassRoom().getClassName() : "미배정")
+                    .decision_date(approval != null ? approval.getDecisionDate().toLocalDate() : null)
                     .build();
         }
     }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    //멤버 목록 불러오기 (for 목록페이지)
+    public static class DetailMemberWithApprovalDto {
+        private int member_no;
+        private String member_name;
+        private String member_profile;
+        private int center_no;
+        private Integer class_no;
+        private String class_name;
+        private LocalDate decision_date;
+
+        public static DetailMemberWithApprovalDto from(Member member, Approval approval) {
+            ClassRoom classRoom = member.getClassRoom();
+
+            return DetailMemberWithApprovalDto.builder()
+                    .member_no(member.getMemberNo())
+                    .member_name(member.getMemberName())
+                    .member_profile(member.getMemberProfile())
+                    .center_no(member.getCenter().getCenterNo())
+                    .class_no(classRoom != null ? member.getClassRoom().getClassNo() : null)
+                    .class_name(classRoom != null ? member.getClassRoom().getClassName() : "미배정")
+                    .decision_date(approval != null ? approval.getDecisionDate().toLocalDate() : null)
+                    .build();
+        }
+    }
+
 
 
     @Getter
@@ -310,6 +356,29 @@ public class MemberDto {
                                     : "미배정"
                     )
                     .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class updateParentInfo{
+        private int member_no;
+        private String member_name;
+        private LocalDate member_birth;
+        private String member_phone;
+        private String member_profile;
+
+        public static updateParentInfo toDto(Member member){
+            return updateParentInfo.builder()
+                    .member_no(member.getMemberNo())
+                    .member_name(member.getMemberName())
+                    .member_birth(member.getMemberBirth())
+                    .member_phone(member.getMemberPhone())
+                    .build();
+
         }
     }
 

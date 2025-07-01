@@ -9,6 +9,7 @@ import com.bridge.kinder.entity.ChildAttendance;
 import com.bridge.kinder.entity.ChildHealthData;
 import com.bridge.kinder.entity.ChildHealthLog;
 import com.bridge.kinder.entity.ClassRoom;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,6 +49,16 @@ public interface ChildRepository {
     Optional<ChildHealthData> updateHealthData(int childNo, ChildDto.health data);
     //아동 생활 데이터 수정
     Optional<ChildActivityData> updateActivityData(int childNo, ChildDto.activity data);
+    //아동 건강 로그 데이터 날짜,반 필터링해서 불러오기
+    List<ChildHealthLog> getHealthLog(int classNo, LocalDate date);
+    //아동 생활 로그 데이터 날짜,반 필터링해서 불러오기
+    List<ChildActivityLog> getActivityLog(int classNo, LocalDate date);
 
+    //부모 번호로 해당 연결된 아동 리스트 가져오기
+    List<Child> findByMemberNo(int memberNo);
 
+    //아동 건강 로그 데이터 삽입 혹은 수정하기
+    Optional<ChildHealthLog> updateHealthLog(int childNo, LocalDate date, ChildDto.healthLog data);
+    //아동 생활 로그 데이터 삽입 혹은 수정하기
+    Optional<ChildActivityLog> updateActivityLog(int childNo, LocalDate date, ChildDto.activityLog data);
 }

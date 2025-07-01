@@ -36,13 +36,16 @@ public interface MemberService {
     //교사 목록 (시설별 for 목록페이지)
     List<MemberDto.DetailMemberDto> findDetailedTeachersByCenterNo(int centerNo);
     //교사 조회
-    MemberDto.DetailMemberDto findTeacherByMemberNo(int memberNo);
+    MemberDto.DetailMemberWithApprovalDto findTeacherByMemberNo(int memberNo);
 
     //마이페이지
     MemberDto.MyPageResponse getMyInfo(int memberNo);
 
     //마이페이지 수정
     String updateMyPage(int id ,MypageDto.Update dto);
+
+    //학부모 마이페이지 수정
+    MemberDto.updateParentInfo updateParentInfo(MemberDto.updateParentInfo dto);
 
     //시설장 선생 목록 가져오기(시설번호를 받아서)
     List<MemberDto.teacherListResponse> managerTeacherList(int centerNo);

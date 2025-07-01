@@ -10,6 +10,7 @@ import com.bridge.kinder.dto.MemberDto.DetailMemberDto;
 import com.bridge.kinder.dto.MemberDto.modalResponse;
 import com.bridge.kinder.dto.MemberDto.teacherListResponse;
 import com.bridge.kinder.dto.MemberDto.updateClass;
+import com.bridge.kinder.dto.MemberDto.updateParentInfo;
 import com.bridge.kinder.dto.MemberTeacherDto;
 import com.bridge.kinder.dto.MypageDto;
 import com.bridge.kinder.entity.*;
@@ -234,11 +235,18 @@ public class MemberServiceImpl implements MemberService {
 
     //memberNo으로 교사 조회
     @Override
-    public MemberDto.DetailMemberDto findTeacherByMemberNo(int memberNo) {
+    public MemberDto.DetailMemberWithApprovalDto findTeacherByMemberNo(int memberNo) {
         Member member =  memberRepository.findMemberByMemberNo(memberNo)
                 .orElseThrow(() -> new RuntimeException("해당 교사가 존재하지 않습니다."));
 
-        return MemberDto.DetailMemberDto.from(member);
+        Center center = member.getCenter();
+
+        Approval approval = member.getApprovals().stream()
+                .filter(a -> a.getCenter() != null && a.getCenter().getCenterNo() == center.getCenterNo())
+                .findFirst()
+                .orElse(null);
+
+        return MemberDto.DetailMemberWithApprovalDto.from(member, approval);
     }
 
     //멤버 ID 찾기(이름, 생년월일)
@@ -264,6 +272,20 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.myPageUpdate(id, dto).get();
         Center center = centerRepository.myPageUpdate(id, dto).get();
         return "";
+    }
+
+    //학부모 정보 변경
+    @Override
+    public updateParentInfo updateParentInfo(updateParentInfo dto) {
+        Member member = memberRepository.findByMemberNo(dto.getMember_no())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
+
+        member.changeMemberName(dto.getMember_name());
+        member.changeMemberBirth(dto.getMember_birth());
+        member.changeMemberPhone(dto.getMember_phone());
+        member.changeMemberProfile(dto.getMember_profile());
+
+        return updateParentInfo.toDto(member);
     }
 
     @Override

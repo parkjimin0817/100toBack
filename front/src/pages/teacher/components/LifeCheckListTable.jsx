@@ -36,12 +36,20 @@ const LifeCheckListTable = ({ data, onEdit, onChange }) => {
               </td>
               <td>
                 {child.editable ? (
-                  <input
-                    type="text"
-                    value={child.napTime}
-                    onChange={(e) => onChange(index, 'napTime', e.target.value)}
-                    style={{ width: '80%', border: '1px solid black', textAlign: 'center' }}
-                  />
+                  <>
+                    <input
+                      type="time"
+                      value={child.napStart}
+                      onChange={(e) => onChange(index, 'napStart', e.target.value)}
+                      style={{ width: '48%', marginRight: '4%', textAlign: 'center' }}
+                    />
+                    <input
+                      type="time"
+                      value={child.napEnd}
+                      onChange={(e) => onChange(index, 'napEnd', e.target.value)}
+                      style={{ width: '48%', textAlign: 'center' }}
+                    />
+                  </>
                 ) : child.napTime ? (
                   `${child.napTime}`
                 ) : (
@@ -120,15 +128,15 @@ const VacationTable = styled.table`
 
   th:nth-child(1),
   td:nth-child(1) {
-    width: 12%;
+    width: 10%;
   }
   th:nth-child(2),
   td:nth-child(2) {
-    width: 12%;
+    width: 10%;
   }
   th:nth-child(3),
   td:nth-child(3) {
-    width: 12%;
+    width: 23%;
   }
   th:nth-child(4),
   td:nth-child(4) {
@@ -136,11 +144,11 @@ const VacationTable = styled.table`
   }
   th:nth-child(5),
   td:nth-child(5) {
-    width: 20%;
+    width: 15%;
   }
   th:nth-child(6),
   td:nth-child(6) {
-    width: 22%;
+    width: 15%;
     text-align: left;
   }
   th:nth-child(7),

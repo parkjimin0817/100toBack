@@ -28,6 +28,7 @@ export const API_ENDPOINTS = {
     MANAGERSIGNUP: '/api/members/manager',
     LOGIN: `/api/members/login`,
     MYPAGE: (memberNo) => `/api/members/mypage?id=${memberNo}`,
+    UPDATE: (memberNo) => `/api/members/mtpage?id=${memberNo}`,
     SEARCHID: `/api/members/searchId`,
     PWDSEARCHID: `/api/members/pwdSearchId`,
     PHONEACCESS: `/api/members/sendOne`,
@@ -46,6 +47,7 @@ export const API_ENDPOINTS = {
   },
   CENTERS: {
     BASE: '/api/center',
+    DETAIL: (centerNo) => `/api/center/detail?centerNo=${centerNo}`,
   },
   CLASSROOM: {
     BASE: '/api/classroom',
@@ -61,13 +63,11 @@ export const API_ENDPOINTS = {
     //퇴근 시간 기록
     WORKOUT: (memberNo) => `/api/attendance/workout/${memberNo}`,
     //교사가 자신 근태 기록 조회
-    //MYATTENDANCE:
     //시설장이 교사 별 근태 조회
-    TEACHERATTENDANCE: (memberNo) => `/api/attendance/teacher/${memberNo}`,
-    TEACHERATTENDANCE: (memberNo, year, month) =>
-      `/api/attendance/teacher?memberNo=${memberNo}&year=${year}&month=${month}`,
     TEACHERATTENDANCE: (memberNo, centerNo, year, month) =>
       `/api/attendance/teacher?memberNo=${memberNo}&centerNo=${centerNo}&year=${year}&month=${month}`,
+    //교사 근태 수정
+    UPDATETEACHERATTENDANCE: (attendanceNo) => `/api/attendance/teacher/update/${attendanceNo}`,
     //아동 출결 관리
     CHILDATTENDANCE: `/api/attendance/createChildAttendance`,
     //아동 출결 수정
@@ -85,6 +85,7 @@ export const API_ENDPOINTS = {
     BASE: '/api/childs',
     GETALL: '/api/childs/all',
     GET: '/api/childs/get',
+    PARENTCHILDLIST: (memberNo) => `/api/childs/parentChild?memberNo=${memberNo}`,
   },
   BOARDS: {
     BASE: '/api/boards',
@@ -92,5 +93,14 @@ export const API_ENDPOINTS = {
     DETAIL: (id) => `/api/boards/${id}`,
     DELETE: (id) => `/api/boards/${id}`,
     TYPE: (type, centerNo, page) => `/api/boards/type/${type}?centerNo=${centerNo}&page=${page}`,
+  },
+  VACATION: {
+    BASE: '/api/vacation',
+    REQUEST: (memberNo) => `/api/vacation/request/${memberNo}`,
+    GETLIST: (memberNo) => `/api/vacation/${memberNo}`,
+    DELETE: (vacationNo) => `/api/vacation/delete/${vacationNo}`,
+    GETLISTALL: (centerNo) => `/api/vacation/all/${centerNo}`,
+    APPROVE: (vacationNo) => `/api/vacation/approve/${vacationNo}`,
+    REJECT: (vacationNo) => `/api/vacation/reject/${vacationNo}`,
   },
 };

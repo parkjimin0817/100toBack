@@ -10,6 +10,7 @@ import { RiHealthBookLine } from 'react-icons/ri';
 import { useLoginStore } from '../../store/loginStore';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/axios.js';
+import { toast } from 'react-toastify';
 
 // 생략된 import 및 스타일 코드는 유지되고, 핵심 수정 관련 부분만 보여줍니다
 
@@ -71,10 +72,10 @@ const TeacherMyPage = () => {
           centerAddress: centerInfo.centerAddress,
           centerType: centerInfo.centerType,
         });
-        alert('수정 완료!');
+        toast.success('수정이 성공적으로 완료되었습니다.');
         setIsEditing(false);
       } catch (e) {
-        alert('수정 실패: ' + e.message);
+        toast.error('수정 실패: ' + e.message);
       }
     }
   };
@@ -106,8 +107,13 @@ const TeacherMyPage = () => {
         </InfoBox>
 
         <MenuBox>
-          <MyPageMenuBox menuName="근태관리" icon={<FaRegClock size={60} />} url="/근태관리" color="blue" />
-          <MyPageMenuBox menuName="나의 건강" icon={<RiHealthBookLine size={60} />} url="/myhealth" color="yellow" />
+          <MyPageMenuBox menuName="근태관리" icon={<FaRegClock size={60} />} url="/teacher/myattendance" color="blue" />
+          <MyPageMenuBox
+            menuName="나의 건강"
+            icon={<RiHealthBookLine size={60} />}
+            url="/teacherhealth"
+            color="yellow"
+          />
           <MyPageMenuBox
             menuName="휴가 및 워케이션 관리"
             icon={<FaUmbrellaBeach size={60} />}

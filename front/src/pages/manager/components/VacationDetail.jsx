@@ -3,6 +3,16 @@ import styled from 'styled-components';
 
 const VacationDetail = ({ isOpen, onClose, data }) => {
   if (!isOpen || !data) return null;
+  const TYPE = {
+    VACATED: '휴가',
+    WORKATION: '워케이션',
+  };
+
+  const STATUS = {
+    APPROVED: '승인',
+    REJECTED: '거절',
+    PENDING: '대기',
+  };
 
   return (
     <Backdrop onClick={onClose}>
@@ -13,7 +23,7 @@ const VacationDetail = ({ isOpen, onClose, data }) => {
         <ModalContent>
           <ModalDate>
             <Span>작성일 :</Span>
-            <P>{data.create_date}</P>
+            <P>{data.createDate}</P>
           </ModalDate>
           <ModalMain>
             <ModalInfo>
@@ -21,18 +31,18 @@ const VacationDetail = ({ isOpen, onClose, data }) => {
                 <ModalInfoTypeLeft>
                   <Span>휴가 종류 :</Span>
                   <P>
-                    {data.type} - {data.type_detail}
+                    {TYPE[data.type] || data.type} - {data.typeDetail}
                   </P>
                 </ModalInfoTypeLeft>
                 <ModalInfoTypeRight>
                   <Span>신청자 :</Span>
-                  <p>{data.name}</p>
+                  <p>{data.memberName}</p>
                 </ModalInfoTypeRight>
               </ModalInfoType>
               <ModalInfoDate>
                 <Span>기간 :</Span>
                 <P>
-                  {data.start_date} ~ {data.end_date}
+                  {data.startDate} ~ {data.endDate}
                 </P>
               </ModalInfoDate>
             </ModalInfo>
@@ -43,12 +53,12 @@ const VacationDetail = ({ isOpen, onClose, data }) => {
               </ModalContentReason>
               <ModalContentAttachment>
                 <Span>첨부파일 :</Span>
-                <P>{data.file === 'O' ? '있음' : '없음'}</P>
+                <P>{data.attachment === 'O' ? '있음' : '없음'}</P>
               </ModalContentAttachment>
             </ModalContentMain>
             <ModalStatus>
               <Span>상태 :</Span>
-              <P>{data.status}</P>
+              <P> {STATUS[data.status] || data.status}</P>
             </ModalStatus>
           </ModalMain>
         </ModalContent>

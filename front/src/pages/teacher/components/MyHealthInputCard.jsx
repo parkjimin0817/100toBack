@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import StressInputBar from './StressInputBar';
 
-const MyHealthInputCard = ({ text, label, name, value, onChange, type = 'text', unit }) => {
+const MyHealthInputCard = ({ text, label, name, value, onChange, type = 'text', unit, longWidth }) => {
   return (
     <>
       <Text>{text}</Text>
@@ -22,7 +22,7 @@ const MyHealthInputCard = ({ text, label, name, value, onChange, type = 'text', 
               />
             ) : (
               <>
-                <Value type={type} name={name} value={value} onChange={onChange} />
+                <Value type={type} name={name} value={value} onChange={onChange} $width={longWidth} />
                 <Unit>{unit}</Unit>
               </>
             )}
@@ -80,7 +80,7 @@ const Label = styled.label`
 
 const Value = styled.input`
   font-size: ${({ theme }) => theme.fontSizes.xl};
-  width: 100px;
+  width: ${({ $width }) => $width || '100px'};
   height: 35px;
   border: 1px solid ${({ theme }) => theme.colors.gray[400]};
   border-radius: 8px;

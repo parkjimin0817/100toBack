@@ -1,49 +1,109 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 import ContentHeader from '../../components/Common/ContentHeader';
 import CheckListSearchBar from './components/CheckListSearchBar';
-import { List } from '../../components/ChildDummyData';
-import { format } from 'date-fns';
 import LifeCheckListTable from './components/LifeCheckListTable';
+import { format } from 'date-fns';
+import useLoginStore from '../../store/loginStore';
+import { toast } from 'react-toastify';
 
 const ChildLifeCheck = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedClass, setSelectedClass] = useState('햇님반');
+  const [selectedClassNo, setSelectedClassNo] = useState('');
+  const [classList, setClassList] = useState([]);
   const [checklist, setChecklist] = useState([]);
 
-  const handleSearch = () => {
-    if (!selectedDate || !(selectedDate instanceof Date) || !selectedClass) {
+  const member = useLoginStore((state) => state.member);
+  const centerNo = member.centerNo;
+
+  //시설별 반 목록 가져오기
+  useEffect(() => {
+    if (!centerNo) return;
+    const fetchClassList = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8888/api/classroom/list/${centerNo}`);
+        setClassList(response.data);
+      } catch (error) {
+        toast.error('반 목록 불러오기 실패', error);
+      }
+    };
+    fetchClassList();
+  }, [centerNo]);
+
+  const handleSearch = async () => {
+    if (!selectedDate || !selectedClassNo) {
       alert('반과 날짜를 모두 선택해주세요.');
       return;
     }
 
     const formattedDate = format(selectedDate, 'yyyy-MM-dd');
 
-    const childrenInClass = List.filter((child) => child.className === selectedClass);
+    try {
+      const childRes = await axios.get(`http://localhost:8888/api/childs`, {
+        params: { classNo: selectedClassNo },
+      });
+      const children = childRes.data;
 
-    const filledChecklist = childrenInClass.map((child) => {
-      const record = child.lifeRecords?.find((r) => r.date === formattedDate);
-      return {
-        name: child.name,
-        meal: record?.meal || '',
-        napTime: record?.napTime || '',
-        play: record?.play || '',
-        social: record?.social || '',
-        memo: record?.memo || '',
-        editable: false,
-      };
-    });
+      const logRes = await axios.get(`http://localhost:8888/api/childs/activitylog/class`, {
+        params: { classNo: selectedClassNo, date: formattedDate },
+      });
+      const logs = logRes.data;
 
-    setChecklist(filledChecklist);
+      const mergedChecklist = children.map((child) => {
+        const matchedLog = logs.find((log) => log.child_name === child.child_name);
+        return {
+          name: child.child_name,
+          child_no: child.child_no,
+          meal: matchedLog?.dailyMeal_amount || '',
+          napStart: matchedLog?.napStart_time || '',
+          napEnd: matchedLog?.napEnd_time || '',
+          napTime:
+            matchedLog?.napStart_time && matchedLog?.napEnd_time
+              ? `${matchedLog.napStart_time.substring(0, 5)} ~ ${matchedLog.napEnd_time.substring(0, 5)}`
+              : '',
+          play: matchedLog?.play_participation || '',
+          social: matchedLog?.daily_friendship || '',
+          memo: matchedLog?.activity_log_memo || '',
+          editable: false,
+        };
+      });
+
+      setChecklist(mergedChecklist);
+    } catch (error) {
+      console.error('생활 체크리스트 불러오기 실패:', error);
+    }
   };
 
-  useEffect(() => {
-    if (selectedDate && selectedClass) {
-      handleSearch();
-    }
-  }, []);
+  const toggleEdit = async (index) => {
+    const item = checklist[index];
+    const formattedDate = format(selectedDate, 'yyyy-MM-dd');
 
-  const toggleEdit = (index) => {
+    if (item.editable) {
+      try {
+        await axios.patch(
+          `http://localhost:8888/api/childs/updateactivitylog`,
+          {
+            dailyMeal_amount: item.meal,
+            napStart_time: item.napStart,
+            napEnd_time: item.napEnd,
+            play_participation: item.play,
+            daily_friendship: item.social,
+            activity_log_memo: item.memo,
+          },
+          {
+            params: {
+              childNo: item.child_no,
+              date: formattedDate,
+            },
+          }
+        );
+        toast.success('저장되었습니다!');
+      } catch (error) {
+        toast.error('저장 실패에 실패하였습니다.');
+      }
+    }
+
     setChecklist((prev) => prev.map((item, i) => (i === index ? { ...item, editable: !item.editable } : item)));
   };
 
@@ -58,9 +118,10 @@ const ChildLifeCheck = () => {
         <CheckListSearchBar
           selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
-          selectedClass={selectedClass}
-          setSelectedClass={setSelectedClass}
+          selectedClassNo={selectedClassNo}
+          setSelectedClassNo={setSelectedClassNo}
           onSearch={handleSearch}
+          classList={classList}
         />
         <LifeCheckListTable data={checklist} onEdit={toggleEdit} onChange={handleChange} />
       </Content>

@@ -1,139 +1,63 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import { LuSearch } from 'react-icons/lu';
-import App from '../../App';
 import Modal from '../manager/components/VacationDetail';
+import useLoginStore from '../../store/loginStore';
+import { vacationService } from '../../api/vacation';
+import { toast } from 'react-toastify';
 
 const ApprovalList = () => {
   const [selectedType, setSelectedType] = useState('전체');
   const [openModal, setOpenModal] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
 
-  const data = [
-    {
-      create_date: '2023-10-09',
-      start_date: '2023-10-11',
-      end_date: '2023-10-14',
-      type: '휴가',
-      type_detail: '병가',
-      name: '김선생',
-      reason: '다리 부상',
-      file: 'O',
-      status: '승인',
-      decision_date: '2023-10-10',
-    },
-    {
-      create_date: '2023-10-05',
-      start_date: '2023-10-08',
-      end_date: '2023-10-10',
-      type: '휴가',
-      type_detail: '연차',
-      name: '박지민',
-      reason: '여행',
-      file: 'X',
-      status: '거절',
-      decision_date: '2023-10-07',
-    },
-    {
-      create_date: '2023-10-02',
-      start_date: '2023-10-08',
-      end_date: '2023-10-08',
-      type: '워케이션',
-      type_detail: '사전답사',
-      name: '이선생',
-      reason: '소풍 사전답사',
-      file: 'O',
-      status: '승인',
-      decision_date: '2023-10-03',
-    },
-    {
-      create_date: '2023-09-30',
-      start_date: '2023-10-01',
-      end_date: '2023-10-01',
-      type: '휴가',
-      type_detail: '병가',
-      name: '김승기',
-      reason: '몸살감기',
-      file: 'O',
-      status: '승인',
-      decision_date: '2023-10-01',
-    },
-    {
-      create_date: '2023-09-28',
-      start_date: '2023-09-30',
-      end_date: '2023-09-30',
-      type: '워케이션',
-      type_detail: '세미나 참석',
-      name: '최선생',
-      reason: '세미나 참석',
-      file: 'X',
-      status: '대기',
-      decision_date: null,
-    },
-    {
-      create_date: '2023-09-25',
-      start_date: '2023-09-26',
-      end_date: '2023-09-28',
-      type: '휴가',
-      type_detail: '연차',
-      name: '정형일',
-      reason: '놀고싶음',
-      file: 'O',
-      status: '대기',
-      decision_date: null,
-    },
-    {
-      create_date: '2023-09-20',
-      start_date: '2023-09-21',
-      end_date: '2023-09-22',
-      type: '워케이션',
-      type_detail: '사전답사',
-      name: '홍선생',
-      reason: '소풍 사전답사',
-      file: 'O',
-      status: '거절',
-      decision_date: '2023-09-20',
-    },
-    {
-      create_date: '2023-09-15',
-      start_date: '2023-09-16',
-      end_date: '2023-09-18',
-      type: '휴가',
-      type_detail: '병가',
-      name: '정의철',
-      reason: '아픔...',
-      file: 'X',
-      status: '대기',
-      decision_date: null,
-    },
-    {
-      create_date: '2023-09-10',
-      start_date: '2023-09-13',
-      end_date: '2023-09-14',
-      type: '워케이션',
-      type_detail: '세미나 참석',
-      name: '양동민',
-      reason: '세미나 참석',
-      file: 'O',
-      status: '승인',
-      decision_date: '2023-10-11',
-    },
-    {
-      create_date: '2023-09-05',
-      start_date: '2023-09-06',
-      end_date: '2023-09-07',
-      type: '휴가',
-      type_detail: '연차',
-      name: '박선생',
-      reason: '휴가엔 사유가 필요 없다',
-      file: 'X',
-      status: '거절',
-      decision_date: '2023-09-06',
-    },
-  ];
+  const { member } = useLoginStore();
+  const centerNo = member?.centerNo;
+  const [vacations, setVacations] = useState([]);
 
-  const filteredData = selectedType === '전체' ? data : data.filter((item) => item.type === selectedType);
+  //휴가 목록 불러오기
+  useEffect(() => {
+    if (!centerNo) return;
+
+    vacationService
+      .getVacationListAll(centerNo)
+      .then((data) => {
+        const sorted = data.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
+        setVacations(sorted);
+      })
+      .catch((err) => console.error('휴가 목록 불러오기 실패 : ', err.message));
+  }, [centerNo]);
+
+  //타입으로 필터
+  const TYPE = {
+    VACATED: '휴가',
+    WORKATION: '워케이션',
+  };
+
+  const filteredData = selectedType === '전체' ? vacations : vacations.filter((v) => TYPE[v.type] === selectedType);
+
+  // 휴가 승인 로직
+  const handleApprove = async (vacationNo) => {
+    try {
+      const updatedVacation = await vacationService.approveVacation(vacationNo);
+      setVacations((prev) => prev.map((v) => (v.vacationNo === vacationNo ? updatedVacation : v)));
+      toast.success('휴가가 승인되었습니다.');
+    } catch (error) {
+      console.error('휴가 승인 실패:', error.message);
+    }
+  };
+
+  //휴가 거절 로직
+  const handleReject = async (vacationNo) => {
+    try {
+      const updatedVacation = await vacationService.rejectVacation(vacationNo);
+      setVacations((prev) => prev.map((v) => (v.vacationNo === vacationNo ? updatedVacation : v)));
+      toast.success('휴가가 거절되었습니다.');
+    } catch (error) {
+      console.error('휴가 거절 실패 :', error.message);
+    }
+  };
 
   return (
     <>
@@ -142,7 +66,7 @@ const ApprovalList = () => {
         <Navigation>
           <NavigationLeft>
             {['전체', '휴가', '워케이션'].map((type) => (
-              <MemberType key={type} isActive={selectedType === type} onClick={() => setSelectedType(type)}>
+              <MemberType key={type} $isActive={selectedType === type} onClick={() => setSelectedType(type)}>
                 {type}
               </MemberType>
             ))}
@@ -162,37 +86,58 @@ const ApprovalList = () => {
               <thead>
                 <tr>
                   <th>작성일</th>
+                  <th>신청자</th>
                   <th>분류</th>
-                  <th>이름</th>
+                  <th>사유</th>
                   <th>첨부파일</th>
                   <th>승인여부</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredData.map((data, index) => (
+                {filteredData.map((v, index) => (
                   <tr
                     key={index}
-                    onClick={() => {
-                      setSelectedData(data);
+                    onClick={(e) => {
+                      if (e.target.tagName.toLowerCase() === 'button') return;
+                      if (e.target.closest('button')) return;
+                      setSelectedData(v);
                       setOpenModal(true);
                     }}
                   >
-                    <td>{data.create_date}</td>
+                    <td>{v.createDate}</td>
+                    <td>{v.memberName}</td>
                     <td>
-                      {data.type} - {data.type_detail}
+                      {TYPE[v.type] || v.type} - {v.typeDetail}
                     </td>
-                    <td>{data.name}</td>
-                    <td>{data.file}</td>
+                    <td>{v.reason}</td>
+                    {/* <td>{v.attachment}</td> */}
+                    <td>파일자리</td>
                     <td>
-                      {data.decision_date === null ? (
+                      {v.status === 'PENDING' ? (
                         <>
-                          <button className="approved">승인</button>
-                          <button className="rejected">거절</button>
+                          <button
+                            className="approved"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleApprove(v.vacationNo);
+                            }}
+                          >
+                            승인
+                          </button>
+                          <button
+                            className="rejected"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleReject(v.vacationNo);
+                            }}
+                          >
+                            거절
+                          </button>
                         </>
-                      ) : data.status === '승인' ? (
-                        <ApprovedDecisionDate>{data.decision_date}</ApprovedDecisionDate>
+                      ) : v.status === 'APPROVED' ? (
+                        <ApprovedDecisionDate>{v.decisionDate}</ApprovedDecisionDate>
                       ) : (
-                        <RejectedDecisionDate>{data.decision_date}</RejectedDecisionDate>
+                        <RejectedDecisionDate>{v.decisionDate}</RejectedDecisionDate>
                       )}
                     </td>
                   </tr>
@@ -235,7 +180,7 @@ const MemberType = styled.span`
   color: ${({ theme }) => theme.colors.blue};
   transition: color 0.3s;
 
-  border-bottom: ${({ isActive, theme }) => (isActive ? `3px solid ${theme.colors.blue}` : 'none')};
+  border-bottom: ${({ $isActive, theme }) => ($isActive ? `3px solid ${theme.colors.blue}` : 'none')};
 
   &:hover {
     border-bottom: 2px solid ${({ theme }) => theme.colors.blue};
@@ -293,75 +238,76 @@ const TableWrapper = styled.div`
 
 const Table = styled.table`
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+  table-layout: fixed;
+  border-collapse: collapse;
   font-size: ${({ theme }) => theme.fontSizes.base};
 
   thead {
     background-color: ${({ theme }) => theme.colors.blue};
     color: ${({ theme }) => theme.colors.white};
-  }
 
-  th {
-    padding: ${({ theme }) => theme.spacing[3]};
-    text-align: center;
-    font-weight: ${({ theme }) => theme.fontWeights.bold};
-  }
-  th:nth-child(1) {
-    width: 20%;
-  }
-  th:nth-child(2) {
-    width: 30%;
-  }
-  th:nth-child(3) {
-    width: 15%;
-  }
-  th:nth-child(4) {
-    width: 15%;
-  }
-  th:nth-child(5) {
-    width: 20%;
-  }
+    th {
+      padding: ${({ theme }) => theme.spacing[3]};
+      text-align: center;
+      font-weight: ${({ theme }) => theme.fontWeights.bold};
+    }
 
-  tbody > tr {
-    cursor: pointer;
-    transition: background-color 0.3s;
-
-    &:hover {
-      background-color: ${({ theme }) => theme.colors.gray[100]};
+    th:nth-child(1) {
+      width: 14%;
+    }
+    th:nth-child(2) {
+      width: 10%;
+    }
+    th:nth-child(3) {
+      width: 18%;
+    }
+    th:nth-child(4) {
+      width: 28%;
+    }
+    th:nth-child(5) {
+      width: 10%;
+    }
+    th:nth-child(6) {
+      width: 20%;
     }
   }
 
-  td {
-    color: ${({ theme }) => theme.colors.blue};
-    font-weight: ${({ theme }) => theme.fontWeights.bold};
-    padding: ${({ theme }) => theme.spacing[3]};
-    text-align: center;
-    border-bottom: 2px solid ${({ theme }) => theme.colors.gray[400]};
-    min-height: 50px;
-  }
+  tbody {
+    tr {
+      cursor: pointer;
+      transition: background-color 0.2s;
 
-  td:nth-child(5) {
-    border-right: none;
-    display: flex;
-    justify-content: center;
-    gap: ${({ theme }) => theme.spacing[4]};
+      &:hover {
+        background-color: ${({ theme }) => theme.colors.gray[100]};
+      }
+    }
+
+    td {
+      padding: ${({ theme }) => theme.spacing[3]};
+      text-align: center;
+      font-weight: ${({ theme }) => theme.fontWeights.bold};
+      color: ${({ theme }) => theme.colors.blue};
+      border-bottom: 1px solid ${({ theme }) => theme.colors.gray[300]};
+      word-break: break-word;
+    }
   }
 
   button {
     border: none;
-    padding: 0 ${({ theme }) => theme.spacing[6]};
+    width: 70px;
+    height: 30px;
+    margin: 0 4px;
     border-radius: ${({ theme }) => theme.borderRadius.md};
     cursor: pointer;
     font-size: ${({ theme }) => theme.fontSizes.xs};
     color: ${({ theme }) => theme.colors.white};
   }
 
-  button.approved {
+  .approved {
     background-color: ${({ theme }) => theme.colors.green};
   }
 
-  button.rejected {
+  .rejected {
     background-color: ${({ theme }) => theme.colors.orange};
   }
 `;
@@ -369,25 +315,14 @@ const Table = styled.table`
 const ApprovedDecisionDate = styled.span`
   background-color: ${({ theme }) => theme.colors.green};
   color: ${({ theme }) => theme.colors.white};
-  border: none;
-  padding: 0 ${({ theme }) => theme.spacing[6]};
   border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: 4px 10px;
   font-size: ${({ theme }) => theme.fontSizes.xs};
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: inline-block;
 `;
 
-const RejectedDecisionDate = styled.span`
+const RejectedDecisionDate = styled(ApprovedDecisionDate)`
   background-color: ${({ theme }) => theme.colors.orange};
-  color: ${({ theme }) => theme.colors.white};
-  border: none;
-  padding: 0 ${({ theme }) => theme.spacing[6]};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  font-size: ${({ theme }) => theme.fontSizes.xs};
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;
 
 export default ApprovalList;

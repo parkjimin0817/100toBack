@@ -6,7 +6,9 @@ import com.bridge.kinder.entity.ChildHealthData;
 import com.bridge.kinder.service.ChildService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -109,11 +111,55 @@ public class ChildController {
         return ResponseEntity.ok(childService.updateActivityData(childNo,data));
     }
 
-//    //아동 개인 건강 로그 리스트에 필요한 데이터 가져오기
-//    @GetMapping("/personalhealthlog")
-//    public ResponseEntity<ChildDto.personalhealthlog> personalHealthLog(@RequestParam int childNo){
+    //아동 건강 로그 체크리스트 날짜,반 별로 조회
+    @GetMapping("/healthlog/class")
+    public ResponseEntity<List<ChildDto.healthLog>> healthLogClass(@RequestParam int classNo,
+                                                                       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+        return ResponseEntity.ok(childService.getHealthLog(classNo,date));
+
+    }
+
+    //아동 생활 로그 체크리스트 날짜,반 별로 조회
+    @GetMapping("/activitylog/class")
+    public ResponseEntity<List<ChildDto.activityLog>> activityLogClass(@RequestParam int classNo,
+                                                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+        return ResponseEntity.ok(childService.getActivityLog(classNo,date));
+
+    }
+
+//    //아동 생활 로그 데이터 삽입,수정하기
+//    @PatchMapping("/updateactivitylog")
+//    public ResponseEntity<ChildDto.activityLog> updateActivityLog(@RequestParam int childNo,
+//                                                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+//                                                @RequestBody ChildDto.activityLog data) {
+//        return ResponseEntity.ok(childService.updateActivityLog(childNo, date, data));
 //
 //    }
 
+    //부모 번호로 해당 연결된 아동 리스트 가져오기
+    @GetMapping("/parentChild")
+    public ResponseEntity<List<ChildDto.myPageChilds>> myChilds(@RequestParam int memberNo){
+        return ResponseEntity.ok(childService.myPageChilds(memberNo));
+    }
+
+
+
+    //아동 건강 로그 체크리스트 데이터 삽입,수정
+    @PatchMapping("/updatehealthlog")
+    public ResponseEntity<ChildDto.healthLog> updateActivityLog(@RequestParam int childNo,
+                                                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+                                                                  @RequestBody ChildDto.healthLog data) {
+        return ResponseEntity.ok(childService.updateHealthLog(childNo, date, data));
+
+    }
+
+    //아동 생활 로그 체크리스트 데이터 삽입,수정하기
+    @PatchMapping("/updateactivitylog")
+    public ResponseEntity<ChildDto.activityLog> updateActivityLog(@RequestParam int childNo,
+                                                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+                                                @RequestBody ChildDto.activityLog data) {
+        return ResponseEntity.ok(childService.updateActivityLog(childNo, date, data));
+
+    }
 
 }

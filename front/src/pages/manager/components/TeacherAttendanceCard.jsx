@@ -4,13 +4,26 @@ import styled from 'styled-components';
 import TeacherProfilePhoto from './TeacherProfilePhoto';
 import TeacherAttendanceEditModal from './TeacherAttendanceEditModal';
 import { attendanceStatusToKorean } from '../../../constants/attendanceStatusMap';
+import { attendanceService } from '../../../api/attendance';
+import { toast } from 'react-toastify';
 
-const TeacherAttendanceCard = ({ selectedDate, teacher, currentMonth, attendance, monthAttendance }) => {
+const TeacherAttendanceCard = ({
+  selectedDate,
+  teacher,
+  currentMonth,
+  attendance,
+  monthAttendance,
+  minDate,
+  maxDate,
+  onUpdateAttendances,
+}) => {
   const [openModal, setOpenModal] = useState(false);
   const month = currentMonth.getMonth() + 1;
   const title = `${month}월 근태 관리`;
 
-  console.log(attendance);
+  //teacher의 memberNo, centerNo
+  const memberNo = teacher?.member_no;
+  const centerNo = teacher?.center_no;
 
   //출퇴근 시간
   const inTime = attendance?.inTime
@@ -27,12 +40,31 @@ const TeacherAttendanceCard = ({ selectedDate, teacher, currentMonth, attendance
         hour12: false,
       })
     : '-';
+  //출근 결근 count
+  minDate.setHours(0, 0, 0, 0);
+  maxDate.setHours(23, 59, 59, 999);
 
-  console.log(Array.isArray(monthAttendance));
-  console.log(monthAttendance);
+  const filteredAttendances = monthAttendance.filter((att) => {
+    const date = new Date(att.attendanceDate);
+    return date >= minDate && date <= maxDate;
+  });
 
-  //const workDayCount = monthAttendance.filter((att) => att.status === 'PRESENT');
-  //const absentCount = monthAttendance.filter((att) => att.status === 'ABSENT');
+  const workDayCount = filteredAttendances.filter((att) => att.status === 'PRESENT').length;
+  const absentCount = filteredAttendances.filter((att) => att.status === 'ABSENT').length;
+
+  //근태 수정
+  const onEdit = async (data) => {
+    try {
+      console.log('전달 데이터: ', data);
+      await attendanceService.updateTeacherAttendance(data.attendanceNo, data);
+      toast.success('근태 정보가 수정되었습니다.');
+      await onUpdateAttendances(); // 함수 호출 , 목록 재조회 (업데이트 된거 보이게)
+      setOpenModal(false);
+    } catch (err) {
+      console.error('근태 수정 실패 : ', err.message);
+      toast.error('근태 수정 중 오류가 발생했습니다.');
+    }
+  };
 
   return (
     <>
@@ -44,11 +76,11 @@ const TeacherAttendanceCard = ({ selectedDate, teacher, currentMonth, attendance
         <AttendanceCountBox>
           <AttendanceCount>
             <Name>출근</Name>
-            <Count>수정중</Count>
+            <Count>{workDayCount}</Count>
           </AttendanceCount>
           <AttendanceCount>
             <Name>결근</Name>
-            <Count>수정중</Count>
+            <Count>{absentCount}</Count>
           </AttendanceCount>
         </AttendanceCountBox>
       </TopContent>
@@ -70,8 +102,7 @@ const TeacherAttendanceCard = ({ selectedDate, teacher, currentMonth, attendance
               <tbody>
                 <tr>
                   <th>상태:</th>
-                  {/* {attendanceStatusToKorean[attendance.status] || '알 수 없음'} */}
-                  <td>수정중</td>
+                  <td>{attendanceStatusToKorean[attendance?.status] || '알 수 없음'}</td>
                 </tr>
                 <tr>
                   <th>출근시간: </th>
@@ -88,13 +119,11 @@ const TeacherAttendanceCard = ({ selectedDate, teacher, currentMonth, attendance
       </BottomContent>
       {openModal && (
         <TeacherAttendanceEditModal
-          status={status}
+          memberNo={memberNo}
+          centerNo={centerNo}
           attendance={attendance}
           onClose={() => setOpenModal(false)}
-          onEdit={(data) => {
-            console.log(data);
-            setOpenModal(false);
-          }}
+          onEdit={onEdit}
         />
       )}
     </>

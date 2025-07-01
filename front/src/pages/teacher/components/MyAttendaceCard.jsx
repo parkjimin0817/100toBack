@@ -4,13 +4,54 @@ import styled from 'styled-components';
 
 const StatusData = { in_time: '09:00', out_time: '18:00' };
 
-const MyAttendaceCard = ({ selectedDate }) => {
-  const isLeft = Boolean(StatusData.out_time); //퇴근 시간찍혀있으면 퇴근
-  const statusLabel = isLeft ? '퇴근' : '출근';
+const MyAttendaceCard = ({ selectedDate, currentMonth, attendance, minDate, maxDate, monthAttendance }) => {
+  const month = currentMonth.getMonth() + 1;
+  const title = `${month}월 근태 관리`;
+
+  const STATUS = {
+    ABSENT: '결근',
+    PRESENT: '출근',
+    WORKING: '근무중',
+    HOLIDAY: '공휴일',
+    WEEKEND: '주말',
+    VACATION: '휴가',
+    WORKCATION: '워케이션',
+  };
+
+  //출퇴근 시간
+  const inTime = attendance?.inTime
+    ? new Date(attendance.inTime).toLocaleTimeString('ko-KR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      })
+    : '미출근';
+  const outTime = attendance?.outTime
+    ? new Date(attendance.outTime).toLocaleTimeString('ko-KR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      })
+    : '미퇴근';
+
+  //출근 결근 count
+  minDate.setHours(0, 0, 0, 0);
+  maxDate.setHours(23, 59, 59, 999);
+
+  const filteredAttendances = monthAttendance.filter((att) => {
+    const date = new Date(att.attendanceDate);
+    return date >= minDate && date <= maxDate;
+  });
+
+  const workDayCount = filteredAttendances.filter((att) => att.status === 'PRESENT').length;
+  const absentCount = filteredAttendances.filter((att) => att.status === 'ABSENT').length;
+  const vacationCount = filteredAttendances.filter(
+    (att) => att.status === 'VACATION' || att.status === 'WORKCATION'
+  ).length;
 
   return (
     <>
-      <ContentHeader Title="이번달 근태 현황" Color={'blue'} FontSize={'sm'} />
+      <ContentHeader Title={title} Color={'blue'} FontSize={'sm'} />
       <AttendanceCountBox>
         <DateDiv>
           {selectedDate.toLocaleDateString('ko-KR', {
@@ -23,18 +64,17 @@ const MyAttendaceCard = ({ selectedDate }) => {
         <CountDiv>
           <AttendanceCount>
             <Name>출근</Name>
-            <Count>7</Count>
+            <Count>{workDayCount}</Count>
           </AttendanceCount>
           <AttendanceCount>
             <Name>결근</Name>
-            <Count>7</Count>
+            <Count>{absentCount}</Count>
           </AttendanceCount>
           <AttendanceCount>
-            <Name>조퇴</Name>
-            <Count>7</Count>
+            <Name>휴가</Name>
+            <Count>{vacationCount}</Count>
           </AttendanceCount>
         </CountDiv>
-        <DailyStatus></DailyStatus>
       </AttendanceCountBox>
       <AttendanceDetailBox>
         <AttendanceDetailDate>
@@ -44,12 +84,16 @@ const MyAttendaceCard = ({ selectedDate }) => {
           })}
         </AttendanceDetailDate>
         <ButtonDiv>
-          <Status $status={statusLabel} disabled>
-            {statusLabel}
-          </Status>
+          {attendance?.status ? (
+            <Status $status={STATUS[attendance.status] || attendance.status}>
+              {STATUS[attendance.status] || attendance.status}
+            </Status>
+          ) : (
+            <Status $status="UNKNOWN">기록 없음</Status>
+          )}
         </ButtonDiv>
         <DetailContent>
-          {StatusData.in_time}~{StatusData.out_time}
+          {inTime} ~ {outTime}
         </DetailContent>
       </AttendanceDetailBox>
     </>
@@ -105,8 +149,6 @@ const Count = styled.div`
   font-weight: ${({ theme }) => theme.fontWeights.bold};
 `;
 
-const DailyStatus = styled.div``;
-
 const AttendanceDetailBox = styled.div`
   margin: 10px auto;
   margin-top: 65px;
@@ -140,13 +182,31 @@ const ButtonDiv = styled.div`
   justify-content: flex-end;
 `;
 
-const Status = styled.button`
+const Status = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 80px;
   height: 30px;
   background-color: ${({ $status }) => {
-    if ($status === '출근') return '#4caf50'; // 초록
-    if ($status === '퇴근') return '#9e9e9e'; // 회색
-    return '#e0e0e0'; // 기본
+    switch ($status) {
+      case '출근':
+        return '#4caf50'; // 초록
+      case '결근':
+        return '#f44336'; // 빨강
+      case '근무중':
+        return '#2196f3'; // 파랑
+      case '공휴일':
+        return '#9e9e9e'; // 주황
+      case '주말':
+        return '#9e9e9e'; // 회색
+      case '휴가':
+        return '#9c27b0'; // 보라
+      case '워케이션':
+        return '#00bcd4'; // 청록
+      default:
+        return '#e0e0e0'; // 기본 회색
+    }
   }};
   border-radius: 5px;
   color: ${({ theme }) => theme.colors.white};

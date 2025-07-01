@@ -9,6 +9,7 @@ import com.bridge.kinder.dto.ChildDto.detail;
 import com.bridge.kinder.dto.ChildDto.health;
 import com.bridge.kinder.dto.ChildDto.healthLog;
 import com.bridge.kinder.dto.ChildDto.modalResponse;
+import com.bridge.kinder.dto.ChildDto.myPageChilds;
 import com.bridge.kinder.dto.ChildDto.updateClass;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Child;
@@ -24,6 +25,7 @@ import com.bridge.kinder.repository.ChildRepository;
 import com.bridge.kinder.repository.MemberChildRepository;
 import com.bridge.kinder.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -234,4 +236,46 @@ public class ChildServiceImpl implements ChildService {
         return ChildDto.activity.toDto(activityData);
     }
 
+    @Override
+    public List<healthLog> getHealthLog(int classNo, LocalDate date) {
+        return childRepository.getHealthLog(classNo,date).stream()
+                .map(ChildDto.healthLog::toDto)
+                .collect(Collectors.toList());
+    }
+
+    //아동 생활 로그 데이터 날짜,반 필터링해서 불러오기
+    @Override
+    public List<activityLog> getActivityLog(int classNo, LocalDate date) {
+        return childRepository.getActivityLog(classNo,date).stream()
+                .map(ChildDto.activityLog::toDto)
+                .collect(Collectors.toList());
+    }
+
+    // 아동 건강 로그 데이터 생성, 업데이트
+    @Override
+    public healthLog updateHealthLog(int childNo, LocalDate date, ChildDto.healthLog data) {
+        ChildHealthLog healthLog = childRepository.updateHealthLog(childNo, date, data)
+                .orElseThrow(() -> new EntityNotFoundException("정상적으로 수정되지 않았습니다."));
+        return ChildDto.healthLog.toDto(healthLog);
+    }
+
+    //아동 생활 로그 데이터 생성, 업데이트
+    @Override
+    public ChildDto.activityLog updateActivityLog(int childNo, LocalDate date, ChildDto.activityLog data) {
+        ChildActivityLog activityLog = childRepository.updateActivityLog(childNo, date, data)
+                .orElseThrow(() -> new EntityNotFoundException("정상적으로 수정되지 않았습니다."));
+        return ChildDto.activityLog.toDto(activityLog);
+    }
+
+
+    //부모 번호로 해당 연결된 아동 리스트 가져오기
+    @Transactional(readOnly = true)
+    @Override
+    public List<myPageChilds> myPageChilds(int memberNo) {
+
+        return childRepository.findByMemberNo(memberNo)
+                .stream()
+                .map(ChildDto.myPageChilds::toDto)
+                .collect(Collectors.toList());
+    }
 }
