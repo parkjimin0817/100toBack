@@ -13,6 +13,7 @@ import com.bridge.kinder.repository.MemberRepository;
 import com.bridge.kinder.repository.VacationRepository;
 import java.io.File;
 import java.io.IOException;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -60,6 +61,9 @@ public class VacationServiceImpl implements VacationService {
             Leave leave = leaveRepository.findByMember_MemberNo(memberNo)
                     .orElseThrow(() -> new RuntimeException("해당 교사의 연차 정보가 없습니다."));
 
+            long days = ChronoUnit.DAYS.between(vacation.getStartDate(), vacation.getEndDate()) +1 ;
+            leave.useLeave((int) days);
+
 
         return VacationDto.Response.toDto(vacation, member);
     }
@@ -81,6 +85,14 @@ public class VacationServiceImpl implements VacationService {
         if(!vacation.getStatus().equals(AdmissionStatus.PENDING)) {
             throw new IllegalArgumentException("승인 대기 중인 휴가만 삭제할 수 있습니다.");
         }
+
+        //연차 일수 복구
+        Member member = vacation.getMember();
+        Leave leave = leaveRepository.findByMember_MemberNo(member.getMemberNo())
+                        .orElseThrow(() -> new RuntimeException("해당 교사의 연차 정보가 없습니다."));
+
+        long days = ChronoUnit.DAYS.between(vacation.getStartDate(), vacation.getEndDate()) + 1;
+        leave.cancelLeave((int) days);
 
         vacationRepository.deleteById(vacationNo);
     }
