@@ -71,6 +71,14 @@ export const attendanceService = {
       throw new Error('서버 통신 불량: ' + error.message);
     }
   },
+  //시설장이 교사 근태 수정하기
+  updateTeacherAttendance: async (attendanceNo, data) => {
+    try {
+      await api.patch(API_ENDPOINTS.ATTENDANCE.UPDATETEACHERATTENDANCE(attendanceNo), data);
+    } catch (error) {
+      throw new Error('서버 통신 불량: ' + error.message);
+    }
+  },
 
   //해당 반 출결 정보 가져오기
   classAttendance: async (class_no, create_date) => {

@@ -87,7 +87,7 @@ export const vacationService = {
   },
   approveVacation: async (vacationNo) => {
     try {
-      const data = await api.patch(API_ENDPOINTS.VACATION.APPROVE(vacationNo));
+      const { data } = await api.patch(API_ENDPOINTS.VACATION.APPROVE(vacationNo));
 
       const camelData = {
         vacationNo: data.vacation_no,
@@ -110,7 +110,7 @@ export const vacationService = {
   },
   rejectVacation: async (vacationNo) => {
     try {
-      const data = await api.patch(API_ENDPOINTS.VACATION.REJECT(vacationNo));
+      const { data } = await api.patch(API_ENDPOINTS.VACATION.REJECT(vacationNo));
       const camelData = {
         vacationNo: data.vacation_no,
         type: data.type,

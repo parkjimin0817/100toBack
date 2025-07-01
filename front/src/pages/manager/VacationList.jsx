@@ -29,6 +29,7 @@ const ApprovalList = () => {
       .catch((err) => console.error('휴가 목록 불러오기 실패 : ', err.message));
   }, [centerNo]);
 
+  //타입으로 필터
   const TYPE = {
     VACATED: '휴가',
     WORKATION: '워케이션',
@@ -41,7 +42,6 @@ const ApprovalList = () => {
     try {
       const updatedVacation = await vacationService.approveVacation(vacationNo);
       setVacations((prev) => prev.map((v) => (v.vacationNo === vacationNo ? updatedVacation : v)));
-      //console.log('업데이트된 리스트:', updatedList);
       toast.success('휴가가 승인되었습니다.');
     } catch (error) {
       console.error('휴가 승인 실패:', error.message);
@@ -53,7 +53,6 @@ const ApprovalList = () => {
     try {
       const updatedVacation = await vacationService.rejectVacation(vacationNo);
       setVacations((prev) => prev.map((v) => (v.vacationNo === vacationNo ? updatedVacation : v)));
-      console.log('업데이트된 : ', vacations);
       toast.success('휴가가 거절되었습니다.');
     } catch (error) {
       console.error('휴가 거절 실패 :', error.message);

@@ -50,7 +50,6 @@ const MyAttendance = () => {
     }) || null;
 
   const today = new Date();
-  const lastDateOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
 
   return (
     <div>
@@ -64,7 +63,7 @@ const MyAttendance = () => {
               monthlyAttendanceList={attendances}
               disableFuture={true}
               minDate={joinDate}
-              maxDate={lastDateOfMonth}
+              maxDate={today}
             />
           </Div1>
           <Div2>
@@ -73,7 +72,8 @@ const MyAttendance = () => {
               currentMonth={currentMonth}
               monthAttendance={attendances}
               attendance={selectedRecord}
-              startDate={joinDate}
+              minDate={joinDate}
+              maxDate={today}
             />
           </Div2>
         </Content>
