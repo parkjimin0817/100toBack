@@ -248,6 +248,7 @@ public class ChildDto {
         private String daily_friendship;
         private String activity_log_memo;
         private String child_name;
+        private int child_no;
 
         public static activityLog toDto(ChildActivityLog activitylog){
             return activityLog.builder()
@@ -259,6 +260,7 @@ public class ChildDto {
                     .daily_friendship(activitylog.getDailyFriendship())
                     .activity_log_memo(activitylog.getActivityLogMemo())
                     .child_name(activitylog.getChild().getChildName())
+                    .child_no(activitylog.getChild().getChildNo())
                     .build();
         }
 
