@@ -2,6 +2,7 @@ package com.bridge.kinder.controller;
 
 import com.bridge.kinder.dto.VacationDto;
 import com.bridge.kinder.dto.VacationDto.Response;
+import com.bridge.kinder.entity.Leave;
 import com.bridge.kinder.service.VacationService;
 import java.io.IOException;
 import java.util.List;
