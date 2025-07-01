@@ -6,6 +6,7 @@ import CheckListSearchBar from './components/CheckListSearchBar';
 import HealthCheckListTable from './components/HealthCheckListTable';
 import { format } from 'date-fns';
 import useLoginStore from '../../store/loginStore';
+import { toast } from 'react-toastify';
 
 const ChildHealthCheck = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -24,7 +25,7 @@ const ChildHealthCheck = () => {
         const response = await axios.get(`http://localhost:8888/api/classroom/list/${centerNo}`);
         setClassList(response.data);
       } catch (error) {
-        console.error('반 목록 불러오기 실패', error);
+        toast.error('반 목록 불러오기 실패', error);
       }
     };
     fetchClassList();
@@ -60,6 +61,7 @@ const ChildHealthCheck = () => {
         const matchedLog = logs.find((log) => log.child_name === child.child_name);
         return {
           name: child.child_name,
+          child_no: child.child_no,
           temp: matchedLog?.temperature || '',
           height: matchedLog?.height || '',
           weight: matchedLog?.weight || '',
@@ -75,7 +77,35 @@ const ChildHealthCheck = () => {
     }
   };
 
-  const toggleEdit = (index) => {
+  const toggleEdit = async (index) => {
+    const item = checklist[index];
+    const formattedDate = format(selectedDate, 'yyyy-MM-dd');
+
+    if (item.editable) {
+      try {
+        await axios.patch(
+          `http://localhost:8888/api/childs/updatehealthlog`,
+          {
+            temperature: item.temp,
+            height: item.height,
+            weight: item.weight,
+            symptoms: item.symptom,
+            healthLogMemo: item.memo,
+          },
+          {
+            params: {
+              childNo: item.child_no,
+              date: formattedDate,
+            },
+          }
+        );
+        toast.success('저장되었습니다!');
+      } catch (error) {
+        toast.error('저장 실패하였습니다.');
+        toast.error(error);
+      }
+    }
+
     setChecklist((prev) => prev.map((item, i) => (i === index ? { ...item, editable: !item.editable } : item)));
   };
 

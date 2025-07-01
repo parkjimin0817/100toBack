@@ -57,6 +57,8 @@ public interface ChildRepository {
     //부모 번호로 해당 연결된 아동 리스트 가져오기
     List<Child> findByMemberNo(int memberNo);
 
+    //아동 건강 로그 데이터 삽입 혹은 수정하기
+    Optional<ChildHealthLog> updateHealthLog(int childNo, LocalDate date, ChildDto.healthLog data);
     //아동 생활 로그 데이터 삽입 혹은 수정하기
     Optional<ChildActivityLog> updateActivityLog(int childNo, LocalDate date, ChildDto.activityLog data);
 }

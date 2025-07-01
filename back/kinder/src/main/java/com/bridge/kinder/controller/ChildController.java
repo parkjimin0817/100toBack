@@ -144,10 +144,16 @@ public class ChildController {
 
 
 
-    //아동 건강 로그 체크리스트 수정
+    //아동 건강 로그 체크리스트 데이터 삽입,수정
+    @PatchMapping("/updatehealthlog")
+    public ResponseEntity<ChildDto.healthLog> updateActivityLog(@RequestParam int childNo,
+                                                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+                                                                  @RequestBody ChildDto.healthLog data) {
+        return ResponseEntity.ok(childService.updateHealthLog(childNo, date, data));
 
+    }
 
-    //아동 생활 로그 데이터 삽입,수정하기
+    //아동 생활 로그 체크리스트 데이터 삽입,수정하기
     @PatchMapping("/updateactivitylog")
     public ResponseEntity<ChildDto.activityLog> updateActivityLog(@RequestParam int childNo,
                                                 @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,

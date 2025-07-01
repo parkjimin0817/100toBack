@@ -17,6 +17,7 @@ const ChildLifeCheck = () => {
   const member = useLoginStore((state) => state.member);
   const centerNo = member.centerNo;
 
+  //시설별 반 목록 가져오기
   useEffect(() => {
     if (!centerNo) return;
     const fetchClassList = async () => {
@@ -24,7 +25,7 @@ const ChildLifeCheck = () => {
         const response = await axios.get(`http://localhost:8888/api/classroom/list/${centerNo}`);
         setClassList(response.data);
       } catch (error) {
-        console.error('반 목록 불러오기 실패', error);
+        toast.error('반 목록 불러오기 실패', error);
       }
     };
     fetchClassList();
@@ -99,7 +100,7 @@ const ChildLifeCheck = () => {
         );
         toast.success('저장되었습니다!');
       } catch (error) {
-        toast.error('저장 실패');
+        toast.error('저장 실패에 실패하였습니다.');
       }
     }
 
