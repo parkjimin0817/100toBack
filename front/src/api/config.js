@@ -103,4 +103,8 @@ export const API_ENDPOINTS = {
     APPROVE: (vacationNo) => `/api/vacation/approve/${vacationNo}`,
     REJECT: (vacationNo) => `/api/vacation/reject/${vacationNo}`,
   },
+  LEAVE: {
+    BASE: '/api/leave',
+    GETLEAVE: (memberNo) => `/api/leave/${memberNo}`,
+  },
 };

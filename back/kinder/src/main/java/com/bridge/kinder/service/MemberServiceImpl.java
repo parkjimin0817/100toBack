@@ -46,6 +46,7 @@ public class MemberServiceImpl implements MemberService {
     private final ApprovalRepository approvalRepository;
     private final MemberChildRepository memberChildRepository;
     private final String UPLOAD_PATH = "C://test_upload/"; //aws S3 연결시 관련 코드 수정할 것.
+    private final LeaveRepository leaveRepository;
 
     //회원가입 시 아이디 중복 체크
     @Override
@@ -113,6 +114,14 @@ public class MemberServiceImpl implements MemberService {
 
         Member teacher = dto.getMember().toEntity(center, profilePath);
         memberRepository.save(teacher);
+
+        Leave leave = Leave.builder()
+                .member(teacher)
+                .leaveDays(15)
+                .usedLeave(0)
+                .build();
+
+        leaveRepository.save(leave);
 
         Approval approval = Approval.builder()
                 .center(center)

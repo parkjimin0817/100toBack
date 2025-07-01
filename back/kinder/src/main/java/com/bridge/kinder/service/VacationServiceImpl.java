@@ -4,9 +4,11 @@ package com.bridge.kinder.service;
 import com.bridge.kinder.dto.VacationDto;
 import com.bridge.kinder.dto.VacationDto.Request;
 import com.bridge.kinder.dto.VacationDto.Response;
+import com.bridge.kinder.entity.Leave;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.entity.Vacation;
 import com.bridge.kinder.enums.CommonEnums.AdmissionStatus;
+import com.bridge.kinder.repository.LeaveRepository;
 import com.bridge.kinder.repository.MemberRepository;
 import com.bridge.kinder.repository.VacationRepository;
 import java.io.File;
@@ -25,6 +27,7 @@ public class VacationServiceImpl implements VacationService {
 
     private final VacationRepository vacationRepository;
     private final MemberRepository memberRepository;
+    private final LeaveRepository leaveRepository;
     private final String UPLOAD_PATH = "C://test_upload/";
 
     @Override
@@ -52,6 +55,11 @@ public class VacationServiceImpl implements VacationService {
             //휴가 신청
             Vacation vacation = request.toEntity(member, attachmentPath);
             vacationRepository.save(vacation);
+
+            //연차 일수 삭감
+            Leave leave = leaveRepository.findByMember_MemberNo(memberNo)
+                    .orElseThrow(() -> new RuntimeException("해당 교사의 연차 정보가 없습니다."));
+
 
         return VacationDto.Response.toDto(vacation, member);
     }
