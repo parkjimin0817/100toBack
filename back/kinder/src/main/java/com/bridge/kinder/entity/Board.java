@@ -83,4 +83,8 @@ public class Board {// 게시판
         }
     }
 
+    public void increaseViewCount() {
+        this.views += 1;
+    }
+
 }

@@ -91,6 +91,8 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardRepository.findById(boardNo)
                 .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
 
+        board.increaseViewCount(); // 조회수 증가
+
         return BoardDto.Detail.fromEntity(board);
     }
 
@@ -110,72 +112,60 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Page<BoardDto.Simple> getBoardsByType(CommonEnums.BoardType type, int page, int size) {
+    public Page<BoardDto.NoticeBoardDto> getNoticeBoards(CommonEnums.BoardType type, int centerNo, int page, int size) {
         int offset = (page - 1) * size;
-        List<Board> boards = boardRepository.findByType(type, offset, size);
-        List<BoardDto.Simple> result = boards.stream()
-                .map(BoardDto.Simple::fromEntity)
-                .collect(Collectors.toList());
-
-        long total = boardRepository.countByType(type);
-        return new PageImpl<>(result, PageRequest.of(page - 1, size), total);
-    }
-
-    @Override
-    public Page<BoardDto.NoticeBoardDto> getNoticeBoards(CommonEnums.BoardType type, int page, int size) {
-        int offset = (page - 1) * size;
-        List<Board> boards = boardRepository.findByType(type, offset, size);
+        List<Board> boards = boardRepository.findByType(type, centerNo, offset, size);
         List<BoardDto.NoticeBoardDto> result = boards.stream()
                 .map(BoardDto.NoticeBoardDto::fromEntity)
                 .collect(Collectors.toList());
 
-        long total = boardRepository.countByType(type);
+        long total = boardRepository.countByType(type, centerNo);
         return new PageImpl<>(result, PageRequest.of(page - 1, size), total);
     }
 
     @Override
-    public Page<BoardDto.NoteBoardDto> getNoteBoards(CommonEnums.BoardType type, int page, int size) {
+    public Page<BoardDto.NoteBoardDto> getNoteBoards(CommonEnums.BoardType type, int centerNo, int page, int size) {
         int offset = (page - 1) * size;
-        List<Board> boards = boardRepository.findByType(type, offset, size);
+        List<Board> boards = boardRepository.findByType(type, centerNo, offset, size);
         List<BoardDto.NoteBoardDto> result = boards.stream()
                 .map(BoardDto.NoteBoardDto::fromEntity)
                 .collect(Collectors.toList());
 
-        long total = boardRepository.countByType(type);
+        long total = boardRepository.countByType(type, centerNo);
         return new PageImpl<>(result, PageRequest.of(page - 1, size), total);
     }
 
     @Override
-    public Page<BoardDto.FamilyNoticeDto> getFamilyNoticeBoards(CommonEnums.BoardType type, int page, int size) {
+    public Page<BoardDto.FamilyNoticeDto> getFamilyNoticeBoards(CommonEnums.BoardType type, int centerNo, int page, int size) {
         int offset = (page - 1) * size;
-        List<Board> boards = boardRepository.findByType(type, offset, size);
+        List<Board> boards = boardRepository.findByType(type, centerNo, offset, size);
         List<BoardDto.FamilyNoticeDto> result = boards.stream()
                 .map(BoardDto.FamilyNoticeDto::fromEntity)
                 .collect(Collectors.toList());
 
-        long total = boardRepository.countByType(type);
+        long total = boardRepository.countByType(type, centerNo);
         return new PageImpl<>(result, PageRequest.of(page - 1, size), total);
     }
     @Override
-    public Page<BoardDto.PhotoBoardDto> getPhotoBoards(CommonEnums.BoardType type, int page, int size) {
+    public Page<BoardDto.PhotoBoardDto> getPhotoBoards(CommonEnums.BoardType type, int centerNo, int page, int size) {
         int offset = (page - 1) * size;
-        List<Board> boards = boardRepository.findByType(type, offset, size);
+        List<Board> boards = boardRepository.findByType(type, centerNo, offset, size);
         List<BoardDto.PhotoBoardDto> result = boards.stream()
                 .map(BoardDto.PhotoBoardDto::fromEntity)
                 .collect(Collectors.toList());
 
-        long total = boardRepository.countByType(type);
+        long total = boardRepository.countByType(type, centerNo);
         return new PageImpl<>(result, PageRequest.of(page - 1, size), total);
     }
     @Override
-    public Page<BoardDto.MealPlanBoardDto> getMealPlanBoards(CommonEnums.BoardType type, int page, int size) {
+    public Page<BoardDto.MealPlanBoardDto> getMealPlanBoards(CommonEnums.BoardType type, int centerNo, int page, int size) {
         int offset = (page - 1) * size;
-        List<Board> boards = boardRepository.findByType(type, offset, size);
+        List<Board> boards = boardRepository.findByType(type, centerNo, offset, size);
         List<BoardDto.MealPlanBoardDto> result = boards.stream()
                 .map(BoardDto.MealPlanBoardDto::fromEntity)
                 .collect(Collectors.toList());
 
-        long total = boardRepository.countByType(type);
+        long total = boardRepository.countByType(type, centerNo);
         return new PageImpl<>(result, PageRequest.of(page - 1, size), total);
     }
 

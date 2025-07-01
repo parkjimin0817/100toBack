@@ -13,12 +13,11 @@ public interface BoardService {
     BoardDto.Detail getBoard(int boardNo);
     List<BoardDto.Simple> getAllBoards();
     void deleteBoard(int boardNo);
-    Page<BoardDto.Simple> getBoardsByType(CommonEnums.BoardType type, int page, int size);
-    Page<BoardDto.NoticeBoardDto> getNoticeBoards(CommonEnums.BoardType type, int page, int size);
-    Page<BoardDto.NoteBoardDto> getNoteBoards(CommonEnums.BoardType type, int page, int size);
-    Page<BoardDto.FamilyNoticeDto> getFamilyNoticeBoards(CommonEnums.BoardType type, int page, int size);
-    Page<BoardDto.PhotoBoardDto> getPhotoBoards(CommonEnums.BoardType type, int page, int size);
-    Page<BoardDto.MealPlanBoardDto> getMealPlanBoards(CommonEnums.BoardType type, int page, int size);
+    Page<BoardDto.NoticeBoardDto> getNoticeBoards(CommonEnums.BoardType type, int centerNo, int page, int size);
+    Page<BoardDto.NoteBoardDto> getNoteBoards(CommonEnums.BoardType type, int centerNo, int page, int size);
+    Page<BoardDto.FamilyNoticeDto> getFamilyNoticeBoards(CommonEnums.BoardType type, int centerNo, int page, int size);
+    Page<BoardDto.PhotoBoardDto> getPhotoBoards(CommonEnums.BoardType type, int centerNo, int page, int size);
+    Page<BoardDto.MealPlanBoardDto> getMealPlanBoards(CommonEnums.BoardType type, int centerNo, int page, int size);
 
     int updateBoard(Integer boardNo, BoardDto.Update dto, MultipartFile file, List<MultipartFile> contentFiles) throws IOException;
 }
