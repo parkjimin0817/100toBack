@@ -45,20 +45,22 @@ public class BoardRepositoryImpl implements BoardRepository {
     }
 
     @Override
-    public List<Board> findByType(CommonEnums.BoardType type, int offset, int limit) {
-        String jpql = "SELECT b FROM Board b WHERE b.type = :type ORDER BY b.createDate DESC";
+    public List<Board> findByType(CommonEnums.BoardType type, int centerNo, int offset, int limit) {
+        String jpql = "SELECT b FROM Board b WHERE b.type = :type AND b.center.centerNo = :centerNo ORDER BY b.createDate DESC";
         return em.createQuery(jpql, Board.class)
                 .setParameter("type", type)
+                .setParameter("centerNo", centerNo)
                 .setFirstResult(offset)
                 .setMaxResults(limit)
                 .getResultList();
     }
 
     @Override
-    public long countByType(CommonEnums.BoardType type) { // 해당 타입의 게시판의 게시물 수
-        String jpql = "SELECT COUNT(b) FROM Board b WHERE b.type = :type";
+    public long countByType(CommonEnums.BoardType type, int centerNo) { // 해당 타입의 게시판의 게시물 수
+        String jpql = "SELECT COUNT(b) FROM Board b WHERE b.type = :type AND b.center.centerNo = :centerNo";
         return em.createQuery(jpql, Long.class)
                 .setParameter("type", type)
+                .setParameter("centerNo", centerNo)
                 .getSingleResult();
     }
 }
