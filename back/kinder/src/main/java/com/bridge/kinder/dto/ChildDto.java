@@ -402,7 +402,7 @@ public class ChildDto {
                     .child_name(child.getChildName())
                     .child_resident_no(child.getChildResidentNo())
                     .child_profile(child.getChildProfile())
-                    .class_name(child.getClassRoom().getClassName())
+                    .class_name(child.getClassRoom() != null ? child.getClassRoom().getClassName() : null)
                     .build();
 
         }
