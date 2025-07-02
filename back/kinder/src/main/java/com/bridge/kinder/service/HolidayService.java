@@ -30,7 +30,7 @@ public class HolidayService {
 
     private final HolidayRepository holidayRepository;
 
-//    @Value("${holiday.api.key}")
+    @Value("${holiday.api.key}")
     private String serviceKey;
 
     //공휴일 가져와서 저장
@@ -44,9 +44,6 @@ public class HolidayService {
             urlBuilder.append("&_type=xml"); //응답 타입 : xml
 
             URL url = new URL(urlBuilder.toString());
-
-            System.out.println("💡 최종 요청 URL: " + urlBuilder.toString());
-
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");

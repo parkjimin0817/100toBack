@@ -59,7 +59,11 @@ const MyAttendance = () => {
           <Div1>
             <TeacherAttendanceCalendar
               onDateClick={(date) => setSelectedDate(date)}
-              onMonthChange={(date) => setCurrentMonth(date)}
+              onMonthChange={(date) => {
+                setCurrentMonth(date);
+                const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+                setSelectedDate(firstDayOfMonth);
+              }}
               monthlyAttendanceList={attendances}
               disableFuture={true}
               minDate={joinDate}

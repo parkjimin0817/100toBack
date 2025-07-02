@@ -4,7 +4,6 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import axios from 'axios';
 import { holidayService } from '../../api/holiday';
 
 const TeacherAttendanceCalendar = ({ onDateClick, onMonthChange, disableFuture = false, minDate, maxDate }) => {
