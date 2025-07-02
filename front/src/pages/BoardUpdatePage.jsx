@@ -30,7 +30,7 @@ const BoardUpdatePage = () => {
   const [formState, setFormState] = useState({
     title: postData.title,
     type : postData.type, 
-    classRoomNo: postData.classRoomNo,
+    classRoomNo: postData.classNo,
     file: null,
     memberName: member.memberName,
     memberId : member.memberNo,
