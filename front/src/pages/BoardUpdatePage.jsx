@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import BoardEditor from '../components/Board/BoardEditor';
 import ContentHeader from '../components/Common/ContentHeader';
 import styled from 'styled-components';
@@ -19,6 +19,7 @@ const categoryName = {
 
 const BoardUpdatePage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const postData = location.state?.post || null;
   const category = location.state?.category || "default";
 
@@ -57,8 +58,38 @@ const BoardUpdatePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(formState);
-    console.log(postData);
+    // ✅ 1. 제목 유효성 검사
+    if (!formState.title.trim()) {
+      alert("제목을 입력해주세요.");
+      return;
+    }
+
+    // ✅ 2. 반 선택 유효성 검사 (category가 반이 필요한 경우만)
+    if ((category === 'family_notice' || category === 'note') && !formState.classRoomNo) {
+      alert("반을 선택해주세요.");
+      return;
+    }
+
+    // ✅ 3. 콘텐츠가 최소 1개 이상 있어야 함
+    if (formState.contents.length === 0) {
+      alert("내용을 최소 1개 이상 작성해주세요.");
+      return;
+    }
+
+    // ✅ 4. 콘텐츠 내용 검증 (빈 텍스트 or 이미지 파일 없음 등)
+    const hasInvalidBlock = formState.contents.some((item) => {
+      if (item.type === "TEXT" && !item.contentText?.trim()) return true;
+      if (item.type === "IMG" && !item.contentFile) return true;
+      return false;
+    });
+
+    if (hasInvalidBlock) {
+      alert("빈 텍스트 블록이나 이미지가 누락된 블록이 있습니다.");
+      return;
+    }
+
+    // console.log("formState : ", formState);
+    // console.log("responseData : ", postData);
 
     const formData = new FormData();
 
@@ -73,10 +104,12 @@ const BoardUpdatePage = () => {
         contentId: item.boardContentNo || null,
         type: item.type,
         contentText: item.contentText || null,
-        contentFileKey: item.contentFile ? `contentFile_${index}` : null,
+        contentFile: item.contentFile?.name ? item.contentFile.name : item.contentFile,
         sortOrder: index,
       })),
     };
+
+    // console.log("payload : ", payload);
 
     // 👉 JSON 문자열로 보내기
     formData.append('data', new Blob([JSON.stringify(payload)], { type: 'application/json' }));
@@ -87,14 +120,14 @@ const BoardUpdatePage = () => {
     }
 
     // 📁 contents 내부 이미지 파일들
-    formState.contents.forEach((item, index) => {
+    formState.contents.forEach((item) => {
       // console.log(postData.boardContents[index].contentFile);
       if (item.type === 'IMG') {
         formData.append(`contentFiles`, item.contentFile);
       }
     });
 
-    console.log("전송할 데이터:", formData);
+    // console.log("전송할 데이터:", formData);
 
     // axios 전송 예시
     await axios.put(`http://localhost:8888/api/boards/${postData.boardNo}`, formData, {
@@ -113,7 +146,7 @@ const BoardUpdatePage = () => {
 
   const addBlock = () => {
     const newBlock = {
-      id: Date.now(),
+      boardContentNo: Date.now(),
       type: "default", // or 'text' or 'image'
     };
     setFormState((prev) => ({
@@ -126,7 +159,7 @@ const BoardUpdatePage = () => {
     setFormState((prev) => ({
       ...prev,
       contents: prev.contents.map((content) =>
-        content.id === id
+        content.boardContentNo === id
           ? {
               ...content,
               ...(content.type === 'IMG'
@@ -142,7 +175,7 @@ const BoardUpdatePage = () => {
     setFormState((prev) => ({
       ...prev,
       contents: prev.contents.map((content) =>
-        content.id === id
+        content.boardContentNo === id
           ? {
               ...content,
               type: type,
@@ -156,7 +189,7 @@ const BoardUpdatePage = () => {
   const deleteBlock = (id) => {
     setFormState((prev) => ({
       ...prev,
-      contents: prev.contents.filter((content) => content.id !== id),
+      contents: prev.contents.filter((content) => content.boardContentNo !== id),
     }));
   };
 

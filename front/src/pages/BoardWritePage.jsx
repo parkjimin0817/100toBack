@@ -57,6 +57,36 @@ const BoardWritePage = () => {
 
     // 입력 검증
 
+    // ✅ 1. 제목 유효성 검사
+    if (!formState.title.trim()) {
+      alert("제목을 입력해주세요.");
+      return;
+    }
+
+    // ✅ 2. 반 선택 유효성 검사 (category가 반이 필요한 경우만)
+    if ((category === 'family_notice' || category === 'note') && !formState.classRoomNo) {
+      alert("반을 선택해주세요.");
+      return;
+    }
+
+    // ✅ 3. 콘텐츠가 최소 1개 이상 있어야 함
+    if (formState.contents.length === 0) {
+      alert("내용을 최소 1개 이상 작성해주세요.");
+      return;
+    }
+
+    // ✅ 4. 콘텐츠 내용 검증 (빈 텍스트 or 이미지 파일 없음 등)
+    const hasInvalidBlock = formState.contents.some((item) => {
+      if (item.type === "TEXT" && !item.contentText?.trim()) return true;
+      if (item.type === "IMG" && !item.contentFile) return true;
+      return false;
+    });
+
+    if (hasInvalidBlock) {
+      alert("빈 텍스트 블록이나 이미지가 누락된 블록이 있습니다.");
+      return;
+    }
+
     const formData = new FormData();
 
     // 📦 JSON으로 직렬화한 게시글 본문 데이터
@@ -89,7 +119,7 @@ const BoardWritePage = () => {
       }
     });
 
-    console.log("전송할 데이터:", payload);
+    // console.log("전송할 데이터:", payload);
 
     // axios 전송 예시
     await axios.post("http://localhost:8888/api/boards", formData, {
@@ -108,7 +138,7 @@ const BoardWritePage = () => {
 
   const addBlock = () => {
     const newBlock = {
-      id: Date.now(),
+      boardContentNo: Date.now(),
       type: "default", // or 'text' or 'image'
     };
     setFormState((prev) => ({
@@ -121,7 +151,7 @@ const BoardWritePage = () => {
     setFormState((prev) => ({
       ...prev,
       contents: prev.contents.map((content) =>
-        content.id === id
+        content.boardContentNo === id
           ? {
               ...content,
               ...(content.type === 'IMG'
@@ -137,7 +167,7 @@ const BoardWritePage = () => {
     setFormState((prev) => ({
       ...prev,
       contents: prev.contents.map((content) =>
-        content.id === id
+        content.boardContentNo === id
           ? {
               ...content,
               type: type,
@@ -151,7 +181,7 @@ const BoardWritePage = () => {
   const deleteBlock = (id) => {
     setFormState((prev) => ({
       ...prev,
-      contents: prev.contents.filter((content) => content.id !== id),
+      contents: prev.contents.filter((content) => content.boardContentNo !== id),
     }));
   };
 
