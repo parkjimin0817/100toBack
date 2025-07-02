@@ -22,8 +22,12 @@ public interface ScheduleService {
     void deleteSchedule(int scheduleNo);
 
     //반 일과표 생성
-    String createDailySchedule(List<ScheduleDto.DailyScheduleDto> dto );
+    List<Integer> createDailySchedule(List<ScheduleDto.DailyScheduleDto> dto);
 
     //반 일과표 조회
     List<ScheduleDto.DailyResponse> dailyList(int centerNo, int memberNo, int classNo, LocalDate scheduleDate);
+
+    //반 일과표 등록(수정)
+    List<ScheduleDto.DailyResponse> updateDailySchedule(List<ScheduleDto.DailyScheduleUpdateDto> dto);
+
 }

@@ -167,7 +167,7 @@ function App() {
             <Route path="/childhealthcheck" element={<ChildHealthCheck />} />
             <Route path="/childlifecheck" element={<ChildLifeCheck />} />
             <Route path="/daily" element={<DailySchedule />} />
-            <Route path="/dailyDetail/:schedule_no" element={<DailyScheduleDetail />} />
+            <Route path="/dailyDetail/:class_no" element={<DailyScheduleDetail />} />
             <Route path="/child/detail/:id" element={<ChildDetail />} />
             <Route path="/teacher/workcation" element={<MyVacation />} />
             <Route path="/childattendance/:class_no" element={<AttendancePage />} />
@@ -201,7 +201,7 @@ function App() {
              * 6-2. 작성
              * 6-3. 상세
              * 6-4. 수정
-             * 
+             *
              *  */}
             <Route path="/family_notice">
               <Route path="list" element={<FamilyNoticePage />} />
@@ -217,17 +217,17 @@ function App() {
               <Route path=":id" element={<BoardDetailPage />} />
               <Route path="update/:id" element={<BoardUpdatePage />} />
             </Route>
-            <Route path='/photo'>
+            <Route path="/photo">
               <Route path="list" element={<PhotoPage />} />
               <Route path="write" element={<BoardWritePage />} />
               <Route path=":id" element={<BoardDetailPage />} />
-              <Route path='update/:id' element={<BoardUpdatePage />} />
+              <Route path="update/:id" element={<BoardUpdatePage />} />
             </Route>
-            <Route path='/meal_plan'>
+            <Route path="/meal_plan">
               <Route path="list" element={<MealPlanPage />} />
               <Route path="write" element={<BoardWritePage />} />
               <Route path=":id" element={<BoardDetailPage />} />
-              <Route path='update/:id' element={<BoardUpdatePage />} />
+              <Route path="update/:id" element={<BoardUpdatePage />} />
             </Route>
           </Route>
 

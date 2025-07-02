@@ -3,7 +3,6 @@ import ContentHeader from '../../components/Common/ContentHeader';
 import { GoDotFill } from 'react-icons/go';
 import styled from 'styled-components';
 // import { media } from '../../styles/MediaQueries';
-import useScheduleStore from '../../store/scheduleStore';
 // import { useDailyScheduleForm } from '../../hook/useDailyScheduleForm';
 import { useScheduleService } from '../../api/schedule';
 import { useParams } from 'react-router-dom';
@@ -12,26 +11,55 @@ import { FaPlus, FaMinus } from 'react-icons/fa';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 import useLoginStore from '../../store/loginStore';
+import { ImInfo } from 'react-icons/im';
+import { TiDelete } from 'react-icons/ti';
+import { set } from 'react-hook-form';
+import { BarLoader } from 'react-spinners';
 
 const DailyScheduleDetail = () => {
-  // const {} = useDailyScheduleForm();
   const { member } = useLoginStore();
-
   const { class_no } = useParams();
-
-  //데이터를 모아서 보내줄 useState
-  const [ad, setAd] = useState([]);
-
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
-  const [title, setTitle] = useState('');
+  //등록 / 수정으로 넘어가는 값
   const [writeAuthority, setWriteAuthority] = useState(false);
+
+  //요청 보낼 데이터값
+  const [inputs, setInputs] = useState([]);
 
   const today = dayjs(); // 오늘 날짜
   const [thisday, setThisday] = useState(today.format('YYYY-MM-DD'));
 
   //년도, 월, 일, 요일(숫자), 요일(글자)
   const [arWeek, setArWeek] = useState([]);
+
+  const [status, setStatus] = useState('');
+
+  const fetchdata = async (sch) => {
+    try {
+      setWriteAuthority(false);
+      const selectedDate = sch?.allDate ?? dayjs().format('YYYY-MM-DD');
+      setThisday(selectedDate);
+
+      const schedule = await useScheduleService.dailyScheduleSelect(
+        member.centerNo,
+        member.memberNo,
+        class_no,
+        selectedDate
+      );
+
+      if (!schedule) {
+        throw new Error('일정표 없음');
+      }
+
+      setInputs(schedule);
+    } catch (error) {
+      toast.error('일정표 불러오는 중에 문제 발생하였습니다.');
+      console.error('불러오기 에러 : ', error);
+    }
+  };
+
+  useEffect(() => {
+    setStatus('일정을 등록해주세요.');
+  }, [thisday]);
 
   //년도, 월, 일, 요일(숫자), 요일(글자) 추가
   useEffect(() => {
@@ -54,79 +82,118 @@ const DailyScheduleDetail = () => {
     });
 
     setArWeek(newWeek);
+    fetchdata();
   }, []);
 
-  console.log(arWeek);
+  //일정표 생성
+  const handleAddButton = async () => {
+    try {
+      const newItem = {
+        schedule_date: thisday,
+        start_time: null,
+        end_time: null,
+        title: '일정표',
+        description: null,
+        type: 'CLASSROOM',
+        center_no: member.centerNo,
+        class_no: class_no,
+        member_no: member.memberNo,
+      };
+
+      const scheduleNos = await useScheduleService.dailyCreate([newItem]);
+      if (!scheduleNos || scheduleNos.length !== 1) {
+        throw new Error('일정 등록 생성에 실패했습니다.');
+      }
+
+      const newItemWithScheduleNo = {
+        ...newItem,
+        schedule_no: scheduleNos[0],
+      };
+
+      setInputs((prev) => [...prev, newItemWithScheduleNo]);
+
+      setStatus('일정 등록에 성공했습니다.');
+    } catch (error) {
+      toast.error('일정 등록에 실패했습니다.');
+      console.error('일정 등록 실패 : ', error);
+    }
+  };
 
   //입력 시 상태 변경
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    switch (name) {
-      case 'activity':
-        setTitle(value);
-        break;
-      case 'startTime':
-        setStartTime(value);
-        break;
-      case 'endTime':
-        setEndTime(value);
-      default:
-        break;
-    }
+  const handleChange = (index, field, value) => {
+    const updated = [...inputs];
+    updated[index] = {
+      ...updated[index],
+      [field]: value,
+    };
+    setInputs(updated);
   };
 
   //수정 / 등록
-  const handleSubmit = (ev) => {
+  const handleSubmit = async (ev) => {
     ev.preventDefault();
+    try {
+      if (inputs.length === 0) {
+        setWriteAuthority(false);
+        return;
+      }
 
+      const updateDailySchedule = await useScheduleService.dailyUpdate(inputs);
+
+      if (!updateDailySchedule) {
+        throw new Error('일정 등록에 실패했습니다.');
+      }
+
+      toast.success('일정 등록에 성공했습니다.');
+      setStatus('일정 등록에 성공했습니다.');
+    } catch (error) {
+      toast.error('일정 등록에 실패했습니다.');
+      setStatus('일정 등록에 실패했습니다.');
+    }
     setWriteAuthority(false);
   };
 
-  const selecthandle = async (sch) => {
+  //해당 일정표 삭제
+  const handleDelete = async (schedule_no) => {
     try {
-      setThisday(sch.allDate);
+      const deleteDailySchedule = await useScheduleService.dailyDelete(schedule_no);
 
-      setAd({
-        title: title,
-        center_no: member.center_no,
-        class_no: class_no,
-        member_no: member.member_no,
-        create_date: thisday,
-        start_time: startTime,
-        end_time: endTime,
-        type: 'CLASSROOM',
-      });
-
-      const schedule = await useScheduleService.searchDate(ad);
-      if (!schedule) {
-        throw new Error('일과표 없음');
+      if (!deleteDailySchedule) {
+        throw new Error('일정 삭제 실패했습니다.');
       }
 
-      toast.success('일과표 불러오기 성공');
+      setStatus('일정 삭제 성공했습니다.');
+      fetchdata({ allDate: thisday });
+      setWriteAuthority(true);
     } catch (error) {
-      toast.error('일과표 불러오는 중에 문제 발생하였습니다.');
-      console.error('불러오기 에러 : ', error);
+      toast.error('일정 삭제 실패했습니다.');
+      setStatus('일정 삭제 실패했습니다.');
     }
   };
 
-  const handleAddButton = () => {
-    setAd();
-  };
-
   return (
-    <Content>
+    <Content onSubmit={handleSubmit}>
       <ContentHeader
         Title={'일과표'}
         Color={'purple'}
-        ButtonProps={[
-          {
-            Title: '일과 등록 및 수정',
-            func: () => {
-              writeAuthority === false ? setWriteAuthority(true) : setWriteAuthority(false);
-            },
-          },
-        ]}
+        ButtonProps={
+          writeAuthority === false
+            ? [
+                {
+                  Title: '일정표 작성하기',
+                  func: (e) => {
+                    e.preventDefault();
+                    setWriteAuthority(true);
+                  },
+                },
+              ]
+            : [
+                {
+                  Title: '일정표 등록하기',
+                  type: 'submit',
+                },
+              ]
+        }
       />
       <Div>
         <div>
@@ -147,7 +214,7 @@ const DailyScheduleDetail = () => {
                       schedule.day.toString().padStart(2, '0')
                     }
                     $weekNumber={schedule.weekday}
-                    onClick={() => selecthandle(schedule)}
+                    onClick={() => fetchdata(schedule)}
                   >
                     <td>{schedule.weekdayNames}</td>
                     <td>{schedule.day}</td>
@@ -159,75 +226,174 @@ const DailyScheduleDetail = () => {
         </div>
 
         <Border>
-          <Form onSubmit={handleSubmit}>
-            <Table>
-              <Tbody>
-                <Tr>
-                  <Td>
-                    <IconDiv>
-                      <GoDotFill />
-                    </IconDiv>
-                  </Td>
-                  <Td>
-                    {writeAuthority === true ? (
-                      <TableInput
-                        type="text"
-                        name="startTime"
-                        value={startTime}
-                        onChange={handleChange}
-                        placeholder="시작 시간"
-                      />
-                    ) : (
-                      <ActivityTitle>
-                        {startTime === '' ? <ActivityNone>시작 시간</ActivityNone> : startTime}
-                      </ActivityTitle>
-                    )}
-                  </Td>
-                  <Td>-</Td>
-                  <Td>
-                    {writeAuthority === true ? (
-                      <TableInput
-                        type="text"
-                        name="endTime"
-                        value={endTime}
-                        onChange={handleChange}
-                        placeholder="종료 시간"
-                      />
-                    ) : (
-                      <ActivityTitle>{endTime === '' ? <ActivityNone>종료 시간</ActivityNone> : endTime}</ActivityTitle>
-                    )}
-                  </Td>
-                  <Td>
-                    {writeAuthority === true ? (
-                      <Input
-                        type="text"
-                        name="activity"
-                        value={title}
-                        onChange={handleChange}
-                        placeholder="활동 입력하기"
-                      />
-                    ) : (
-                      <ActivityTitle>
-                        {title === '' ? <ActivityNone>활동을 등록해주세요.</ActivityNone> : title}
-                      </ActivityTitle>
-                    )}
-                  </Td>
-                </Tr>
-                <Tr>
-                  <AddButtonTd>
-                    <AddButton type="button" onClick={handleAddButton}>
-                      <FaPlus />
-                    </AddButton>
-                  </AddButtonTd>
-                </Tr>
-              </Tbody>
-            </Table>
+          <Form>
+            <HintArea>
+              <ImInfo />
+              하루 일정를 확인하고 등록하실 수 있습니다.
+            </HintArea>
+            <InnerBorder $writeAuthority={writeAuthority}>
+              {inputs.length === 0 ? (
+                <NotingAnyMore>
+                  <BarLoader />
+                  <h1>일정이 없습니다.</h1>
+                </NotingAnyMore>
+              ) : (
+                inputs.map((input, index) => (
+                  <Line key={index}>
+                    <OutIconDiv>
+                      <IconDiv>
+                        <GoDotFill />
+                      </IconDiv>
+                    </OutIconDiv>
+                    <TimeInputLine>
+                      {writeAuthority === true ? (
+                        <TableInput
+                          type="text"
+                          name="startTime"
+                          value={input?.start_time ?? ''}
+                          onChange={(e) => handleChange(index, 'start_time', e.target.value)}
+                          placeholder="시작 시간"
+                        />
+                      ) : (
+                        <ActivityTitle>
+                          {input.start_time === null ? <ActivityNone>시작 시간</ActivityNone> : input.start_time}
+                        </ActivityTitle>
+                      )}
+                      -
+                      {writeAuthority === true ? (
+                        <TableInput
+                          type="text"
+                          name="endTime"
+                          value={input?.end_time ?? ''}
+                          onChange={(e) => handleChange(index, 'end_time', e.target.value)}
+                          placeholder="종료 시간"
+                        />
+                      ) : (
+                        <ActivityTitle>
+                          {input.end_time === null ? <ActivityNone>종료 시간</ActivityNone> : input.end_time}
+                        </ActivityTitle>
+                      )}
+                    </TimeInputLine>
+                    <ActivityLine>
+                      {writeAuthority === true ? (
+                        <Input
+                          type="text"
+                          name="description"
+                          value={input?.description ?? ''}
+                          onChange={(e) => handleChange(index, 'description', e.target.value)}
+                          placeholder="활동 입력하기"
+                        />
+                      ) : (
+                        <ActivityTitle>
+                          {input.description === null ? (
+                            <ActivityNone>활동을 등록해주세요.</ActivityNone>
+                          ) : (
+                            input.description
+                          )}
+                        </ActivityTitle>
+                      )}
+                      {writeAuthority === true ? (
+                        <DailyDeleteButton type="button" onClick={() => handleDelete(input.schedule_no)}>
+                          <DeleteIcon />
+                        </DailyDeleteButton>
+                      ) : (
+                        ''
+                      )}
+                    </ActivityLine>
+                  </Line>
+                ))
+              )}
+              {writeAuthority === true ? (
+                <AddButtonDiv>
+                  <AddButton type="button" onClick={handleAddButton}>
+                    <FaPlus />
+                  </AddButton>
+                </AddButtonDiv>
+              ) : (
+                ''
+              )}
+            </InnerBorder>
+            <StatusDiv>{status}</StatusDiv>
           </Form>
         </Border>
       </Div>
     </Content>
   );
 };
+
+const StatusDiv = styled.div`
+  font-size: ${({ theme }) => theme.fontSizes.lg};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  color: ${({ theme }) => theme.colors.purple};
+`;
+
+const NotingAnyMore = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 250px;
+  gap: 20px;
+`;
+
+const InnerBorder = styled.div`
+  display: flex;
+  justify-content: ${({ $writeAuthority }) => ($writeAuthority ? 'space-between' : 'flex-start')};
+  align-items: center;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing[2]};
+  min-height: 270px;
+  padding: ${({ theme }) => theme.spacing[4]};
+`;
+
+const DeleteIcon = styled(TiDelete)`
+  width: 25px;
+  height: 25px;
+
+  &:hover {
+    scale: 0.98;
+  }
+`;
+
+const DailyDeleteButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const HintArea = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing[2]};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+`;
+
+const ActivityLine = styled.div`
+  display: flex;
+  justify-content: center;
+  white-space: nowrap;
+  gap: ${({ theme }) => theme.spacing[2]};
+`;
+
+const TimeInputLine = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+`;
+
+const OutIconDiv = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+`;
+
+const Line = styled.div`
+  display: grid;
+  grid-template-columns: 20px 1.5fr 2fr;
+  gap: ${({ theme }) => theme.spacing[2]};
+  padding: ${({ theme }) => theme.spacing[2]} 0;
+`;
 
 const TableInput = styled.input`
   width: 70px;
@@ -236,11 +402,12 @@ const TableInput = styled.input`
   text-align: center;
 `;
 
-const AddButtonTd = styled.td`
+const AddButtonDiv = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-top: ${({ theme }) => theme.spacing[4]};
 `;
 
 const AddButton = styled.button`
@@ -253,7 +420,7 @@ const AddButton = styled.button`
   align-items: center;
 `;
 
-const Content = styled.div`
+const Content = styled.form`
   width: 100%;
   min-height: 600px;
   background-color: #ffffff;
@@ -307,29 +474,15 @@ const Div = styled.div`
 `;
 
 const Border = styled.div`
+  min-width: 570px;
+  min-height: 300px;
   border: 1px solid ${({ theme }) => theme.colors.gray[400]};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
-
   box-shadow: ${({ theme }) => theme.shadows.md};
 `;
 
-const Form = styled.form`
+const Form = styled.div`
   padding: ${({ theme }) => theme.spacing[6]};
-`;
-
-const Table = styled.table`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-`;
-
-const Tbody = styled.tbody`
-  display: flex;
-  justify-content: center;
-  align-items: start;
-  flex-direction: column;
-  gap: 15px;
 `;
 
 const IconDiv = styled.div`
@@ -347,25 +500,12 @@ const Input = styled.input`
   box-shadow: ${({ theme }) => theme.shadows.md};
 `;
 
-const Td = styled.td`
-  font-size: ${({ theme }) => theme.fontSizes.base};
-  font-weight: ${({ theme }) => theme.fontWeights.semibold};
-`;
-
-const Tr = styled.tr`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 33px;
-  gap: 10px;
-  width: 100%;
-`;
-
 const ActivityNone = styled.span`
   color: ${({ theme }) => theme.colors.gray[400]};
 `;
 
-const ActivityTitle = styled.span`
+const ActivityTitle = styled.div`
+  width: 100%;
   padding: 0 ${({ theme }) => theme.spacing[1]};
 `;
 export default DailyScheduleDetail;

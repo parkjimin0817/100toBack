@@ -29,4 +29,7 @@ public interface ScheduleRepository {
     //반 일과표 조회
     List<Schedule> findDailyList(int centerNo, int memberNo, int classNo, LocalDate scheduleDate);
 
+    //반 일과표 조회
+    List<Schedule> findDailySchedule(int centerNo, int memberNo, int classNo, int scheduleNo, LocalDate scheduleDate);
+
 }

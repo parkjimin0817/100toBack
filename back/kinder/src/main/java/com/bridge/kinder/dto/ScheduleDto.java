@@ -5,6 +5,7 @@ import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.entity.Schedule;
 import com.bridge.kinder.enums.CommonEnums;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -110,7 +111,7 @@ public class ScheduleDto {
     @Builder
     public static class DailyScheduleDto {
         private String title;
-        private LocalDate create_date;
+        private LocalDate schedule_date;
         private LocalTime start_time;
         private LocalTime end_time;
         private CommonEnums.RollType type;
@@ -122,7 +123,7 @@ public class ScheduleDto {
         public Schedule toDto(Center center, Member member, ClassRoom classRoom) {
             return Schedule.builder()
                     .title(title)
-                    .scheduleDate(create_date)
+                    .scheduleDate(schedule_date)
                     .startTime(start_time)
                     .endTime(end_time)
                     .type(type)
@@ -143,12 +144,17 @@ public class ScheduleDto {
         private String title;
         private LocalDate schedule_date;
         private LocalDateTime create_date;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
         private LocalTime start_time;
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
         private LocalTime end_time;
         private CommonEnums.RollType type;
+        private String description;
 
         private int center_no;
         private int member_no;
+        private int class_no;
 
         public static DailyResponse toDto(Schedule schedule) {
             return DailyResponse.builder()
@@ -159,9 +165,29 @@ public class ScheduleDto {
                     .start_time(schedule.getStartTime())
                     .end_time(schedule.getEndTime())
                     .type(schedule.getType())
+                    .description(schedule.getDescription())
                     .center_no(schedule.getCenter().getCenterNo())
                     .member_no(schedule.getMember().getMemberNo())
+                    .class_no(schedule.getClassRoom().getClassNo())
                     .build();
         }
     }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class DailyScheduleUpdateDto {
+        private int schedule_no;
+        private int center_no;
+        private int member_no;
+        private int class_no;
+        private LocalDate schedule_date;
+
+        private String description;
+        private LocalTime start_time;
+        private LocalTime end_time;
+
+    }
+
 }

@@ -4,6 +4,7 @@ import com.bridge.kinder.dto.ScheduleDto;
 import com.bridge.kinder.dto.ScheduleDto.CreateScheduleDto;
 import com.bridge.kinder.dto.ScheduleDto.DailyResponse;
 import com.bridge.kinder.dto.ScheduleDto.DailyScheduleDto;
+import com.bridge.kinder.dto.ScheduleDto.DailyScheduleUpdateDto;
 import com.bridge.kinder.dto.ScheduleDto.ScheduleResponse;
 import com.bridge.kinder.dto.ScheduleDto.ScheduleUpdateDto;
 import com.bridge.kinder.entity.Center;
@@ -17,10 +18,12 @@ import com.bridge.kinder.repository.MemberRepository;
 import com.bridge.kinder.repository.ScheduleRepository;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -113,14 +116,14 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     //반 일과표 생성
     @Override
-    public String createDailySchedule(List<ScheduleDto.DailyScheduleDto> dto) {
+    public List<Integer> createDailySchedule(List<DailyScheduleDto> dto) {
         int centerNo = 0;
         int memberNo = 0;
         int classNo = 0;
 
         List<Schedule> sc = new ArrayList<>();
 
-        for(ScheduleDto.DailyScheduleDto dailyScheduleDto : dto){
+        for(DailyScheduleDto dailyScheduleDto : dto){
             centerNo = dailyScheduleDto.getCenter_no();
             memberNo = dailyScheduleDto.getMember_no();
             classNo = dailyScheduleDto.getClass_no();
@@ -134,17 +137,19 @@ public class ScheduleServiceImpl implements ScheduleService {
             ClassRoom classRoom = classRoomRepository.findByClassNo(classNo)
                     .orElseThrow(() -> new RuntimeException("존재하지 않는 반입니다."));
 
-            Schedule schedule = dailyScheduleDto.toDto(center, member,classRoom);
+            Schedule schedule = dailyScheduleDto.toDto(center, member, classRoom);
             sc.add(schedule);
         }
 
         scheduleRepository.saveDailySchedule(sc);
-        return  String.valueOf(sc.get(0).getScheduleNo());
+        return  sc.stream()
+                .map(Schedule::getScheduleNo)
+                .collect(Collectors.toList());
     }
 
     //반 일과표 조회
     @Override
-    public List<ScheduleDto.DailyResponse> dailyList(int centerNo, int memberNo, int classNo ,LocalDate scheduleDate) {
+    public List<DailyResponse> dailyList(int centerNo, int memberNo, int classNo , LocalDate scheduleDate) {
         Center center = centerRepository.findById(centerNo)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
 
@@ -156,7 +161,37 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 
         return scheduleRepository.findDailyList(center.getCenterNo(), member.getMemberNo(), classRoom.getClassNo(), scheduleDate)
-                .stream().map(ScheduleDto.DailyResponse::toDto)
+                .stream().map(DailyResponse::toDto)
                 .collect(Collectors.toList());
     }
+
+    //반 일과표 등록(수정)
+    @Override
+    public List<ScheduleDto.DailyResponse> updateDailySchedule(List<DailyScheduleUpdateDto> dtoList) {
+        List<ScheduleDto.DailyResponse> resultList = new ArrayList<>();
+
+        for (DailyScheduleUpdateDto dto : dtoList) {
+            int centerNo = dto.getCenter_no();
+            int memberNo = dto.getMember_no();
+            int classNo = dto.getClass_no();
+            int scheduleNo = dto.getSchedule_no();
+            LocalDate scheduleDate = dto.getSchedule_date();
+            String description = dto.getDescription();
+            LocalTime startTime = dto.getStart_time();
+            LocalTime endTime = dto.getEnd_time();
+
+            // 각 DTO에 해당하는 Schedule을 조회
+            List<Schedule> schedules = scheduleRepository.findDailySchedule(centerNo, memberNo, classNo, scheduleNo, scheduleDate);
+
+            for (Schedule schedule : schedules) {
+                schedule.updateDailySchedule(description, startTime, endTime);
+
+                // 수정된 결과를 DTO로 변환해서 결과 리스트에 추가
+                resultList.add(ScheduleDto.DailyResponse.toDto(schedule));
+            }
+        }
+
+        return resultList;
+    }
+
 }
