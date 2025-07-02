@@ -85,6 +85,34 @@ public class ScheduleDto {
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
+    @Builder
+    public static class ScheduleSimpleResponse {
+        private int schedule_no;
+        private String title;
+        private LocalDate schedule_date;
+        private LocalTime start_time;
+        private CommonEnums.RollType type;
+
+        private int center_no;
+        private int member_no;
+
+        public static ScheduleSimpleResponse toDto(Schedule schedule, Center center, Member member) {
+            return ScheduleSimpleResponse.builder()
+                    .schedule_no(schedule.getScheduleNo())
+                    .title(schedule.getTitle())
+                    .schedule_date(schedule.getScheduleDate())
+                    .start_time(schedule.getStartTime())
+                    .type(schedule.getType())
+                    .center_no(center.getCenterNo())
+                    .member_no(member.getMemberNo())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class ScheduleUpdateDto {
         private int schedule_no;
         private String title;

@@ -1,8 +1,12 @@
 import { format, addDays, isSameDay, isAfter, parse } from 'date-fns';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import useLoginStore from '../../../../store/loginStore';
+import { useScheduleService } from '../../../../api/schedule';
+
+//sheduleNo, title, scheduleDate, startTime, type=member,
 
 const schedules = [
   { date: '2025-06-19', time: '13:00', text: '김승기 부모님과 대면 상담' },
@@ -18,21 +22,36 @@ const schedules = [
 
 const MainSchedule = () => {
   const navigate = useNavigate();
+  const { member } = useLoginStore();
+  const memberNo = member?.memberNo;
+  const centerNo = member?.centerNo;
+
+  const [schedules, setSchedules] = useState([]);
+
   //요일 일자
   const today = new Date();
   const week = getWeek(today);
+  const todayString = format(today, 'yyyy-MM-dd');
+
+  useEffect(() => {
+    if (!memberNo || !centerNo) return;
+
+    useScheduleService
+      .getTodayScheduleList(centerNo, memberNo, todayString)
+      .then((data) => setSchedules(data))
+      .catch((err) => console.error('메인 페이지 스케줄 불러오기 실패 : ', err));
+  }, [memberNo, centerNo]);
 
   //일정
-  const todayString = format(today, 'yyyy-MM-dd');
   const todaySchedules = schedules
-    .filter((s) => s.date === todayString)
-    .sort((a, b) => a.time.localeCompare(b.time))
+    .filter((s) => s.schedule_date === todayString)
+    .sort((a, b) => a.start_time.localeCompare(b.start_time))
     .slice(0, 7);
 
   const now = new Date();
   const nextIndex = todaySchedules.findIndex((s) => {
-    if (!s.time) return false;
-    const datetime = parse(`${s.date} ${s.time}`, 'yyyy-MM-dd HH:mm', new Date());
+    if (!s.start_time) return false;
+    const datetime = parse(`${s.schedule_date} ${s.start_time}`, 'yyyy-MM-dd HH:mm:ss', new Date());
     return isAfter(datetime, now);
   });
 
@@ -58,11 +77,11 @@ const MainSchedule = () => {
         {todaySchedules.map((s, i) => {
           const isNow = i === nextIndex;
           return (
-            <ScheduleItem key={i}>
+            <ScheduleItem key={s.schedule_no}>
               <Circle $highlight={isNow} />
               <Content>
-                <Time $highlight={isNow}>{s.time}</Time>
-                <Text $highlight={isNow}>{s.text}</Text>
+                <Time $highlight={isNow}> {format(parse(s.start_time, 'HH:mm:ss', new Date()), 'HH:mm')}</Time>
+                <Text $highlight={isNow}>{s.title}</Text>
               </Content>
             </ScheduleItem>
           );
@@ -140,7 +159,7 @@ const ScheduleWrapper = styled.div`
 const VerticalLine = styled.div`
   position: absolute;
   top: ${({ theme }) => theme.spacing[2]};
-  left: 21px;
+  left: 20px;
   bottom: ${({ theme }) => theme.spacing[4]};
   width: 1px;
   border-left: 3px dotted ${({ theme }) => theme.colors.gray[400]};
@@ -178,7 +197,7 @@ const Time = styled.div`
 const Text = styled.div`
   display: flex;
   align-items: center;
-  font-size: ${({ theme }) => theme.fontSizes.sm};
+  font-size: ${({ theme }) => theme.fontSizes.base};
   font-weight: ${({ $highlight }) => ($highlight ? 'bold' : 'normal')};
   color: ${({ $highlight }) => ($highlight ? '#000' : '#888')};
 `;

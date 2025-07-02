@@ -42,6 +42,14 @@ public class ScheduleController {
         return ResponseEntity.ok(response);
     }
 
+    //오늘 스케줄 리스트 불러오기
+    @GetMapping("/lists/main")
+    public ResponseEntity<List<ScheduleDto.ScheduleSimpleResponse>> getTodaySchedules(@RequestParam int centerNo,
+                                                                           @RequestParam int memberNo, @RequestParam LocalDate today) {
+        List<ScheduleDto.ScheduleSimpleResponse> response = scheduleService.getTodaySchedules(centerNo, memberNo, today);
+        return ResponseEntity.ok(response);
+    }
+
     //스케줄 수정하기
     @PatchMapping("/edit")
     public ResponseEntity<String> editSchedule(@RequestBody ScheduleDto.ScheduleUpdateDto dto){
