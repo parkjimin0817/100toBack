@@ -45,8 +45,7 @@ public interface ChildService {
     ChildDto.healthLog updateHealthLog(int childNo, LocalDate date, ChildDto.healthLog data);
     //아동 생활 로그 데이터 삽입,수정하기
     ChildDto.activityLog updateActivityLog(int childNo, LocalDate date, ChildDto.activityLog data);
-
-
     //부모 번호로 해당 연결된 아동 리스트 가져오기
     List<ChildDto.myPageChilds> myPageChilds(int memberNo);
+
 }

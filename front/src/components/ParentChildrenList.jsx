@@ -1,57 +1,48 @@
-import React, { useState } from 'react';
-import { List } from './ChildDummyData';
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import ChildImg from '../assets/Child.png';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import axios from 'axios';
 
-const ParentChildrenList = ({ showAll, sortBy, roleBy, classFilter, nameFilter, onChildClick }) => {
-  let list = [...List];
+const ParentChildrenList = ({ childFilter, onChildClick }) => {
+  const [childList, setChildList] = useState([]);
+  const navigate = useNavigate();
 
-  if (!showAll) {
-    list = list.filter((child) => !child.className);
-  }
+  useEffect(() => {
+    const fetchChildren = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8888/api/childs/parentChild?memberNo=${childFilter}`);
+        setChildList(response.data);
+      } catch (error) {
+        console.error('아동 목록 조회 실패:', error);
+      }
+    };
 
-  if (sortBy === 'class') {
-    list.sort((a, b) => a.className.localeCompare(b.className));
-  } else if (sortBy === 'name') {
-    list.sort((a, b) => a.name.localeCompare(b.name));
-  } else if (sortBy === 'createDate') {
-    list.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
-  }
-
-  // 역할(role) 필터링: 'child' 또는 'teacher'만 필터링
-  if (roleBy === 'child' || roleBy === 'teacher') {
-    list = list.filter((item) => item.role === roleBy);
-  }
-
-  if (classFilter) {
-    list = list.filter((item) => item.className === classFilter);
-  }
-
-  if (nameFilter) {
-    list = list.filter((item) => item.name.toLowerCase().includes(nameFilter.toLowerCase()));
-  }
+    if (childFilter) {
+      fetchChildren();
+    }
+  }, [childFilter]);
 
   return (
-    <>
-      <Container>
-        <CardLine>
-          {list.map((child) => (
-            <Card key={child.id} onClick={() => onChildClick(child)}>
-              <PictureBox>
-                <ChildPic src={ChildImg} alt="아이사진" />
-              </PictureBox>
-              <NameBox>
-                <NameLine>{child.name}</NameLine>
-                <ClassLine>{child.className || '미배정'}</ClassLine>
-              </NameBox>
-            </Card>
-          ))}
-        </CardLine>
-      </Container>
-    </>
+    <Container>
+      <CardLine>
+        {childList.map((child) => (
+          <Card key={child.child_no} onClick={() => onChildClick(child)}>
+            <PictureBox>
+              <ChildPic src={ChildImg} alt="아이사진" />
+            </PictureBox>
+            <NameBox>
+              <NameLine>{child.child_name}</NameLine>
+              <ClassLine>{child.class_name || '미배정'}</ClassLine>
+            </NameBox>
+          </Card>
+        ))}
+      </CardLine>
+    </Container>
   );
 };
+
+export default ParentChildrenList;
 
 const Container = styled.div`
   padding: ${({ theme }) => theme.spacing[6]};
@@ -117,5 +108,3 @@ const ClassLine = styled.div`
   font-size: 10px;
   color: white;
 `;
-
-export default ParentChildrenList;

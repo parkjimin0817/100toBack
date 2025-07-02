@@ -392,6 +392,7 @@ public class ChildDto {
         private String child_name;
         private String child_resident_no;
         private String child_profile;
+        private String class_name;
 
         public static myPageChilds toDto(Child child){
             return myPageChilds.builder()
@@ -399,6 +400,7 @@ public class ChildDto {
                     .child_name(child.getChildName())
                     .child_resident_no(child.getChildResidentNo())
                     .child_profile(child.getChildProfile())
+                    .class_name(child.getClassRoom().getClassName())
                     .build();
 
         }
