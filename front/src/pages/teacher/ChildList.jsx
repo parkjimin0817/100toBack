@@ -37,7 +37,7 @@ const ChildList = () => {
         sortBy="createDate"
         roleBy="child"
         //시설장인 경우 필터링 null -> url에 있으면 url , 교사일 경우 url 우선 -> 해당 교사 반
-        classFilter={memberType === 'MANAGER' ? paramClassNo : paramClassNo || classNo}
+        classFilter={memberType === 'MANAGER' ? (paramClassNo ?? null) : paramClassNo || classNo}
         centerNo={centerNo}
       />
     </Content>
