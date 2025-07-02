@@ -74,6 +74,7 @@ import BoardDetailPage from './pages/BoardDetailPage';
 import BoardUpdatePage from './pages/BoardUpdatePage';
 import PhotoPage from './pages/PhotoPage';
 import MealPlanPage from './pages/MealPlanPage';
+import ClassListPage from './pages/ClassListPage';
 
 function App() {
   return (
@@ -82,6 +83,8 @@ function App() {
       <Router>
         <Routes>
           <Route element={<Layout />}>
+            {/* 반 목록 -> 반별 아동목록 */}
+            <Route path="/class/list" element={<ClassListPage />} />
             {/**
              * 학부모
              *
@@ -163,6 +166,8 @@ function App() {
              *
              *  */}
             <Route path="/childlist" element={<ChildList />} />
+            {/* 반별아동목록 */}
+            <Route path="/childlist/:classNo" element={<ChildList />} />
             <Route path="/classlist" element={<AttendanceClassList />} />
             <Route path="/childhealthcheck" element={<ChildHealthCheck />} />
             <Route path="/childlifecheck" element={<ChildLifeCheck />} />
@@ -174,8 +179,8 @@ function App() {
             <Route path="/notice">
               <Route path="list" element={<NoticePage />} />
               <Route path="write" element={<BoardWritePage />} />
-              <Route path=':id' element={<BoardDetailPage />} />
-              <Route path='update/:id' element={<BoardUpdatePage />} />
+              <Route path=":id" element={<BoardDetailPage />} />
+              <Route path="update/:id" element={<BoardUpdatePage />} />
             </Route>
 
             {/**
@@ -201,13 +206,13 @@ function App() {
              * 6-2. 작성
              * 6-3. 상세
              * 6-4. 수정
-             * 
+             *
              *  */}
             <Route path="/family_notice">
               <Route path="list" element={<FamilyNoticePage />} />
               <Route path="write" element={<BoardWritePage />} />
-              <Route path=':id' element={<BoardDetailPage />} />
-              <Route path='update/:id' element={<BoardUpdatePage />} />
+              <Route path=":id" element={<BoardDetailPage />} />
+              <Route path="update/:id" element={<BoardUpdatePage />} />
             </Route>
             <Route path="/child/healthlist" element={<PersonalHealth />} />
             <Route path="/child/lifelist" element={<PersonalLife />} />
@@ -215,19 +220,19 @@ function App() {
               <Route path="list" element={<NotePage />} />
               <Route path="write" element={<BoardWritePage />} />
               <Route path=":id" element={<BoardDetailPage />} />
-              <Route path='update/:id' element={<BoardUpdatePage />} />
+              <Route path="update/:id" element={<BoardUpdatePage />} />
             </Route>
-            <Route path='/photo'>
+            <Route path="/photo">
               <Route path="list" element={<PhotoPage />} />
               <Route path="write" element={<BoardWritePage />} />
               <Route path=":id" element={<BoardDetailPage />} />
-              <Route path='update/:id' element={<BoardUpdatePage />} />
+              <Route path="update/:id" element={<BoardUpdatePage />} />
             </Route>
-            <Route path='/meal_plan'>
+            <Route path="/meal_plan">
               <Route path="list" element={<MealPlanPage />} />
               <Route path="write" element={<BoardWritePage />} />
               <Route path=":id" element={<BoardDetailPage />} />
-              <Route path='update/:id' element={<BoardUpdatePage />} />
+              <Route path="update/:id" element={<BoardUpdatePage />} />
             </Route>
           </Route>
 

@@ -74,12 +74,14 @@ public class ChildDto {
         private String child_name;
 
         private int class_no;
+        private String class_name;
 
         public static Response toDto(Child child){
             return Response.builder()
                     .child_no(child.getChildNo())
                     .child_name(child.getChildName())
                     .class_no(child.getClassRoom().getClassNo())
+                    .class_name(child.getClassRoom().getClassName())
                     .build();
         }
     }
@@ -392,6 +394,7 @@ public class ChildDto {
         private String child_name;
         private String child_resident_no;
         private String child_profile;
+        private String class_name;
 
         public static myPageChilds toDto(Child child){
             return myPageChilds.builder()
@@ -399,6 +402,7 @@ public class ChildDto {
                     .child_name(child.getChildName())
                     .child_resident_no(child.getChildResidentNo())
                     .child_profile(child.getChildProfile())
+                    .class_name(child.getClassRoom().getClassName())
                     .build();
 
         }
