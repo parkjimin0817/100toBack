@@ -9,6 +9,8 @@ import com.bridge.kinder.entity.ChildHealthData;
 import com.bridge.kinder.entity.ChildHealthLog;
 import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.entity.Member;
+import com.bridge.kinder.enums.CommonEnums;
+import com.bridge.kinder.enums.CommonEnums.AdmissionStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDate;
@@ -253,11 +255,14 @@ public class ChildRepositoryImpl implements ChildRepository {
                 .getResultList();
     }
 
+    //부모 번호로 아동 리스트 가져오기
     @Override
     public List<Child> findByMemberNo(int memberNo) {
         return em.createQuery(
-                        "SELECT c FROM MemberChild mc JOIN mc.child c WHERE mc.member.memberNo = :memberNo", Child.class)
+                        "SELECT c FROM MemberChild mc JOIN mc.child c " +
+                                "WHERE mc.member.memberNo = :memberNo AND c.status = :status", Child.class)
                 .setParameter("memberNo", memberNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
     }
 }

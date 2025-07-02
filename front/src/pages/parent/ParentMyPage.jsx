@@ -14,9 +14,10 @@ import { childInfo } from '../../api/childInfo';
 import api from '../../api/axios.js';
 import { toast } from 'react-toastify';
 
+import ChildAddModal from './components/childAddModal.jsx';
+
 const ParentMyPage = () => {
   const [isEditMode, setIsEditMode] = useState(false);
-  // const { member } = useLoginStore();
   const member = useLoginStore((state) => state.member);
   const setMember = useLoginStore((state) => state.setMember);
   const [editableInfo, setEditableInfo] = useState({
@@ -36,6 +37,7 @@ const ParentMyPage = () => {
     }
   };
 
+  //info 수정
   const handleEditSubmit = async () => {
     try {
       const { data } = await api.patch(`/api/members/mypage/parent`, {
@@ -81,6 +83,19 @@ const ParentMyPage = () => {
     }
   };
 
+  const chunkArray = (arr, size) => {
+    const result = [];
+    for (let i = 0; i < arr.length; i += size) {
+      result.push(arr.slice(i, i + size));
+    }
+    return result;
+  };
+
+  //modal
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const openAddModal = () => setIsAddModalOpen(true);
+  const closeAddModal = () => setIsAddModalOpen(false);
+
   return (
     <Content>
       <ContentHeader
@@ -103,6 +118,7 @@ const ParentMyPage = () => {
         </InfoBox>
         <MenuBox>
           {childList.map((data) => {
+            console.log(data);
             const { age, gender, birthday } = childInfo(data.child_resident_no);
             return (
               <Card key={data.child_no} onClick={() => navigate(`/child/detail?id=${data.child_no}`)}>
@@ -120,7 +136,7 @@ const ParentMyPage = () => {
             );
           })}
           <AddChild>
-            <AddBox onClick={() => navigate('/parent/addchild')}>
+            <AddBox onClick={openAddModal}>
               <Plus>아동 추가</Plus>
               <Img src={AddImage} />
             </AddBox>
@@ -131,6 +147,7 @@ const ParentMyPage = () => {
           </AddChild>
         </MenuBox>
       </Wrapper>
+      <ChildAddModal isOpen={isAddModalOpen} onClose={closeAddModal} />
     </Content>
   );
 };
@@ -158,7 +175,7 @@ const InfoBox = styled.div`
   justify-content: space-between;
   margin: 10px 0;
   box-sizing: border-box;
-  gap: 20px; /* 컴포넌트 사이 간격 */
+  gap: 20px;
 `;
 const ProfileImgBox = styled.div`
   width: 20%;
@@ -183,6 +200,7 @@ const MenuBox = styled.div`
   display: flex;
   flex-direction: row;
   margin: 30px 0;
+  overflow-x: scroll;
 `;
 
 const Card = styled.div`
@@ -191,6 +209,7 @@ const Card = styled.div`
   background-color: ${({ theme }) => theme.colors.lightblue};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   flex-shrink: 0;
+  margin-right: ${({ theme }) => theme.spacing[8]};
 
   :hover {
     cursor: pointer;
@@ -238,7 +257,7 @@ const AddChild = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 240px;
+  width: 140px;
   height: 360px;
 `;
 

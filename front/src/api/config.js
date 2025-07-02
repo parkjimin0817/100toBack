@@ -81,6 +81,7 @@ export const API_ENDPOINTS = {
   },
   CHILDS: {
     BASE: '/api/childs',
+    ADD: '/api/childs/add',
     GETALL: '/api/childs/all',
     GET: '/api/childs/get',
     PARENTCHILDLIST: (memberNo) => `/api/childs/parentChild?memberNo=${memberNo}`,
