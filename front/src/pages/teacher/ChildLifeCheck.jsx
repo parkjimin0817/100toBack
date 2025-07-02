@@ -48,78 +48,57 @@ const ChildLifeCheck = () => {
       return;
     }
 
-    if (memberType !== 'PARENT') {
-      // 교사/시설장
-      try {
-        const childRes = await axios.get(`http://localhost:8888/api/childs`, {
-          params: { classNo: selectedClassNo },
-        });
-        const children = childRes.data;
+    try {
+      let children = [];
+      let logs = [];
 
-        const logRes = await axios.get(`http://localhost:8888/api/childs/activitylog/class`, {
-          params: { classNo: selectedClassNo, date: formattedDate },
-        });
-        const logs = logRes.data;
-
-        const mergedChecklist = children.map((child) => {
-          const matchedLog = logs.find((log) => log.child_name === child.child_name);
-          return {
-            name: child.child_name,
-            child_no: child.child_no,
-            meal: matchedLog?.dailyMeal_amount || '',
-            napStart: matchedLog?.napStart_time || '',
-            napEnd: matchedLog?.napEnd_time || '',
-            napTime:
-              matchedLog?.napStart_time && matchedLog?.napEnd_time
-                ? `${matchedLog.napStart_time.substring(0, 5)} ~ ${matchedLog.napEnd_time.substring(0, 5)}`
-                : '',
-            play: matchedLog?.play_participation || '',
-            social: matchedLog?.daily_friendship || '',
-            memo: matchedLog?.activity_log_memo || '',
-            editable: false,
-          };
-        });
-
-        setChecklist(mergedChecklist);
-      } catch (error) {
-        toast.error('생활 체크리스트 불러오기 실패:', error);
-      }
-    } else {
-      // 학부모
-      try {
+      if (memberType === 'PARENT') {
+        // 로그 데이터가 없을 경우에도 아이들을 불러와서 빈칸으로 보여줘야 하기 때문에
         const childRes = await axios.get(`http://localhost:8888/api/childs/parentChild`, {
           params: { memberNo: member.memberNo },
         });
-        const children = childRes.data;
+        children = childRes.data;
 
         const logRes = await axios.get(`http://localhost:8888/api/childs/activitylog/parent`, {
           params: { memberNo: member.memberNo, date: formattedDate },
         });
-        const logs = logRes.data;
-
-        const mergedChecklist = children.map((child) => {
-          const matchedLog = logs.find((log) => log.child_no === child.child_no);
-          return {
-            name: child.child_name,
-            child_no: child.child_no,
-            meal: matchedLog?.dailyMeal_amount || '',
-            napStart: matchedLog?.napStart_time || '',
-            napEnd: matchedLog?.napEnd_time || '',
-            napTime:
-              matchedLog?.napStart_time && matchedLog?.napEnd_time
-                ? `${matchedLog.napStart_time.substring(0, 5)} ~ ${matchedLog.napEnd_time.substring(0, 5)}`
-                : '',
-            play: matchedLog?.play_participation || '',
-            social: matchedLog?.daily_friendship || '',
-            memo: matchedLog?.activity_log_memo || '',
-            editable: false,
-          };
+        logs = logRes.data;
+      } else {
+        // 로그 데이터가 없을 경우에도 아이들을 불러와서 빈칸으로 보여줘야 하기 때문에
+        const childRes = await axios.get(`http://localhost:8888/api/childs`, {
+          params: { classNo: selectedClassNo },
         });
+        children = childRes.data;
 
-        setChecklist(mergedChecklist);
-      } catch (error) {
-        toast.error('생활 정보 조회 실패', error);
+        const logRes = await axios.get(`http://localhost:8888/api/childs/activitylog/class`, {
+          params: { classNo: selectedClassNo, date: formattedDate },
+        });
+        logs = logRes.data;
       }
+
+      // 병합
+      const checklist = children.map((child) => {
+        const matchedLog = logs.find((log) => log.child_no === child.child_no);
+        return {
+          name: child.child_name,
+          child_no: child.child_no,
+          meal: matchedLog?.dailyMeal_amount || '',
+          napStart: matchedLog?.napStart_time || '',
+          napEnd: matchedLog?.napEnd_time || '',
+          napTime:
+            matchedLog?.napStart_time && matchedLog?.napEnd_time
+              ? `${matchedLog.napStart_time.substring(0, 5)} ~ ${matchedLog.napEnd_time.substring(0, 5)}`
+              : '',
+          play: matchedLog?.play_participation || '',
+          social: matchedLog?.daily_friendship || '',
+          memo: matchedLog?.activity_log_memo || '',
+          editable: false,
+        };
+      });
+
+      setChecklist(checklist);
+    } catch (error) {
+      toast.error('생활 체크리스트 불러오기 실패', error);
     }
   };
 

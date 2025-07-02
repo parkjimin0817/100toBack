@@ -48,80 +48,52 @@ const ChildHealthCheck = () => {
       return;
     }
 
-    // 교사,시설장인 경우
-    if (memberType !== 'PARENT') {
-      try {
-        // 1. 반에 속한 아동 전체 조회
-        const childRes = await axios.get(`http://localhost:8888/api/childs`, {
-          params: { classNo: selectedClassNo },
-        });
-        const children = childRes.data;
+    try {
+      let children = [];
+      let logs = [];
 
-        // 2. 해당 날짜의 건강 로그 조회
-        const logRes = await axios.get('http://localhost:8888/api/childs/healthlog/class', {
-          params: {
-            classNo: selectedClassNo,
-            date: formattedDate,
-          },
-        });
-        const logs = logRes.data;
-
-        // 3. 병합
-        const mergedChecklist = children.map((child) => {
-          const matchedLog = logs.find((log) => log.child_name === child.child_name);
-          return {
-            name: child.child_name,
-            child_no: child.child_no,
-            temp: matchedLog?.temperature || '',
-            height: matchedLog?.height || '',
-            weight: matchedLog?.weight || '',
-            symptom: matchedLog?.symptoms || '',
-            memo: matchedLog?.healthLogMemo || '',
-            editable: false,
-          };
-        });
-
-        setChecklist(mergedChecklist);
-      } catch (error) {
-        toast.error('교사용 건강 체크리스트 불러오기 실패:', error);
-      }
-    } else {
-      // 학부모인 경우
-      try {
-        // 1. 자녀 목록 가져오기
+      if (memberType === 'PARENT') {
+        //로그 데이터가 없을 경우에도 아동의 이름과 빈칸을 띄워야 하기 때문에 불러와서 로그 데이터들과 병합을 한다.
         const childRes = await axios.get(`http://localhost:8888/api/childs/parentChild`, {
           params: { memberNo: member.memberNo },
         });
-        const children = childRes.data;
+        children = childRes.data;
 
-        // 2. 건강 로그 가져오기
-        const logRes = await axios.get('http://localhost:8888/api/childs/healthlog/parent', {
-          params: {
-            memberNo: member.memberNo,
-            date: formattedDate,
-          },
+        const logRes = await axios.get(`http://localhost:8888/api/childs/healthlog/parent`, {
+          params: { memberNo: member.memberNo, date: formattedDate },
         });
-        const logs = logRes.data;
-
-        // 3. 자녀 목록 + 건강 로그 병합
-        const merged = children.map((child) => {
-          const matchedLog = logs.find((log) => log.child_no === child.child_no);
-          return {
-            name: child.child_name,
-            child_no: child.child_no,
-            temp: matchedLog?.temperature || '',
-            height: matchedLog?.height || '',
-            weight: matchedLog?.weight || '',
-            symptom: matchedLog?.symptoms || '',
-            memo: matchedLog?.healthLogMemo || '',
-            editable: false,
-          };
+        logs = logRes.data;
+      } else {
+        //로그 데이터가 없을 경우에도 아동의 이름과 빈칸을 띄워야 하기 때문에 불러와서 로그 데이터들과 병합을 한다.
+        const childRes = await axios.get(`http://localhost:8888/api/childs`, {
+          params: { classNo: selectedClassNo },
         });
+        children = childRes.data;
 
-        setChecklist(merged);
-      } catch (error) {
-        toast.error('학부모용 건강 정보 조회 실패', error);
+        const logRes = await axios.get(`http://localhost:8888/api/childs/healthlog/class`, {
+          params: { classNo: selectedClassNo, date: formattedDate },
+        });
+        logs = logRes.data;
       }
+
+      //  병합
+      const checklist = children.map((child) => {
+        const matchedLog = logs.find((log) => log.child_no === child.child_no);
+        return {
+          name: child.child_name,
+          child_no: child.child_no,
+          temp: matchedLog?.temperature || '',
+          height: matchedLog?.height || '',
+          weight: matchedLog?.weight || '',
+          symptom: matchedLog?.symptoms || '',
+          memo: matchedLog?.healthLogMemo || '',
+          editable: false,
+        };
+      });
+
+      setChecklist(checklist);
+    } catch (error) {
+      toast.error('건강 체크리스트 불러오기 실패', error);
     }
   };
 
