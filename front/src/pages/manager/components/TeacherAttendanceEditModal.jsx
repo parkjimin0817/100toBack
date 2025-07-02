@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { attendanceStatusToKorean } from '../../../constants/attendanceStatusMap';
 
 const TeacherAttendanceEditModal = ({ onClose, onEdit, attendance, memberNo, centerNo }) => {
   const [status, setStatus] = useState(attendance?.status || '');
@@ -19,9 +20,20 @@ const TeacherAttendanceEditModal = ({ onClose, onEdit, attendance, memberNo, cen
     const fullInTime = inTime ? `${attendance.attendanceDate}T${inTime}` : null;
     const fullOutTime = outTime ? `${attendance.attendanceDate}T${outTime}` : null;
 
+    const confirmMessage =
+      `다음과 같이 수정하시겠습니까?\n\n` +
+      `날짜 : ${attendance.attendanceDate}\n` +
+      `상태 : ${attendanceStatusToKorean[status] || status} \n` +
+      `출근시간: ${inTime || '-'}\n` +
+      `퇴근시간: ${outTime || '-'}\n`;
+
+    const isConfirmed = window.confirm(confirmMessage);
+    if (!isConfirmed) return;
+
     onEdit({
       ...attendance,
-      attendance: attendance.attendanceDate,
+      attendanceNo: attendance.attendanceNo,
+      attendanceDate: attendance.attendanceDate,
       status,
       inTime: fullInTime,
       outTime: fullOutTime,
@@ -53,11 +65,17 @@ const TeacherAttendanceEditModal = ({ onClose, onEdit, attendance, memberNo, cen
             <Label>
               출근시간:
               <Input type="time" name="startTime" value={inTime} onChange={(e) => setInTime(e.target.value)} />
+              <ClearButton type="button" onClick={() => setInTime('')}>
+                지우기
+              </ClearButton>
             </Label>
             <br />
             <Label>
               퇴근시간:
               <Input type="time" name="endTime" value={outTime} onChange={(e) => setOutTime(e.target.value)} />
+              <ClearButton type="button" onClick={() => setOutTime('')}>
+                지우기
+              </ClearButton>
             </Label>
             <br />
             <ButtonGroup>
@@ -155,4 +173,14 @@ const Input = styled.input`
   padding: 5px;
   font-size: ${({ theme }) => theme.fontSizes.sm};
   font-weight: ${({ theme }) => theme.fontWeights.light};
+`;
+
+const ClearButton = styled.button`
+  width: 50px;
+  border-radius: ${({ theme }) => theme.borderRadius.base};
+  border: 1px solid ${({ theme }) => theme.colors.gray[400]};
+  margin-left: 10px;
+  padding: 4px 8px;
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  cursor: pointer;
 `;

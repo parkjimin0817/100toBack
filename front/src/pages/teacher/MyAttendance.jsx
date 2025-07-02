@@ -103,7 +103,7 @@ const Content = styled.div`
 
 const Div1 = styled.div`
   width: 60%;
-  min-height: 500px;
+  min-height: 630px;
   margin: 10;
   border-radius: 20px;
   display: flex;

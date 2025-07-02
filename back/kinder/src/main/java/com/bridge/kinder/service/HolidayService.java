@@ -1,5 +1,7 @@
 package com.bridge.kinder.service;
 
+import com.bridge.kinder.dto.HolidayDto;
+import com.bridge.kinder.dto.HolidayDto.Response;
 import com.bridge.kinder.entity.Holiday;
 import com.bridge.kinder.repository.HolidayRepository;
 import jakarta.annotation.PostConstruct;
@@ -8,6 +10,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import lombok.RequiredArgsConstructor;
@@ -115,6 +119,21 @@ public class HolidayService {
             return nodeList.item(0).getFirstChild().getNodeValue();
         }
         return null;
+    }
+
+    //공휴일 불러와서 프론트 전달해주기
+    public List<Response> getHolidays (String year, String month){
+        int yearInt = Integer.parseInt(year);
+        int monthInt = Integer.parseInt(month);
+
+        LocalDate startDate = LocalDate.of(yearInt, monthInt, 1);
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+
+        List<Holiday> holidays = holidayRepository.findByHolidayDateBetween(startDate, endDate);
+
+        return holidays.stream()
+                .map(h-> new Response(h.getHolidayDate(), h.getHolidayName()))
+                .collect(Collectors.toList());
     }
 }
 
