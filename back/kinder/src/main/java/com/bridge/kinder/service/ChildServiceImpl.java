@@ -11,6 +11,7 @@ import com.bridge.kinder.dto.ChildDto.healthLog;
 import com.bridge.kinder.dto.ChildDto.modalResponse;
 import com.bridge.kinder.dto.ChildDto.myPageChilds;
 import com.bridge.kinder.dto.ChildDto.updateClass;
+import com.bridge.kinder.entity.Approval;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.ChildActivityData;
@@ -20,6 +21,7 @@ import com.bridge.kinder.entity.ChildHealthData;
 import com.bridge.kinder.entity.ChildHealthLog;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.entity.MemberChild;
+import com.bridge.kinder.repository.ApprovalRepository;
 import com.bridge.kinder.repository.CenterRepository;
 import com.bridge.kinder.repository.ChildRepository;
 import com.bridge.kinder.repository.MemberChildRepository;
@@ -47,6 +49,7 @@ public class ChildServiceImpl implements ChildService {
     private final MemberRepository memberRepository;
     private final MemberChildRepository memberChildRepository;
     private final CenterRepository centerRepository;
+    private final ApprovalRepository approvalRepository;
     private final String UPLOAD_PATH = "C://test_upload/"; //aws S3 연결시 관련 코드 수정할 것.
 
     //아동 생성
@@ -77,6 +80,12 @@ public class ChildServiceImpl implements ChildService {
 
         Child child = dto.toEntity(center, profilePath);
         childRepository.save(child);
+
+        Approval approvalChild = Approval.builder()
+                .center(center)
+                .child(child)
+                .build();
+        approvalRepository.save(approvalChild);
 
         MemberChild link = MemberChild.builder()
                 .member(parent)
@@ -279,5 +288,22 @@ public class ChildServiceImpl implements ChildService {
                 .collect(Collectors.toList());
     }
 
-    
+    //부모 번호로 아동 건강 로그 체크리스트 불러오기
+    @Override
+    public List<healthLog> healthLogByParent(int memberNo, LocalDate date) {
+        return childRepository.healthLogByParent(memberNo,date)
+                .stream()
+                .map(ChildDto.healthLog::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<activityLog> activityLogByParent(int memberNo, LocalDate date) {
+        return childRepository.activityLogByParent(memberNo,date)
+                .stream()
+                .map(ChildDto.activityLog::toDto)
+                .collect(Collectors.toList());
+    }
+
+
 }

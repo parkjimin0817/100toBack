@@ -64,10 +64,10 @@ const FamilyNoticePage = () => {
   const [data, setData] = useState(null);
   const [page, setPage] = useState(1); // 1부터 시작
   const navigate = useNavigate();
-  const member = useLoginStore((state) => state.member);
+  const member = useLoginStore((state) => state.member);  
 
   useEffect(() => {
-
+    console.log(member);
     const getPostList = async () => {
       try {
         const responseData = await boardService.typeBoardList("FAMILY_NOTICE", member.centerNo,  page);
@@ -92,7 +92,10 @@ const FamilyNoticePage = () => {
         Title={'가정통신문'}
         Color={'green'}
         // 교사면 버튼 추가, 학부모면 없음.
-        ButtonProps={[
+        ButtonProps={
+          member.memberType === "FARENT" ? 
+          []
+          : [
           { Title: '작성하기', 
             func: () => {
               navigate("/family_notice/write", { state: { category: "family_notice" }, })

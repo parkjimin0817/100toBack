@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const LifeCheckListTable = ({ data, onEdit, onChange }) => {
+const LifeCheckListTable = ({ data, onEdit, onChange, memberType }) => {
+  const isParent = memberType === 'PARENT';
+
   return (
     <TableWrapper>
       <VacationTable>
@@ -13,7 +15,7 @@ const LifeCheckListTable = ({ data, onEdit, onChange }) => {
             <th>놀이참여</th>
             <th>교우관계</th>
             <th>메모</th>
-            <th>비고</th>
+            {!isParent && <th>비고</th>}
           </tr>
         </thead>
         <tbody>
@@ -28,10 +30,8 @@ const LifeCheckListTable = ({ data, onEdit, onChange }) => {
                     onChange={(e) => onChange(index, 'meal', e.target.value)}
                     style={{ width: '80%', border: '1px solid black', textAlign: 'center' }}
                   />
-                ) : child.meal ? (
-                  `${child.meal}`
                 ) : (
-                  ''
+                  child.meal || ''
                 )}
               </td>
               <td>
@@ -50,10 +50,8 @@ const LifeCheckListTable = ({ data, onEdit, onChange }) => {
                       style={{ width: '48%', textAlign: 'center' }}
                     />
                   </>
-                ) : child.napTime ? (
-                  `${child.napTime}`
                 ) : (
-                  ''
+                  child.napTime || ''
                 )}
               </td>
               <td>
@@ -63,12 +61,9 @@ const LifeCheckListTable = ({ data, onEdit, onChange }) => {
                     value={child.play}
                     onChange={(e) => onChange(index, 'play', e.target.value)}
                     style={{ width: '80%', border: '1px solid black', textAlign: 'center' }}
-                    border={'1px solid black'}
                   />
-                ) : child.play ? (
-                  `${child.play}`
                 ) : (
-                  ''
+                  child.play || ''
                 )}
               </td>
               <td>
@@ -80,7 +75,7 @@ const LifeCheckListTable = ({ data, onEdit, onChange }) => {
                     style={{ width: '90%', border: '1px solid black', textAlign: 'center' }}
                   />
                 ) : (
-                  child.social
+                  child.social || ''
                 )}
               </td>
               <td>
@@ -92,12 +87,14 @@ const LifeCheckListTable = ({ data, onEdit, onChange }) => {
                     style={{ width: '90%', border: '1px solid black', textAlign: 'center' }}
                   />
                 ) : (
-                  child.memo
+                  child.memo || ''
                 )}
               </td>
-              <td>
-                <EditButton onClick={() => onEdit(index)}>{child.editable ? '저장' : '수정'}</EditButton>
-              </td>
+              {!isParent && (
+                <td>
+                  <EditButton onClick={() => onEdit(index)}>{child.editable ? '저장' : '수정'}</EditButton>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

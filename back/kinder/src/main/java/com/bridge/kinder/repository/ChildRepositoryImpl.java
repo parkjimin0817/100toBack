@@ -11,6 +11,8 @@ import com.bridge.kinder.entity.ChildHealthData;
 import com.bridge.kinder.entity.ChildHealthLog;
 import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.entity.Member;
+import com.bridge.kinder.enums.CommonEnums;
+import com.bridge.kinder.enums.CommonEnums.AdmissionStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDate;
@@ -255,11 +257,14 @@ public class ChildRepositoryImpl implements ChildRepository {
                 .getResultList();
     }
 
+    //부모 번호로 아동 리스트 가져오기
     @Override
     public List<Child> findByMemberNo(int memberNo) {
         return em.createQuery(
-                        "SELECT c FROM MemberChild mc JOIN mc.child c WHERE mc.member.memberNo = :memberNo", Child.class)
+                        "SELECT c FROM MemberChild mc JOIN mc.child c " +
+                                "WHERE mc.member.memberNo = :memberNo AND c.status = :status", Child.class)
                 .setParameter("memberNo", memberNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
     }
 
@@ -365,4 +370,43 @@ public class ChildRepositoryImpl implements ChildRepository {
         return Optional.of(targetLog);
     }
 
+    @Override
+    public List<ChildHealthLog> healthLogByParent(int memberNo, LocalDate date) {
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.plusDays(1).atStartOfDay();
+
+        return em.createQuery("""
+        SELECT hl 
+        FROM MemberChild mc 
+        JOIN mc.child c 
+        JOIN ChildHealthLog hl ON hl.child = c 
+        WHERE mc.member.memberNo = :memberNo 
+          AND hl.createDate >= :start 
+          AND hl.createDate < :end
+        """, ChildHealthLog.class)
+                .setParameter("memberNo", memberNo)
+                .setParameter("start", start)
+                .setParameter("end", end)
+                .getResultList();
+    }
+
+    @Override
+    public List<ChildActivityLog> activityLogByParent(int memberNo, LocalDate date) {
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.plusDays(1).atStartOfDay();
+
+        return em.createQuery("""
+        SELECT al 
+        FROM MemberChild mc 
+        JOIN mc.child c 
+        JOIN ChildActivityLog al ON al.child = c 
+        WHERE mc.member.memberNo = :memberNo 
+          AND al.createDate >= :start 
+          AND al.createDate < :end
+        """, ChildActivityLog.class)
+                .setParameter("memberNo", memberNo)
+                .setParameter("start", start)
+                .setParameter("end", end)
+                .getResultList();
+    }
 }

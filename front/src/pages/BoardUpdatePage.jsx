@@ -12,8 +12,8 @@ const categoryName = {
   family_notice : "가정통신문",
   notice : "공지사항",
   note : "알림장",
-  album : "사진 게시판",
-  foodmenu : "식단표",
+  photo : "사진 게시판",
+  meal_plan : "식단표",
   default : "테스트"
 }
 
@@ -30,7 +30,7 @@ const BoardUpdatePage = () => {
   const [formState, setFormState] = useState({
     title: postData.title,
     type : postData.type, 
-    classRoomNo: postData.classRoomNo,
+    classRoomNo: postData.classNo,
     file: null,
     memberName: member.memberName,
     memberId : member.memberNo,

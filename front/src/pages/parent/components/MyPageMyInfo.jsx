@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import useLoginStore from '../../../store/loginStore';
 
 const MyPageMyInfo = ({ isEditMode, editableInfo, onChange }) => {
   return (
