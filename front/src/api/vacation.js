@@ -52,11 +52,11 @@ export const vacationService = {
   },
 
   //시설별 휴가 조회
-  getVacationListAll: async (centerNo) => {
+  getVacationListAll: async (centerNo, type, page, size) => {
     try {
-      const { data } = await api.get(API_ENDPOINTS.VACATION.GETLISTALL(centerNo));
+      const { data } = await api.get(API_ENDPOINTS.VACATION.GETLISTALL(centerNo, type, page, size));
 
-      const camelDataList = data.map((item) => ({
+      const camelDataList = data.content.map((item) => ({
         vacationNo: item.vacation_no,
         type: item.type,
         typeDetail: item.type_detail,
@@ -70,7 +70,12 @@ export const vacationService = {
         createDate: item.create_date,
         decisionDate: item.decision_date,
       }));
-      return camelDataList;
+      return {
+        content: camelDataList,
+        totalPages: data.totalPages,
+        totalElements: data.totalElements,
+        currentPage: data.number + 1,
+      };
     } catch (error) {
       throw new Error('서버 통신 불량' + error.message);
     }
