@@ -16,10 +16,12 @@ const ChildLifeCheck = () => {
 
   const member = useLoginStore((state) => state.member);
   const centerNo = member.centerNo;
+  const memberType = member.memberType;
 
-  //시설별 반 목록 가져오기
+  // 반 목록: 교사/시설장만
   useEffect(() => {
-    if (!centerNo) return;
+    if (!centerNo || memberType === 'PARENT') return;
+
     const fetchClassList = async () => {
       try {
         const response = await axios.get(`http://localhost:8888/api/classroom/list/${centerNo}`);
@@ -28,54 +30,102 @@ const ChildLifeCheck = () => {
         toast.error('반 목록 불러오기 실패', error);
       }
     };
-    fetchClassList();
-  }, [centerNo]);
 
+    fetchClassList();
+  }, [centerNo, memberType]);
+
+  // 검색 실행
   const handleSearch = async () => {
-    if (!selectedDate || !selectedClassNo) {
+    const formattedDate = format(selectedDate, 'yyyy-MM-dd');
+
+    if (!selectedDate) {
+      alert('날짜를 선택해주세요.');
+      return;
+    }
+
+    if (memberType !== 'PARENT' && !selectedClassNo) {
       alert('반과 날짜를 모두 선택해주세요.');
       return;
     }
 
-    const formattedDate = format(selectedDate, 'yyyy-MM-dd');
+    if (memberType !== 'PARENT') {
+      // 교사/시설장
+      try {
+        const childRes = await axios.get(`http://localhost:8888/api/childs`, {
+          params: { classNo: selectedClassNo },
+        });
+        const children = childRes.data;
 
-    try {
-      const childRes = await axios.get(`http://localhost:8888/api/childs`, {
-        params: { classNo: selectedClassNo },
-      });
-      const children = childRes.data;
+        const logRes = await axios.get(`http://localhost:8888/api/childs/activitylog/class`, {
+          params: { classNo: selectedClassNo, date: formattedDate },
+        });
+        const logs = logRes.data;
 
-      const logRes = await axios.get(`http://localhost:8888/api/childs/activitylog/class`, {
-        params: { classNo: selectedClassNo, date: formattedDate },
-      });
-      const logs = logRes.data;
+        const mergedChecklist = children.map((child) => {
+          const matchedLog = logs.find((log) => log.child_name === child.child_name);
+          return {
+            name: child.child_name,
+            child_no: child.child_no,
+            meal: matchedLog?.dailyMeal_amount || '',
+            napStart: matchedLog?.napStart_time || '',
+            napEnd: matchedLog?.napEnd_time || '',
+            napTime:
+              matchedLog?.napStart_time && matchedLog?.napEnd_time
+                ? `${matchedLog.napStart_time.substring(0, 5)} ~ ${matchedLog.napEnd_time.substring(0, 5)}`
+                : '',
+            play: matchedLog?.play_participation || '',
+            social: matchedLog?.daily_friendship || '',
+            memo: matchedLog?.activity_log_memo || '',
+            editable: false,
+          };
+        });
 
-      const mergedChecklist = children.map((child) => {
-        const matchedLog = logs.find((log) => log.child_name === child.child_name);
-        return {
-          name: child.child_name,
-          child_no: child.child_no,
-          meal: matchedLog?.dailyMeal_amount || '',
-          napStart: matchedLog?.napStart_time || '',
-          napEnd: matchedLog?.napEnd_time || '',
-          napTime:
-            matchedLog?.napStart_time && matchedLog?.napEnd_time
-              ? `${matchedLog.napStart_time.substring(0, 5)} ~ ${matchedLog.napEnd_time.substring(0, 5)}`
-              : '',
-          play: matchedLog?.play_participation || '',
-          social: matchedLog?.daily_friendship || '',
-          memo: matchedLog?.activity_log_memo || '',
-          editable: false,
-        };
-      });
+        setChecklist(mergedChecklist);
+      } catch (error) {
+        toast.error('생활 체크리스트 불러오기 실패:', error);
+      }
+    } else {
+      // 학부모
+      try {
+        const childRes = await axios.get(`http://localhost:8888/api/childs/parentChild`, {
+          params: { memberNo: member.memberNo },
+        });
+        const children = childRes.data;
 
-      setChecklist(mergedChecklist);
-    } catch (error) {
-      console.error('생활 체크리스트 불러오기 실패:', error);
+        const logRes = await axios.get(`http://localhost:8888/api/childs/activitylog/parent`, {
+          params: { memberNo: member.memberNo, date: formattedDate },
+        });
+        const logs = logRes.data;
+
+        const mergedChecklist = children.map((child) => {
+          const matchedLog = logs.find((log) => log.child_no === child.child_no);
+          return {
+            name: child.child_name,
+            child_no: child.child_no,
+            meal: matchedLog?.dailyMeal_amount || '',
+            napStart: matchedLog?.napStart_time || '',
+            napEnd: matchedLog?.napEnd_time || '',
+            napTime:
+              matchedLog?.napStart_time && matchedLog?.napEnd_time
+                ? `${matchedLog.napStart_time.substring(0, 5)} ~ ${matchedLog.napEnd_time.substring(0, 5)}`
+                : '',
+            play: matchedLog?.play_participation || '',
+            social: matchedLog?.daily_friendship || '',
+            memo: matchedLog?.activity_log_memo || '',
+            editable: false,
+          };
+        });
+
+        setChecklist(mergedChecklist);
+      } catch (error) {
+        toast.error('생활 정보 조회 실패', error);
+      }
     }
   };
 
   const toggleEdit = async (index) => {
+    if (memberType === 'PARENT') return;
+
     const item = checklist[index];
     const formattedDate = format(selectedDate, 'yyyy-MM-dd');
 
@@ -100,7 +150,7 @@ const ChildLifeCheck = () => {
         );
         toast.success('저장되었습니다!');
       } catch (error) {
-        toast.error('저장 실패에 실패하였습니다.');
+        toast.error('저장 실패');
       }
     }
 
@@ -121,9 +171,9 @@ const ChildLifeCheck = () => {
           selectedClassNo={selectedClassNo}
           setSelectedClassNo={setSelectedClassNo}
           onSearch={handleSearch}
-          classList={classList}
+          classList={memberType !== 'PARENT' ? classList : null}
         />
-        <LifeCheckListTable data={checklist} onEdit={toggleEdit} onChange={handleChange} />
+        <LifeCheckListTable data={checklist} onEdit={toggleEdit} onChange={handleChange} memberType={memberType} />
       </Content>
     </Wrapper>
   );

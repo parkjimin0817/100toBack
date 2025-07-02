@@ -51,10 +51,10 @@ public class ChildHealthLog {// 아동 건강 기록
     //아동
 
     //---------------------------------------------------------------------------------------------
-    @PrePersist
-    protected void onCreate() {
-        this.createDate = LocalDateTime.now();
-    }
+//    @PrePersist
+//    protected void onCreate() {
+//        this.createDate = LocalDateTime.now();
+//    }
 
     //---------------------------------------------------------------------------------------------
     public void update(BigDecimal temperature,BigDecimal height, BigDecimal weight, String symptoms, String healthLogMemo) {

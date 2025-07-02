@@ -74,12 +74,14 @@ public class ChildDto {
         private String child_name;
 
         private int class_no;
+        private String class_name;
 
         public static Response toDto(Child child){
             return Response.builder()
                     .child_no(child.getChildNo())
                     .child_name(child.getChildName())
                     .class_no(child.getClassRoom().getClassNo())
+                    .class_name(child.getClassRoom().getClassName())
                     .build();
         }
     }
