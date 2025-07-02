@@ -5,12 +5,15 @@ import com.bridge.kinder.dto.VacationDto.Response;
 import java.io.IOException;
 import java.lang.reflect.ReflectPermission;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface VacationService {
     VacationDto.Response requestVacation (int memberNo, VacationDto.Request request) throws IOException;
     List<Response> getVacationsByMember (int memberNo);
     void deleteVacation (long VacationNo);
-    List<Response> getVacationsByCenter(int centerNo);
+    //List<Response> getVacationsByCenter(int centerNo);
+    Page<Response> getVacationListPaged(int centerNo, String type, Pageable pageable);
     Response approveVacation (long VacationNo);
     Response rejectVacation (long VacationNo);
 
