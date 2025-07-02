@@ -9,11 +9,11 @@ import { boardService } from '../api/boards';
 import useLoginStore from '../store/loginStore';
 
 const categoryName = {
-  letterhome : "가정통신문",
+  family_notice : "가정통신문",
   notice : "공지사항",
   note : "알림장",
   photo : "사진 게시판",
-  mealplan : "식단표",
+  meal_plan : "식단표",
   default : "테스트"
 }
 

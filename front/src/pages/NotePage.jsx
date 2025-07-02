@@ -82,7 +82,10 @@ const NotePage = () => {
         Title={'알림장'}
         Color={'green'}
         // 교사면 버튼 추가, 학부모면 없음.
-        ButtonProps={[
+        ButtonProps={
+          member.memberType === "FARENT" ? 
+          []
+          : [
           { Title: '작성하기', 
             func: () => {
               navigate("/note/write", { state: { category: "note" }, })

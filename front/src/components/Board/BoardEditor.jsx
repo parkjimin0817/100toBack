@@ -44,7 +44,8 @@ const BoardEditor = (
           <>
           {/* 로딩시, api 호출해서 옵션을 채울 예정  */}
             <HeadLabel htmlFor='classRoom'>반 선택</HeadLabel>
-            <Select id='classRoom' type="text" value={formState?.classRoomNo} onChange={(e) => updateFormField("classRoomNo",e.target.value)} >
+            {classRoomList.length > 0 && (
+              <Select id='classRoom' type="text" value={formState?.classRoomNo} onChange={(e) => updateFormField("classRoomNo",e.target.value)} >
               <option value="선택">반 선택</option>
               {classRoomList.map((classRoom) => (
                 <option key={classRoom.class_no} value={classRoom.class_no}>
@@ -52,13 +53,14 @@ const BoardEditor = (
                 </option>
               ))}
             </Select>
+            )}
           </>
           )
         }
           <HeadLabel htmlFor='writer'>작성자</HeadLabel>
-          <HeadInput id='writer' type="text" value={formState?.memberName} onChange={(e) => updateFormField("memberName", e.target.value)} />
+          <HeadInput id='writer' type="text" value={formState?.memberName} onChange={(e) => updateFormField("memberName", e.target.value)} readOnly />
         </HeadBlock>
-        {category !== 'gallery' && (
+        {category !== 'photo' && (
           <HeadBlock>
             <HeadLabel htmlFor='file'>첨부 파일</HeadLabel>
             <HeadInput id='file' type="file" onChange={(e) => updateFormField("file", e.target.files[0])} />
@@ -67,37 +69,39 @@ const BoardEditor = (
 
         <div style={{ marginTop: "1rem" }}>
           {formState?.contents.map((block) => (
-            <div key={block.id} style={{ marginBottom: "1rem" }}>
+            // <div key={block.boardContentNo} style={{ marginBottom: "1rem" }}>
+            <>
               {block.type === "default" ? (
                 <ButtonBox>
-                  <AddBlockButton type="button" onClick={() => selectBlock("TEXT", block.id)}>
+                  <AddBlockButton type="button" onClick={() => selectBlock("TEXT", block.boardContentNo)}>
                     텍스트 추가
                   </AddBlockButton>
-                  <AddBlockButton type="button" onClick={() => selectBlock("IMG", block.id)}>
+                  <AddBlockButton type="button" onClick={() => selectBlock("IMG", block.boardContentNo)}>
                     이미지 추가
                   </AddBlockButton>
-                  <AddBlockButton type='button' onClick={() => deleteBlock(block.id)}>
+                  <AddBlockButton type='button' onClick={() => deleteBlock(block.boardContentNo)}>
                     <FaMinus></FaMinus>
                   </AddBlockButton>
                 </ButtonBox>
               ) : block.type === "TEXT" ? (
                 <TextInputBlock
-                  key={block.id}
-                  onChange={(value) => updateBlock(block.id, value)}
+                  key={block.boardContentNo}
+                  onChange={(value) => updateBlock(block.boardContentNo, value)}
                   content={block.contentText}
-                  blockDelete={() => deleteBlock(block.id)}
+                  blockDelete={() => deleteBlock(block.boardContentNo)}
                 />
               ) : (
                 <ImageInputBlock
-                  id={block.id}
+                  id={block.boardContentNo}
                   value={block.contentFile}
                   onChange={updateBlock}
-                  blockDelete={() => deleteBlock(block.id)}
+                  blockDelete={() => deleteBlock(block.boardContentNo)}
                 />
               )}
-            </div>
+            {/* </div> */}
+            </>
           ))}
-          <AddBlockButton type="button" /*onClick={() => setShowOptions(!showOptions)}*/onClick={() => addBlock("default")}>
+          <AddBlockButton type="button" onClick={() => addBlock("default")}>
             <FaPlus></FaPlus>
           </AddBlockButton>
         </div>
@@ -143,6 +147,8 @@ const AddBlockButton = styled.button`
   height: 80px;
   border-radius: 5px;
   border: 1px solid #BEBEBE;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 `;
 const Select = styled.select`
   flex : 1;

@@ -288,5 +288,22 @@ public class ChildServiceImpl implements ChildService {
                 .collect(Collectors.toList());
     }
 
-    
+    //부모 번호로 아동 건강 로그 체크리스트 불러오기
+    @Override
+    public List<healthLog> healthLogByParent(int memberNo, LocalDate date) {
+        return childRepository.healthLogByParent(memberNo,date)
+                .stream()
+                .map(ChildDto.healthLog::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<activityLog> activityLogByParent(int memberNo, LocalDate date) {
+        return childRepository.activityLogByParent(memberNo,date)
+                .stream()
+                .map(ChildDto.activityLog::toDto)
+                .collect(Collectors.toList());
+    }
+
+
 }

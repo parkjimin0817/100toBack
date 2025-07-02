@@ -16,10 +16,12 @@ const ChildLifeCheck = () => {
 
   const member = useLoginStore((state) => state.member);
   const centerNo = member.centerNo;
+  const memberType = member.memberType;
 
-  //시설별 반 목록 가져오기
+  // 반 목록: 교사/시설장만
   useEffect(() => {
-    if (!centerNo) return;
+    if (!centerNo || memberType === 'PARENT') return;
+
     const fetchClassList = async () => {
       try {
         const response = await axios.get(`http://localhost:8888/api/classroom/list/${centerNo}`);
@@ -28,30 +30,55 @@ const ChildLifeCheck = () => {
         toast.error('반 목록 불러오기 실패', error);
       }
     };
-    fetchClassList();
-  }, [centerNo]);
 
+    fetchClassList();
+  }, [centerNo, memberType]);
+
+  // 검색 실행
   const handleSearch = async () => {
-    if (!selectedDate || !selectedClassNo) {
+    const formattedDate = format(selectedDate, 'yyyy-MM-dd');
+
+    if (!selectedDate) {
+      alert('날짜를 선택해주세요.');
+      return;
+    }
+
+    if (memberType !== 'PARENT' && !selectedClassNo) {
       alert('반과 날짜를 모두 선택해주세요.');
       return;
     }
 
-    const formattedDate = format(selectedDate, 'yyyy-MM-dd');
-
     try {
-      const childRes = await axios.get(`http://localhost:8888/api/childs`, {
-        params: { classNo: selectedClassNo },
-      });
-      const children = childRes.data;
+      let children = [];
+      let logs = [];
 
-      const logRes = await axios.get(`http://localhost:8888/api/childs/activitylog/class`, {
-        params: { classNo: selectedClassNo, date: formattedDate },
-      });
-      const logs = logRes.data;
+      if (memberType === 'PARENT') {
+        // 로그 데이터가 없을 경우에도 아이들을 불러와서 빈칸으로 보여줘야 하기 때문에
+        const childRes = await axios.get(`http://localhost:8888/api/childs/parentChild`, {
+          params: { memberNo: member.memberNo },
+        });
+        children = childRes.data;
 
-      const mergedChecklist = children.map((child) => {
-        const matchedLog = logs.find((log) => log.child_name === child.child_name);
+        const logRes = await axios.get(`http://localhost:8888/api/childs/activitylog/parent`, {
+          params: { memberNo: member.memberNo, date: formattedDate },
+        });
+        logs = logRes.data;
+      } else {
+        // 로그 데이터가 없을 경우에도 아이들을 불러와서 빈칸으로 보여줘야 하기 때문에
+        const childRes = await axios.get(`http://localhost:8888/api/childs`, {
+          params: { classNo: selectedClassNo },
+        });
+        children = childRes.data;
+
+        const logRes = await axios.get(`http://localhost:8888/api/childs/activitylog/class`, {
+          params: { classNo: selectedClassNo, date: formattedDate },
+        });
+        logs = logRes.data;
+      }
+
+      // 병합
+      const checklist = children.map((child) => {
+        const matchedLog = logs.find((log) => log.child_no === child.child_no);
         return {
           name: child.child_name,
           child_no: child.child_no,
@@ -69,13 +96,15 @@ const ChildLifeCheck = () => {
         };
       });
 
-      setChecklist(mergedChecklist);
+      setChecklist(checklist);
     } catch (error) {
-      console.error('생활 체크리스트 불러오기 실패:', error);
+      toast.error('생활 체크리스트 불러오기 실패', error);
     }
   };
 
   const toggleEdit = async (index) => {
+    if (memberType === 'PARENT') return;
+
     const item = checklist[index];
     const formattedDate = format(selectedDate, 'yyyy-MM-dd');
 
@@ -100,7 +129,7 @@ const ChildLifeCheck = () => {
         );
         toast.success('저장되었습니다!');
       } catch (error) {
-        toast.error('저장 실패에 실패하였습니다.');
+        toast.error('저장 실패');
       }
     }
 
@@ -121,9 +150,9 @@ const ChildLifeCheck = () => {
           selectedClassNo={selectedClassNo}
           setSelectedClassNo={setSelectedClassNo}
           onSearch={handleSearch}
-          classList={classList}
+          classList={memberType !== 'PARENT' ? classList : null}
         />
-        <LifeCheckListTable data={checklist} onEdit={toggleEdit} onChange={handleChange} />
+        <LifeCheckListTable data={checklist} onEdit={toggleEdit} onChange={handleChange} memberType={memberType} />
       </Content>
     </Wrapper>
   );

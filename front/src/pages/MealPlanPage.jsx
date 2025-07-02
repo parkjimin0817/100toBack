@@ -88,7 +88,10 @@ const MealPlanPage = () => {
         Title={'식단표 게시판'}
         Color={'green'}
         // 교사면 버튼 추가, 학부모면 없음.
-        ButtonProps={[
+        ButtonProps={
+          member.memberType === "FARENT" ? 
+          []
+          : [
           { Title: '작성하기', 
             func: () => {
               navigate("/meal_plan/write", { state: { category: "meal_plan" }, })

@@ -57,10 +57,10 @@ public class ChildActivityLog {// 아동 생활 기록
 
 
     //---------------------------------------------------------------------------------------------
-    @PrePersist
-    protected void onCreate() {
-        this.createDate = LocalDateTime.now();
-    }
+//    @PrePersist
+//    protected void onCreate() {
+//        this.createDate = LocalDateTime.now();
+//    }
 
 
     //---------------------------------------------------------------------------------------------

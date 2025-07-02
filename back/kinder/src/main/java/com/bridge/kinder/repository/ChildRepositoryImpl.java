@@ -370,4 +370,43 @@ public class ChildRepositoryImpl implements ChildRepository {
         return Optional.of(targetLog);
     }
 
+    @Override
+    public List<ChildHealthLog> healthLogByParent(int memberNo, LocalDate date) {
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.plusDays(1).atStartOfDay();
+
+        return em.createQuery("""
+        SELECT hl 
+        FROM MemberChild mc 
+        JOIN mc.child c 
+        JOIN ChildHealthLog hl ON hl.child = c 
+        WHERE mc.member.memberNo = :memberNo 
+          AND hl.createDate >= :start 
+          AND hl.createDate < :end
+        """, ChildHealthLog.class)
+                .setParameter("memberNo", memberNo)
+                .setParameter("start", start)
+                .setParameter("end", end)
+                .getResultList();
+    }
+
+    @Override
+    public List<ChildActivityLog> activityLogByParent(int memberNo, LocalDate date) {
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.plusDays(1).atStartOfDay();
+
+        return em.createQuery("""
+        SELECT al 
+        FROM MemberChild mc 
+        JOIN mc.child c 
+        JOIN ChildActivityLog al ON al.child = c 
+        WHERE mc.member.memberNo = :memberNo 
+          AND al.createDate >= :start 
+          AND al.createDate < :end
+        """, ChildActivityLog.class)
+                .setParameter("memberNo", memberNo)
+                .setParameter("start", start)
+                .setParameter("end", end)
+                .getResultList();
+    }
 }
