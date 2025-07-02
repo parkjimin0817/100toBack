@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import axios from 'axios';
+import { holidayService } from '../api/holiday';
 
 const CustomCalendar = ({ onDateClick, onMonthChange, disableFuture = false }) => {
   const today = new Date();
@@ -10,18 +10,13 @@ const CustomCalendar = ({ onDateClick, onMonthChange, disableFuture = false }) =
   const [activeMonth, setActiveMonth] = useState(new Date());
 
   useEffect(() => {
-    const fetchHolidays = async () => {
-      const year = activeMonth.getFullYear();
-      const month = activeMonth.getMonth() + 1;
+    const year = activeMonth.getFullYear();
+    const month = activeMonth.getMonth() + 1;
 
-      try {
-        const { data } = await axios.get(`http://localhost:8888/api/holiday?year=${year}&month=${month}`);
-        setHolidays(data);
-      } catch (error) {
-        console.error('공휴일 불러오기 실패 :', error);
-      }
-    };
-    fetchHolidays();
+    holidayService
+      .getHoliday(year, month)
+      .then((data) => setHolidays(data))
+      .catch((err) => console.error('공휴일 불러오기 실패:', err));
   }, [activeMonth]);
 
   return (

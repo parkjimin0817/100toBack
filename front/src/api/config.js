@@ -108,4 +108,8 @@ export const API_ENDPOINTS = {
     BASE: '/api/leave',
     GETLEAVE: (memberNo) => `/api/leave/${memberNo}`,
   },
+  HOLIDAY: {
+    BASE: '/api/holiday',
+    GET: (year, month) => `api/holiday?year=${year}&month=${month}`,
+  },
 };
