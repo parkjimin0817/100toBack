@@ -47,6 +47,17 @@ const Header = ({ member }) => {
     }
   };
 
+  //타입에 따라 다른 메인페이지 이동
+  const handleMainPage = () => {
+    if (type === '교사') {
+      navigate('/teacher/main');
+    } else if (type === '시설장') {
+      navigate('/manager/main');
+    } else {
+      navigate('/parent/main');
+    }
+  };
+
   //로그아웃
   const logout = useLoginStore((state) => state.logout);
   const resetAttendance = useAttendanceStore((state) => state.resetAttendance);
@@ -62,7 +73,7 @@ const Header = ({ member }) => {
     <HeaderContainer>
       <HeaderLeftBox>
         {/* 로그인한 사람 role 기준으로 url 바뀌기 */}
-        <Logo src={logo} alt="KinderBridge" onClick={() => navigate('/parent/main')} />
+        <Logo src={logo} alt="KinderBridge" onClick={handleMainPage} />
         <LinearBar></LinearBar>
         <IoCallOutline />
         <p>{centerTel}</p>
