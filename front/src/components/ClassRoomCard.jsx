@@ -29,7 +29,7 @@ const ClassRoomCard = ({ classrooms, address }) => {
             capacity={classroom.capacity}
             teacher={classroom.member_name}
             classColor={classroom.color}
-            address={address + `/${classroom.class_no}`}
+            address={`${address}/${classroom.class_no}`}
           />
         ))}
       </FlexContainer>

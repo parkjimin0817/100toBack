@@ -6,13 +6,14 @@ import styled from 'styled-components';
 import useScheduleStore from '../../store/scheduleStore';
 // import { useDailyScheduleForm } from '../../hook/useDailyScheduleForm';
 import { useScheduleService } from '../../api/schedule';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 
 const DailyScheduleDetail = () => {
+  const navigate = useNavigate();
   const { schedule } = useScheduleStore();
   // const {} = useDailyScheduleForm();
 
@@ -137,6 +138,12 @@ const DailyScheduleDetail = () => {
             Title: '일과 등록 및 수정',
             func: () => {
               writeAuthority === false ? setWriteAuthority(true) : setWriteAuthority(false);
+            },
+          },
+          {
+            Title: '뒤로가기',
+            func: () => {
+              navigate('/daily');
             },
           },
         ]}

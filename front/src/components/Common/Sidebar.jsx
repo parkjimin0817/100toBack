@@ -5,9 +5,11 @@ const SideBar = ({ type }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [openMenus, setOpenMenus] = useState({});
   const sidebarRef = useRef(null);
+  const { member } = useLoginStore();
+  const classNo = member?.classNo;
 
   const sidebarByType = {
-    TEACHER: teacherSidebar,
+    TEACHER: teacherSidebar(classNo),
     MANAGER: managerSidebar,
     PARENT: parentSidebar,
   };
@@ -73,14 +75,15 @@ import { IoPeopleOutline } from 'react-icons/io5';
 import { FaSchoolFlag } from 'react-icons/fa6';
 import useLoginStore from '../../store/loginStore';
 
-const teacherSidebar = [
+//교사
+const teacherSidebar = (classNo) => [
   {
     id: 'menu1',
     label: '아동 관리',
     icon: <LuBaby />,
     color: 'orange',
     subItems: [
-      { label: '아동 목록', link: '/childlist' },
+      { label: '아동 목록', link: `/childlist/${classNo ?? ''}` },
       { label: '아동 출결', link: '/classlist' },
       { label: '아동 건강', link: '/childhealthcheck' },
       { label: '아동 생활', link: '/childlifecheck' },
@@ -133,6 +136,7 @@ const teacherSidebar = [
   },
 ];
 
+//시설장
 const managerSidebar = [
   {
     id: 'menu1',
@@ -140,8 +144,8 @@ const managerSidebar = [
     icon: <LuBaby />,
     color: 'orange',
     subItems: [
-      { label: '아동 목록', link: '/childlist' },
-      { label: '아동 출결', link: '/classlist' },
+      { label: '아동 목록', link: '/childlist' }, //시설 모든 아동 목록
+      { label: '아동 출결', link: '/classlist' }, //출결 페이지로 이동되는 반목록
       { label: '아동 건강', link: '/childhealthcheck' },
       { label: '아동 생활', link: '/childlifecheck' },
     ],
@@ -181,6 +185,7 @@ const managerSidebar = [
       { label: '회원가입 승인', link: '/approvalList' },
       { label: '교사 소개', link: '/manager/introteacher' },
       { label: '반 배정', link: '/manager/classplacement' },
+      { label: '반 생성', link: '/manager/classmanage' },
     ],
   },
   {

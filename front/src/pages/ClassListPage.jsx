@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import ClassRoomCard from '../../components/ClassRoomCard';
-import ContentHeader from '../../components/Common/ContentHeader';
-import sun from '../../assets/img/sun.png';
+import ClassRoomCard from '../components/ClassRoomCard';
+import ContentHeader from '../components/Common/ContentHeader';
+import sun from '../assets/img/sun.png';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import useLoginStore from '../../store/loginStore';
-import { classService } from '../../api/class';
+import useLoginStore from '../store/loginStore';
+import { classService } from '../api/class';
 import { ImInfo } from 'react-icons/im';
 import { toast } from 'react-toastify';
 
-//출석 체크 시 반별 페이지(모든 반이 나옴)
-const AttendanceClassList = () => {
+const ClassListPage = () => {
+  const buttons = [{ Title: '아동 목록', func: () => navigator('/childlist') }];
+
   const { member } = useLoginStore();
   const centerNo = member?.centerNo;
   const [classrooms, setClassrooms] = useState([]);
+  const navigator = useNavigate();
 
   useEffect(() => {
     if (!member) {
@@ -29,13 +31,13 @@ const AttendanceClassList = () => {
 
   return (
     <Content>
-      <ContentHeader Title={'아동 출결'} Color={'orange'} />
+      <ContentHeader Title={'반 목록'} Color={'orange'} ButtonProps={buttons} />
       <Div>
         <Hint>
           <ImInfo />
-          해당 반을 선택하시면 아동들의 출결을 관리하실 수 있습니다.
+          반을 선택하시면 해당 반 아동 목록을 볼 수 있습니다.
         </Hint>
-        <ClassRoomCard classrooms={classrooms} address={'/childattendance'} />
+        <ClassRoomCard classrooms={classrooms} address={'/childlist'} />
       </Div>
     </Content>
   );
@@ -64,4 +66,4 @@ const Content = styled.div`
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 `;
 
-export default AttendanceClassList;
+export default ClassListPage;

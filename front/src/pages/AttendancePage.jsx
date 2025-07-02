@@ -41,6 +41,8 @@ const AttendancePage = () => {
     }
   }, [selectedDate, class_no]);
 
+  const className = attendanceInfo.length > 0 ? attendanceInfo[0].class_name : '';
+
   const handleDateClick = (date) => {
     const formatted = dayjs(date).format('YYYY-MM-DD (ddd)');
     setSelectedDate(formatted);
@@ -48,7 +50,7 @@ const AttendancePage = () => {
   return (
     <Wrapper>
       <ContentHeader
-        Title={'반 출결'}
+        Title={`${className}반 출결`}
         Color={'orange'}
         ButtonProps={[{ Title: '뒤로가기', func: () => navigate(-1) }]}
       />
