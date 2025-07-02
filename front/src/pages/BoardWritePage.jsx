@@ -13,7 +13,7 @@ const categoryName = {
   notice : "공지사항",
   note : "알림장",
   photo : "사진 게시판",
-  foodmenu : "식단표",
+  meal_plan : "식단표",
   default : "테스트"
 }
 
