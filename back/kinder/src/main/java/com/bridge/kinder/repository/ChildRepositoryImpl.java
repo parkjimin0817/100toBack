@@ -364,4 +364,5 @@ public class ChildRepositoryImpl implements ChildRepository {
 
         return Optional.of(targetLog);
     }
+
 }

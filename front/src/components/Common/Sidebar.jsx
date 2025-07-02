@@ -207,7 +207,7 @@ const parentSidebar = [
     icon: <LuBaby />,
     color: 'orange',
     subItems: [
-      { label: '아동 출결', link: '/parent/mychild' },
+      { label: '아동 목록', link: '/parent/mychild' },
       { label: '아동 건강', link: '/childhealthcheck' },
       { label: '아동 생활', link: '/childlifecheck' },
     ],
