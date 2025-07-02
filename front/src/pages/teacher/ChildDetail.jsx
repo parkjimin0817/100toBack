@@ -218,16 +218,19 @@ const ChildDetail = () => {
                     <th>증상</th>
                     <th>메모</th>
                   </HealthTr>
-                  {child.healthLogs?.slice(0, 4).map((record, index) => (
-                    <HealthContentTr key={index}>
-                      <td>{formatDate(record.create_date)}</td>
-                      <td>{record.temperature}</td>
-                      <td>{record.height}</td>
-                      <td>{record.weight}</td>
-                      <td>{record.symptoms}</td>
-                      <td>{record.healthLogMemo}</td>
-                    </HealthContentTr>
-                  ))}
+                  {child.healthLogs
+                    ?.sort((a, b) => new Date(b.create_date) - new Date(a.create_date))
+                    .slice(0, 4)
+                    .map((record, index) => (
+                      <HealthContentTr key={index}>
+                        <td>{formatDate(record.create_date)}</td>
+                        <td>{record.temperature}</td>
+                        <td>{record.height}</td>
+                        <td>{record.weight}</td>
+                        <td>{record.symptoms}</td>
+                        <td>{record.healthLogMemo}</td>
+                      </HealthContentTr>
+                    ))}
                 </tbody>
               </Table>
               <LoadMoreButton onClick={() => navigate(`/child/healthlist?id=${id}`)}>더보기</LoadMoreButton>
@@ -413,18 +416,21 @@ const ChildDetail = () => {
                     <th>교우관계</th>
                     <th>메모</th>
                   </HealthTr>
-                  {child.activityLogs?.slice(0, 4).map((record, index) => (
-                    <HealthContentTr key={index}>
-                      <td>{formatDate(record.create_date)}</td>
-                      <td>{record.dailyMeal_amount}</td>
-                      <td>
-                        {record.napStart_time}~{record.napEnd_time}
-                      </td>
-                      <td>{record.play_participation}</td>
-                      <td>{record.daily_friendship}</td>
-                      <td>{record.activity_log_memo}</td>
-                    </HealthContentTr>
-                  ))}
+                  {child.activityLogs
+                    ?.sort((a, b) => new Date(b.create_date) - new Date(a.create_date))
+                    .slice(0, 4)
+                    .map((record, index) => (
+                      <HealthContentTr key={index}>
+                        <td>{formatDate(record.create_date)}</td>
+                        <td>{record.dailyMeal_amount}</td>
+                        <td>
+                          {record.napStart_time}~{record.napEnd_time}
+                        </td>
+                        <td>{record.play_participation}</td>
+                        <td>{record.daily_friendship}</td>
+                        <td>{record.activity_log_memo}</td>
+                      </HealthContentTr>
+                    ))}
                 </tbody>
               </Table>
               <LoadMoreButton onClick={() => navigate(`/child/lifelist?id=${id}`)}>더보기</LoadMoreButton>
