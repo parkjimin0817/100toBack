@@ -59,5 +59,9 @@ public interface ChildRepository {
     Optional<ChildHealthLog> updateHealthLog(int childNo, LocalDate date, ChildDto.healthLog data);
     //아동 생활 로그 데이터 삽입 혹은 수정하기
     Optional<ChildActivityLog> updateActivityLog(int childNo, LocalDate date, ChildDto.activityLog data);
+    //부모 멤버 번호로 본인 아동들의 건강 로그 데이터 가져오기
+    List<ChildHealthLog> healthLogByParent(int memberNo, LocalDate date);
+    //부모 멤버 번호로 본인 아동들의 생활 로그 데이터 가져오기
+    List<ChildActivityLog> activityLogByParent(int memberNo, LocalDate date);
 
 }

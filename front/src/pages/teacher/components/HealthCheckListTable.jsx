@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const HealthCheckListTable = ({ data, onEdit, onChange }) => {
+const HealthCheckListTable = ({ data, onEdit, onChange, memberType }) => {
   return (
     <TableWrapper>
       <VacationTable>
@@ -13,7 +13,7 @@ const HealthCheckListTable = ({ data, onEdit, onChange }) => {
             <th>몸무게</th>
             <th>증상</th>
             <th>메모</th>
-            <th>비고</th>
+            {memberType !== 'PARENT' && <th>비고</th>}
           </tr>
         </thead>
         <tbody>
@@ -22,7 +22,7 @@ const HealthCheckListTable = ({ data, onEdit, onChange }) => {
               <td>{child.name}</td>
               <td>
                 {child.editable ? (
-                  <input
+                  <Input
                     type="text"
                     value={child.temp}
                     onChange={(e) => onChange(index, 'temp', e.target.value)}
@@ -36,7 +36,7 @@ const HealthCheckListTable = ({ data, onEdit, onChange }) => {
               </td>
               <td>
                 {child.editable ? (
-                  <input
+                  <Input
                     type="text"
                     value={child.height}
                     onChange={(e) => onChange(index, 'height', e.target.value)}
@@ -50,7 +50,7 @@ const HealthCheckListTable = ({ data, onEdit, onChange }) => {
               </td>
               <td>
                 {child.editable ? (
-                  <input
+                  <Input
                     type="text"
                     value={child.weight}
                     onChange={(e) => onChange(index, 'weight', e.target.value)}
@@ -65,7 +65,7 @@ const HealthCheckListTable = ({ data, onEdit, onChange }) => {
               </td>
               <td>
                 {child.editable ? (
-                  <input
+                  <Input
                     type="text"
                     value={child.symptom}
                     onChange={(e) => onChange(index, 'symptom', e.target.value)}
@@ -77,7 +77,7 @@ const HealthCheckListTable = ({ data, onEdit, onChange }) => {
               </td>
               <td>
                 {child.editable ? (
-                  <input
+                  <Input
                     type="text"
                     value={child.memo}
                     onChange={(e) => onChange(index, 'memo', e.target.value)}
@@ -87,9 +87,11 @@ const HealthCheckListTable = ({ data, onEdit, onChange }) => {
                   child.memo
                 )}
               </td>
-              <td>
-                <EditButton onClick={() => onEdit(index)}>{child.editable ? '저장' : '수정'}</EditButton>
-              </td>
+              {memberType !== 'PARENT' && (
+                <td>
+                  <EditButton onClick={() => onEdit(index)}>{child.editable ? '저장' : '수정'}</EditButton>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
@@ -161,4 +163,10 @@ const EditButton = styled.button`
   &:hover {
     background-color: ${({ theme }) => theme.colors.lightorange};
   }
+`;
+
+const Input = styled.input`
+  width: 90%;
+  border: 1px solid black;
+  text-align: center;
 `;
