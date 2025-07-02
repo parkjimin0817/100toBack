@@ -1,8 +1,21 @@
 import styled from 'styled-components';
 import { vacationService } from '../../../api/vacation';
 import { toast } from 'react-toastify';
+import { useState } from 'react';
+import { set } from 'date-fns';
+import Pagination from '../../../components/Common/Pagenation';
 
 const MyVacationList = ({ vacations, onDeleteSuccess }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  const startIndex = (currentPage - 1) * itemsPerPage; //페이지에서 첫 아이템 0 ~
+  const endIndex = startIndex + itemsPerPage; //페이지에서 마지막 아이템 5 => 0,1,2,3,4
+
+  const sortedVacations = [...vacations].sort((a, b) => b.vacationNo - a.vacationNo);
+  const paginatedVacations = sortedVacations.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(sortedVacations.length / itemsPerPage);
+
   const TYPE = {
     VACATED: '휴가',
     WORKATION: '워케이션',
@@ -21,6 +34,12 @@ const MyVacationList = ({ vacations, onDeleteSuccess }) => {
       await vacationService.deleteVacation(vacationNo);
       toast.success('휴가 신청이 삭제되었습니다.');
       onDeleteSuccess();
+
+      //삭제 후 페이지에 항목이 없다면 이전 페이지로
+      const isLastItemOnPage = paginatedVacations.length === 1;
+      if (isLastItemOnPage && currentPage > 1) {
+        setCurrentPage((prev) => prev - 1);
+      }
     } catch (err) {
       console.error('휴가 삭제 실패 :', err);
       toast.error('휴가 신청 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
@@ -42,29 +61,36 @@ const MyVacationList = ({ vacations, onDeleteSuccess }) => {
           </tr>
         </thead>
         <tbody>
-          {[...vacations]
-            .sort((a, b) => b.vacationNo - a.vacationNo)
-            .map((vacation, index) => (
-              <tr key={vacation.vacationNo}>
-                <td>{index + 1}</td>
-                <td>{TYPE[vacation.type] || vacation.type}</td>
-                <td>{vacation.typeDetail}</td>
-                <td>
-                  {vacation.startDate}-{vacation.endDate}
-                </td>
-                <td>{vacation.reason}</td>
-                <td>{vacation.file || ''}</td>
-                <td>
-                  {vacation.status === 'PENDING' ? (
-                    <DeleteButton onClick={() => handleDelete(vacation.vacationNo)}>삭제</DeleteButton>
-                  ) : (
-                    <Status $status={vacation.status}>{STATUS[vacation.status] || vacation.status}</Status>
-                  )}
-                </td>
-              </tr>
-            ))}
+          {paginatedVacations.map((vacation, index) => (
+            <tr key={vacation.vacationNo}>
+              <td>{index + 1}</td>
+              <td>{TYPE[vacation.type] || vacation.type}</td>
+              <td>{vacation.typeDetail}</td>
+              <td>
+                {vacation.startDate}-{vacation.endDate}
+              </td>
+              <td>{vacation.reason}</td>
+              <td>{vacation.file || ''}</td>
+              <td>
+                {vacation.status === 'PENDING' ? (
+                  <DeleteButton onClick={() => handleDelete(vacation.vacationNo)}>삭제</DeleteButton>
+                ) : (
+                  <Status $status={vacation.status}>{STATUS[vacation.status] || vacation.status}</Status>
+                )}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </VacationTable>
+      {totalPages > 1 && (
+        <MyVacationPagination>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <PageButton key={i} $active={currentPage === i + 1} onClick={() => setCurrentPage(i + 1)}>
+              {i + 1}
+            </PageButton>
+          ))}
+        </MyVacationPagination>
+      )}
     </Wrapper>
   );
 };
@@ -73,17 +99,19 @@ export default MyVacationList;
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 500px;
+  height: 335px;
   border-radius: 10px;
   margin: 10px;
   border: 1px solid ${({ theme }) => theme.colors.gray[200]};
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  position: relative;
 `;
 
 const VacationTable = styled.table`
   width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
+  padding: 10px;
 
   th,
   td {
@@ -143,5 +171,29 @@ const DeleteButton = styled.button`
 
   &:hover {
     outline: 1px solid red;
+  }
+`;
+
+const MyVacationPagination = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+`;
+
+const PageButton = styled.button`
+  padding: 5px 10px;
+  margin: 0 5px;
+  border-radius: ${({ theme }) => theme.borderRadius.base};
+  border: 1px solid ${({ theme }) => theme.colors.gray[300]};
+  background-color: ${({ $active, theme }) => ($active ? theme.colors.blue : theme.colors.white)};
+  color: ${({ $active, theme }) => ($active ? theme.colors.white : theme.colors.text)};
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.gray[100]};
   }
 `;
