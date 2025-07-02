@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 
 const TeacherMyPage = () => {
   const member = useLoginStore((state) => state.member);
+  const setMember = useLoginStore((state) => state.setMember);
   const navigate = useNavigate();
   const isAuthenticated = useLoginStore((state) => state.isAuthenticated);
 
@@ -71,6 +72,12 @@ const TeacherMyPage = () => {
           centerTel: centerInfo.centerTel,
           centerAddress: centerInfo.centerAddress,
           centerType: centerInfo.centerType,
+        });
+        setMember({
+          ...member,
+          memberName: editableInfo.memberName,
+          memberBirth: editableInfo.memberBirth,
+          memberPhone: editableInfo.memberPhone,
         });
         toast.success('수정이 성공적으로 완료되었습니다.');
         setIsEditing(false);

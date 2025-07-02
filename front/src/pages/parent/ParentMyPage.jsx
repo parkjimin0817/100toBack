@@ -14,9 +14,11 @@ import { childInfo } from '../../api/childInfo';
 import api from '../../api/axios.js';
 import { toast } from 'react-toastify';
 
+import ChildAddModal from './components/childAddModal.jsx';
+import ChildBringModal from './components/childBringModal.jsx';
+
 const ParentMyPage = () => {
   const [isEditMode, setIsEditMode] = useState(false);
-  // const { member } = useLoginStore();
   const member = useLoginStore((state) => state.member);
   const setMember = useLoginStore((state) => state.setMember);
   const [editableInfo, setEditableInfo] = useState({
@@ -36,9 +38,17 @@ const ParentMyPage = () => {
     }
   };
 
+  useEffect(() => {
+    window.refreshChildList = fetchChildList;
+    return () => {
+      delete window.refreshChildList;
+    };
+  }, []);
+
+  //info 수정
   const handleEditSubmit = async () => {
     try {
-      const { data: updatedMember } = await api.patch(`/api/members/mypage/parent`, {
+      const { data } = await api.patch(`/api/members/mypage/parent`, {
         member_no: member.memberNo,
         member_name: editableInfo.memberName,
         member_birth: editableInfo.memberBirth,
@@ -47,7 +57,9 @@ const ParentMyPage = () => {
 
       setMember({
         ...member,
-        ...updatedMember,
+        memberName: editableInfo.memberName,
+        memberBirth: editableInfo.memberBirth,
+        memberPhone: editableInfo.memberPhone,
       });
 
       setIsEditMode(false);
@@ -58,6 +70,7 @@ const ParentMyPage = () => {
 
   useEffect(() => {
     fetchChildList();
+    handleEditSubmit();
   }, []);
 
   const handleChange = (key, value) => {
@@ -77,6 +90,14 @@ const ParentMyPage = () => {
       handleEditSubmit();
     }
   };
+
+  //modal
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isBringModalOpen, setIsBringModalOpen] = useState(false);
+  const openAddModal = () => setIsAddModalOpen(true);
+  const closeAddModal = () => setIsAddModalOpen(false);
+  const openBringModal = () => setIsBringModalOpen(true);
+  const closeBringModal = () => setIsBringModalOpen(false);
 
   return (
     <Content>
@@ -100,6 +121,7 @@ const ParentMyPage = () => {
         </InfoBox>
         <MenuBox>
           {childList.map((data) => {
+            console.log(data);
             const { age, gender, birthday } = childInfo(data.child_resident_no);
             return (
               <Card key={data.child_no} onClick={() => navigate(`/child/detail?id=${data.child_no}`)}>
@@ -117,17 +139,19 @@ const ParentMyPage = () => {
             );
           })}
           <AddChild>
-            <AddBox onClick={() => navigate('/parent/addchild')}>
+            <AddBox onClick={openAddModal}>
               <Plus>아동 추가</Plus>
               <Img src={AddImage} />
             </AddBox>
-            <AddBox onClick={() => navigate('/parent/searchchild')}>
+            <AddBox onClick={openBringModal}>
               <Plus>아동 검색</Plus>
               <Img src={SearchImage} />
             </AddBox>
           </AddChild>
         </MenuBox>
       </Wrapper>
+      <ChildAddModal isOpen={isAddModalOpen} onClose={closeAddModal} />
+      <ChildBringModal isOpen={isBringModalOpen} onClose={closeBringModal} />
     </Content>
   );
 };
@@ -155,7 +179,7 @@ const InfoBox = styled.div`
   justify-content: space-between;
   margin: 10px 0;
   box-sizing: border-box;
-  gap: 20px; /* 컴포넌트 사이 간격 */
+  gap: 20px;
 `;
 const ProfileImgBox = styled.div`
   width: 20%;
@@ -178,8 +202,10 @@ const MenuBox = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   margin: 30px 0;
+  gap: 20px;
 `;
 
 const Card = styled.div`
@@ -188,6 +214,7 @@ const Card = styled.div`
   background-color: ${({ theme }) => theme.colors.lightblue};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   flex-shrink: 0;
+  margin-right: ${({ theme }) => theme.spacing[8]};
 
   :hover {
     cursor: pointer;
@@ -235,7 +262,7 @@ const AddChild = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 240px;
+  width: 140px;
   height: 360px;
 `;
 

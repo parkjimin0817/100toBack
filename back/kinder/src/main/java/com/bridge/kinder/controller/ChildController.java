@@ -40,6 +40,8 @@ public class ChildController {
     //로그인된 부모의 아동 연결
     @PostMapping("/link")
     public ResponseEntity<String> linkChild(@RequestBody ChildDto.LinkChildRequest dto) throws IOException {
+        System.out.println("=======================================");
+        System.out.println(dto.getMember_no());
         String childNo = childService.linkChild(dto);
         return ResponseEntity.ok(childNo);
     }
