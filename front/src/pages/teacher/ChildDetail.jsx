@@ -58,6 +58,8 @@ const ChildDetail = () => {
     return `${fullYear}.${String(mm).padStart(2, '0')}.${String(dd).padStart(2, '0')} (만 ${age}세)`;
   };
 
+  console.log(id);
+
   //정보 불러오기
   useEffect(() => {
     const fetchChildDetail = async () => {

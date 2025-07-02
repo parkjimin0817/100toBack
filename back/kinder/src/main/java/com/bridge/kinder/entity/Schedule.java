@@ -99,4 +99,11 @@ public class Schedule {// 일정
         }
     }
 
+    //일과표 등록(수정)
+    public void updateDailySchedule(String description, LocalTime startTime, LocalTime endTime) {
+        this.description = description;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
 }
