@@ -81,7 +81,22 @@ public class BoardServiceImpl implements BoardService {
         }
 
         board.getBoardContents().addAll(contents);
+
+        // 사진 게시판의 경우, 첨부파일은 썸네일이 되도록 함.
+        if(dto.getType() == CommonEnums.BoardType.PHOTO) {
+            Optional<BoardContent> firstImageContent = contents.stream()
+                    .filter(content -> content.getType() == CommonEnums.BoardContentType.IMG)
+                    .findFirst();
+            attachmentPath = firstImageContent
+                    .map(BoardContent::getContentFile)
+                    .orElse(null);
+            System.out.println("사진 경로" + attachmentPath);
+            board.update(board.getTitle(), board.getType(), attachmentPath);
+            System.out.println(board.getAttachment());
+        }
+
         boardRepository.save(board);
+        System.out.println("final attachment: " + board.getAttachment());
         return board.getBoardNo();
     }
 
@@ -179,49 +194,41 @@ public class BoardServiceImpl implements BoardService {
         if (file != null && !file.isEmpty()) {
             attachmentPath = UUID.randomUUID() + "_" + file.getOriginalFilename();
             file.transferTo(new File(UPLOAD_PATH + attachmentPath));
-//            dto.setAttachment(attachmentPath);
         }
-
-        board.update(dto.getTitle(), dto.getType(), attachmentPath);
 
         // 기존 컨텐츠 매핑
         Map<Long, BoardContent> existingContentMap = board.getBoardContents().stream()
                 .collect(Collectors.toMap(BoardContent::getBoardContentNo, Function.identity()));
 
         List<BoardContent> updatedContents = new ArrayList<>(); // 수정 후 컨텐츠 리스트
-        Set<Long> receivedContentIds = new HashSet<>(); // 체크용 셋
         AtomicInteger order = new AtomicInteger(0);
         AtomicInteger imageIndex = new AtomicInteger(0);
 
         for (BoardContentDto.Update contentDto : dto.getContents()) {
-            BoardContent contentEntity;
+            BoardContent contentEntity = existingContentMap.get(contentDto.getContentId()); // 수정전 컨텐츠 가져옴
+            if (contentEntity != null) { // 기존 컨텐츠인지 판단
+                String oldFileName = contentEntity.getContentFile();
 
-            if (contentDto.getContentId() != null) { // 기존 컨텐츠인지 판단
-                contentEntity = existingContentMap.get(contentDto.getContentId()); // 수정전 컨텐츠 가져옴
-                if (contentEntity != null) {
-                    String oldFileName = contentEntity.getContentFile();
-
-                    if (contentDto.getType() == CommonEnums.BoardContentType.IMG && contentFiles != null && imageIndex.get() < contentFiles.size()) {
+                // 이미지인지 판단
+                if (contentDto.getType() == CommonEnums.BoardContentType.IMG && contentFiles != null && imageIndex.get() < contentFiles.size()) {
+                    // 수정전 파일과 현재 파일 같은지 판단
+                    if(!contentDto.getContentFile().equals(contentEntity.getContentFile())) {
                         MultipartFile newFile = contentFiles.get(imageIndex.get());
                         String newFileName = newFile.getOriginalFilename();
-
                         if (newFile != null && !newFile.isEmpty() &&
                                 (oldFileName == null || !oldFileName.endsWith(newFileName))) {
                             // 파일 변경 시
                             String savedPath = UUID.randomUUID() + "_content_" + newFileName;
                             newFile.transferTo(new File(UPLOAD_PATH + savedPath));
-                            contentDto.setContentFile(savedPath);
+                            contentEntity.updateBoardContentImg(savedPath);
+                            imageIndex.incrementAndGet();
                         }
-                        imageIndex.incrementAndGet();
                     }
-
-//                    contentDto.setContentText(contentDto.getContentText());
-                    contentDto.setSortOrder(order.getAndIncrement());
-
-                    BoardContent content = contentDto.toEntity(board);
-                    updatedContents.add(content);
-                    receivedContentIds.add(content.getBoardContentNo());
                 }
+
+                contentEntity.updateBoardContent(contentDto.getContentText(), order.getAndIncrement());
+
+                updatedContents.add(contentEntity);
             } else {
                 // 신규 컨텐츠
                 String newFilePath = null;
@@ -232,9 +239,7 @@ public class BoardServiceImpl implements BoardService {
                         newFile.transferTo(new File(UPLOAD_PATH + newFilePath));
                     }
                 }
-//                contentDto.setContentFile(newFilePath);
-//                contentDto.setSortOrder(order.getAndIncrement());
-//                BoardContent newContent = contentDto.toEntity(board);
+
                 BoardContent newContent = BoardContent.builder()
                         .board(board)
                         .type(contentDto.getType())
@@ -246,14 +251,24 @@ public class BoardServiceImpl implements BoardService {
             }
         }
 
-        // 삭제된 콘텐츠 제거
-        List<BoardContent> toRemove = board.getBoardContents().stream()
-                .filter(content -> !receivedContentIds.contains(content.getBoardContentNo()))
-                .collect(Collectors.toList());
+        if(dto.getType() == CommonEnums.BoardType.PHOTO) {
+            Optional<BoardContent> firstImageContent = updatedContents.stream()
+                    .filter(content -> content.getType() == CommonEnums.BoardContentType.IMG)
+                    .findFirst();
+            attachmentPath = firstImageContent
+                    .map(BoardContent::getContentFile)
+                    .orElse(null);
+            System.out.println(firstImageContent);
+            System.out.println("사진 경로" + attachmentPath);
+        }
 
-        board.getBoardContents().removeAll(toRemove);
+        board.update(dto.getTitle(), dto.getType(), attachmentPath);
+
         board.getBoardContents().clear();
         board.getBoardContents().addAll(updatedContents);
+
+        System.out.println("final Content Count : " + updatedContents.size());
+        board.getBoardContents().forEach(c -> System.out.println("content: " + c.getContentText()));
 
         boardRepository.save(board);
         return board.getBoardNo();

@@ -54,4 +54,15 @@ public class BoardContent {// 게시판 내용
         this.createDate = LocalDateTime.now();
     }
 
+    //---------------------------------------------------------------------------------------------
+
+    public void updateBoardContent(String contentText, int sortOrder) {
+        this.contentText = contentText;
+        this.sortOrder= sortOrder;
+    }
+
+    public void updateBoardContentImg(String contentFile) {
+        this.contentFile = contentFile;
+    }
+
 }

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import TeacherAttendanceCard from './components/TeacherAttendanceCard';
 import TeacherAttendanceCalendar from '../../components/Common/TeacherAttendanceCalendar';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { attendanceService } from '../../api/attendance';
 import { memberService } from '../../api/member';
 import useLoginStore from '../../store/loginStore';
@@ -18,6 +18,13 @@ const TeacherAttendance = () => {
   const centerNo = member?.centerNo;
   const startDate = new Date(teacher.decision_date);
   const today = new Date();
+
+  //뒤로가기 버튼
+  const navigate = useNavigate();
+  const backButton = {
+    Title: '뒤로가기',
+    func: () => navigate('/manager/teacherlist'),
+  };
 
   //근태 수정후 월별 데이터 재조회
   const fetchAttendances = async () => {
@@ -56,7 +63,7 @@ const TeacherAttendance = () => {
 
   return (
     <Wrapper>
-      <ContentHeader Title={'교사 근태 관리'} Color={'blue'} />
+      <ContentHeader Title={'교사 근태 관리'} Color={'blue'} ButtonProps={[backButton]} />
       <Content>
         <Div1>
           <TeacherAttendanceCalendar
