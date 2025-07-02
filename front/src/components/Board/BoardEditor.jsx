@@ -44,7 +44,8 @@ const BoardEditor = (
           <>
           {/* 로딩시, api 호출해서 옵션을 채울 예정  */}
             <HeadLabel htmlFor='classRoom'>반 선택</HeadLabel>
-            <Select id='classRoom' type="text" value={formState?.classRoomNo} onChange={(e) => updateFormField("classRoomNo",e.target.value)} >
+            {classRoomList.length > 0 && (
+              <Select id='classRoom' type="text" value={formState?.classRoomNo} onChange={(e) => updateFormField("classRoomNo",e.target.value)} >
               <option value="선택">반 선택</option>
               {classRoomList.map((classRoom) => (
                 <option key={classRoom.class_no} value={classRoom.class_no}>
@@ -52,13 +53,14 @@ const BoardEditor = (
                 </option>
               ))}
             </Select>
+            )}
           </>
           )
         }
           <HeadLabel htmlFor='writer'>작성자</HeadLabel>
-          <HeadInput id='writer' type="text" value={formState?.memberName} onChange={(e) => updateFormField("memberName", e.target.value)} />
+          <HeadInput id='writer' type="text" value={formState?.memberName} onChange={(e) => updateFormField("memberName", e.target.value)} readOnly />
         </HeadBlock>
-        {category !== 'gallery' && (
+        {category !== 'photo' && (
           <HeadBlock>
             <HeadLabel htmlFor='file'>첨부 파일</HeadLabel>
             <HeadInput id='file' type="file" onChange={(e) => updateFormField("file", e.target.files[0])} />

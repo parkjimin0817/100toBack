@@ -80,7 +80,10 @@ const NoticePage = () => {
         Title={'공지사항'}
         Color={'green'}
         // 학부모는 못봄, 교사는 작성하기 못함, 시설장만 가능
-        ButtonProps={[
+        ButtonProps={
+          member.memberType === "FARENT" ? 
+          []
+          : [
           { Title: '작성하기', 
             func: () => {
               navigate("/notice/write", { state: { category: "notice" }, })

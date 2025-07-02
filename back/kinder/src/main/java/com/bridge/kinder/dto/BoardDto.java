@@ -81,6 +81,7 @@ public class BoardDto {
         private LocalDateTime createDate;
         private String attachment;
         private Integer centerId;
+        private Integer classNo;
         private String className;
         private Integer memberNo;
         private String memberName;
@@ -95,6 +96,7 @@ public class BoardDto {
                     .createDate(board.getCreateDate())
                     .attachment(board.getAttachment())
                     .centerId(board.getCenter() != null ? board.getCenter().getCenterNo() : null)
+                    .classNo(board.getClassRoom() != null ? board.getClassRoom().getClassNo() : null)
                     .className(board.getClassRoom() != null ? board.getClassRoom().getClassName() : null)
                     .memberNo(board.getMember() != null ? board.getMember().getMemberNo() : null)
                     .memberName(board.getMember() != null ? board.getMember().getMemberName() : null)
