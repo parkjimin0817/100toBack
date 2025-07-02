@@ -20,6 +20,11 @@ export const API_ENDPOINTS = {
     EDIT: `/api/schedule/edit`,
     DELETE: `/api/schedule/delete`,
     TODAYLISTS: '/api/schedule/lists/main',
+    DAILYSCHEDULE: `/api/schedule/dailyCreate`,
+    DAILYSCHEDULELIST: (centerNo, memberNo, classNo, scheduleDate) =>
+      `/api/schedule/dailyList?centerNo=${centerNo}&memberNo=${memberNo}&classNo=${classNo}&scheduleDate=${scheduleDate}`,
+    UPDATEDAILY: `/api/schedule/dailyUpdate`,
+    DELETEDAILY: (scheduleNo) => `/api/schedule/dailyDelete/${scheduleNo}`,
   },
   MEMBERS: {
     BASE: '/api/members',

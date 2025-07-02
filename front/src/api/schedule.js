@@ -1,3 +1,4 @@
+import DailySchedule from '../pages/teacher/DailySchedule';
 import api from './axios';
 import { API_ENDPOINTS } from './config';
 
@@ -67,6 +68,48 @@ export const useScheduleService = {
       const { data } = await api.delete(`${API_ENDPOINTS.SCHEDULES.DELETE}`, {
         params: { scheduleNo },
       });
+      return data;
+    } catch (error) {
+      throw new Error(error, '서버 통신 불량');
+    }
+  },
+
+  //일과표 생성
+  dailyCreate: async (formData) => {
+    try {
+      const { data } = await api.post(API_ENDPOINTS.SCHEDULES.DAILYSCHEDULE, formData);
+      return data;
+    } catch (error) {
+      throw new Error(error, '서버 통신 불량');
+    }
+  },
+
+  //일과표 조회
+  dailyScheduleSelect: async (centerNo, memberNo, classNo, scheduleDate) => {
+    try {
+      const { data } = await api.get(
+        API_ENDPOINTS.SCHEDULES.DAILYSCHEDULELIST(centerNo, memberNo, classNo, scheduleDate)
+      );
+      return data;
+    } catch (error) {
+      throw new Error(error, '서버 통신 불량');
+    }
+  },
+
+  //일과표 등록(수정)
+  dailyUpdate: async (updateData) => {
+    try {
+      const { data } = await api.patch(API_ENDPOINTS.SCHEDULES.UPDATEDAILY, updateData);
+      return data;
+    } catch (error) {
+      throw new Error(error, '서버 통신 불량');
+    }
+  },
+
+  //일과표 삭제
+  dailyDelete: async (scheduleNo) => {
+    try {
+      const { data } = await api.delete(API_ENDPOINTS.SCHEDULES.DELETEDAILY(scheduleNo));
       return data;
     } catch (error) {
       throw new Error(error, '서버 통신 불량');

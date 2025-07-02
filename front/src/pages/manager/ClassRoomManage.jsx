@@ -32,7 +32,10 @@ const ClassRoomManage = () => {
       <ContentHeader
         Title={'반 목록'}
         Color={'blue'}
-        ButtonProps={[{ Title: '반 생성하기', func: () => setIsModalOpen(true) }]}
+        ButtonProps={[
+          { Title: '반 생성하기', func: () => setIsModalOpen(true) },
+          { Title: '뒤로가기', func: () => navigate(-1) },
+        ]}
       />
 
       <Div>
