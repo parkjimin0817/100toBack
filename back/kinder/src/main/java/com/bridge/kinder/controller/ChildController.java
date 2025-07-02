@@ -40,6 +40,8 @@ public class ChildController {
     //로그인된 부모의 아동 연결
     @PostMapping("/link")
     public ResponseEntity<String> linkChild(@RequestBody ChildDto.LinkChildRequest dto) throws IOException {
+        System.out.println("=======================================");
+        System.out.println(dto.getMember_no());
         String childNo = childService.linkChild(dto);
         return ResponseEntity.ok(childNo);
     }
@@ -111,7 +113,7 @@ public class ChildController {
         return ResponseEntity.ok(childService.updateActivityData(childNo,data));
     }
 
-    //아동 건강 로그 체크리스트 날짜,반 별로
+    //아동 건강 로그 체크리스트 날짜,반 별로 조회
     @GetMapping("/healthlog/class")
     public ResponseEntity<List<ChildDto.healthLog>> healthLogClass(@RequestParam int classNo,
                                                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
@@ -119,7 +121,7 @@ public class ChildController {
 
     }
 
-    //아동 생활 로그 체크리스트 날짜,반 별로
+    //아동 생활 로그 체크리스트 날짜,반 별로 조회
     @GetMapping("/activitylog/class")
     public ResponseEntity<List<ChildDto.activityLog>> activityLogClass(@RequestParam int classNo,
                                                                    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
@@ -127,19 +129,42 @@ public class ChildController {
 
     }
 
-//    //아동 생활 로그 데이터 삽입,수정하기
-//    @PatchMapping("/updateactivitylog")
-//    public ResponseEntity<ChildDto.activityLog> updateActivityLog(@RequestParam int childNo,
-//                                                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-//                                                @RequestBody ChildDto.activityLog data) {
-//        return ResponseEntity.ok(childService.updateActivityLog(childNo, date, data));
-//
-//    }
-
     //부모 번호로 해당 연결된 아동 리스트 가져오기
     @GetMapping("/parentChild")
     public ResponseEntity<List<ChildDto.myPageChilds>> myChilds(@RequestParam int memberNo){
         return ResponseEntity.ok(childService.myPageChilds(memberNo));
+    }
+
+
+
+    //아동 건강 로그 체크리스트 데이터 삽입,수정
+    @PatchMapping("/updatehealthlog")
+    public ResponseEntity<ChildDto.healthLog> updateActivityLog(@RequestParam int childNo,
+                                                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+                                                                  @RequestBody ChildDto.healthLog data) {
+        return ResponseEntity.ok(childService.updateHealthLog(childNo, date, data));
+
+    }
+
+    //아동 생활 로그 체크리스트 데이터 삽입,수정하기
+    @PatchMapping("/updateactivitylog")
+    public ResponseEntity<ChildDto.activityLog> updateActivityLog(@RequestParam int childNo,
+                                                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+                                                @RequestBody ChildDto.activityLog data) {
+        return ResponseEntity.ok(childService.updateActivityLog(childNo, date, data));
+
+    }
+
+    //부모 번호로 선택 날짜의 아동 건강 로그 체크리스트 불러오기(본인 아동들의 건강 로그 데이터)
+    @GetMapping("/healthlog/parent")
+    public ResponseEntity<List<ChildDto.healthLog>> healthLogByParent(@RequestParam int memberNo,@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+        return ResponseEntity.ok(childService.healthLogByParent(memberNo,date));
+    }
+
+    //부모 번호로 선택 날짜의 아동 생활 로그 체크리스트 불러오기(본인 아동들의 생활 로그 데이터)
+    @GetMapping("/activitylog/parent")
+    public ResponseEntity<List<ChildDto.activityLog>> activityLogByParent(@RequestParam int memberNo,@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return ResponseEntity.ok(childService.activityLogByParent(memberNo, date));
     }
 
 

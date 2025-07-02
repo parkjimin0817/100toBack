@@ -7,6 +7,7 @@ import ContentHeader from '../components/Common/ContentHeader';
 import ImagePost from '../components/Board/ImagePost';
 import { boardService } from '../api/boards';
 import Pagination from '../components/Common/Pagenation';
+import useLoginStore from '../store/loginStore';
 
 const columns = [
   {
@@ -54,11 +55,12 @@ const MealPlanPage = () => {
   const [data, setData] = useState(null);
   const [page, setPage] = useState(1); // 1부터 시작
   const navigate = useNavigate();
+  const member = useLoginStore((state) => state.member);
 
   useEffect(() => {
     const getPostList = async () => {
       try {
-        const responseData = await boardService.typeBoardList("MEAL_PLAN", page);
+        const responseData = await boardService.typeBoardList("MEAL_PLAN", member.centerNo, page);
         console.log(responseData);
         setData(responseData);
         // alert("게시글 조회 성공");
@@ -86,7 +88,10 @@ const MealPlanPage = () => {
         Title={'식단표 게시판'}
         Color={'green'}
         // 교사면 버튼 추가, 학부모면 없음.
-        ButtonProps={[
+        ButtonProps={
+          member.memberType === "FARENT" ? 
+          []
+          : [
           { Title: '작성하기', 
             func: () => {
               navigate("/meal_plan/write", { state: { category: "meal_plan" }, })
@@ -96,8 +101,8 @@ const MealPlanPage = () => {
       ></ContentHeader>
       {data && (
         <BoardContainer>
-          {data.content.map((post) => (
-            <ImagePost onClick={() => handleClick(post.boardNo)} postData={post}></ImagePost>
+          {data.content.map((post, index) => (
+            <ImagePost onClick={() => handleClick(post.boardNo)} postData={post} key={index}></ImagePost>
           ))}
         </BoardContainer>
       )}

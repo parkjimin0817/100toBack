@@ -5,32 +5,65 @@ import { LuSearch } from 'react-icons/lu';
 import Modal from '../manager/components/VacationDetail';
 import useLoginStore from '../../store/loginStore';
 import { vacationService } from '../../api/vacation';
+import { toast } from 'react-toastify';
 
 const ApprovalList = () => {
+  const [vacationData, setVacationData] = useState({
+    content: [],
+    currentPage: 1,
+    totalPages: 1,
+  });
   const [selectedType, setSelectedType] = useState('전체');
   const [openModal, setOpenModal] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
 
   const { member } = useLoginStore();
   const centerNo = member?.centerNo;
-  const [vacations, setVacations] = useState([]);
 
-  //휴가 목록 불러오기
-  useEffect(() => {
+  //목록 불러오기 함수
+  const fetchVacations = async (page = 1, type = selectedType) => {
     if (!centerNo) return;
 
-    vacationService
-      .getVacationListAll(centerNo)
-      .then((data) => setVacations(data))
-      .catch((err) => console.error('휴가 목록 불러오기 실패 : ', err.message));
-  }, [centerNo]);
+    try {
+      const englishType = type === '전체' ? null : type === '휴가' ? 'VACATED' : 'WORKATION';
+      const data = await vacationService.getVacationListAll(centerNo, englishType, page - 1, 6);
+      setVacationData(data);
+    } catch (err) {
+      console.error('휴가 목록 불러오기 실패 : ', err.message);
+    }
+  };
 
+  useEffect(() => {
+    fetchVacations(1, selectedType);
+  }, [centerNo, selectedType]);
+
+  //타입으로 필터
   const TYPE = {
     VACATED: '휴가',
     WORKATION: '워케이션',
   };
 
-  const filteredData = selectedType === '전체' ? vacations : vacations.filter((v) => TYPE[v.type] === selectedType);
+  // 휴가 승인 로직
+  const handleApprove = async (vacationNo) => {
+    try {
+      await vacationService.approveVacation(vacationNo);
+      toast.success('휴가가 승인되었습니다.');
+      fetchVacations(vacationData.currentPage, selectedType);
+    } catch (error) {
+      console.error('휴가 승인 실패:', error.message);
+    }
+  };
+
+  //휴가 거절 로직
+  const handleReject = async (vacationNo) => {
+    try {
+      await vacationService.rejectVacation(vacationNo);
+      toast.success('휴가가 거절되었습니다.');
+      fetchVacations(vacationData.currentPage, selectedType);
+    } catch (error) {
+      console.error('휴가 거절 실패 :', error.message);
+    }
+  };
 
   return (
     <>
@@ -44,13 +77,6 @@ const ApprovalList = () => {
               </MemberType>
             ))}
           </NavigationLeft>
-
-          <NavigationRight>
-            <SearchInput type="text" placeholder="검색어를 입력해주세요" />
-            <SearchButton>
-              <SearchIcon />
-            </SearchButton>
-          </NavigationRight>
         </Navigation>
 
         <ApprovalLists>
@@ -59,6 +85,7 @@ const ApprovalList = () => {
               <thead>
                 <tr>
                   <th>작성일</th>
+                  <th>신청자</th>
                   <th>분류</th>
                   <th>사유</th>
                   <th>첨부파일</th>
@@ -66,15 +93,17 @@ const ApprovalList = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredData.map((v, index) => (
+                {vacationData.content.map((v, index) => (
                   <tr
                     key={index}
-                    onClick={() => {
+                    onClick={(e) => {
+                      if (e.target.closest('button')) return;
                       setSelectedData(v);
                       setOpenModal(true);
                     }}
                   >
                     <td>{v.createDate}</td>
+                    <td>{v.memberName}</td>
                     <td>
                       {TYPE[v.type] || v.type} - {v.typeDetail}
                     </td>
@@ -82,15 +111,31 @@ const ApprovalList = () => {
                     {/* <td>{v.attachment}</td> */}
                     <td>파일자리</td>
                     <td>
-                      {v.decision_date === null ? (
+                      {v.status === 'PENDING' ? (
                         <>
-                          <button className="approved">승인</button>
-                          <button className="rejected">거절</button>
+                          <button
+                            className="approved"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleApprove(v.vacationNo);
+                            }}
+                          >
+                            승인
+                          </button>
+                          <button
+                            className="rejected"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleReject(v.vacationNo);
+                            }}
+                          >
+                            거절
+                          </button>
                         </>
                       ) : v.status === 'APPROVED' ? (
-                        <ApprovedDecisionDate>{v.decision_date}</ApprovedDecisionDate>
+                        <ApprovedDecisionDate>{v.decisionDate}</ApprovedDecisionDate>
                       ) : (
-                        <RejectedDecisionDate>{v.decision_date}</RejectedDecisionDate>
+                        <RejectedDecisionDate>{v.decisionDate}</RejectedDecisionDate>
                       )}
                     </td>
                   </tr>
@@ -99,6 +144,17 @@ const ApprovalList = () => {
             </Table>
           </TableWrapper>
         </ApprovalLists>
+        <PageDiv>
+          {Array.from({ length: vacationData.totalPages }, (_, i) => (
+            <PageButton
+              key={i}
+              onClick={() => fetchVacations(i + 1, selectedType)}
+              $active={vacationData.currentPage === i + 1}
+            >
+              {i + 1}
+            </PageButton>
+          ))}
+        </PageDiv>
       </Content>
       <Modal isOpen={openModal} onClose={() => setOpenModal(false)} data={selectedData} />
     </>
@@ -111,6 +167,7 @@ const Content = styled.div`
   background-color: #ffffff;
   border-radius: 20px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  position: relative;
 `;
 
 const Navigation = styled.div`
@@ -140,37 +197,6 @@ const MemberType = styled.span`
   }
 `;
 
-const NavigationRight = styled.div`
-  width: 50%;
-  display: flex;
-  border: 2px solid ${({ theme }) => theme.colors.black};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-`;
-
-const SearchInput = styled.input`
-  width: 80%;
-  padding: ${({ theme }) => theme.spacing[2]};
-  font-size: ${({ theme }) => theme.fontSizes.base};
-  border-radius: ${({ theme }) => theme.borderRadius.md} 0 0 ${({ theme }) => theme.borderRadius.md};
-`;
-
-const SearchButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: right;
-  width: 20%;
-  padding: 0 ${({ theme }) => theme.spacing[3]};
-  color: ${({ theme }) => theme.colors.bleack};
-  border-radius: 0 ${({ theme }) => theme.borderRadius.md} ${({ theme }) => theme.borderRadius.md} 0;
-  cursor: pointer;
-  font-size: ${({ theme }) => theme.fontSizes.base};
-`;
-
-const SearchIcon = styled(LuSearch)`
-  width: 30px;
-  height: 30px;
-`;
-
 const ApprovalLists = styled.div`
   width: 100%;
   padding: 0 ${({ theme }) => theme.spacing[10]};
@@ -191,75 +217,76 @@ const TableWrapper = styled.div`
 
 const Table = styled.table`
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+  table-layout: fixed;
+  border-collapse: collapse;
   font-size: ${({ theme }) => theme.fontSizes.base};
 
   thead {
     background-color: ${({ theme }) => theme.colors.blue};
     color: ${({ theme }) => theme.colors.white};
-  }
 
-  th {
-    padding: ${({ theme }) => theme.spacing[3]};
-    text-align: center;
-    font-weight: ${({ theme }) => theme.fontWeights.bold};
-  }
-  th:nth-child(1) {
-    width: 20%;
-  }
-  th:nth-child(2) {
-    width: 20%;
-  }
-  th:nth-child(3) {
-    width: 30%;
-  }
-  th:nth-child(4) {
-    width: 15%;
-  }
-  th:nth-child(5) {
-    width: 20%;
-  }
+    th {
+      padding: ${({ theme }) => theme.spacing[3]};
+      text-align: center;
+      font-weight: ${({ theme }) => theme.fontWeights.bold};
+    }
 
-  tbody > tr {
-    cursor: pointer;
-    transition: background-color 0.3s;
-
-    &:hover {
-      background-color: ${({ theme }) => theme.colors.gray[100]};
+    th:nth-child(1) {
+      width: 14%;
+    }
+    th:nth-child(2) {
+      width: 10%;
+    }
+    th:nth-child(3) {
+      width: 18%;
+    }
+    th:nth-child(4) {
+      width: 28%;
+    }
+    th:nth-child(5) {
+      width: 10%;
+    }
+    th:nth-child(6) {
+      width: 20%;
     }
   }
 
-  td {
-    color: ${({ theme }) => theme.colors.blue};
-    font-weight: ${({ theme }) => theme.fontWeights.bold};
-    padding: ${({ theme }) => theme.spacing[3]};
-    text-align: center;
-    border-bottom: 2px solid ${({ theme }) => theme.colors.gray[400]};
-    min-height: 50px;
-  }
+  tbody {
+    tr {
+      cursor: pointer;
+      transition: background-color 0.2s;
 
-  td:nth-child(5) {
-    border-right: none;
-    display: flex;
-    justify-content: center;
-    gap: ${({ theme }) => theme.spacing[4]};
+      &:hover {
+        background-color: ${({ theme }) => theme.colors.gray[100]};
+      }
+    }
+
+    td {
+      padding: ${({ theme }) => theme.spacing[3]};
+      text-align: center;
+      font-weight: ${({ theme }) => theme.fontWeights.bold};
+      color: ${({ theme }) => theme.colors.blue};
+      border-bottom: 1px solid ${({ theme }) => theme.colors.gray[300]};
+      word-break: break-word;
+    }
   }
 
   button {
     border: none;
-    padding: 0 ${({ theme }) => theme.spacing[6]};
+    width: 70px;
+    height: 30px;
+    margin: 0 4px;
     border-radius: ${({ theme }) => theme.borderRadius.md};
     cursor: pointer;
     font-size: ${({ theme }) => theme.fontSizes.xs};
     color: ${({ theme }) => theme.colors.white};
   }
 
-  button.approved {
+  .approved {
     background-color: ${({ theme }) => theme.colors.green};
   }
 
-  button.rejected {
+  .rejected {
     background-color: ${({ theme }) => theme.colors.orange};
   }
 `;
@@ -267,25 +294,38 @@ const Table = styled.table`
 const ApprovedDecisionDate = styled.span`
   background-color: ${({ theme }) => theme.colors.green};
   color: ${({ theme }) => theme.colors.white};
-  border: none;
-  padding: 0 ${({ theme }) => theme.spacing[6]};
   border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: 4px 10px;
   font-size: ${({ theme }) => theme.fontSizes.xs};
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: inline-block;
 `;
 
-const RejectedDecisionDate = styled.span`
+const RejectedDecisionDate = styled(ApprovedDecisionDate)`
   background-color: ${({ theme }) => theme.colors.orange};
-  color: ${({ theme }) => theme.colors.white};
-  border: none;
-  padding: 0 ${({ theme }) => theme.spacing[6]};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  font-size: ${({ theme }) => theme.fontSizes.xs};
+`;
+
+const PageDiv = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
+  margin: 15px 0;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+`;
+
+const PageButton = styled.button`
+  padding: 5px 10px;
+  margin: 0 5px;
+  border-radius: ${({ theme }) => theme.borderRadius.base};
+  border: 1px solid ${({ theme }) => theme.colors.gray[300]};
+  background-color: ${({ $active, theme }) => ($active ? theme.colors.blue : theme.colors.white)};
+  color: ${({ $active, theme }) => ($active ? theme.colors.white : theme.colors.text)};
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.gray[100]};
+  }
 `;
 
 export default ApprovalList;

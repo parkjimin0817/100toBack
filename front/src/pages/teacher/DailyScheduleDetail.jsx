@@ -5,7 +5,7 @@ import styled from 'styled-components';
 // import { media } from '../../styles/MediaQueries';
 // import { useDailyScheduleForm } from '../../hook/useDailyScheduleForm';
 import { useScheduleService } from '../../api/schedule';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FaPlus, FaMinus } from 'react-icons/fa';
 import dayjs from 'dayjs';

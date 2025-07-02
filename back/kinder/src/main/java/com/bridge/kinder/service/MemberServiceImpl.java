@@ -46,6 +46,7 @@ public class MemberServiceImpl implements MemberService {
     private final ApprovalRepository approvalRepository;
     private final MemberChildRepository memberChildRepository;
     private final String UPLOAD_PATH = "C://test_upload/"; //aws S3 연결시 관련 코드 수정할 것.
+    private final LeaveRepository leaveRepository;
 
     //회원가입 시 아이디 중복 체크
     @Override
@@ -113,6 +114,14 @@ public class MemberServiceImpl implements MemberService {
 
         Member teacher = dto.getMember().toEntity(center, profilePath);
         memberRepository.save(teacher);
+
+        Leave leave = Leave.builder()
+                .member(teacher)
+                .leaveDays(15)
+                .usedLeave(0)
+                .build();
+
+        leaveRepository.save(leave);
 
         Approval approval = Approval.builder()
                 .center(center)
@@ -235,11 +244,18 @@ public class MemberServiceImpl implements MemberService {
 
     //memberNo으로 교사 조회
     @Override
-    public MemberDto.DetailMemberDto findTeacherByMemberNo(int memberNo) {
+    public MemberDto.DetailMemberWithApprovalDto findTeacherByMemberNo(int memberNo) {
         Member member =  memberRepository.findMemberByMemberNo(memberNo)
                 .orElseThrow(() -> new RuntimeException("해당 교사가 존재하지 않습니다."));
 
-        return MemberDto.DetailMemberDto.from(member);
+        Center center = member.getCenter();
+
+        Approval approval = member.getApprovals().stream()
+                .filter(a -> a.getCenter() != null && a.getCenter().getCenterNo() == center.getCenterNo())
+                .findFirst()
+                .orElse(null);
+
+        return MemberDto.DetailMemberWithApprovalDto.from(member, approval);
     }
 
     //멤버 ID 찾기(이름, 생년월일)

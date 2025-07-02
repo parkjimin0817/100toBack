@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const LifeCheckListTable = ({ data, onEdit, onChange }) => {
+const LifeCheckListTable = ({ data, onEdit, onChange, memberType }) => {
+  const isParent = memberType === 'PARENT';
+
   return (
     <TableWrapper>
       <VacationTable>
@@ -13,7 +15,7 @@ const LifeCheckListTable = ({ data, onEdit, onChange }) => {
             <th>놀이참여</th>
             <th>교우관계</th>
             <th>메모</th>
-            <th>비고</th>
+            {!isParent && <th>비고</th>}
           </tr>
         </thead>
         <tbody>
@@ -28,24 +30,28 @@ const LifeCheckListTable = ({ data, onEdit, onChange }) => {
                     onChange={(e) => onChange(index, 'meal', e.target.value)}
                     style={{ width: '80%', border: '1px solid black', textAlign: 'center' }}
                   />
-                ) : child.meal ? (
-                  `${child.meal}`
                 ) : (
-                  ''
+                  child.meal || ''
                 )}
               </td>
               <td>
                 {child.editable ? (
-                  <input
-                    type="text"
-                    value={child.napTime}
-                    onChange={(e) => onChange(index, 'napTime', e.target.value)}
-                    style={{ width: '80%', border: '1px solid black', textAlign: 'center' }}
-                  />
-                ) : child.napTime ? (
-                  `${child.napTime}`
+                  <>
+                    <input
+                      type="time"
+                      value={child.napStart}
+                      onChange={(e) => onChange(index, 'napStart', e.target.value)}
+                      style={{ width: '48%', marginRight: '4%', textAlign: 'center' }}
+                    />
+                    <input
+                      type="time"
+                      value={child.napEnd}
+                      onChange={(e) => onChange(index, 'napEnd', e.target.value)}
+                      style={{ width: '48%', textAlign: 'center' }}
+                    />
+                  </>
                 ) : (
-                  ''
+                  child.napTime || ''
                 )}
               </td>
               <td>
@@ -55,12 +61,9 @@ const LifeCheckListTable = ({ data, onEdit, onChange }) => {
                     value={child.play}
                     onChange={(e) => onChange(index, 'play', e.target.value)}
                     style={{ width: '80%', border: '1px solid black', textAlign: 'center' }}
-                    border={'1px solid black'}
                   />
-                ) : child.play ? (
-                  `${child.play}`
                 ) : (
-                  ''
+                  child.play || ''
                 )}
               </td>
               <td>
@@ -72,7 +75,7 @@ const LifeCheckListTable = ({ data, onEdit, onChange }) => {
                     style={{ width: '90%', border: '1px solid black', textAlign: 'center' }}
                   />
                 ) : (
-                  child.social
+                  child.social || ''
                 )}
               </td>
               <td>
@@ -84,12 +87,14 @@ const LifeCheckListTable = ({ data, onEdit, onChange }) => {
                     style={{ width: '90%', border: '1px solid black', textAlign: 'center' }}
                   />
                 ) : (
-                  child.memo
+                  child.memo || ''
                 )}
               </td>
-              <td>
-                <EditButton onClick={() => onEdit(index)}>{child.editable ? '저장' : '수정'}</EditButton>
-              </td>
+              {!isParent && (
+                <td>
+                  <EditButton onClick={() => onEdit(index)}>{child.editable ? '저장' : '수정'}</EditButton>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
@@ -120,15 +125,15 @@ const VacationTable = styled.table`
 
   th:nth-child(1),
   td:nth-child(1) {
-    width: 12%;
+    width: 10%;
   }
   th:nth-child(2),
   td:nth-child(2) {
-    width: 12%;
+    width: 10%;
   }
   th:nth-child(3),
   td:nth-child(3) {
-    width: 12%;
+    width: 23%;
   }
   th:nth-child(4),
   td:nth-child(4) {
@@ -136,11 +141,11 @@ const VacationTable = styled.table`
   }
   th:nth-child(5),
   td:nth-child(5) {
-    width: 20%;
+    width: 15%;
   }
   th:nth-child(6),
   td:nth-child(6) {
-    width: 22%;
+    width: 15%;
     text-align: left;
   }
   th:nth-child(7),

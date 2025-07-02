@@ -11,6 +11,6 @@ public interface BoardRepository {
     Optional<Board> findById(int boardNo);
     List<Board> findAll();
     void deleteById(int boardNo);
-    List<Board> findByType(CommonEnums.BoardType type, int offset, int limit);
-    long countByType(CommonEnums.BoardType type);
+    List<Board> findByType(CommonEnums.BoardType type, int centerNo, int offset, int limit);
+    long countByType(CommonEnums.BoardType type, int centerNo);
 }

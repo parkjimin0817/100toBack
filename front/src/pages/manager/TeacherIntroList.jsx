@@ -7,16 +7,12 @@ import TeacherPicture from '../../assets/Child.png';
 
 const TeacherIntroList = () => {
   const navigate = useNavigate();
-  const headerButtons = [
-    { Title: '반 목록', func: () => navigate('/classlist') },
-    { Title: '뒤로가기', func: () => navigate(-1) },
-  ];
 
   const teachers = List.filter((person) => person.role === 'teacher').slice(0, 4);
 
   return (
     <Content>
-      <ContentHeader Title="교사 소개 및 조회" Color="blue" ButtonProps={headerButtons} />
+      <ContentHeader Title="교사 소개 및 조회" Color="blue" />
       <CardGrid>
         {teachers.map((teacher) => (
           <Card

@@ -74,6 +74,7 @@ import BoardDetailPage from './pages/BoardDetailPage';
 import BoardUpdatePage from './pages/BoardUpdatePage';
 import PhotoPage from './pages/PhotoPage';
 import MealPlanPage from './pages/MealPlanPage';
+import ClassListPage from './pages/ClassListPage';
 
 function App() {
   return (
@@ -82,6 +83,8 @@ function App() {
       <Router>
         <Routes>
           <Route element={<Layout />}>
+            {/* 반 목록 -> 반별 아동목록 */}
+            <Route path="/class/list" element={<ClassListPage />} />
             {/**
              * 학부모
              *
@@ -163,6 +166,8 @@ function App() {
              *
              *  */}
             <Route path="/childlist" element={<ChildList />} />
+            {/* 반별아동목록 */}
+            <Route path="/childlist/:classNo" element={<ChildList />} />
             <Route path="/classlist" element={<AttendanceClassList />} />
             <Route path="/childhealthcheck" element={<ChildHealthCheck />} />
             <Route path="/childlifecheck" element={<ChildLifeCheck />} />

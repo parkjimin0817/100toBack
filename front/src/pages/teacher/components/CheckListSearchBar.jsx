@@ -14,19 +14,23 @@ const CheckListSearchBar = ({
   onSearch,
   classList,
 }) => {
+  const hasClassList = Array.isArray(classList) && classList.length > 0;
+
   return (
     <SearchBox>
-      <SelectClass value={selectedClassNo} onChange={(e) => setSelectedClassNo(e.target.value)}>
-        <option value="" disabled>
-          반 선택
-        </option>
-        {Array.isArray(classList) &&
-          classList.map((cls) => (
+      {hasClassList && (
+        <SelectClass value={selectedClassNo} onChange={(e) => setSelectedClassNo(e.target.value)}>
+          <option value="" disabled>
+            반 선택
+          </option>
+          {classList.map((cls) => (
             <option key={cls.class_no} value={cls.class_no}>
               {cls.class_name}
             </option>
           ))}
-      </SelectClass>
+        </SelectClass>
+      )}
+
       <DateInputWrapper>
         <StyledDatePicker
           selected={selectedDate}
@@ -38,6 +42,7 @@ const CheckListSearchBar = ({
         />
         <CalendarIcon />
       </DateInputWrapper>
+
       <Button onClick={onSearch} width="50px" color="orange" hovercolor="lightorange">
         조회
       </Button>

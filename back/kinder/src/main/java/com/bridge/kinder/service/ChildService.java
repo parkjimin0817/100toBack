@@ -41,10 +41,14 @@ public interface ChildService {
     List<ChildDto.healthLog> getHealthLog(int classNo, LocalDate date);
     //아동 생활 체크리스트 날짜,반 별로
     List<ChildDto.activityLog> getActivityLog(int classNo, LocalDate date);
+    //아동 건강 로그 데이터 삽입,수정하기
+    ChildDto.healthLog updateHealthLog(int childNo, LocalDate date, ChildDto.healthLog data);
     //아동 생활 로그 데이터 삽입,수정하기
-//    ChildDto.activityLog updateActivityLog(int childNo, LocalDate date, ChildDto.activityLog data);
-
-
+    ChildDto.activityLog updateActivityLog(int childNo, LocalDate date, ChildDto.activityLog data);
     //부모 번호로 해당 연결된 아동 리스트 가져오기
     List<ChildDto.myPageChilds> myPageChilds(int memberNo);
+    //부모 번호로 아동들의 건강 로그 체크리스트 불러오기
+    List<ChildDto.healthLog> healthLogByParent(int memberNo, LocalDate date);
+    //부모 번호로 아동들의 생활 로그 체크리스트 불러오기
+    List<ChildDto.activityLog> activityLogByParent(int memberNo, LocalDate date);
 }

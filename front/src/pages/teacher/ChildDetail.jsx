@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AttendanceChildSchedule from '../../components/AttendanceChildSchedule';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const ChildDetail = () => {
   const navigate = useNavigate();
@@ -94,10 +95,17 @@ const ChildDetail = () => {
         .then((res) => {
           setChild((prev) => ({ ...prev, health: res.data }));
           setIsEditing(false);
+<<<<<<< HEAD
         })
         .catch((err) => {
           console.error('건강정보 수정 실패:', err);
           alert('수정 실패');
+=======
+          toast.success('건강 정보 수정이 완료되었습니다.');
+        })
+        .catch((err) => {
+          toast.error('건강 정보 수정에 실패했습니다.', err);
+>>>>>>> 8b5c79b51418f646774f9866a1003e7a7d9e022a
         });
     }
   };
@@ -117,10 +125,17 @@ const ChildDetail = () => {
         .then((res) => {
           setChild((prev) => ({ ...prev, activity: res.data }));
           setIsLifeEditing(false);
+<<<<<<< HEAD
         })
         .catch((err) => {
           console.error('생활정보 수정 실패:', err);
           alert('수정 실패');
+=======
+          toast.success('생활 정보 수정이 완료되었습니다.');
+        })
+        .catch((err) => {
+          toast.error('생활 정보 수정에 실패했습니다.', err);
+>>>>>>> 8b5c79b51418f646774f9866a1003e7a7d9e022a
         });
     }
   };
@@ -219,16 +234,19 @@ const ChildDetail = () => {
                     <th>증상</th>
                     <th>메모</th>
                   </HealthTr>
-                  {child.healthLogs?.slice(0, 4).map((record, index) => (
-                    <HealthContentTr key={index}>
-                      <td>{formatDate(record.create_date)}</td>
-                      <td>{record.temperature}</td>
-                      <td>{record.height}</td>
-                      <td>{record.weight}</td>
-                      <td>{record.symptoms}</td>
-                      <td>{record.healthLogMemo}</td>
-                    </HealthContentTr>
-                  ))}
+                  {child.healthLogs
+                    ?.sort((a, b) => new Date(b.create_date) - new Date(a.create_date))
+                    .slice(0, 4)
+                    .map((record, index) => (
+                      <HealthContentTr key={index}>
+                        <td>{formatDate(record.create_date)}</td>
+                        <td>{record.temperature}</td>
+                        <td>{record.height}</td>
+                        <td>{record.weight}</td>
+                        <td>{record.symptoms}</td>
+                        <td>{record.healthLogMemo}</td>
+                      </HealthContentTr>
+                    ))}
                 </tbody>
               </Table>
               <LoadMoreButton onClick={() => navigate(`/child/healthlist?id=${id}`)}>더보기</LoadMoreButton>
@@ -414,18 +432,21 @@ const ChildDetail = () => {
                     <th>교우관계</th>
                     <th>메모</th>
                   </HealthTr>
-                  {child.activityLogs?.slice(0, 4).map((record, index) => (
-                    <HealthContentTr key={index}>
-                      <td>{formatDate(record.create_date)}</td>
-                      <td>{record.dailyMeal_amount}</td>
-                      <td>
-                        {record.napStart_time}~{record.napEnd_time}
-                      </td>
-                      <td>{record.play_participation}</td>
-                      <td>{record.daily_friendship}</td>
-                      <td>{record.activity_log_memo}</td>
-                    </HealthContentTr>
-                  ))}
+                  {child.activityLogs
+                    ?.sort((a, b) => new Date(b.create_date) - new Date(a.create_date))
+                    .slice(0, 4)
+                    .map((record, index) => (
+                      <HealthContentTr key={index}>
+                        <td>{formatDate(record.create_date)}</td>
+                        <td>{record.dailyMeal_amount}</td>
+                        <td>
+                          {record.napStart_time}~{record.napEnd_time}
+                        </td>
+                        <td>{record.play_participation}</td>
+                        <td>{record.daily_friendship}</td>
+                        <td>{record.activity_log_memo}</td>
+                      </HealthContentTr>
+                    ))}
                 </tbody>
               </Table>
               <LoadMoreButton onClick={() => navigate(`/child/lifelist?id=${id}`)}>더보기</LoadMoreButton>

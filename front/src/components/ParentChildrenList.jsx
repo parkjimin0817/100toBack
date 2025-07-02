@@ -1,57 +1,58 @@
-import React, { useState } from 'react';
-import { List } from './ChildDummyData';
-import ChildImg from '../assets/Child.png';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
+import ChildImg from '../assets/Child.png';
+import axios from 'axios';
 
-const ParentChildrenList = ({ showAll, sortBy, roleBy, classFilter, nameFilter, onChildClick }) => {
-  let list = [...List];
+const ParentChildrenList = ({ childFilter, onChildClick }) => {
+  const [childList, setChildList] = useState([]);
 
-  if (!showAll) {
-    list = list.filter((child) => !child.className);
-  }
+  const fetchChildren = useCallback(async () => {
+    console.log('fetchChildren 실행됨, childFilter:', childFilter);
+    try {
+      const response = await axios.get(`http://localhost:8888/api/childs/parentChild?memberNo=${childFilter}`);
+      console.log('자녀 목록 조회 성공:', response.data);
+      setChildList(response.data);
+    } catch (error) {
+      console.error('아동 목록 조회 실패:', error);
+    }
+  }, [childFilter]);
 
-  if (sortBy === 'class') {
-    list.sort((a, b) => a.className.localeCompare(b.className));
-  } else if (sortBy === 'name') {
-    list.sort((a, b) => a.name.localeCompare(b.name));
-  } else if (sortBy === 'createDate') {
-    list.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
-  }
+  useEffect(() => {
+    if (childFilter) {
+      fetchChildren();
+    }
+  }, [childFilter, fetchChildren]);
 
-  // 역할(role) 필터링: 'child' 또는 'teacher'만 필터링
-  if (roleBy === 'child' || roleBy === 'teacher') {
-    list = list.filter((item) => item.role === roleBy);
-  }
-
-  if (classFilter) {
-    list = list.filter((item) => item.className === classFilter);
-  }
-
-  if (nameFilter) {
-    list = list.filter((item) => item.name.toLowerCase().includes(nameFilter.toLowerCase()));
-  }
+  // 자녀 목록 새로고침 함수를 전역으로 노출
+  useEffect(() => {
+    console.log('전역 함수 refreshChildList 설정');
+    window.refreshChildList = fetchChildren;
+    return () => {
+      console.log('전역 함수 refreshChildList 제거');
+      delete window.refreshChildList;
+    };
+  }, [fetchChildren]);
 
   return (
-    <>
-      <Container>
-        <CardLine>
-          {list.map((child) => (
-            <Card key={child.id} onClick={() => onChildClick(child)}>
-              <PictureBox>
-                <ChildPic src={ChildImg} alt="아이사진" />
-              </PictureBox>
-              <NameBox>
-                <NameLine>{child.name}</NameLine>
-                <ClassLine>{child.className || '미배정'}</ClassLine>
-              </NameBox>
-            </Card>
-          ))}
-        </CardLine>
-      </Container>
-    </>
+    <Container>
+      <CardLine>
+        {childList.map((child) => (
+          <Card key={child.child_no} onClick={() => onChildClick(child)}>
+            <PictureBox>
+              <ChildPic src={ChildImg} alt="아이사진" />
+            </PictureBox>
+            <NameBox>
+              <NameLine>{child.child_name}</NameLine>
+              <ClassLine>{child.class_name || '미배정'}</ClassLine>
+            </NameBox>
+          </Card>
+        ))}
+      </CardLine>
+    </Container>
   );
 };
+
+export default ParentChildrenList;
 
 const Container = styled.div`
   padding: ${({ theme }) => theme.spacing[6]};
@@ -117,5 +118,3 @@ const ClassLine = styled.div`
   font-size: 10px;
   color: white;
 `;
-
-export default ParentChildrenList;

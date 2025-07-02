@@ -6,6 +6,7 @@ import ContentHeader from '../components/Common/ContentHeader';
 import { useNavigate } from 'react-router-dom';
 import { boardService } from '../api/boards';
 import Pagination from '../components/Common/Pagenation';
+import useLoginStore from '../store/loginStore';
 
 const columns = [
   {
@@ -52,11 +53,12 @@ const NoticePage = () => {
   const [data, setData] = useState(null);
   const [page, setPage] = useState(1); // 1부터 시작
   const navigate = useNavigate();
+  const member = useLoginStore((state) => state.member);
 
   useEffect(() => {
     const getPostList = async () => {
       try {
-        const responseData = await boardService.typeBoardList("NOTICE", page);
+        const responseData = await boardService.typeBoardList("NOTICE", member.centerNo, page);
         console.log(responseData);
         setData(responseData);
         // alert("게시글 조회 성공");
@@ -78,7 +80,10 @@ const NoticePage = () => {
         Title={'공지사항'}
         Color={'green'}
         // 학부모는 못봄, 교사는 작성하기 못함, 시설장만 가능
-        ButtonProps={[
+        ButtonProps={
+          member.memberType === "FARENT" ? 
+          []
+          : [
           { Title: '작성하기', 
             func: () => {
               navigate("/notice/write", { state: { category: "notice" }, })

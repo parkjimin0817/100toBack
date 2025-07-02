@@ -75,7 +75,7 @@ const ScheduleTeacher = () => {
   return (
     <>
       <Content>
-        <ContentHeader Title={'시설장 일정'} Color={'purple'}></ContentHeader>
+        <ContentHeader Title={'유치원 일정'} Color={'purple'}></ContentHeader>
         <ContentWrapper>
           <ContentLeft>
             <CustomCalendar scheduleData={data} onDateClick={handleDateClick} />

@@ -6,6 +6,7 @@ import theme from "../styles/theme";
 import ContentHeader from '../components/Common/ContentHeader';
 import Pagination from '../components/Common/Pagenation';
 import { boardService } from '../api/boards';
+import useLoginStore from '../store/loginStore';
 
 const columns = [
   {
@@ -53,11 +54,12 @@ const NotePage = () => {
   const [data, setData] = useState(null);
   const [page, setPage] = useState(1); // 1부터 시작
   const navigate = useNavigate();
+  const member = useLoginStore((state) => state.member);
 
   useEffect(() => {
     const getPostList = async () => {
       try {
-        const responseData = await boardService.typeBoardList("NOTE", page);
+        const responseData = await boardService.typeBoardList("NOTE", member.centerNo, page);
         console.log(responseData);
         setData(responseData);
         // alert("게시글 조회 성공");
@@ -80,7 +82,10 @@ const NotePage = () => {
         Title={'알림장'}
         Color={'green'}
         // 교사면 버튼 추가, 학부모면 없음.
-        ButtonProps={[
+        ButtonProps={
+          member.memberType === "FARENT" ? 
+          []
+          : [
           { Title: '작성하기', 
             func: () => {
               navigate("/note/write", { state: { category: "note" }, })

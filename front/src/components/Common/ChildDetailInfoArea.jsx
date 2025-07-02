@@ -1,49 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
 import ChildImg from '../../assets/Child.png';
 import AttendanceChildSchedule from '../AttendanceChildSchedule';
+import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
-const attendanceData = [
-  {
-    child_attendance_no: 1,
-    child_no: 101,
-    class_no: 201,
-    create_date: '2025-06-17T08:30:00Z',
-    status: 'present',
-  },
-  {
-    child_attendance_no: 1,
-    child_no: 101,
-    class_no: 201,
-    create_date: '2025-06-16T08:30:00Z',
-    status: 'absent',
-  },
-  {
-    child_attendance_no: 1,
-    child_no: 101,
-    class_no: 201,
-    create_date: '2025-06-15T08:30:00Z',
-    status: 'half',
-  },
-];
-
-const ChildDetailInfoArea = ({ child }) => {
+const ChildDetailInfoArea = ({ childNo }) => {
+  const [childData, setChildData] = useState(null);
   const [select, setSelect] = useState({
     health: true,
     life: false,
     attendance: false,
   });
+  const navigate = useNavigate();
 
-  if (!child) return <div>로딩중...</div>;
-  const handleSelect = (tab) => {
-    setSelect({
-      health: tab === 'health',
-      life: tab === 'life',
-      attendance: tab === 'attendance',
-    }); // true 또는 false로 설정
-  };
+  useEffect(() => {
+    const fetchChildDetail = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8888/api/childs/detail?childNo=${childNo}`);
+        setChildData(response.data);
+      } catch (error) {
+        console.error('아동 상세 정보 불러오기 실패:', error);
+      }
+    };
+
+    if (childNo) {
+      fetchChildDetail();
+    }
+  }, [childNo]);
+
+  if (!childData) return <div>로딩중...</div>;
+
+  const formatDate = (dateStr) => format(new Date(dateStr), 'yyyy-MM-dd');
+
   return (
     <>
+      {/* 기본 정보 */}
       <BasicInfo>
         <PictureLine>
           <Picture src={ChildImg} alt="아이사진" />
@@ -51,48 +44,47 @@ const ChildDetailInfoArea = ({ child }) => {
         <FirstInfo>
           <thead>
             <NameTr>
-              <td>{child.name}</td>
+              <td>{childData.child_name}</td>
             </NameTr>
           </thead>
           <tbody>
             <Info>
               <InfoColumn>생년월일</InfoColumn>
-              <InfoResult>{child.birth}</InfoResult>
+              <InfoResult>{childData.child_birthday}</InfoResult>
             </Info>
             <Info>
               <InfoColumn>키</InfoColumn>
-              <InfoResult>{child.height}</InfoResult>
+              <InfoResult>{childData.child_height}</InfoResult>
             </Info>
             <Info>
               <InfoColumn>몸무게</InfoColumn>
-              <InfoResult>{child.weight}</InfoResult>
+              <InfoResult>{childData.child_weight}</InfoResult>
             </Info>
             <Info>
               <InfoColumn>주소</InfoColumn>
-              <InfoResult>{child.address}</InfoResult>
+              <InfoResult>{childData.child_address}</InfoResult>
             </Info>
           </tbody>
         </FirstInfo>
         <FirstInfo>
           <thead>
             <Class>
-              <td>{child.className}</td>
+              <td>{childData.class_name}</td>
             </Class>
           </thead>
-
           <tbody>
             <Info>
               <InfoColumn>학부모</InfoColumn>
               <InfoResult>
-                부:{child.parents.father}, 모:{child.parents.mother}
+                부:{childData.father_name}, 모:{childData.mother_name}
               </InfoResult>
             </Info>
             <Info>
               <InfoColumn>비상연락처</InfoColumn>
               <InfoResult1>
                 <SpanWrapper>
-                  <span>부:{child.phone.father}</span>
-                  <span>모:{child.phone.mother}</span>
+                  <span>부:{childData.father_phone}</span>
+                  <span>모:{childData.mother_phone}</span>
                 </SpanWrapper>
               </InfoResult1>
             </Info>
@@ -100,20 +92,23 @@ const ChildDetailInfoArea = ({ child }) => {
         </FirstInfo>
       </BasicInfo>
 
+      {/* 탭 */}
       <HealthInfoContainer>
         <SelectHeader>
-          <HealthStyle select={select} onClick={() => handleSelect('health')}>
+          <HealthStyle select={select} onClick={() => setSelect({ health: true, life: false, attendance: false })}>
             건강
           </HealthStyle>
-          <LifeStyle select={select} onClick={() => handleSelect('life')}>
+          <LifeStyle select={select} onClick={() => setSelect({ health: false, life: true, attendance: false })}>
             생활
           </LifeStyle>
-          <Attendance select={select} onClick={() => handleSelect('attendance')}>
+          <Attendance select={select} onClick={() => setSelect({ health: false, life: false, attendance: true })}>
             출석
           </Attendance>
         </SelectHeader>
+
         <DetailInfoContainer>
-          {select.health ? (
+          {/* 건강 탭 */}
+          {select.health && (
             <>
               <Title>하루 건강</Title>
               <Table>
@@ -126,24 +121,21 @@ const ChildDetailInfoArea = ({ child }) => {
                     <th>증상</th>
                     <th>메모</th>
                   </HealthTr>
-                  {child.healthRecords &&
-                    [...child.healthRecords]
-                      .sort((a, b) => new Date(b.date) - new Date(a.date))
-                      .slice(0, 4)
-                      .map((record, index) => (
-                        <HealthContentTr key={index}>
-                          <td>{record.date}</td>
-                          <td>{record.temp}</td>
-                          <td>{record.height}</td>
-                          <td>{record.weight}</td>
-                          <td>{record.symptom}</td>
-                          <td>{record.memo}</td>
-                        </HealthContentTr>
-                      ))}
+                  {childData.healthLogs?.slice(0, 4).map((record, index) => (
+                    <HealthContentTr key={index}>
+                      <td>{formatDate(record.create_date)}</td>
+                      <td>{record.temperature}</td>
+                      <td>{record.height}</td>
+                      <td>{record.weight}</td>
+                      <td>{record.symptoms}</td>
+                      <td>{record.healthLogMemo}</td>
+                    </HealthContentTr>
+                  ))}
                 </tbody>
               </Table>
-              <LoadMoreButton>더보기</LoadMoreButton>
+              <LoadMoreButton onClick={() => navigate(`/child/healthlist?id=${childNo}`)}>더보기</LoadMoreButton>
 
+              {/* 건강: 복약, 예방접종, 알레르기 */}
               <FooterInfoLine>
                 <FooterBox>
                   <FooterTitle>복약정보</FooterTitle>
@@ -151,27 +143,27 @@ const ChildDetailInfoArea = ({ child }) => {
                     <tbody>
                       <tr>
                         <FooterTd1>약 이름</FooterTd1>
-                        <FooterTd2>{child.medication.name}</FooterTd2>
+                        <FooterTd2>{childData.health.medication_name}</FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>복용 용량</FooterTd1>
-                        <FooterTd2>{child.medication.dose}</FooterTd2>
+                        <FooterTd2>{childData.health.medication_amount}</FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>복용 시간</FooterTd1>
-                        <FooterTd2>{child.medication.time}</FooterTd2>
+                        <FooterTd2>{childData.health.medication_time}</FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>복용 기간</FooterTd1>
-                        <FooterTd2>{child.medication.period}</FooterTd2>
+                        <FooterTd2>{childData.health.medication_period}</FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>복용 목적</FooterTd1>
-                        <FooterTd2>{child.medication.purpose}</FooterTd2>
+                        <FooterTd2>{childData.health.medication_purpose}</FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>메모</FooterTd1>
-                        <FooterTd2>{child.medication.note}</FooterTd2>
+                        <FooterTd2>{childData.health.medication_memo}</FooterTd2>
                       </tr>
                     </tbody>
                   </FooterTable>
@@ -182,12 +174,8 @@ const ChildDetailInfoArea = ({ child }) => {
                   <FooterTable>
                     <tbody>
                       <tr>
-                        <FooterTd1>BCG</FooterTd1>
-                        <FooterTd2>{child.vaccination.BCG}</FooterTd2>
-                      </tr>
-                      <tr>
-                        <FooterTd1>접종 예정</FooterTd1>
-                        <FooterTd2>{child.vaccination.schedule}</FooterTd2>
+                        <FooterTd1>예방접종</FooterTd1>
+                        <FooterTd2>{childData.health.vaccination}</FooterTd2>
                       </tr>
                     </tbody>
                   </FooterTable>
@@ -199,30 +187,29 @@ const ChildDetailInfoArea = ({ child }) => {
                     <tbody>
                       <tr>
                         <FooterTd1>알레르기</FooterTd1>
-                        <FooterTd2>{child.allergy.items}</FooterTd2>
+                        <FooterTd2>{childData.health.allergy}</FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>반응</FooterTd1>
-                        <FooterTd2>{child.allergy.reaction}</FooterTd2>
+                        <FooterTd2>{childData.health.allergy_reaction}</FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>심각도</FooterTd1>
-                        <FooterTd2>{child.allergy.severity}</FooterTd2>
+                        <FooterTd2>{childData.health.allergy_severity}</FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>메모</FooterTd1>
-                        <FooterTd2>{child.allergy.note}</FooterTd2>
+                        <FooterTd2>{childData.health.allergy_memo}</FooterTd2>
                       </tr>
                     </tbody>
                   </FooterTable>
                 </FooterBox>
               </FooterInfoLine>
-              <LoadMoreButton>수정</LoadMoreButton>
             </>
-          ) : (
-            ''
           )}
-          {select.life ? (
+
+          {/* 생활 탭 */}
+          {select.life && (
             <>
               <Title>하루 생활</Title>
               <Table>
@@ -235,25 +222,22 @@ const ChildDetailInfoArea = ({ child }) => {
                     <th>교우관계</th>
                     <th>메모</th>
                   </HealthTr>
-
-                  {child.lifeRecords &&
-                    [...child.lifeRecords]
-                      .sort((a, b) => new Date(b.date) - new Date(a.date))
-                      .slice(0, 4) //최신순으로 상위 4개까지 잘라냄
-                      .map((record, index) => (
-                        <HealthContentTr key={index}>
-                          <td>{record.date}</td>
-                          <td>{record.meal}</td>
-                          <td>{record.napTime}</td>
-                          <td>{record.play}</td>
-                          <td>{record.social}</td>
-                          <td>{record.memo}</td>
-                        </HealthContentTr>
-                      ))}
+                  {childData.activityLogs?.slice(0, 4).map((record, index) => (
+                    <HealthContentTr key={index}>
+                      <td>{formatDate(record.create_date)}</td>
+                      <td>{record.dailyMeal_amount}</td>
+                      <td>
+                        {record.napStart_time} ~ {record.napEnd_time}
+                      </td>
+                      <td>{record.play_participation}</td>
+                      <td>{record.daily_friendship}</td>
+                      <td>{record.activity_log_memo}</td>
+                    </HealthContentTr>
+                  ))}
                 </tbody>
               </Table>
 
-              <LoadMoreButton>더보기</LoadMoreButton>
+              <LoadMoreButton onClick={() => navigate(`/child/lifelist?id=${childNo}`)}>더보기</LoadMoreButton>
 
               <FooterInfoLine>
                 <FooterBox2>
@@ -262,19 +246,19 @@ const ChildDetailInfoArea = ({ child }) => {
                     <tbody>
                       <tr>
                         <FooterTd1>좋아하는 음식</FooterTd1>
-                        <FooterTd2>{child.eatingHabit.likes}</FooterTd2>
+                        <FooterTd2>{childData.activity.like_food}</FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>싫어하는 음식</FooterTd1>
-                        <FooterTd2>{child.eatingHabit.dislikes}</FooterTd2>
+                        <FooterTd2>{childData.activity.dislike_food}</FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>식사량</FooterTd1>
-                        <FooterTd2>{child.eatingHabit.status}</FooterTd2>
+                        <FooterTd2>{childData.activity.meal_amount}</FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>메모</FooterTd1>
-                        <FooterTd2>{child.eatingHabit.note}</FooterTd2>
+                        <FooterTd2>{childData.activity.meal_memo}</FooterTd2>
                       </tr>
                     </tbody>
                   </FooterTable>
@@ -285,26 +269,25 @@ const ChildDetailInfoArea = ({ child }) => {
                     <tbody>
                       <tr>
                         <FooterTd1>친한친구</FooterTd1>
-                        <FooterTd2>{child.socialRelation.closeFriends}</FooterTd2>
+                        <FooterTd2>{childData.activity.close_friend}</FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>좋아하는 놀이</FooterTd1>
-                        <FooterTd2>{child.socialRelation.favoritePlay}</FooterTd2>
+                        <FooterTd2>{childData.activity.like_play}</FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>메모</FooterTd1>
-                        <FooterTd2>{child.socialRelation.note}</FooterTd2>
+                        <FooterTd2>{childData.activity.friend_memo}</FooterTd2>
                       </tr>
                     </tbody>
                   </FooterTable>
                 </FooterBox2>
               </FooterInfoLine>
-              <LoadMoreButton>수정</LoadMoreButton>
             </>
-          ) : (
-            ''
           )}
-          {select.attendance ? (
+
+          {/* 출석 탭 */}
+          {select.attendance && (
             <>
               <AttendanceOutline>
                 <CalendarHeader>
@@ -330,12 +313,10 @@ const ChildDetailInfoArea = ({ child }) => {
                 </CalendarHeader>
 
                 <CalendarOutline>
-                  <AttendanceChildSchedule data={attendanceData} />
+                  <AttendanceChildSchedule data={childData.attendanceLogs} />
                 </CalendarOutline>
               </AttendanceOutline>
             </>
-          ) : (
-            ''
           )}
         </DetailInfoContainer>
       </HealthInfoContainer>

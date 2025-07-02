@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const StatusData = { in_time: '09:00', out_time: '18:00' };
 
-const MyAttendaceCard = ({ selectedDate, currentMonth, attendance, monthAttendance }) => {
+const MyAttendaceCard = ({ selectedDate, currentMonth, attendance, minDate, maxDate, monthAttendance }) => {
   const month = currentMonth.getMonth() + 1;
   const title = `${month}월 근태 관리`;
 
@@ -35,9 +35,17 @@ const MyAttendaceCard = ({ selectedDate, currentMonth, attendance, monthAttendan
     : '미퇴근';
 
   //출근 결근 count
-  const workDayCount = monthAttendance.filter((att) => att.status === 'PRESENT').length;
-  const absentCount = monthAttendance.filter((att) => att.status === 'ABSENT').length;
-  const vacationCount = monthAttendance.filter(
+  minDate.setHours(0, 0, 0, 0);
+  maxDate.setHours(23, 59, 59, 999);
+
+  const filteredAttendances = monthAttendance.filter((att) => {
+    const date = new Date(att.attendanceDate);
+    return date >= minDate && date <= maxDate;
+  });
+
+  const workDayCount = filteredAttendances.filter((att) => att.status === 'PRESENT').length;
+  const absentCount = filteredAttendances.filter((att) => att.status === 'ABSENT').length;
+  const vacationCount = filteredAttendances.filter(
     (att) => att.status === 'VACATION' || att.status === 'WORKCATION'
   ).length;
 

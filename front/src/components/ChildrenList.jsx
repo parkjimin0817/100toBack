@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
 import ChildImg from '../assets/Child.png';
+import { toast } from 'react-toastify';
 
 const ChildrenList = ({
   showAll,
@@ -40,7 +41,7 @@ const ChildrenList = ({
         }
         if (res?.data) setList(res.data);
       } catch (err) {
-        console.error('데이터 조회 실패:', err);
+        toast.error('데이터 조회 실패:', err);
       }
     };
     fetchData();
@@ -98,7 +99,7 @@ const ChildrenList = ({
               </PictureBox>
               <NameBox color={Color}>
                 <NameLine>{name}</NameLine>
-                <ClassLine>{className}</ClassLine>
+                <ClassLine>{className}반</ClassLine>
               </NameBox>
             </Card>
           );

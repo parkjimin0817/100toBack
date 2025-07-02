@@ -43,19 +43,25 @@ public class ChildHealthLog {// 아동 건강 기록
     @Column(name = "HEALTH_LOG_MEMO", length = 200)
     private String healthLogMemo;
     //건강 기록 메모
-    
-    
+
     //---------------------------------------------------------------------------------------------
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CHILD_NO")
     private Child child;
     //아동
 
+    //---------------------------------------------------------------------------------------------
+//    @PrePersist
+//    protected void onCreate() {
+//        this.createDate = LocalDateTime.now();
+//    }
 
     //---------------------------------------------------------------------------------------------
-    @PrePersist
-    protected void onCreate() {
-        this.createDate = LocalDateTime.now();
+    public void update(BigDecimal temperature,BigDecimal height, BigDecimal weight, String symptoms, String healthLogMemo) {
+        this.temperature = temperature;
+        this.height = height;
+        this.weight = weight;
+        this.symptoms = symptoms;
+        this.healthLogMemo = healthLogMemo;
     }
-    
 }

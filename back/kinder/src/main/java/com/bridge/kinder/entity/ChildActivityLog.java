@@ -57,8 +57,20 @@ public class ChildActivityLog {// 아동 생활 기록
 
 
     //---------------------------------------------------------------------------------------------
-    @PrePersist
-    protected void onCreate() {
-        this.createDate = LocalDateTime.now();
+//    @PrePersist
+//    protected void onCreate() {
+//        this.createDate = LocalDateTime.now();
+//    }
+
+
+    //---------------------------------------------------------------------------------------------
+    public void update(String dailyMealAmount, LocalTime napStartTime, LocalTime napEndTime,
+                       String playParticipation, String dailyFriendship, String activityLogMemo) {
+        this.dailyMealAmount = dailyMealAmount;
+        this.napStartTime = napStartTime;
+        this.napEndTime = napEndTime;
+        this.playParticipation = playParticipation;
+        this.dailyFriendship = dailyFriendship;
+        this.activityLogMemo = activityLogMemo;
     }
 }

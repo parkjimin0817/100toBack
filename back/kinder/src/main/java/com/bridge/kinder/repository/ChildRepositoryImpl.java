@@ -1,6 +1,8 @@
 package com.bridge.kinder.repository;
 
 import com.bridge.kinder.dto.ChildDto;
+import com.bridge.kinder.dto.ChildDto.activityLog;
+import com.bridge.kinder.dto.ChildDto.healthLog;
 import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.ChildActivityData;
 import com.bridge.kinder.entity.ChildActivityLog;
@@ -9,6 +11,8 @@ import com.bridge.kinder.entity.ChildHealthData;
 import com.bridge.kinder.entity.ChildHealthLog;
 import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.entity.Member;
+import com.bridge.kinder.enums.CommonEnums;
+import com.bridge.kinder.enums.CommonEnums.AdmissionStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDate;
@@ -253,11 +257,156 @@ public class ChildRepositoryImpl implements ChildRepository {
                 .getResultList();
     }
 
+    //부모 번호로 아동 리스트 가져오기
     @Override
     public List<Child> findByMemberNo(int memberNo) {
         return em.createQuery(
-                        "SELECT c FROM MemberChild mc JOIN mc.child c WHERE mc.member.memberNo = :memberNo", Child.class)
+                        "SELECT c FROM MemberChild mc JOIN mc.child c " +
+                                "WHERE mc.member.memberNo = :memberNo AND c.status = :status", Child.class)
                 .setParameter("memberNo", memberNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
+                .getResultList();
+    }
+
+
+
+    @Override
+    public Optional<ChildHealthLog> updateHealthLog(int childNo, LocalDate date, healthLog data) {
+        // 날짜 기준 범위 계산
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.plusDays(1).atStartOfDay();
+
+        // 기존 로그 조회
+        List<ChildHealthLog> logs = em.createQuery(
+                        "SELECT log FROM ChildHealthLog log " +
+                                "WHERE log.child.childNo = :childNo AND log.createDate >= :start AND log.createDate < :end",
+                        ChildHealthLog.class)
+                .setParameter("childNo", childNo)
+                .setParameter("start", start)
+                .setParameter("end", end)
+                .getResultList();
+
+        ChildHealthLog targetLog;
+
+        if (!logs.isEmpty()) {
+            // 기존 로그가 있을 경우 → 수정
+            targetLog = logs.get(0);
+            targetLog.update(
+                    data.getTemperature(),
+                    data.getHeight(),
+                    data.getWeight(),
+                    data.getSymptoms(),
+                    data.getHealthLogMemo()
+            );
+        } else {
+            // 없을 경우 → 새로 생성
+            Child child = em.find(Child.class, childNo); // 자식 엔티티 로드
+            if (child == null) return Optional.empty(); // child가 없으면 실패
+
+            targetLog = ChildHealthLog.builder()
+                    .child(child)
+                    .createDate(start)
+                    .temperature(data.getTemperature())
+                    .height(data.getHeight())
+                    .weight(data.getWeight())
+                    .symptoms(data.getSymptoms())
+                    .healthLogMemo(data.getHealthLogMemo())
+                    .build();
+
+            em.persist(targetLog);
+        }
+
+        return Optional.of(targetLog);
+    }
+
+    @Override
+    public Optional<ChildActivityLog> updateActivityLog(int childNo, LocalDate date, activityLog data) {
+        // 날짜 기준 범위 계산
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.plusDays(1).atStartOfDay();
+
+        // 기존 로그 조회
+        List<ChildActivityLog> logs = em.createQuery(
+                        "SELECT log FROM ChildActivityLog log " +
+                                "WHERE log.child.childNo = :childNo AND log.createDate >= :start AND log.createDate < :end",
+                        ChildActivityLog.class)
+                .setParameter("childNo", childNo)
+                .setParameter("start", start)
+                .setParameter("end", end)
+                .getResultList();
+
+        ChildActivityLog targetLog;
+
+        if (!logs.isEmpty()) {
+            // 기존 로그가 있을 경우 → 수정
+            targetLog = logs.get(0);
+            targetLog.update(
+                    data.getDailyMeal_amount(),
+                    data.getNapStart_time(),
+                    data.getNapEnd_time(),
+                    data.getPlay_participation(),
+                    data.getDaily_friendship(),
+                    data.getActivity_log_memo()
+            );
+        } else {
+            // 없을 경우 → 새로 생성
+            Child child = em.find(Child.class, childNo); // 자식 엔티티 로드
+            if (child == null) return Optional.empty(); // child가 없으면 실패
+
+            targetLog = ChildActivityLog.builder()
+                    .child(child)
+                    .createDate(start)
+                    .dailyMealAmount(data.getDailyMeal_amount())
+                    .napStartTime(data.getNapStart_time())
+                    .napEndTime(data.getNapEnd_time())
+                    .playParticipation(data.getPlay_participation())
+                    .dailyFriendship(data.getDaily_friendship())
+                    .activityLogMemo(data.getActivity_log_memo())
+                    .build();
+
+            em.persist(targetLog);
+        }
+
+        return Optional.of(targetLog);
+    }
+
+    @Override
+    public List<ChildHealthLog> healthLogByParent(int memberNo, LocalDate date) {
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.plusDays(1).atStartOfDay();
+
+        return em.createQuery("""
+        SELECT hl 
+        FROM MemberChild mc 
+        JOIN mc.child c 
+        JOIN ChildHealthLog hl ON hl.child = c 
+        WHERE mc.member.memberNo = :memberNo 
+          AND hl.createDate >= :start 
+          AND hl.createDate < :end
+        """, ChildHealthLog.class)
+                .setParameter("memberNo", memberNo)
+                .setParameter("start", start)
+                .setParameter("end", end)
+                .getResultList();
+    }
+
+    @Override
+    public List<ChildActivityLog> activityLogByParent(int memberNo, LocalDate date) {
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.plusDays(1).atStartOfDay();
+
+        return em.createQuery("""
+        SELECT al 
+        FROM MemberChild mc 
+        JOIN mc.child c 
+        JOIN ChildActivityLog al ON al.child = c 
+        WHERE mc.member.memberNo = :memberNo 
+          AND al.createDate >= :start 
+          AND al.createDate < :end
+        """, ChildActivityLog.class)
+                .setParameter("memberNo", memberNo)
+                .setParameter("start", start)
+                .setParameter("end", end)
                 .getResultList();
     }
 }

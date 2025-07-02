@@ -74,7 +74,7 @@ public class MemberController {
 
     //교사 조회 memberNo으로
     @GetMapping("/teacher/{memberNo}")
-    public ResponseEntity<MemberDto.DetailMemberDto> findDetailTeacher(@PathVariable int memberNo){
+    public ResponseEntity<MemberDto.DetailMemberWithApprovalDto> findDetailTeacher(@PathVariable int memberNo){
         return ResponseEntity.ok(memberService.findTeacherByMemberNo(memberNo));
     }
 
@@ -83,6 +83,7 @@ public class MemberController {
     public ResponseEntity<MemberDto.SearchId> searchId(@RequestBody MemberDto.SearchId dto){
         return ResponseEntity.ok(memberService.searchId(dto));
     }
+
     //마이페이지에서 정보 조회
     @GetMapping("/mypage")
     public ResponseEntity<MemberDto.MyPageResponse> myPage(@RequestParam int id){
