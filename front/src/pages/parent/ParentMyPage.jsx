@@ -15,6 +15,7 @@ import api from '../../api/axios.js';
 import { toast } from 'react-toastify';
 
 import ChildAddModal from './components/childAddModal.jsx';
+import ChildBringModal from './components/childBringModal.jsx';
 
 const ParentMyPage = () => {
   const [isEditMode, setIsEditMode] = useState(false);
@@ -36,6 +37,13 @@ const ParentMyPage = () => {
       console.error('자녀 목록을 가져오는 데 실패했습니다:', error);
     }
   };
+
+  useEffect(() => {
+    window.refreshChildList = fetchChildList;
+    return () => {
+      delete window.refreshChildList;
+    };
+  }, []);
 
   //info 수정
   const handleEditSubmit = async () => {
@@ -83,18 +91,13 @@ const ParentMyPage = () => {
     }
   };
 
-  const chunkArray = (arr, size) => {
-    const result = [];
-    for (let i = 0; i < arr.length; i += size) {
-      result.push(arr.slice(i, i + size));
-    }
-    return result;
-  };
-
   //modal
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isBringModalOpen, setIsBringModalOpen] = useState(false);
   const openAddModal = () => setIsAddModalOpen(true);
   const closeAddModal = () => setIsAddModalOpen(false);
+  const openBringModal = () => setIsBringModalOpen(true);
+  const closeBringModal = () => setIsBringModalOpen(false);
 
   return (
     <Content>
@@ -140,7 +143,7 @@ const ParentMyPage = () => {
               <Plus>아동 추가</Plus>
               <Img src={AddImage} />
             </AddBox>
-            <AddBox onClick={() => navigate('/parent/searchchild')}>
+            <AddBox onClick={openBringModal}>
               <Plus>아동 검색</Plus>
               <Img src={SearchImage} />
             </AddBox>
@@ -148,6 +151,7 @@ const ParentMyPage = () => {
         </MenuBox>
       </Wrapper>
       <ChildAddModal isOpen={isAddModalOpen} onClose={closeAddModal} />
+      <ChildBringModal isOpen={isBringModalOpen} onClose={closeBringModal} />
     </Content>
   );
 };
@@ -198,9 +202,10 @@ const MenuBox = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   margin: 30px 0;
-  overflow-x: scroll;
+  gap: 20px;
 `;
 
 const Card = styled.div`
