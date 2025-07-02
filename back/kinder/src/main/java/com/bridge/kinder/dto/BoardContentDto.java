@@ -62,7 +62,7 @@ public class BoardContentDto {
     @AllArgsConstructor
     @Builder
     public static class Update {
-        private Integer contentId;  // 기존 content 구분용 ID
+        private Long contentId;  // 기존 content 구분용 ID
         private CommonEnums.BoardContentType type;
         private String contentText;
         private String contentFile; // 수정된 경우 경로 저장
