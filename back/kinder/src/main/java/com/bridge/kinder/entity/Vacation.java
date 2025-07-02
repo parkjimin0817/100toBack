@@ -1,6 +1,7 @@
 package com.bridge.kinder.entity;
 
 import com.bridge.kinder.enums.CommonEnums;
+import com.bridge.kinder.enums.CommonEnums.AdmissionStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,7 +35,7 @@ public class Vacation { //휴가, 워케이션
     private LocalDate startDate;
     //시작일
 
-    @Column(name = "END_TIME")
+    @Column(name = "END_DATE")
     private LocalDate endDate;
     //종료일
 
@@ -80,8 +81,15 @@ public class Vacation { //휴가, 워케이션
         }
     }
 
-    @PreUpdate
-    protected void onUpdate() {
+    public void approve() {
+        if(this.status != AdmissionStatus.PENDING) throw new IllegalStateException("이미 처리됨");
+        this.status = CommonEnums.AdmissionStatus.APPROVED;
+        this.decisionDate = LocalDateTime.now();
+    }
+
+    public void reject() {
+        if(this.status != AdmissionStatus.PENDING) throw new IllegalStateException("이미 처리됨");
+        this.status = AdmissionStatus.REJECTED;
         this.decisionDate = LocalDateTime.now();
     }
 

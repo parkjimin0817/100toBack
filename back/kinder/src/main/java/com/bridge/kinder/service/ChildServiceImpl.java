@@ -260,12 +260,21 @@ public class ChildServiceImpl implements ChildService {
                 .collect(Collectors.toList());
     }
 
-//    @Override
-//    public activityLog updateActivityLog(int childNo, LocalDate date, activityLog data) {
-//        ChildHealthData healthData = childRepository.updateHealthData(childNo, data)
-//                .orElseThrow(() -> new EntityNotFoundException("정상적으로 수정되지 않았습니다."));
-//        return ChildDto.health.toDto(healthData);
-//    }
+    // 아동 건강 로그 데이터 생성, 업데이트
+    @Override
+    public healthLog updateHealthLog(int childNo, LocalDate date, ChildDto.healthLog data) {
+        ChildHealthLog healthLog = childRepository.updateHealthLog(childNo, date, data)
+                .orElseThrow(() -> new EntityNotFoundException("정상적으로 수정되지 않았습니다."));
+        return ChildDto.healthLog.toDto(healthLog);
+    }
+
+    //아동 생활 로그 데이터 생성, 업데이트
+    @Override
+    public ChildDto.activityLog updateActivityLog(int childNo, LocalDate date, ChildDto.activityLog data) {
+        ChildActivityLog activityLog = childRepository.updateActivityLog(childNo, date, data)
+                .orElseThrow(() -> new EntityNotFoundException("정상적으로 수정되지 않았습니다."));
+        return ChildDto.activityLog.toDto(activityLog);
+    }
 
 
     //부모 번호로 해당 연결된 아동 리스트 가져오기
@@ -278,4 +287,6 @@ public class ChildServiceImpl implements ChildService {
                 .map(ChildDto.myPageChilds::toDto)
                 .collect(Collectors.toList());
     }
+
+    
 }

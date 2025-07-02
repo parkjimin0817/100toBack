@@ -3,6 +3,7 @@ package com.bridge.kinder.service;
 import com.bridge.kinder.dto.VacationDto;
 import com.bridge.kinder.dto.VacationDto.Response;
 import java.io.IOException;
+import java.lang.reflect.ReflectPermission;
 import java.util.List;
 
 public interface VacationService {
@@ -10,5 +11,7 @@ public interface VacationService {
     List<Response> getVacationsByMember (int memberNo);
     void deleteVacation (long VacationNo);
     List<Response> getVacationsByCenter(int centerNo);
+    Response approveVacation (long VacationNo);
+    Response rejectVacation (long VacationNo);
 
 }

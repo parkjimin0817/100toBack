@@ -22,8 +22,6 @@ export const vacationService = {
         status: data.status,
         memberNo: data.member_no,
       };
-
-      console.log(camelData);
       return camelData;
     } catch (error) {
       throw new Error('서버 통신 불량' + error.message);
@@ -81,6 +79,51 @@ export const vacationService = {
   deleteVacation: async (vacationNo) => {
     try {
       await api.delete(API_ENDPOINTS.VACATION.DELETE(vacationNo));
+    } catch (error) {
+      throw new Error('서버 통신 불량' + error.message);
+    }
+  },
+  approveVacation: async (vacationNo) => {
+    try {
+      const { data } = await api.patch(API_ENDPOINTS.VACATION.APPROVE(vacationNo));
+
+      const camelData = {
+        vacationNo: data.vacation_no,
+        type: data.type,
+        typeDetail: data.type_detail,
+        startDate: data.start_date,
+        endDate: data.end_date,
+        reason: data.reason,
+        attachment: data.attachment,
+        status: data.status,
+        memberNo: data.member_no,
+        memberName: data.member_name,
+        createDate: data.create_date,
+        decisionDate: data.decision_date,
+      };
+      return camelData;
+    } catch (error) {
+      throw new Error('서버 통신 불량' + error.message);
+    }
+  },
+  rejectVacation: async (vacationNo) => {
+    try {
+      const { data } = await api.patch(API_ENDPOINTS.VACATION.REJECT(vacationNo));
+      const camelData = {
+        vacationNo: data.vacation_no,
+        type: data.type,
+        typeDetail: data.type_detail,
+        startDate: data.start_date,
+        endDate: data.end_date,
+        reason: data.reason,
+        attachment: data.attachment,
+        status: data.status,
+        memberNo: data.member_no,
+        memberName: data.member_name,
+        createDate: data.create_date,
+        decisionDate: data.decision_date,
+      };
+      return camelData;
     } catch (error) {
       throw new Error('서버 통신 불량' + error.message);
     }

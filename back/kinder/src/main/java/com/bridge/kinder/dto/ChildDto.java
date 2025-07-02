@@ -178,6 +178,7 @@ public class ChildDto {
         private String symptoms;
         private String healthLogMemo;
         private String child_name;
+        private int child_no;
 
         public static healthLog toDto(ChildHealthLog log){
             return healthLog.builder()
@@ -188,6 +189,7 @@ public class ChildDto {
                     .symptoms(log.getSymptoms())
                     .healthLogMemo(log.getHealthLogMemo())
                     .child_name(log.getChild().getChildName())
+                    .child_no(log.getChild().getChildNo())
                     .build();
         }
     }
@@ -248,6 +250,7 @@ public class ChildDto {
         private String daily_friendship;
         private String activity_log_memo;
         private String child_name;
+        private int child_no;
 
         public static activityLog toDto(ChildActivityLog activitylog){
             return activityLog.builder()
@@ -259,6 +262,7 @@ public class ChildDto {
                     .daily_friendship(activitylog.getDailyFriendship())
                     .activity_log_memo(activitylog.getActivityLogMemo())
                     .child_name(activitylog.getChild().getChildName())
+                    .child_no(activitylog.getChild().getChildNo())
                     .build();
         }
 
@@ -388,6 +392,7 @@ public class ChildDto {
         private String child_name;
         private String child_resident_no;
         private String child_profile;
+        private String class_name;
 
         public static myPageChilds toDto(Child child){
             return myPageChilds.builder()
@@ -395,6 +400,7 @@ public class ChildDto {
                     .child_name(child.getChildName())
                     .child_resident_no(child.getChildResidentNo())
                     .child_profile(child.getChildProfile())
+                    .class_name(child.getClassRoom().getClassName())
                     .build();
 
         }

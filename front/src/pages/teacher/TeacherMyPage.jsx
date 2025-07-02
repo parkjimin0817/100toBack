@@ -79,10 +79,10 @@ const TeacherMyPage = () => {
           memberBirth: editableInfo.memberBirth,
           memberPhone: editableInfo.memberPhone,
         });
-        toast.success('수정 완료!');
+        toast.success('수정이 성공적으로 완료되었습니다.');
         setIsEditing(false);
       } catch (e) {
-        alert('수정 실패: ' + e.message);
+        toast.error('수정 실패: ' + e.message);
       }
     }
   };

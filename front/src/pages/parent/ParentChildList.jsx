@@ -4,34 +4,45 @@ import ContentHeader from '../../components/Common/ContentHeader';
 
 import ParentChildrenList from '../../components/ParentChildrenList';
 import ChildImg from '../../assets/Child.png';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { List } from '../../components/ChildDummyData';
 import ChildDetailInfoArea from '../../components/Common/ChildDetailInfoArea';
+import useLoginStore from '../../store/loginStore';
+import { toast } from 'react-toastify';
 
 const ParentChildList = () => {
   const [selectedChild, setSelectedChild] = useState(null);
+  const [isAuthorized, setIsAuthorized] = useState(null);
+  const navigate = useNavigate();
 
-  const handleChildClick = (child) => {
-    setSelectedChild(child); // 카드 클릭 시 상태 저장
-  };
+  const member = useLoginStore((state) => state.member);
+  const role = member.memberType;
+  const memberNo = member.memberNo;
+
+  useEffect(() => {
+    if (role === 'PARENT') {
+      setIsAuthorized(true);
+    } else {
+      setIsAuthorized(false);
+      toast.error('잘못된 접근입니다.');
+      setTimeout(() => navigate(-1), 3500); // 토스트 띄우고 3.5초 후 이동
+    }
+  }, [role, navigate]);
+
+  if (isAuthorized === null) return null; // 아직 권한 확인 중이라면 아무것도 안 보이게
+  if (isAuthorized === false) return null; // 권한 없으면 화면 렌더링 안 함
 
   return (
     <>
       <Content>
-        <ContentHeader Title="아동 출결" Color="orange" />
+        <ContentHeader Title="나의 아동" Color="orange" />
         <InnerContent>
           <Title>나의 아동 목록</Title>
-          <ParentChildrenList
-            showAll={true}
-            sortBy="createDate"
-            roleBy="child"
-            classFilter="햇님반"
-            onChildClick={handleChildClick}
-          />
+          <ParentChildrenList childFilter={memberNo} onChildClick={setSelectedChild} />
         </InnerContent>
       </Content>
 
-      <ChildInfoArea>{selectedChild && <ChildDetailInfoArea child={selectedChild} />}</ChildInfoArea>
+      <ChildInfoArea>{selectedChild && <ChildDetailInfoArea childNo={selectedChild.child_no} />}</ChildInfoArea>
     </>
   );
 };

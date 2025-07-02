@@ -41,6 +41,11 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
         return attendance;
     }
 
+    @Override
+    public Optional<Attendance> findById(int attendanceNo) {
+        return Optional.ofNullable(em.find(Attendance.class, attendanceNo));
+    }
+
     //달별 출근 기록
     @Override
     public List<Attendance> findByMemberNoAndDateRange(int memberNo, int centerNo, LocalDateTime startDateTime, LocalDateTime endDateTime) {

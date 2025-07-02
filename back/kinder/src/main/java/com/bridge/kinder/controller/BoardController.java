@@ -73,9 +73,10 @@ public class BoardController {
      */
     @GetMapping("/type/NOTICE")
     public ResponseEntity<Page<BoardDto.NoticeBoardDto>> getNoticeBoards(
+            @RequestParam int centerNo,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
-        Page<BoardDto.NoticeBoardDto> boardPage = boardService.getNoticeBoards(NOTICE, page, size);
+        Page<BoardDto.NoticeBoardDto> boardPage = boardService.getNoticeBoards(NOTICE, centerNo, page, size);
         return ResponseEntity.ok(boardPage);
     }
     /**
@@ -83,9 +84,10 @@ public class BoardController {
      */
     @GetMapping("/type/FAMILY_NOTICE")
     public ResponseEntity<Page<BoardDto.FamilyNoticeDto>> getFamilyNoticeBoards(
+            @RequestParam int centerNo,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
-        Page<BoardDto.FamilyNoticeDto> boardPage = boardService.getFamilyNoticeBoards(FAMILY_NOTICE, page, size);
+        Page<BoardDto.FamilyNoticeDto> boardPage = boardService.getFamilyNoticeBoards(FAMILY_NOTICE, centerNo, page, size);
         return ResponseEntity.ok(boardPage);
     }
     /**
@@ -93,9 +95,10 @@ public class BoardController {
      */
     @GetMapping("/type/NOTE")
     public ResponseEntity<Page<BoardDto.NoteBoardDto>> getNoteBoards(
+            @RequestParam int centerNo,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
-        Page<BoardDto.NoteBoardDto> boardPage = boardService.getNoteBoards(NOTE, page, size);
+        Page<BoardDto.NoteBoardDto> boardPage = boardService.getNoteBoards(NOTE, centerNo, page, size);
         return ResponseEntity.ok(boardPage);
     }
     /**
@@ -103,9 +106,10 @@ public class BoardController {
      */
     @GetMapping("/type/PHOTO")
     public ResponseEntity<Page<BoardDto.PhotoBoardDto>> getPhotoBoards(
+            @RequestParam int centerNo,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
-        Page<BoardDto.PhotoBoardDto> boardPage = boardService.getPhotoBoards(PHOTO, page, size);
+        Page<BoardDto.PhotoBoardDto> boardPage = boardService.getPhotoBoards(PHOTO, centerNo, page, size);
         return ResponseEntity.ok(boardPage);
     }
     /**
@@ -113,9 +117,10 @@ public class BoardController {
      */
     @GetMapping("/type/MEAL_PLAN")
     public ResponseEntity<Page<BoardDto.MealPlanBoardDto>> getMealPlanBoards(
+            @RequestParam int centerNo,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
-        Page<BoardDto.MealPlanBoardDto> boardPage = boardService.getMealPlanBoards(MEAL_PLAN, page, size);
+        Page<BoardDto.MealPlanBoardDto> boardPage = boardService.getMealPlanBoards(MEAL_PLAN, centerNo, page, size);
         return ResponseEntity.ok(boardPage);
     }
 }
