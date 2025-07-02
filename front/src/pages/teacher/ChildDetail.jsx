@@ -95,17 +95,10 @@ const ChildDetail = () => {
         .then((res) => {
           setChild((prev) => ({ ...prev, health: res.data }));
           setIsEditing(false);
-<<<<<<< HEAD
-        })
-        .catch((err) => {
-          console.error('건강정보 수정 실패:', err);
-          alert('수정 실패');
-=======
           toast.success('건강 정보 수정이 완료되었습니다.');
         })
         .catch((err) => {
           toast.error('건강 정보 수정에 실패했습니다.', err);
->>>>>>> 8b5c79b51418f646774f9866a1003e7a7d9e022a
         });
     }
   };
@@ -125,17 +118,10 @@ const ChildDetail = () => {
         .then((res) => {
           setChild((prev) => ({ ...prev, activity: res.data }));
           setIsLifeEditing(false);
-<<<<<<< HEAD
-        })
-        .catch((err) => {
-          console.error('생활정보 수정 실패:', err);
-          alert('수정 실패');
-=======
           toast.success('생활 정보 수정이 완료되었습니다.');
         })
         .catch((err) => {
           toast.error('생활 정보 수정에 실패했습니다.', err);
->>>>>>> 8b5c79b51418f646774f9866a1003e7a7d9e022a
         });
     }
   };
