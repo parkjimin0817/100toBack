@@ -6,6 +6,7 @@ import com.bridge.kinder.dto.ScheduleDto.DailyResponse;
 import com.bridge.kinder.dto.ScheduleDto.DailyScheduleDto;
 import com.bridge.kinder.dto.ScheduleDto.DailyScheduleUpdateDto;
 import com.bridge.kinder.dto.ScheduleDto.ScheduleResponse;
+import com.bridge.kinder.dto.ScheduleDto.ScheduleSimpleResponse;
 import com.bridge.kinder.dto.ScheduleDto.ScheduleUpdateDto;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.ClassRoom;
@@ -86,6 +87,22 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         return uniqueScheduleMap.values().stream()
                 .map(schedule -> ScheduleResponse.toDto(schedule, schedule.getCenter(), schedule.getMember()))
+                .collect(Collectors.toList());
+    }
+
+    //개인 오늘 스케줄 (메인페이지)
+    @Override
+    public List<ScheduleSimpleResponse> getTodaySchedules(int centerNo, int memberNo, LocalDate today) {
+        Center center = centerRepository.findById(centerNo)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
+
+        Member member = memberRepository.findByMemberNo(memberNo)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
+
+        List<Schedule> memberSchedules = scheduleRepository.findMemberTodaySchedule(center.getCenterNo(), member.getMemberNo(), today);
+
+        return memberSchedules.stream()
+                .map(schedule -> ScheduleSimpleResponse.toDto(schedule, schedule.getCenter(), schedule.getMember()))
                 .collect(Collectors.toList());
     }
 

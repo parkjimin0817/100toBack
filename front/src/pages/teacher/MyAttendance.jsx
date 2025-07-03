@@ -59,7 +59,11 @@ const MyAttendance = () => {
           <Div1>
             <TeacherAttendanceCalendar
               onDateClick={(date) => setSelectedDate(date)}
-              onMonthChange={(date) => setCurrentMonth(date)}
+              onMonthChange={(date) => {
+                setCurrentMonth(date);
+                const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+                setSelectedDate(firstDayOfMonth);
+              }}
               monthlyAttendanceList={attendances}
               disableFuture={true}
               minDate={joinDate}
@@ -103,7 +107,7 @@ const Content = styled.div`
 
 const Div1 = styled.div`
   width: 60%;
-  min-height: 500px;
+  min-height: 630px;
   margin: 10;
   border-radius: 20px;
   display: flex;

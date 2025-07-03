@@ -15,6 +15,9 @@ public interface ScheduleService {
     //스케줄 리스트 불러오기
     List<ScheduleDto.ScheduleResponse> getSchedules(int centerNo, int memberNo);
 
+    //오늘 스케줄 불러오기 (메인)
+    List<ScheduleDto.ScheduleSimpleResponse> getTodaySchedules(int centerNo, int memberNo, LocalDate today);
+
     //스케줄 수정
     String updateSchedule(ScheduleDto.ScheduleUpdateDto dto);
 
