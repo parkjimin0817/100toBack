@@ -28,7 +28,7 @@ public interface ScheduleService {
     List<Integer> createDailySchedule(List<ScheduleDto.DailyScheduleDto> dto);
 
     //반 일과표 조회
-    List<ScheduleDto.DailyResponse> dailyList(int centerNo, int memberNo, int classNo, LocalDate scheduleDate);
+    List<ScheduleDto.DailyResponse> dailyList(int centerNo, int classNo, LocalDate scheduleDate);
 
     //반 일과표 등록(수정)
     List<ScheduleDto.DailyResponse> updateDailySchedule(List<ScheduleDto.DailyScheduleUpdateDto> dto);

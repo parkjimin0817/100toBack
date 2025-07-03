@@ -167,6 +167,9 @@ public class ChildController {
         return ResponseEntity.ok(childService.activityLogByParent(memberNo, date));
     }
 
-
-
+    //학부모 전화번호 조회
+    @GetMapping("/phoneNumber/{centerNo}")
+    public ResponseEntity<List<ChildDto.ParentPhoneNumberResponse>> selectParentPhoneNumber(@PathVariable int centerNo){
+        return ResponseEntity.ok(childService.findByCenterNoPhoneNumber(centerNo));
+    }
 }
