@@ -19,6 +19,12 @@ export const API_ENDPOINTS = {
     LISTS: `/api/schedule/lists`,
     EDIT: `/api/schedule/edit`,
     DELETE: `/api/schedule/delete`,
+    TODAYLISTS: '/api/schedule/lists/main',
+    DAILYSCHEDULE: `/api/schedule/dailyCreate`,
+    DAILYSCHEDULELIST: (centerNo, memberNo, classNo, scheduleDate) =>
+      `/api/schedule/dailyList?centerNo=${centerNo}&memberNo=${memberNo}&classNo=${classNo}&scheduleDate=${scheduleDate}`,
+    UPDATEDAILY: `/api/schedule/dailyUpdate`,
+    DELETEDAILY: (scheduleNo) => `/api/schedule/dailyDelete/${scheduleNo}`,
   },
   MEMBERS: {
     BASE: '/api/members',
@@ -109,5 +115,9 @@ export const API_ENDPOINTS = {
   LEAVE: {
     BASE: '/api/leave',
     GETLEAVE: (memberNo) => `/api/leave/${memberNo}`,
+  },
+  HOLIDAY: {
+    BASE: '/api/holiday',
+    GET: (year, month) => `api/holiday?year=${year}&month=${month}`,
   },
 };

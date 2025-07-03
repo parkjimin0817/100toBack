@@ -17,6 +17,9 @@ public interface ScheduleRepository {
     //시설 스케줄 리스트 불러오기
     List<Schedule> findCenterScheduleAll(int centerNo);
 
+    //개인 오늘 스케줄 리스트 불러오기
+    List<Schedule> findMemberTodaySchedule(int centerNo, int memberNo, LocalDate today);
+
     //스케줄 번호로 찾기
     Schedule findScheduleByScheduleNo(int scheduleNo);
 
@@ -28,5 +31,8 @@ public interface ScheduleRepository {
 
     //반 일과표 조회
     List<Schedule> findDailyList(int centerNo, int memberNo, int classNo, LocalDate scheduleDate);
+
+    //반 일과표 조회
+    List<Schedule> findDailySchedule(int centerNo, int memberNo, int classNo, int scheduleNo, LocalDate scheduleDate);
 
 }

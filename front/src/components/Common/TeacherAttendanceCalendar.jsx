@@ -2,9 +2,25 @@ import React from 'react';
 import styled from 'styled-components';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { holidayService } from '../../api/holiday';
 
 const TeacherAttendanceCalendar = ({ onDateClick, onMonthChange, disableFuture = false, minDate, maxDate }) => {
   const today = new Date();
+  const [holidays, setHolidays] = useState([]);
+  const [activeMonth, setActiveMonth] = useState(new Date());
+
+  useEffect(() => {
+    const year = activeMonth.getFullYear();
+    const month = activeMonth.getMonth() + 1;
+
+    holidayService
+      .getHoliday(year, month)
+      .then((data) => setHolidays(data))
+      .catch((err) => console.error('공휴일 불러오기 실패:', err));
+  }, [activeMonth]);
+
   return (
     <StyledCalendar
       calendarType="gregory"
@@ -16,15 +32,43 @@ const TeacherAttendanceCalendar = ({ onDateClick, onMonthChange, disableFuture =
       onClickDay={onDateClick}
       //onActiveStartDateChange : 보여주는 달이 바뀔 때 실행되는 react-calendar의 props
       onActiveStartDateChange={({ activeStartDate }) => {
+        setActiveMonth(activeStartDate);
         onMonthChange?.(activeStartDate);
       }}
       tileDisabled={({ date, view }) => disableFuture && view === 'month' && date > today}
       tileClassName={({ date, view }) => {
-        if (view === 'month' && date.getDay() === 0) {
-          return 'sunday';
-        } else if (view === 'month' && date.getDay() === 6) {
-          return 'saturday';
+        if (view === 'month') {
+          const isHoliday = holidays.some((h) => new Date(h.holiday_date).toDateString() === date.toDateString());
+          if (isHoliday) return 'holiday';
+          if (date.getDay() === 0) return 'sunday';
+          if (date.getDay() === 6) return 'saturday';
         }
+      }}
+      tileContent={({ date, view }) => {
+        if (view === 'month') {
+          const holiday = holidays.find((h) => new Date(h.holiday_date).toDateString() === date.toDateString());
+          if (holiday) {
+            return (
+              <div
+                style={{
+                  fontSize: '0.6rem',
+                  color: 'red',
+                  position: 'absolute',
+                  top: '75%',
+                  width: '100%',
+                  textAlign: 'center',
+                  whiteSpace: 'normal',
+                  overflow: 'hidden',
+                  lineHeight: '1.1',
+                  padding: '0 2px',
+                }}
+              >
+                {holiday.holiday_name}
+              </div>
+            );
+          }
+        }
+        return null;
       }}
       maxDate={maxDate}
       minDate={minDate}
@@ -150,6 +194,11 @@ const StyledCalendar = styled(Calendar)`
     background: ${({ theme }) => theme.colors.black} !important;
     color: ${({ theme }) => theme.colors.white} !important;
     border: none;
+  }
+
+  .holiday {
+    color: red;
+    font-weight: bold;
   }
 `;
 

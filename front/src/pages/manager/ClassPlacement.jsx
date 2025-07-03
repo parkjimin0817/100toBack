@@ -32,7 +32,10 @@ const ClassPlacement = () => {
   if (!member || accessDenied) return null; // ❗️렌더링 차단
 
   const centerNo = member.centerNo;
-  const headerButtons = [{ Title: '반 목록', func: () => navigate('/manager/classmanage') }];
+  const headerButtons = [
+    { Title: '반 목록', func: () => navigate('/manager/classmanage') },
+    { Title: '뒤로가기', func: () => navigate(-1) },
+  ];
 
   const [showAll, setShowAll] = useState(true);
   const [openModal, setOpenModal] = useState(false);

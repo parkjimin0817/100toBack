@@ -172,7 +172,7 @@ function App() {
             <Route path="/childhealthcheck" element={<ChildHealthCheck />} />
             <Route path="/childlifecheck" element={<ChildLifeCheck />} />
             <Route path="/daily" element={<DailySchedule />} />
-            <Route path="/dailyDetail/:schedule_no" element={<DailyScheduleDetail />} />
+            <Route path="/dailyDetail/:class_no" element={<DailyScheduleDetail />} />
             <Route path="/child/detail/:id" element={<ChildDetail />} />
             <Route path="/teacher/workcation" element={<MyVacation />} />
             <Route path="/childattendance/:class_no" element={<AttendancePage />} />

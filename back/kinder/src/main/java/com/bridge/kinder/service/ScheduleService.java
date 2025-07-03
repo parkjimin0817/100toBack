@@ -15,6 +15,9 @@ public interface ScheduleService {
     //스케줄 리스트 불러오기
     List<ScheduleDto.ScheduleResponse> getSchedules(int centerNo, int memberNo);
 
+    //오늘 스케줄 불러오기 (메인)
+    List<ScheduleDto.ScheduleSimpleResponse> getTodaySchedules(int centerNo, int memberNo, LocalDate today);
+
     //스케줄 수정
     String updateSchedule(ScheduleDto.ScheduleUpdateDto dto);
 
@@ -22,8 +25,12 @@ public interface ScheduleService {
     void deleteSchedule(int scheduleNo);
 
     //반 일과표 생성
-    String createDailySchedule(List<ScheduleDto.DailyScheduleDto> dto );
+    List<Integer> createDailySchedule(List<ScheduleDto.DailyScheduleDto> dto);
 
     //반 일과표 조회
     List<ScheduleDto.DailyResponse> dailyList(int centerNo, int memberNo, int classNo, LocalDate scheduleDate);
+
+    //반 일과표 등록(수정)
+    List<ScheduleDto.DailyResponse> updateDailySchedule(List<ScheduleDto.DailyScheduleUpdateDto> dto);
+
 }
