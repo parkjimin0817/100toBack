@@ -4,13 +4,6 @@ import People from '../../../assets/img/people.png';
 import { classService } from '../../../api/class';
 
 const TeacherMainChild = ({ centerNo }) => {
-  const childdata = [
-    { id: 1, className: '햇님반', completed: 10, total: 20 },
-    { id: 2, className: '햇님반', completed: 12, total: 20 },
-    { id: 3, className: '햇님반', completed: 14, total: 20 },
-    { id: 4, className: '햇님반', completed: 15, total: 20 },
-  ];
-
   const [progress, setProgress] = useState([]);
 
   useEffect(() => {

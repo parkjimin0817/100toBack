@@ -6,13 +6,13 @@ import Progressbar2 from '../../../assets/img/progressbar2.png';
 import YellowFace from '../../../assets/img/yellowface.png';
 import Go from '../../../assets/img/go.png';
 
-const TeacherMainHealth = () => {
+const TeacherMainHealth = ({ member }) => {
   return (
     <>
       <HealthContainer>
         <FirstSecondLine>
           <Greeting>좋은 하루에요.</Greeting>
-          <Greeting>정형일 선생님!</Greeting>
+          <Greeting>{member.memberName} 선생님!</Greeting>
           <Greeting2>오늘도 힘내볼까요?</Greeting2>
           <TeacherPic src={TeacherImage}></TeacherPic>
         </FirstSecondLine>

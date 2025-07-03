@@ -104,7 +104,7 @@ const TeacherMainPage = () => {
           {activeTab === '건강관리' && (
             <>
               <HealthContainer>
-                <TeacherMainHealth />
+                <TeacherMainHealth member={member} />
               </HealthContainer>
             </>
           )}
