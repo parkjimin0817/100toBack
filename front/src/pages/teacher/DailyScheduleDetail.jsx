@@ -19,6 +19,8 @@ import { BounceLoader } from 'react-spinners';
 const DailyScheduleDetail = () => {
   const { member } = useLoginStore();
   const { class_no } = useParams();
+  const navigate = useNavigate();
+
   //등록 / 수정으로 넘어가는 값
   const [writeAuthority, setWriteAuthority] = useState(false);
 
@@ -53,8 +55,11 @@ const DailyScheduleDetail = () => {
     }
   };
 
+  //  PARENT가 아닌 경우에만 상태 메시지
   useEffect(() => {
-    setStatus('일정을 등록해주세요.');
+    if (member.memberType !== 'PARENT') {
+      setStatus('일정을 등록해주세요.');
+    }
   }, [thisday]);
 
   //년도, 월, 일, 요일(숫자), 요일(글자) 추가
@@ -172,24 +177,31 @@ const DailyScheduleDetail = () => {
       <ContentHeader
         Title={'일과표'}
         Color={'purple'}
-        ButtonProps={
-          writeAuthority === false
-            ? [
-                {
-                  Title: '일정표 작성하기',
-                  func: (e) => {
-                    e.preventDefault();
-                    setWriteAuthority(true);
+        ButtonProps={[
+          {
+            Title: '뒤로 가기',
+            func: () => navigate(-1),
+          },
+          // PARENT가 아닐 때만 일정표 작성/등록 버튼 노출
+          ...(member.memberType !== 'PARENT'
+            ? writeAuthority === false
+              ? [
+                  {
+                    Title: '일정표 작성하기',
+                    func: (e) => {
+                      e.preventDefault();
+                      setWriteAuthority(true);
+                    },
                   },
-                },
-              ]
-            : [
-                {
-                  Title: '일정표 등록하기',
-                  type: 'submit',
-                },
-              ]
-        }
+                ]
+              : [
+                  {
+                    Title: '일정표 등록하기',
+                    type: 'submit',
+                  },
+                ]
+            : []),
+        ]}
       />
       <Div>
         <div>

@@ -18,21 +18,16 @@ const ScheduleTeacher = () => {
   const { member } = useLoginStore();
   const [data, setData] = useState([]);
   const [scheduleType, setScheduleType] = useState('');
+  const [viewMode, setViewMode] = useState(false);
 
   const fetchData = async (targetDate = dayjs().format('YYYY-MM-DD')) => {
     try {
       const scheduleData = await useScheduleService.getScheduleList(member.centerNo, member.memberNo);
-
-      // 시간 정렬 (null 예외 처리 포함)
       const sortedData = [...scheduleData].sort((a, b) => a.start_time?.localeCompare(b.start_time));
-
       setData(sortedData);
-
-      // 선택된 날짜의 일정 필터링
       const matchedSchedules = sortedData.filter(
         (item) => dayjs(item.schedule_date).format('YYYY-MM-DD') === targetDate
       );
-
       setSelectedSchedules(matchedSchedules);
       setSelectedDate(dayjs(targetDate).format('YYYY-MM-DD (ddd)'));
     } catch (error) {
@@ -45,7 +40,6 @@ const ScheduleTeacher = () => {
     handleDateClick(dayjs().format('YYYY-MM-DD'));
   }, []);
 
-  //modal
   const [openModal, setOpenModal] = useState(false);
   const [editSchedule, setEditSchedule] = useState(null);
 
@@ -58,6 +52,7 @@ const ScheduleTeacher = () => {
 
   const handleEditClick = (item) => {
     setEditSchedule(item);
+    setViewMode(false);
     setOpenModal(true);
   };
 
@@ -72,10 +67,16 @@ const ScheduleTeacher = () => {
     }
   };
 
+  const handleShowClick = (item) => {
+    setEditSchedule(item);
+    setViewMode(true);
+    setOpenModal(true);
+  };
+
   return (
     <>
       <Content>
-        <ContentHeader Title={'교사 일정'} Color={'purple'}></ContentHeader>
+        <ContentHeader Title={'교사 일정'} Color={'purple'} />
         <ContentWrapper>
           <ContentLeft>
             <CustomCalendar scheduleData={data} onDateClick={handleDateClick} />
@@ -90,7 +91,10 @@ const ScheduleTeacher = () => {
                   {
                     Title: '일정 추가',
                     func: () => {
-                      setOpenModal(true), setEditSchedule(null), setScheduleType('MEMBER');
+                      setOpenModal(true);
+                      setEditSchedule(null);
+                      setScheduleType('MEMBER');
+                      setViewMode(false);
                     },
                   },
                 ]}
@@ -102,6 +106,7 @@ const ScheduleTeacher = () => {
                     schedules={selectedSchedules.filter((item) => item.type === 'MEMBER')}
                     onEditClick={handleEditClick}
                     onDeleteClick={handleDeleteClick}
+                    onShowClick={handleShowClick}
                   />
                 </AreaList>
               </ContentSceduleArea>
@@ -111,7 +116,12 @@ const ScheduleTeacher = () => {
               <ContentSceduleArea>
                 <AreaDate>{selectedDate}</AreaDate>
                 <AreaList>
-                  <ScheduleList schedules={selectedSchedules.filter((item) => item.type === 'CENTER')} />
+                  <ScheduleList
+                    schedules={selectedSchedules.filter((item) => item.type === 'CENTER')}
+                    onEditClick={handleEditClick}
+                    onDeleteClick={handleDeleteClick}
+                    onShowClick={handleShowClick}
+                  />
                 </AreaList>
               </ContentSceduleArea>
             </ContentRightBottom>
@@ -125,6 +135,7 @@ const ScheduleTeacher = () => {
         initialData={editSchedule}
         type={scheduleType}
         onSuccess={(date) => fetchData(date)}
+        viewMode={viewMode}
       />
     </>
   );

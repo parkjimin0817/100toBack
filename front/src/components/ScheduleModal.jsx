@@ -4,7 +4,7 @@ import useLoginStore from '../store/loginStore';
 import { useScheduleService } from '../api/schedule';
 import { toast } from 'react-toastify';
 
-const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData, type, onSuccess }) => {
+const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData, type, onSuccess, viewMode }) => {
   const [title, setTitle] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
@@ -107,7 +107,7 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData, type, onSuc
     <Backdrop onClick={onClose}>
       <ModalContainer onClick={(e) => e.stopPropagation()}>
         <ModalHeader>
-          <Span>{initialData ? '일정 수정' : '일정 추가'}</Span>
+          <Span>{viewMode ? '일정 보기' : initialData ? '일정 수정' : '일정 추가'}</Span>
         </ModalHeader>
         <ModalContent>
           <ModalDate>
@@ -121,7 +121,7 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData, type, onSuc
                   <Span>제목 :</Span>
                 </TitleLeft>
                 <TitleRight>
-                  <TextInput value={title} onChange={(e) => setTitle(e.target.value)} />
+                  <TextInput value={title} onChange={(e) => setTitle(e.target.value)} disabled={viewMode} />
                 </TitleRight>
               </ModalTitle>
               <ModalInfoTime>
@@ -129,9 +129,19 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData, type, onSuc
                   <Span>시간 :</Span>
                 </InfoTimeLeft>
                 <InfoTimeRight>
-                  <TimeInput type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+                  <TimeInput
+                    type="time"
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                    disabled={viewMode}
+                  />
                   <Span>-</Span>
-                  <TimeInput type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
+                  <TimeInput
+                    type="time"
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
+                    disabled={viewMode}
+                  />
                 </InfoTimeRight>
               </ModalInfoTime>
             </ModalInfo>
@@ -142,22 +152,30 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData, type, onSuc
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="내용을 입력해주세요."
+                  disabled={viewMode}
                 />
               </ModalContentDescription>
             </ModalContentMain>
           </ModalMain>
         </ModalContent>
         <ModalFooter>
-          {initialData ? (
-            <Button className="edit" onClick={handleUpdateSubmit}>
-              수정
-            </Button>
+          {viewMode ? (
+            <Button onClick={onClose}>닫기</Button>
+          ) : initialData ? (
+            <>
+              <Button className="edit" onClick={handleUpdateSubmit}>
+                수정
+              </Button>
+              <Button onClick={onClose}>취소</Button>
+            </>
           ) : (
-            <Button className="add" onClick={handleAddSubmit}>
-              등록
-            </Button>
+            <>
+              <Button className="add" onClick={handleAddSubmit}>
+                등록
+              </Button>
+              <Button onClick={onClose}>취소</Button>
+            </>
           )}
-          <Button onClick={onClose}>닫기</Button>
         </ModalFooter>
       </ModalContainer>
     </Backdrop>
@@ -356,6 +374,7 @@ const ModalContentDescriptionRight = styled.textarea`
   border: 1px solid black;
   border-radius: ${({ theme }) => theme.borderRadius.base};
   padding: ${({ theme }) => theme.spacing[2]};
+  resize: none;
 `;
 
 const ModalFooter = styled.div`
