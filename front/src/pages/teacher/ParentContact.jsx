@@ -12,9 +12,8 @@ const ParentContact = () => {
   //페이지가 상태를 가짐
   const [selectedClass, setSelectedClass] = useState('');
   const [searchKeyword, setSearchKeyword] = useState('');
-
   const [value, setValue] = useState([]);
-  console.log(value);
+  const [status, setStatus] = useState('연락처를 불러오는 중...');
 
   const selectPhoneNumber = async () => {
     try {
@@ -25,9 +24,9 @@ const ParentContact = () => {
       }
 
       setValue(parentPhone);
-      toast.success('학부모 연락처 불러오기 성공했습니다.');
     } catch (error) {
       toast.error('학부모 연락처 불러오기 실패했습니다.');
+      setStatus('연락처 불러오기 실패');
     }
   };
 
@@ -43,8 +42,9 @@ const ParentContact = () => {
         setSelectedClass={setSelectedClass}
         searchKeyword={searchKeyword}
         setSearchKeyword={setSearchKeyword}
+        value={value}
       />
-      <ParenctContactList selectedClass={selectedClass} searchKeyword={searchKeyword} value={value} />
+      <ParenctContactList selectedClass={selectedClass} searchKeyword={searchKeyword} value={value} status={status} />
     </Wrapper>
   );
 };
