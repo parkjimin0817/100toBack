@@ -1,4 +1,4 @@
-import api from "./axios";
+import api from './axios';
 import { API_ENDPOINTS } from './config';
 
 export const boardService = {
@@ -42,7 +42,7 @@ export const boardService = {
     }
   },
 
-  boardDelete : async (boardNo) => {
+  boardDelete: async (boardNo) => {
     try {
       const { data } = await api.delete(API_ENDPOINTS.BOARDS.DELETE(boardNo));
       return data;
@@ -53,5 +53,13 @@ export const boardService = {
       }
       throw new Error('서버와의 통신에 실패했습니다.');
     }
-  }
-}
+  },
+  getRecent3Boards: async (centerNo) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.BOARDS.GETRECENT3(centerNo));
+      return data;
+    } catch (error) {
+      throw new Error('서버 통신 불량' + error.message);
+    }
+  },
+};

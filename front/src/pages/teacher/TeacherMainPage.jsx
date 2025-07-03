@@ -27,6 +27,7 @@ const TeacherMainPage = () => {
   const [activeTab, setActiveTab] = useState('상담');
   const [activeCounselTab, setActiveCounselTab] = useState('상담 대기');
   const { member } = useLoginStore();
+  const centerNo = member?.centerNo;
 
   useEffect(() => {}, [member]);
 
@@ -126,7 +127,7 @@ const TeacherMainPage = () => {
           ButtonProps={[{ Title: '더보기', func: () => alert('게시판가야함') }]}
         />
         <RecentBoards>
-          <RecentBoard />
+          <RecentBoard centerNo={centerNo} />
         </RecentBoards>
       </BoardContent>
     </Wrapper>

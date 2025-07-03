@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { boardService } from '../../../../api/boards';
 
 const data = [
   {
@@ -27,14 +28,31 @@ const data = [
   },
 ];
 
-const RecentBoard = () => {
+const RecentBoard = ({ centerNo }) => {
+  const [boards, setBoards] = useState([]);
+  useEffect(() => {
+    if (!centerNo) return;
+
+    boardService
+      .getRecent3Boards(centerNo)
+      .then((data) => setBoards(data))
+      .catch((err) => console.error('최근 게시물 3개 불러오기 실패:', err));
+  }, [centerNo]);
+
+  const TYPE = {
+    NOTICE: '공지사항',
+    FAMILY_NOTICE: '가정통신문',
+    PHOTO: '사진게시판',
+    MEAL_PLAN: '식단표',
+  };
+
   const navigate = useNavigate();
   return (
     <>
-      {data.map((item) => {
-        const [year, month, day] = item.createDate.split('-');
+      {boards.map((item) => {
+        const [year, month, day] = item.create_date.slice(0, 10).split('-');
         return (
-          <Card key={item.board}>
+          <Card key={item.board_no}>
             <DateDiv>
               <DayDiv>{day}</DayDiv>
               <MonthDiv>
@@ -43,9 +61,9 @@ const RecentBoard = () => {
             </DateDiv>
             <ContentWrapper onClick={() => navigate('/familycommunity/list')}>
               <TitleDiv>
-                [{item.type}] {item.title}
+                [{TYPE[item.type]}] {item.title}
               </TitleDiv>
-              <ContentDiv>{item.content}</ContentDiv>
+              <ContentDiv>{item.content_text}</ContentDiv>
             </ContentWrapper>
           </Card>
         );

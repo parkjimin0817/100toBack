@@ -36,20 +36,6 @@ const columns = [
   },
 ];
 
-const BoardData = [
-  { id: 1, title: '[알림장] 6월1주차', writer: '정형일', created_Date: '2025-06-03' },
-  { id: 2, title: '[알림장] 6월2주차', writer: '정형일', created_Date: '2025-06-10' },
-  { id: 3, title: '[알림장] 6월3주차', writer: '정형일', created_Date: '2025-06-17' },
-  { id: 4, title: '[알림장] 6월4주차', writer: '정형일', created_Date: '2025-06-24' },
-];
-
-const tableInfo = {
-  color: theme.colors.white,
-  backgroundColor: theme.colors.green,
-  thFontSize: theme.fontSizes.lg,
-  tbFontSize: theme.fontSizes.base,
-};
-
 const NotePage = () => {
   const [data, setData] = useState(null);
   const [page, setPage] = useState(1); // 1부터 시작

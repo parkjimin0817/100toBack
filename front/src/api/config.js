@@ -101,6 +101,7 @@ export const API_ENDPOINTS = {
     DETAIL: (id) => `/api/boards/${id}`,
     DELETE: (id) => `/api/boards/${id}`,
     TYPE: (type, centerNo, page) => `/api/boards/type/${type}?centerNo=${centerNo}&page=${page}`,
+    GETRECENT3: (centerNo) => `api/boards/recent3/${centerNo}`,
   },
   VACATION: {
     BASE: '/api/vacation',
