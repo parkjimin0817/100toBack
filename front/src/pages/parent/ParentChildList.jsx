@@ -37,7 +37,6 @@ const ParentChildList = () => {
       <Content>
         <ContentHeader Title="나의 아동" Color="orange" />
         <InnerContent>
-          <Title>나의 아동 목록</Title>
           <ParentChildrenList childFilter={memberNo} onChildClick={setSelectedChild} />
         </InnerContent>
       </Content>
@@ -55,11 +54,6 @@ const ChildInfoArea = styled.div`
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   margin-top: 20px;
   padding: ${({ theme }) => theme.spacing[5]};
-`;
-
-const Title = styled.h2`
-  text-align: left;
-  padding-left: ${({ theme }) => theme.spacing[12]};
 `;
 
 const InnerContent = styled.div`
