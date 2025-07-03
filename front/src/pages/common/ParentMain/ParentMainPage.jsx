@@ -9,6 +9,7 @@ import boy2 from '../../../assets/boy2.png';
 import ScrollWrapper from './components/ScrollWrapper';
 import MainSchedule from './components/MainSchedule';
 import { useNavigate } from 'react-router-dom';
+import useLoginStore from '../../../store/loginStore';
 
 const data = [
   { name: '박지민', age: '6', gender: '남', birthdate: '20.02.02', imgurl: boy1 },
@@ -19,6 +20,8 @@ const data = [
 ];
 
 const ParentMainPage = () => {
+  const { member } = useLoginStore();
+  const centerNo = member?.centerNo;
   return (
     <Wrapper>
       <TopContent>
@@ -44,7 +47,7 @@ const ParentMainPage = () => {
           ButtonProps={[{ Title: '더보기', func: () => alert('게시판가야함') }]}
         />
         <RecentBoards>
-          <RecentBoard />
+          <RecentBoard centerNo={centerNo} />
         </RecentBoards>
       </BoardContent>
     </Wrapper>
@@ -64,7 +67,7 @@ const TopContent = styled.div`
 `;
 const FirstContent = styled.div`
   width: 70%;
-  height: 530px;
+  height: 570px;
   background-color: #ffffff;
   border-radius: 20px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
@@ -96,6 +99,7 @@ const Title = styled.div`
 
 const ScheduleContent = styled.div`
   width: 30%;
+  height: 570px;
   background-color: #ffffff;
   border-radius: ${({ theme }) => theme.borderRadius['2xl']};
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);

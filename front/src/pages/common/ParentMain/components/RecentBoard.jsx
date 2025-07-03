@@ -3,31 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { boardService } from '../../../../api/boards';
 
-const data = [
-  {
-    board: '1',
-    createDate: '2025-06-23',
-    type: '공지사항',
-    title: '밥을 다 먹어야합니다.',
-    content: '밥을 남기면 아깝기 때문에 다 먹어야해요',
-  },
-  {
-    board: '2',
-    createDate: '2025-06-22',
-    type: '가정통신문',
-    title: '가족 여행 적극 권장 안내문',
-    content: '아이들이 여행을 좋아합니다 여행을 많이 가시길 바랍니다.',
-  },
-  {
-    board: '3',
-    createDate: '2025-06-21',
-    type: '사진게시판',
-    title: '귀여운 토끼 소개합니다.',
-    content:
-      '우리 유치원에 토끼를 키우기로 했어요~ 예뻐해 줍시다.adsfasdfasdfasdfasdfsdafasdfasdfasdfdsafaddfsdfsdfsdfsdfsdfsdfsdfsdfsdsfadsfadsfafasdfadsf',
-  },
-];
-
 const RecentBoard = ({ centerNo }) => {
   const [boards, setBoards] = useState([]);
   useEffect(() => {

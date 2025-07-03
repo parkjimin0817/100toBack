@@ -6,20 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import useLoginStore from '../../../../store/loginStore';
 import { useScheduleService } from '../../../../api/schedule';
 
-//sheduleNo, title, scheduleDate, startTime, type=member,
-
-const schedules = [
-  { date: '2025-06-19', time: '13:00', text: '김승기 부모님과 대면 상담' },
-  { date: '2025-06-19', time: '15:00', text: '김승기 부모님과 대면 상담' },
-  { date: '2025-06-19', time: '18:00', text: '김승기 부모님과 대면 상담' },
-  { date: '2025-06-19', time: '19:00', text: '여자친구랑 통화' },
-  { date: '2025-06-19', time: '23:00', text: '부모님이랑 코스요리' },
-  { date: '2025-06-19', time: '22:00', text: '정의철 아동 생일파티' },
-  { date: '2025-06-19', time: '21:00', text: '양동민 아동 생일파티' },
-  { date: '2025-06-19', time: '21:00', text: '양동민 아동 생일파티' },
-  { date: '2025-06-19', time: '21:00', text: '양동민 아동 생일파티' },
-];
-
 const MainSchedule = () => {
   const navigate = useNavigate();
   const { member } = useLoginStore();

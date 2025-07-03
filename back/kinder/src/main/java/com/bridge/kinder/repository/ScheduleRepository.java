@@ -20,6 +20,9 @@ public interface ScheduleRepository {
     //개인 오늘 스케줄 리스트 불러오기
     List<Schedule> findMemberTodaySchedule(int centerNo, int memberNo, LocalDate today);
 
+    //유치원 오늘 스케줄 리스트
+    List<Schedule> findCenterTodaySchedule(int centerNo, LocalDate today);
+
     //스케줄 번호로 찾기
     Schedule findScheduleByScheduleNo(int scheduleNo);
 
