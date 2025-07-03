@@ -1,40 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { boardService } from '../../../../api/boards';
 
-const data = [
-  {
-    board: '1',
-    createDate: '2025-06-23',
-    type: '공지사항',
-    title: '밥을 다 먹어야합니다.',
-    content: '밥을 남기면 아깝기 때문에 다 먹어야해요',
-  },
-  {
-    board: '2',
-    createDate: '2025-06-22',
-    type: '가정통신문',
-    title: '가족 여행 적극 권장 안내문',
-    content: '아이들이 여행을 좋아합니다 여행을 많이 가시길 바랍니다.',
-  },
-  {
-    board: '3',
-    createDate: '2025-06-21',
-    type: '사진게시판',
-    title: '귀여운 토끼 소개합니다.',
-    content:
-      '우리 유치원에 토끼를 키우기로 했어요~ 예뻐해 줍시다.adsfasdfasdfasdfasdfsdafasdfasdfasdfdsafaddfsdfsdfsdfsdfsdfsdfsdfsdfsdsfadsfadsfafasdfadsf',
-  },
-];
+const RecentBoard = ({ centerNo }) => {
+  const [boards, setBoards] = useState([]);
+  useEffect(() => {
+    if (!centerNo) return;
 
-const RecentBoard = () => {
+    boardService
+      .getRecent3Boards(centerNo)
+      .then((data) => setBoards(data))
+      .catch((err) => console.error('최근 게시물 3개 불러오기 실패:', err));
+  }, [centerNo]);
+
+  const TYPE = {
+    NOTICE: '공지사항',
+    FAMILY_NOTICE: '가정통신문',
+    PHOTO: '사진게시판',
+    MEAL_PLAN: '식단표',
+  };
+
   const navigate = useNavigate();
   return (
     <>
-      {data.map((item) => {
-        const [year, month, day] = item.createDate.split('-');
+      {boards.map((item) => {
+        const [year, month, day] = item.create_date.slice(0, 10).split('-');
         return (
-          <Card key={item.board}>
+          <Card key={item.board_no}>
             <DateDiv>
               <DayDiv>{day}</DayDiv>
               <MonthDiv>
@@ -43,9 +36,9 @@ const RecentBoard = () => {
             </DateDiv>
             <ContentWrapper onClick={() => navigate('/familycommunity/list')}>
               <TitleDiv>
-                [{item.type}] {item.title}
+                [{TYPE[item.type]}] {item.title}
               </TitleDiv>
-              <ContentDiv>{item.content}</ContentDiv>
+              <ContentDiv>{item.content_text}</ContentDiv>
             </ContentWrapper>
           </Card>
         );
