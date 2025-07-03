@@ -30,4 +30,10 @@ public class ClassRoomController {
         return ResponseEntity.ok(classRoomService.findClassesByCenterNo(centerNo));
     }
 
+    //반별 출석률
+    @GetMapping("/main/attendance-rate/{centerNo}")
+    public ResponseEntity<List<ClassRoomDto.AttendanceRateResponse>> getAttendanceRate(@PathVariable int centerNo){
+        return ResponseEntity.ok(classRoomService.getAttendanceRate(centerNo));
+    }
+
 }

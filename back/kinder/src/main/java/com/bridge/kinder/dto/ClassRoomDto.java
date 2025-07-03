@@ -60,4 +60,26 @@ public class ClassRoomDto {
                     .build();
         }
     }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    //반 출석률 응답
+    public static class AttendanceRateResponse {
+        private int class_no;
+        private String class_name;
+        private int attendance_rate;
+        private String class_image;
+
+        public static AttendanceRateResponse toDto(ClassRoom classRoom, int attendanceRate) {
+            return AttendanceRateResponse.builder()
+                    .class_no(classRoom.getClassNo())
+                    .class_name(classRoom.getClassName())
+                    .attendance_rate(attendanceRate)
+                    .class_image(classRoom.getClassImage())
+                    .build();
+        }
+    }
 }

@@ -1,13 +1,18 @@
 package com.bridge.kinder.service;
 
 import com.bridge.kinder.dto.ClassRoomDto;
+import com.bridge.kinder.dto.ClassRoomDto.AttendanceRateResponse;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.entity.Member;
+import com.bridge.kinder.enums.CommonEnums;
+import com.bridge.kinder.enums.CommonEnums.ChildAttendanceStatus;
+import com.bridge.kinder.repository.AttendanceRepository;
 import com.bridge.kinder.repository.CenterRepository;
 import com.bridge.kinder.repository.ChildRepository;
 import com.bridge.kinder.repository.ClassRoomRepository;
 import com.bridge.kinder.repository.MemberRepository;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +33,7 @@ public class ClassRoomServiceImpl implements ClassRoomService {
     private final CenterRepository centerRepository;
     private final MemberRepository memberRepository;
     private final ChildRepository childRepository;
+    private final AttendanceRepository attendanceRepository;
     private final String UPLOAD_PATH = "C://test_upload/";
 
 
@@ -85,6 +91,30 @@ public class ClassRoomServiceImpl implements ClassRoomService {
                     return ClassRoomDto.Response.toDto(classRoom, teacher, childCount);
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AttendanceRateResponse> getAttendanceRate(int centerNo) {
+        //오늘 날짜
+        LocalDate today = LocalDate.now();
+
+        //반 목록
+        List<ClassRoom> classRooms = classRoomRepository.findByCenterNo(centerNo);
+
+        return classRooms.stream()
+                .map(classRoom -> {
+                    //반별 아동 수
+                    int childCount = childRepository.countChildByClassroom(classRoom.getClassNo());
+                    //출석 아동 수 -- 오늘 날짜, 반 번호, 출석 상태
+                    int presentChildCount = attendanceRepository.countPresentChild(classRoom.getClassNo(), today,
+                            ChildAttendanceStatus.PRESENT).map(Long::intValue).orElse(0);
+                    //출석률 계산
+                    int attendanceRate = childCount == 0 ?
+                            0 : (int) (((double)presentChildCount / childCount) * 100);
+
+                    return AttendanceRateResponse.toDto(classRoom, attendanceRate);
+                })
+                .toList();
     }
 }
 

@@ -59,6 +59,7 @@ export const API_ENDPOINTS = {
     BASE: '/api/classroom',
     CREATE: '/api/classroom/create',
     CLASSROOMLIST: (centerNo) => `/api/classroom/list/${centerNo}`,
+    GETRATE: (centerNo) => `/api/classroom/main/attendance-rate/${centerNo}`,
   },
   ATTENDANCE: {
     BASE: '/api/attendance',
