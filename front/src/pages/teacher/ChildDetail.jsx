@@ -245,7 +245,7 @@ const ChildDetail = () => {
                             <FooterTd1>약 이름</FooterTd1>
                             <FooterTd2>
                               {isEditing ? (
-                                <input
+                                <Input
                                   value={editHealth.medication_name || ''}
                                   onChange={(e) => handleInputChange('medication_name', e.target.value)}
                                 />
@@ -258,7 +258,7 @@ const ChildDetail = () => {
                             <FooterTd1>복용 용량</FooterTd1>
                             <FooterTd2>
                               {isEditing ? (
-                                <input
+                                <Input
                                   value={editHealth.medication_amount || ''}
                                   onChange={(e) => handleInputChange('medication_amount', e.target.value)}
                                 />
@@ -271,7 +271,7 @@ const ChildDetail = () => {
                             <FooterTd1>복용 시간</FooterTd1>
                             <FooterTd2>
                               {isEditing ? (
-                                <input
+                                <Input
                                   value={editHealth.medication_time || ''}
                                   onChange={(e) => handleInputChange('medication_time', e.target.value)}
                                 />
@@ -284,7 +284,7 @@ const ChildDetail = () => {
                             <FooterTd1>복용 기간</FooterTd1>
                             <FooterTd2>
                               {isEditing ? (
-                                <input
+                                <Input
                                   value={editHealth.medication_period || ''}
                                   onChange={(e) => handleInputChange('medication_period', e.target.value)}
                                 />
@@ -297,7 +297,7 @@ const ChildDetail = () => {
                             <FooterTd1>복용 목적</FooterTd1>
                             <FooterTd2>
                               {isEditing ? (
-                                <input
+                                <Input
                                   value={editHealth.medication_purpose || ''}
                                   onChange={(e) => handleInputChange('medication_purpose', e.target.value)}
                                 />
@@ -310,7 +310,7 @@ const ChildDetail = () => {
                             <FooterTd1>메모</FooterTd1>
                             <FooterTd2>
                               {isEditing ? (
-                                <input
+                                <Input
                                   value={editHealth.medication_memo || ''}
                                   onChange={(e) => handleInputChange('medication_memo', e.target.value)}
                                 />
@@ -331,7 +331,7 @@ const ChildDetail = () => {
                             <FooterTd1>알레르기</FooterTd1>
                             <FooterTd2>
                               {isEditing ? (
-                                <input
+                                <Input
                                   value={editHealth.allergy || ''}
                                   onChange={(e) => handleInputChange('allergy', e.target.value)}
                                 />
@@ -344,7 +344,7 @@ const ChildDetail = () => {
                             <FooterTd1>반응</FooterTd1>
                             <FooterTd2>
                               {isEditing ? (
-                                <input
+                                <Input
                                   value={editHealth.allergy_reaction || ''}
                                   onChange={(e) => handleInputChange('allergy_reaction', e.target.value)}
                                 />
@@ -357,7 +357,7 @@ const ChildDetail = () => {
                             <FooterTd1>심각도</FooterTd1>
                             <FooterTd2>
                               {isEditing ? (
-                                <input
+                                <Input
                                   value={editHealth.allergy_severity || ''}
                                   onChange={(e) => handleInputChange('allergy_severity', e.target.value)}
                                 />
@@ -370,7 +370,7 @@ const ChildDetail = () => {
                             <FooterTd1>내용</FooterTd1>
                             <FooterTd2>
                               {isEditing ? (
-                                <input
+                                <Input
                                   value={editHealth.vaccination || ''}
                                   onChange={(e) => handleInputChange('vaccination', e.target.value)}
                                 />
@@ -383,7 +383,7 @@ const ChildDetail = () => {
                             <FooterTd1>메모</FooterTd1>
                             <FooterTd2>
                               {isEditing ? (
-                                <input
+                                <Input
                                   value={editHealth.allergy_memo || ''}
                                   onChange={(e) => handleInputChange('allergy_memo', e.target.value)}
                                 />
@@ -637,13 +637,13 @@ const FooterTable = styled.table`
 `;
 
 const FooterTd1 = styled.td`
-  width: 40%;
+  width: 35%;
   text-align: left;
   font-weight: ${({ theme }) => theme.fontWeights.bold};
 `;
 
 const FooterTd2 = styled.td`
-  width: 50%;
+  width: 65%;
   text-align: left;
 `;
 
@@ -863,4 +863,8 @@ const FooterTitle = styled.div`
   font-size: 18px;
   font-weight: bold;
   padding: ${({ theme }) => theme.spacing[4]} 0;
+`;
+
+const Input = styled.input`
+  padding-left: 10px;
 `;

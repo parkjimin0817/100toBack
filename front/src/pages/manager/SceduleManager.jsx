@@ -7,7 +7,7 @@ import useLoginStore from '../../store/loginStore';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 import { useScheduleService } from '../../api/schedule';
-
+import { toast } from 'react-toastify';
 import ScheduleModal from '../../components/ScheduleModal';
 
 dayjs.locale('ko');
@@ -36,7 +36,7 @@ const ScheduleTeacher = () => {
       setSelectedSchedules(matchedSchedules);
       setSelectedDate(dayjs(targetDate).format('YYYY-MM-DD (ddd)'));
     } catch (error) {
-      console.error('스케줄 데이터 로딩 실패:', error.message);
+      toast.error('스케줄 데이터 로딩 실패:', error.message);
     }
   };
 
@@ -66,8 +66,9 @@ const ScheduleTeacher = () => {
       try {
         await useScheduleService.deleteSchedule(scheduleNo);
         fetchData(selectedDate.split(' ')[0]);
+        toast.success('일정이 정상적으로 삭제되었습니다.');
       } catch (error) {
-        console.error('일정 삭제 실패:', error.message);
+        toast.error('일정 삭제 실패:', error.message);
       }
     }
   };
