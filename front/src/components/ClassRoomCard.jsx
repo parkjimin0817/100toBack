@@ -16,7 +16,7 @@ import { toast } from 'react-toastify';
  * address 부분은 페이지마다 다르게 들어가야합니다.
  */
 
-const ClassRoomCard = ({ classrooms, address }) => {
+const ClassRoomCard = ({ classrooms, address, isDisabled }) => {
   return (
     <>
       <FlexContainer>
@@ -30,6 +30,7 @@ const ClassRoomCard = ({ classrooms, address }) => {
             teacher={classroom.member_name}
             classColor={classroom.color}
             address={`${address}/${classroom.class_no}`}
+            isDisabled={isDisabled}
           />
         ))}
       </FlexContainer>
