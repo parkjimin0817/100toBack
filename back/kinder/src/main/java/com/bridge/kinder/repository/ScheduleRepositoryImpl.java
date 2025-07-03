@@ -62,6 +62,19 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
+    public List<Schedule> findCenterTodaySchedule(int centerNo, LocalDate today) {
+        return em.createQuery(
+                        "SELECT s FROM Schedule s " +
+                                "WHERE s.center.centerNo = :centerNo " +
+                                "AND s.type = : type " +
+                                "AND s.scheduleDate = :today",  Schedule.class)
+                .setParameter("centerNo", centerNo)
+                .setParameter("type", RollType.CENTER)
+                .setParameter("today", today)
+                .getResultList();
+    }
+
+    @Override
     public Schedule findScheduleByScheduleNo(int scheduleNo) {
         return em.find(Schedule.class, scheduleNo);
     }

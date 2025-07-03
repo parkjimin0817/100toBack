@@ -61,8 +61,6 @@ const TeacherAttendance = () => {
     return date === selected;
   });
 
-  console.log('궁금하다:', selectedRecord);
-
   return (
     <Wrapper>
       <ContentHeader Title={'교사 근태 관리'} Color={'blue'} ButtonProps={[backButton]} />

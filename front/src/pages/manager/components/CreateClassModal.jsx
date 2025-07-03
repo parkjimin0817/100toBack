@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { classService } from '../../../api/class';
 import { toast } from 'react-toastify';
 import { memberService } from '../../../api/member';
+import theme from '../../../styles/theme';
 
 const CreateClassModal = ({ onClose, centerNo, onSuccess }) => {
   const [teachers, setTeachers] = useState([]);
@@ -108,7 +109,39 @@ const CreateClassModal = ({ onClose, centerNo, onSuccess }) => {
           </InputRow>
           <InputRow>
             <Label>반 색상 :</Label>
-            <Input type="color" value={classColor} onChange={(e) => setClassColor(e.target.value)} />
+            {/*<Input type="color" value={classColor} onChange={(e) => setClassColor(e.target.value)} />*/}
+            <ColorRow>
+              <Color
+                $color={theme.colors.yellow}
+                onClick={() => setClassColor(theme.colors.yellow)}
+                $selected={classColor === theme.colors.yellow}
+              ></Color>
+              <Color
+                $color={theme.colors.orange}
+                onClick={() => setClassColor(theme.colors.orange)}
+                $selected={classColor === theme.colors.orange}
+              ></Color>
+              <Color
+                $color={theme.colors.green}
+                onClick={() => setClassColor(theme.colors.green)}
+                $selected={classColor === theme.colors.green}
+              ></Color>
+              <Color
+                $color={theme.colors.blue}
+                onClick={() => setClassColor(theme.colors.blue)}
+                $selected={classColor === theme.colors.blue}
+              ></Color>
+              <Color
+                $color={theme.colors.purple}
+                onClick={() => setClassColor(theme.colors.purple)}
+                $selected={classColor === theme.colors.purple}
+              ></Color>
+              <Color
+                $color={theme.colors.gray[500]}
+                onClick={() => setClassColor(theme.colors.gray[500])}
+                $selected={classColor === theme.colors.gray[500]}
+              ></Color>
+            </ColorRow>
           </InputRow>
         </Content>
         <ButtonGroup>
@@ -272,4 +305,22 @@ const PreviewImage = styled.img`
   object-fit: cover;
   border: 1px solid ${({ theme }) => theme.colors.gray[300]};
   margin-right: 10px;
+`;
+
+const ColorRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 3px;
+  width: 200px;
+`;
+const Color = styled.div`
+  width: 30px;
+  height: 30px;
+  background-color: ${({ $color }) => $color};
+  border-radius: ${({ theme }) => theme.borderRadius.base};
+  border: ${({ $selected, theme }) =>
+    $selected ? `3px solid ${theme.colors.black}` : `2px solid ${theme.colors.gray[300]}`};
+  cursor: pointer;
+  transition: 0.2s;
 `;
