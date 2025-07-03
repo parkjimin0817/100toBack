@@ -14,7 +14,7 @@ import useLoginStore from '../../store/loginStore';
 import { ImInfo } from 'react-icons/im';
 import { TiDelete } from 'react-icons/ti';
 import { set } from 'react-hook-form';
-import { BarLoader } from 'react-spinners';
+import { BounceLoader } from 'react-spinners';
 
 const DailyScheduleDetail = () => {
   const { member } = useLoginStore();
@@ -31,6 +31,7 @@ const DailyScheduleDetail = () => {
   //년도, 월, 일, 요일(숫자), 요일(글자)
   const [arWeek, setArWeek] = useState([]);
 
+  //상태를 보여주는 글
   const [status, setStatus] = useState('');
 
   const fetchdata = async (sch) => {
@@ -39,12 +40,7 @@ const DailyScheduleDetail = () => {
       const selectedDate = sch?.allDate ?? dayjs().format('YYYY-MM-DD');
       setThisday(selectedDate);
 
-      const schedule = await useScheduleService.dailyScheduleSelect(
-        member.centerNo,
-        member.memberNo,
-        class_no,
-        selectedDate
-      );
+      const schedule = await useScheduleService.dailyScheduleSelect(member.centerNo, class_no, selectedDate);
 
       if (!schedule) {
         throw new Error('일정표 없음');
@@ -229,12 +225,12 @@ const DailyScheduleDetail = () => {
           <Form>
             <HintArea>
               <ImInfo />
-              하루 일정를 확인하고 등록하실 수 있습니다.
+              일정을 확인하고 등록해보세요!
             </HintArea>
             <InnerBorder $writeAuthority={writeAuthority}>
               {inputs.length === 0 ? (
                 <NotingAnyMore>
-                  <BarLoader />
+                  <BounceLoader color="#8772D3" />
                   <h1>일정이 없습니다.</h1>
                 </NotingAnyMore>
               ) : (

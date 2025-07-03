@@ -180,7 +180,6 @@ public class ScheduleDto {
     public static class DailyScheduleUpdateDto {
         private int schedule_no;
         private int center_no;
-        private int member_no;
         private int class_no;
         private LocalDate schedule_date;
 

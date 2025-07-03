@@ -20,8 +20,8 @@ export const API_ENDPOINTS = {
     EDIT: `/api/schedule/edit`,
     DELETE: `/api/schedule/delete`,
     DAILYSCHEDULE: `/api/schedule/dailyCreate`,
-    DAILYSCHEDULELIST: (centerNo, memberNo, classNo, scheduleDate) =>
-      `/api/schedule/dailyList?centerNo=${centerNo}&memberNo=${memberNo}&classNo=${classNo}&scheduleDate=${scheduleDate}`,
+    DAILYSCHEDULELIST: (centerNo, classNo, scheduleDate) =>
+      `/api/schedule/dailyList?centerNo=${centerNo}&classNo=${classNo}&scheduleDate=${scheduleDate}`,
     UPDATEDAILY: `/api/schedule/dailyUpdate`,
     DELETEDAILY: (scheduleNo) => `/api/schedule/dailyDelete/${scheduleNo}`,
   },
@@ -93,6 +93,7 @@ export const API_ENDPOINTS = {
     GETALL: '/api/childs/all',
     GET: '/api/childs/get',
     PARENTCHILDLIST: (memberNo) => `/api/childs/parentChild?memberNo=${memberNo}`,
+    PARENTPHONENUMBER: (centerNo) => `/api/childs/phoneNumber/${centerNo}`,
   },
   BOARDS: {
     BASE: '/api/boards',

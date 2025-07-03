@@ -64,31 +64,27 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
-    public List<Schedule> findDailyList(int centerNo, int memberNo, int classNo, LocalDate scheduleDate) {
+    public List<Schedule> findDailyList(int centerNo, int classNo, LocalDate scheduleDate) {
         return em.createQuery("select s from Schedule s "
                         + "where s.center.centerNo = :centerNo"
-                        + " and s.member.memberNo = :memberNo"
                         + " and s.classRoom.classNo = :classNo"
                         + " and s.scheduleDate = :scheduleDate", Schedule.class)
                 .setParameter("centerNo", centerNo)
-                .setParameter("memberNo", memberNo)
                 .setParameter("classNo",classNo)
                 .setParameter("scheduleDate", scheduleDate)
                 .getResultList();
     }
 
     @Override
-    public List<Schedule> findDailySchedule(int centerNo, int memberNo, int classNo, int scheduleNo,
+    public List<Schedule> findDailySchedule(int centerNo, int classNo, int scheduleNo,
                                             LocalDate scheduleDate) {
 
         return em.createQuery("select s from Schedule s "
                         + "where s.center.centerNo = :centerNo"
-                        + " and s.member.memberNo = :memberNo"
                         + " and s.classRoom.classNo = :classNo"
                         + " and s.scheduleDate = :scheduleDate"
                         + " and s.scheduleNo = :scheduleNo", Schedule.class)
                 .setParameter("centerNo", centerNo)
-                .setParameter("memberNo", memberNo)
                 .setParameter("classNo",classNo)
                 .setParameter("scheduleDate", scheduleDate)
                 .setParameter("scheduleNo", scheduleNo)

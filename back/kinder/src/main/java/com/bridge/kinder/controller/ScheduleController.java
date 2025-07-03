@@ -64,8 +64,8 @@ public class ScheduleController {
 
     //반 일과표 조회
     @GetMapping("/dailyList")
-    public ResponseEntity<List<ScheduleDto.DailyResponse>> dailyList(@RequestParam int centerNo, int memberNo,int classNo, LocalDate scheduleDate) {
-        return ResponseEntity.ok(scheduleService.dailyList(centerNo,memberNo,classNo,scheduleDate));
+    public ResponseEntity<List<ScheduleDto.DailyResponse>> dailyList(@RequestParam int centerNo, int classNo, LocalDate scheduleDate) {
+        return ResponseEntity.ok(scheduleService.dailyList(centerNo,classNo,scheduleDate));
     }
 
     //반 일과표 등록(수정)
