@@ -29,10 +29,10 @@ public interface ScheduleRepository {
     //반 일과표 생성
     void saveDailySchedule(List<Schedule> schedules);
 
-    //반 일과표 조회
-    List<Schedule> findDailyList(int centerNo, int memberNo, int classNo, LocalDate scheduleDate);
+    //시설 번호, 반 번호, 해당 날짜 반 일과표 조회
+    List<Schedule> findDailyList(int centerNo, int classNo, LocalDate scheduleDate);
 
     //반 일과표 조회
-    List<Schedule> findDailySchedule(int centerNo, int memberNo, int classNo, int scheduleNo, LocalDate scheduleDate);
+    List<Schedule> findDailySchedule(int centerNo, int classNo, int scheduleNo, LocalDate scheduleDate);
 
 }

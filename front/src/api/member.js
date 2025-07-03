@@ -221,6 +221,7 @@ export const memberService = {
       throw new Error('서버 통신 불량: ' + error.message);
     }
   },
+
   //교사 개별 상세 불러오기 (memberNo)
   getTeacherDetail: async (memberNo) => {
     try {

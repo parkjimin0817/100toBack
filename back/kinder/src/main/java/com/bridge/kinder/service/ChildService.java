@@ -51,4 +51,6 @@ public interface ChildService {
     List<ChildDto.healthLog> healthLogByParent(int memberNo, LocalDate date);
     //부모 번호로 아동들의 생활 로그 체크리스트 불러오기
     List<ChildDto.activityLog> activityLogByParent(int memberNo, LocalDate date);
+    //학부모 전화번호 조회
+    List<ChildDto.ParentPhoneNumberResponse> findByCenterNoPhoneNumber(int centerNo);
 }
