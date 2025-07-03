@@ -91,7 +91,10 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
 
     @Override
     public Optional<Long> countPresentChild(int classNo, LocalDate today, ChildAttendanceStatus status) {
-        String jpql = "SELECT COUNT (ca) FROM ChildAttendance ca WHERE ca.classRoom.classNo = :classNo AND ca.createDate = :today AND ca.status = :status";
+        String jpql = "SELECT COUNT (ca) FROM ChildAttendance ca " +
+                " WHERE ca.classRoom.classNo = :classNo " +
+                "AND ca.createDate = :today " +
+                " AND ca.status = :status";
         Long count = em.createQuery(jpql, Long.class)
                 .setParameter("classNo", classNo)
                 .setParameter("today", today)

@@ -94,7 +94,7 @@ const TeacherMainPage = () => {
                   <TeacherMainAttendance centerNo={centerNo} />
                 </AttendanceBox>
                 <AttendanceBox>
-                  <TeacherMainChild />
+                  <TeacherMainChild centerNo={centerNo} />
                 </AttendanceBox>
               </CareContainer>
             </>

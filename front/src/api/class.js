@@ -44,4 +44,12 @@ export const classService = {
       throw new Error('서버 통신 불량' + error.message);
     }
   },
+  getHealthLogProgress: async (centerNo) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.CLASSROOM.GETHEALTHPROGRESS(centerNo));
+      return data;
+    } catch (error) {
+      throw new Error('서버 통신 불량' + error.message);
+    }
+  },
 };

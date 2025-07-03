@@ -82,4 +82,26 @@ public class ClassRoomDto {
                     .build();
         }
     }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    //반 별 건강 로그 완료 현황 (메인)
+    public static class HealthLogProgressResponse{
+        private int class_no;
+        private String class_name;
+        private int completed;
+        private int child_count;
+
+        public static HealthLogProgressResponse toDto(ClassRoom classRoom, int completed, int childCount) {
+            return HealthLogProgressResponse.builder()
+                    .class_no(classRoom.getClassNo())
+                    .class_name(classRoom.getClassName())
+                    .completed(completed)
+                    .child_count(childCount)
+                    .build();
+        }
+    }
 }

@@ -11,6 +11,7 @@ import com.bridge.kinder.entity.ChildHealthLog;
 import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.enums.CommonEnums.ChildAttendanceStatus;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,5 +65,8 @@ public interface ChildRepository {
     List<ChildHealthLog> healthLogByParent(int memberNo, LocalDate date);
     //부모 멤버 번호로 본인 아동들의 생활 로그 데이터 가져오기
     List<ChildActivityLog> activityLogByParent(int memberNo, LocalDate date);
+
+    //오늘 건강 로그 현황 세기
+    Optional<Long> countTodayHealthLog(int classNo, LocalDateTime today);
 
 }

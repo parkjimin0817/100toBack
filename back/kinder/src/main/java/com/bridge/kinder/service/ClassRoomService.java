@@ -13,4 +13,6 @@ public interface ClassRoomService {
     List<ClassRoomDto.Response> findClassesByCenterNo(int centerNo);
     //메인 - 반 별 출석률
     List<ClassRoomDto.AttendanceRateResponse> getAttendanceRate(int centerNo);
+    //메인 - 건강 로그 현황
+    List<ClassRoomDto.HealthLogProgressResponse> getHealthLogProgress(int centerNo);
 }

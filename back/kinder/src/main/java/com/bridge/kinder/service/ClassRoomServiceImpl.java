@@ -2,6 +2,7 @@ package com.bridge.kinder.service;
 
 import com.bridge.kinder.dto.ClassRoomDto;
 import com.bridge.kinder.dto.ClassRoomDto.AttendanceRateResponse;
+import com.bridge.kinder.dto.ClassRoomDto.HealthLogProgressResponse;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.entity.Member;
@@ -13,6 +14,7 @@ import com.bridge.kinder.repository.ChildRepository;
 import com.bridge.kinder.repository.ClassRoomRepository;
 import com.bridge.kinder.repository.MemberRepository;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -114,6 +116,26 @@ public class ClassRoomServiceImpl implements ClassRoomService {
 
                     return AttendanceRateResponse.toDto(classRoom, attendanceRate);
                 })
+                .toList();
+    }
+
+    @Override
+    public List<HealthLogProgressResponse> getHealthLogProgress(int centerNo) {
+        //오늘 날짜
+        LocalDateTime today = LocalDate.now().atStartOfDay();
+
+        //반 목록
+        List<ClassRoom> classRooms = classRoomRepository.findByCenterNo(centerNo);
+
+        return classRooms.stream()
+                .map( classRoom -> {
+                    //반 별 아동 수
+                    int childCount = childRepository.countChildByClassroom(classRoom.getClassNo());
+                    //health-log 오늘 날짜 log 갯수
+                    int completed = childRepository.countTodayHealthLog(classRoom.getClassNo(), today).map(Long::intValue).orElse(0);
+
+                    return HealthLogProgressResponse.toDto(classRoom, completed, childCount);
+                        })
                 .toList();
     }
 }

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import People from '../../../assets/img/people.png';
+import { classService } from '../../../api/class';
 
-const TeacherMainChild = () => {
+const TeacherMainChild = ({ centerNo }) => {
   const childdata = [
     { id: 1, className: '햇님반', completed: 10, total: 20 },
     { id: 2, className: '햇님반', completed: 12, total: 20 },
@@ -10,21 +11,32 @@ const TeacherMainChild = () => {
     { id: 4, className: '햇님반', completed: 15, total: 20 },
   ];
 
+  const [progress, setProgress] = useState([]);
+
+  useEffect(() => {
+    if (!centerNo) return;
+
+    classService
+      .getHealthLogProgress(centerNo)
+      .then((data) => setProgress(data))
+      .catch((err) => console.error('건강 로그 현황 불러오기 실패 :', err));
+  }, [centerNo]);
+
   return (
     <>
       <ChildHeaderRow>
         <ChildSectionTitle>아동 건강관리</ChildSectionTitle>
       </ChildHeaderRow>
       <ContentLine>
-        {childdata.map((item, index) => (
-          <Content key={item.id}>
-            <ContentHeader>{item.className} 건강체크</ContentHeader>
+        {progress.map((item) => (
+          <Content key={item.class_no}>
+            <ContentHeader>{item.class_name}반 건강체크</ContentHeader>
             <ContentProgress>
               <ProgressHeader>건강 체크 완료</ProgressHeader>
               <ProgressBody>
                 <PeopleIcon src={People} alt="사람 사진"></PeopleIcon>
                 <Progress>
-                  {item.completed}/{item.total}
+                  {item.completed}/{item.child_count}
                 </Progress>
               </ProgressBody>
             </ContentProgress>

@@ -411,4 +411,18 @@ public class ChildRepositoryImpl implements ChildRepository {
                 .getResultList();
     }
 
+    @Override
+    public Optional<Long> countTodayHealthLog(int classNo, LocalDateTime today) {
+        String jpql = "SELECT COUNT (h) FROM ChildHealthLog h " +
+                        "JOIN h.child c " +
+                        "WHERE c.classRoom.classNo = :classNo " +
+                        "AND h.createDate = :today";
+        Long count = em.createQuery(jpql, Long.class)
+                .setParameter("classNo", classNo)
+                .setParameter("today", today)
+                .getSingleResult();
+        return Optional.ofNullable(count);
+    }
+
+
 }
