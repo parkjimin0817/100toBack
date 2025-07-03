@@ -36,6 +36,7 @@ export const API_ENDPOINTS = {
     TEACHERLIST: (centerNo) => `/api/members/teacher/select/${centerNo}`,
     TEACHER_DETAIL_LIST: (centerNo) => `/api/members/teacher/list/${centerNo}`,
     TEACHER_DETAIL: (memberNo) => `/api/members/teacher/${memberNo}`,
+    TEACHER_INTRO_LIST: (centerNo) => `/api/members/introList?centerNo=${centerNo}`,
   },
   APPLOVALLIST: {
     BASE: 'api/approval',

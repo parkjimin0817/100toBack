@@ -73,7 +73,7 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData, type, onSuc
       toast.error('시작 시간과 종료 시간을 입력해주세요.');
       return;
     }
-    if (startTime && endTime && startTime >= endTime) {
+    if (startTime > endTime) {
       toast.error('시작 시간은 종료 시간보다 이전이어야 합니다.');
       return;
     }

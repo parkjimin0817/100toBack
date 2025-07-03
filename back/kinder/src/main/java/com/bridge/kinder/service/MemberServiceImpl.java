@@ -7,6 +7,7 @@ import com.bridge.kinder.dto.MemberDto;
 import com.bridge.kinder.dto.MemberDto.PhoneAccess;
 import com.bridge.kinder.dto.MemberDto.PwdUpdate;
 import com.bridge.kinder.dto.MemberDto.DetailMemberDto;
+import com.bridge.kinder.dto.MemberDto.TeacherIntroList;
 import com.bridge.kinder.dto.MemberDto.modalResponse;
 import com.bridge.kinder.dto.MemberDto.teacherListResponse;
 import com.bridge.kinder.dto.MemberDto.updateClass;
@@ -355,5 +356,17 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.updateClass(member_no,class_no)
                 .orElseThrow(() -> new EntityNotFoundException("정상적으로 수정되지 않았습니다."));
         return MemberDto.updateClass.toDto(member);
+    }
+
+    //센터 번호로 교사 소개 리스트 가져오기
+    @Override
+    public List<TeacherIntroList> teacherIntroList(int centerNo) {
+        Center center = centerRepository.findById(centerNo)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
+
+        return memberRepository.findTeacherByCenterNo(center.getCenterNo())
+                .stream()
+                .map(TeacherIntroList::toDto)
+                .collect(Collectors.toList());
     }
 }

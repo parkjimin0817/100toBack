@@ -54,6 +54,7 @@ const MyHealthDetail = () => {
         Title="나의 건강 데이터"
         Color="yellow"
         ButtonProps={[
+          { Title: '뒤로가기', func: () => navigate(-1) },
           { Title: '수정하기', func: handleEdit },
           { Title: '삭제하기', func: handleDelete },
         ]}

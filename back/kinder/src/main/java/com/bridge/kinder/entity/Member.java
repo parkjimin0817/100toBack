@@ -159,4 +159,8 @@ public class Member {// 멤버
     public void changeMemberPhone(String newPhone) {
         this.memberPhone = newPhone;
     }
+
+    public void changeAddress(String newAddress) {
+        this.address = newAddress;
+    }
 }

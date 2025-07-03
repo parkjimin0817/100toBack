@@ -2,20 +2,21 @@ import React from 'react';
 import ContentHeader from '../../components/Common/ContentHeader';
 import styled from 'styled-components';
 import MyHealthList from './components/MyHealthList';
-import { useNavigate } from 'react-router-dom';
-import useLoginStore from '../../store/loginStore';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const MyHealth = () => {
-  const { member } = useLoginStore();
   const navigate = useNavigate();
+  const location = useLocation();
+  const teacherData = location.state;
+
   return (
     <Wrapper>
       <ContentHeader
-        Title="나의 건강 데이터"
+        Title={teacherData?.teacherName ? `${teacherData.teacherName}의 건강 데이터` : '나의 건강 데이터'}
         Color="yellow"
         ButtonProps={[{ Title: '작성하기', func: () => navigate('/teacherhealth/write') }]}
       />
-      <MyHealthList memberNo={member.memberNo} />
+      <MyHealthList />
     </Wrapper>
   );
 };
