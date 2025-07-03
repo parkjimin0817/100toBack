@@ -35,6 +35,17 @@ export const useScheduleService = {
       throw new Error(error, '서버 통신 불량');
     }
   },
+  // 오늘 스케줄 목록 조회
+  getTodayScheduleList: async (centerNo, memberNo, today) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.SCHEDULES.TODAYLISTS, {
+        params: { centerNo, memberNo, today },
+      });
+      return data;
+    } catch (error) {
+      throw new Error(error, '서버 통신 불량');
+    }
+  },
   // 스케줄 수정
   updateSchedule: async (mergedData) => {
     try {

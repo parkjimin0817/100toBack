@@ -77,17 +77,9 @@ public class Attendance {// 근태
     }
 
     public void updateFromDto(AttendanceDto.UpdateTeacherAttendance updateDto) {
-        if(updateDto.getStatus() != null) {
             this.status = updateDto.getStatus();
-        }
-
-        if(updateDto.getInTime() != null) {
             this.inTime = updateDto.getInTime();
-        }
-
-        if(updateDto.getOutTime() != null) {
             this.outTime = updateDto.getOutTime();
-        }
     }
 
 }

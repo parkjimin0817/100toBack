@@ -49,13 +49,13 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
     //달별 출근 기록
     @Override
     public List<Attendance> findByMemberNoAndDateRange(int memberNo, int centerNo, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        String jpql = "SELECT a FROM Attendance a WHERE a.member.memberNo =:memberNo AND a.center.centerNo =: centerNo AND (a.inTime BETWEEN :start AND :end)";
+        String jpql = "SELECT a FROM Attendance a WHERE a.member.memberNo =:memberNo AND a.center.centerNo =: centerNo  AND a.attendanceDate BETWEEN :start AND :end";
 
         return em.createQuery(jpql, Attendance.class)
                 .setParameter("memberNo", memberNo)
                 .setParameter("centerNo", centerNo)
-                .setParameter("start", startDateTime)
-                .setParameter("end", endDateTime)
+                .setParameter("start", startDateTime.toLocalDate())
+                .setParameter("end", endDateTime.toLocalDate())
                 .getResultList();
     }
 
