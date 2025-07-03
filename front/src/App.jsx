@@ -1,48 +1,36 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/common/LoginPage';
-
 import { ThemeProvider } from 'styled-components';
 import theme from './styles/theme';
 import GlobalStyle from './styles/GlobalStyle';
 import Layout from './components/Common/Layout';
 import Home from './pages/Home';
 import SearchId from './pages/common/SearchId';
-import SeachIdSuccss from './pages/common/SeachIdSuccss';
-
 import UserTypeSelect from './pages/common/signup/UserTypeSelect';
 import TermsAgreement from './pages/common/signup/TermsAgreement';
 import SignUpBasicInfo from './pages/common/signup/SignUpBasicInfo';
 import ChildList from '././pages/teacher/ChildList';
-import SearchFormNav from './components/Common/SearchFormNav';
 import SearchPassword from './pages/common/SearchPassword';
 import AuthenticationUser from './pages/common/AuthenticationUser';
 import ChangePassword from './pages/common/ChangePassword';
-
 import SignUpWorkSpaceInfo from './pages/common/signup/SignUpWorkSpaceInfo';
 import SignUpComplete from './pages/common/signup/SignUpComplete';
-
 import ApprovalList from './pages/manager/ApprovalList';
 import ApprovalListAdmin from './pages/admin/ApprovalListAdmin';
 import VacationList from './pages/manager/VacationList';
-
 import SignUpChildInfo from './pages/common/signup/SignUpChildInfo';
 import SignUpCenterInfo from './pages/common/signup/SignUpCenterInfo';
 import MyVacation from './pages/teacher/MyVacation';
 import ChildHealthCheck from './pages/teacher/ChildHealthCheck';
-
 import SeachIdSuccess from './pages/common/SeachIdSuccss';
 import AttendanceClassList from './pages/teacher/AttendanceClassList';
-
 import ClassPlacement from './pages/manager/ClassPlacement';
 import DailySchedule from './pages/teacher/DailySchedule';
 import DailyScheduleDetail from './pages/teacher/DailyScheduleDetail';
 import { ToastContainer } from 'react-toastify';
-
 import ChildDetail from './pages/teacher/ChildDetail';
-
 import FamilyNoticePage from './pages/teacher/FamilyNoticePage';
-import ManagerMyPage from './pages/manager/ManagerMyPage';
 import BoardWritePage from './pages/BoardWritePage';
 import NoticePage from './pages/NoticePage';
 import NotePage from './pages/NotePage';
