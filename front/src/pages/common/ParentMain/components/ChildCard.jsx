@@ -1,25 +1,30 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { childInfo } from '../../../../api/childInfo';
+import boy2 from '../../../../assets/boy2.png';
 
 const ChildCard = ({ data }) => {
   const navigate = useNavigate();
   return (
     <>
-      {data.map((item, index) => (
-        <Card key={index} onClick={() => navigate('/child/detail?id=1')}>
-          <ProfileDiv>
-            <NameDiv> 씩씩한 {item.name} </NameDiv>
-            <AgeDiv>
-              ({item.age}세/ {item.gender})
-            </AgeDiv>
-            <BirthDiv> {item.birthdate} </BirthDiv>
-          </ProfileDiv>
-          <ImgDiv>
-            <Img src={item.imgurl} />
-          </ImgDiv>
-        </Card>
-      ))}
+      {data.map((item) => {
+        const { age, gender, birthday } = childInfo(item.child_resident_no);
+        return (
+          <Card key={item.child_no} onClick={() => navigate('/child/detail?id=1')}>
+            <ProfileDiv>
+              <NameDiv> 씩씩한 {item.child_name} </NameDiv>
+              <AgeDiv>
+                ({age}세/ {gender})
+              </AgeDiv>
+              <BirthDiv> {birthday} </BirthDiv>
+            </ProfileDiv>
+            <ImgDiv>
+              <Img src={boy2} />
+            </ImgDiv>
+          </Card>
+        );
+      })}
     </>
   );
 };
