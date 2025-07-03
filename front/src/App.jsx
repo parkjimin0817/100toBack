@@ -136,6 +136,7 @@ function App() {
              * 10. 시설장 유치원 일정 페이지
              *
              *  */}
+            <Route path="/manager/main" element={<TeacherMainPage />} />
             <Route path="/manager/mypage" element={<TeacherMyPage />} />
             <Route path="/manager/classplacement" element={<ClassPlacement />} />
             <Route path="/manager/teacherlist" element={<TeacherList />} />

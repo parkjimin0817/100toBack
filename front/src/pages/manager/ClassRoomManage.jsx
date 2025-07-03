@@ -43,7 +43,7 @@ const ClassRoomManage = () => {
           <ImInfo />
           확인하실 반을 선택해주세요.
         </Hint>
-        <ClassRoomCard classrooms={classrooms} address={'/childattendance'} />
+        <ClassRoomCard classrooms={classrooms} isDisabled={true} />
       </Div>
       {isModalOpen && (
         <CreateClassModal

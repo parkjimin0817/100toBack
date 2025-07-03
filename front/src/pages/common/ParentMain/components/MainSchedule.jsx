@@ -111,6 +111,8 @@ const getWeek = (today) => {
 const Wrapper = styled.div`
   width: 100%;
   padding: ${({ theme }) => theme.spacing[6]};
+  height: 480px;
+  position: relative;
 `;
 
 const DaysRow = styled.div`
@@ -209,6 +211,10 @@ const Button = styled.button`
   background-color: ${({ theme }) => theme.colors.orange};
   padding: ${({ theme }) => theme.spacing[1]};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
 
   :hover {
     cursor: pointer;
