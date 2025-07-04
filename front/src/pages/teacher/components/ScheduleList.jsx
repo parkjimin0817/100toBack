@@ -5,7 +5,7 @@ import { TbEdit } from 'react-icons/tb';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import useLoginStore from '../../../store/loginStore';
 
-const ScheduleList = ({ schedules, emptyMessage = '일정이 없습니다.', onEditClick, onDeleteClick }) => {
+const ScheduleList = ({ schedules, emptyMessage = '일정이 없습니다.', onEditClick, onDeleteClick, onShowClick }) => {
   const { member } = useLoginStore();
   if (!schedules || schedules.length === 0) {
     return <Message>{emptyMessage}</Message>;
@@ -14,7 +14,7 @@ const ScheduleList = ({ schedules, emptyMessage = '일정이 없습니다.', onE
   return (
     <>
       {schedules.map((item) => (
-        <Box key={item.schedule_no}>
+        <Box key={item.schedule_no} onClick={() => onShowClick?.(item)}>
           <BoxLeft>
             <BoxTime>
               {item.start_time?.substring(0, 5)} ~ {item.end_time?.substring(0, 5)}
@@ -25,10 +25,20 @@ const ScheduleList = ({ schedules, emptyMessage = '일정이 없습니다.', onE
             {item.member_no === member.memberNo && (
               <>
                 <BoxButton>
-                  <EditButton onClick={() => onEditClick(item)} />
+                  <EditButton
+                    onClick={(e) => {
+                      e.stopPropagation(); // Box의 onClick 실행 방지
+                      onEditClick(item);
+                    }}
+                  />
                 </BoxButton>
                 <BoxButton>
-                  <DeleteButton onClick={() => onDeleteClick(item.schedule_no)} />
+                  <DeleteButton
+                    onClick={(e) => {
+                      e.stopPropagation(); // Box의 onClick 실행 방지
+                      onDeleteClick(item.schedule_no);
+                    }}
+                  />
                 </BoxButton>
               </>
             )}
@@ -52,6 +62,10 @@ const Box = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius.lg};
 
   margin-bottom: ${({ theme }) => theme.spacing[2]};
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const BoxLeft = styled.div`
