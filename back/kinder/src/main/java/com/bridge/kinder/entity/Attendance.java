@@ -37,6 +37,7 @@ public class Attendance {// 근태
 
     @Column(name = "ATTENDANCE_DATE")
     private LocalDate attendanceDate;
+    //날짜
 
     @Column(name = "STATUS")
     @Enumerated(EnumType.STRING)
