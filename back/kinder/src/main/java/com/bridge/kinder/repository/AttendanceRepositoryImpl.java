@@ -49,7 +49,7 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
     //달별 출근 기록
     @Override
     public List<Attendance> findByMemberNoAndDateRange(int memberNo, int centerNo, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        String jpql = "SELECT a FROM Attendance a WHERE a.member.memberNo =:memberNo AND a.center.centerNo =: centerNo  AND a.attendanceDate BETWEEN :start AND :end";
+        String jpql = "SELECT a FROM Attendance a WHERE a.member.memberNo =:memberNo AND a.center.centerNo = :centerNo  AND a.attendanceDate BETWEEN :start AND :end";
 
         return em.createQuery(jpql, Attendance.class)
                 .setParameter("memberNo", memberNo)
@@ -87,5 +87,20 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
                 .setParameter("childNo",childNo)
                 .setParameter("createDate",createDate)
                 .getSingleResult());
+    }
+
+    @Override
+    public Optional<Long> countPresentChild(int classNo, LocalDate today, ChildAttendanceStatus status) {
+        String jpql = "SELECT COUNT (ca) FROM ChildAttendance ca " +
+                " WHERE ca.classRoom.classNo = :classNo " +
+                "AND ca.createDate = :today " +
+                " AND ca.status = :status";
+        Long count = em.createQuery(jpql, Long.class)
+                .setParameter("classNo", classNo)
+                .setParameter("today", today)
+                .setParameter("status", status)
+                .getSingleResult();
+        return Optional.ofNullable(count);
+
     }
 }

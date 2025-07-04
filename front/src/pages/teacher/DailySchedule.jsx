@@ -48,9 +48,9 @@ const DailySchedule = () => {
     <Content>
       <ContentHeader Title={'일과표'} Color={'purple'} />
       {loading ? (
-        <Div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px' }}>
+        <ErrorDiv>
           <BounceLoader color="#8772D3" />
-        </Div>
+        </ErrorDiv>
       ) : error ? (
         <ErrorDiv>
           <h1>{error}</h1>
@@ -64,9 +64,9 @@ const DailySchedule = () => {
         <Div>
           <Hint>
             <ImInfo />
-            해당 반을 선택하시면 수정하실 수 있습니다.
+            해당 반을 선택하시면 일과표가 나옵니다.
           </Hint>
-          <ClassRoomCard classrooms={classrooms} isDisabled={true} />
+          <ClassRoomCard classrooms={classrooms} address={'/dailyDetail'} />
         </Div>
       )}
     </Content>

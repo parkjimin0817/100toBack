@@ -49,9 +49,9 @@ const AttendanceClassList = () => {
     <Content>
       <ContentHeader Title={'아동 출결'} Color={'orange'} />
       {loading ? (
-        <Div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px' }}>
+        <ErrorDiv>
           <BounceLoader color="#F36B4D" />
-        </Div>
+        </ErrorDiv>
       ) : error ? (
         <ErrorDiv>
           <h1>{error}</h1>
@@ -65,9 +65,9 @@ const AttendanceClassList = () => {
         <Div>
           <Hint>
             <ImInfo />
-            해당 반을 선택하시면 수정하실 수 있습니다.
+            해당 반을 선택하시면 아동 출결 목록이 나옵니다.
           </Hint>
-          <ClassRoomCard classrooms={classrooms} isDisabled={true} />
+          <ClassRoomCard classrooms={classrooms} address={'/childattendance'} />
         </Div>
       )}
     </Content>

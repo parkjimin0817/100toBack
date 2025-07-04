@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,4 +56,11 @@ public class MemberHealthControllerLog {
         memberHealthService.deleteHealthLog(memberHealthLogNo);
         return ResponseEntity.ok().build();
     }
+
+    //지난주, 이번주 스트레스 평균
+    @GetMapping("/main/avg/{memberNo}")
+    public ResponseEntity<MemberHealthLogDto.HealthAvgResponse> getWeeklyAvgHealth(@PathVariable int memberNo) {
+        return ResponseEntity.ok(memberHealthService.getWeeklyAvg(memberNo));
+    }
+
 }

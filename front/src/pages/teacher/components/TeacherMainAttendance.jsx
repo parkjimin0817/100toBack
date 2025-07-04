@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { classService } from '../../../api/class';
 
-const TeacherMainAttendance = () => {
-  const classData = [
-    { className: '햇님반', rate: '90%', icon: '🙋' },
-    { className: '달님반', rate: '85%', icon: '🌙' },
-    { className: '별님반', rate: '92%', icon: '⭐' },
-    { className: '구름반', rate: '88%', icon: '☁️' },
-  ];
+const TeacherMainAttendance = ({ centerNo }) => {
+  const [rate, setRate] = useState([]);
+
+  useEffect(() => {
+    if (!centerNo) return;
+
+    classService
+      .getAttendanceRate(centerNo)
+      .then((data) => setRate(data))
+      .catch((err) => console.error('반 출석률 불러오기 실패', err));
+  }, [centerNo]);
 
   return (
     <AttendanceSection>
@@ -15,11 +20,11 @@ const TeacherMainAttendance = () => {
         <AttendanceSectionTitle>출결관리</AttendanceSectionTitle>
       </AttendanceHeaderRow>
       <AttendanceGrid>
-        {classData.map((item, index) => (
-          <MainAttendanceCard key={index}>
-            <MainAttendanceClass>{item.className} 출석률</MainAttendanceClass>
-            <MainAttendanceEmoji>{item.icon}</MainAttendanceEmoji>
-            <MainAttendanceRate>{item.rate}</MainAttendanceRate>
+        {rate.map((item) => (
+          <MainAttendanceCard key={item.class_no}>
+            <MainAttendanceClass>{item.class_name}반 출석률</MainAttendanceClass>
+            <MainAttendanceEmoji>{item.icon}🙋</MainAttendanceEmoji>
+            <MainAttendanceRate>{item.attendance_rate}%</MainAttendanceRate>
           </MainAttendanceCard>
         ))}
       </AttendanceGrid>
