@@ -13,6 +13,7 @@ import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.enums.CommonEnums;
 import com.bridge.kinder.enums.CommonEnums.AdmissionStatus;
+import com.bridge.kinder.enums.CommonEnums.ChildAttendanceStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDate;
@@ -409,4 +410,19 @@ public class ChildRepositoryImpl implements ChildRepository {
                 .setParameter("end", end)
                 .getResultList();
     }
+
+    @Override
+    public Optional<Long> countTodayHealthLog(int classNo, LocalDateTime today) {
+        String jpql = "SELECT COUNT (h) FROM ChildHealthLog h " +
+                        "JOIN h.child c " +
+                        "WHERE c.classRoom.classNo = :classNo " +
+                        "AND h.createDate = :today";
+        Long count = em.createQuery(jpql, Long.class)
+                .setParameter("classNo", classNo)
+                .setParameter("today", today)
+                .getSingleResult();
+        return Optional.ofNullable(count);
+    }
+
+
 }

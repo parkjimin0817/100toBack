@@ -288,7 +288,7 @@ public class BoardServiceImpl implements BoardService {
         Center center = centerRepository.findById(centerNo)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
 
-        List<BoardType> types = List.of(BoardType.NOTICE, BoardType.FAMILY_NOTICE, BoardType.PHOTO, BoardType.MEAL_PLAN);
+        List<BoardType> types = List.of(BoardType.NOTICE);
         List<Board> boards = boardRepository.getRecent3Boards(center.getCenterNo(), types);
 
         return boards.stream()
