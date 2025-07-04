@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { memberHealthLogService } from '../../../api/memberHealthLog';
 import useLoginStore from '../../../store/loginStore';
-import { useLocation } from 'react-router-dom';
 
 const MyHealthList = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [data, setData] = useState([]);
   const { member } = useLoginStore();
+  const [data, setData] = useState([]);
+
+  const targetMemberNo = location.state?.teacherNo || member.memberNo;
 
   const fetchData = async () => {
     try {
-      const result = await memberHealthLogService.getHealthLogList(member.memberNo);
+      const result = await memberHealthLogService.getHealthLogList(targetMemberNo);
       setData(result.reverse());
     } catch (error) {
       console.error('건강 기록 조회 실패:', error);
@@ -22,7 +23,7 @@ const MyHealthList = () => {
 
   useEffect(() => {
     fetchData();
-  }, [location.state]);
+  }, [targetMemberNo]);
 
   const handleClick = (healthLogNo) => {
     navigate(`/myhealth/${healthLogNo}`);
