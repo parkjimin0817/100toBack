@@ -38,7 +38,7 @@ public class Member {// 멤버
     private String memberId;
     //아이디
 
-    @Column(name = "MEMBER_PWD", length = 20, nullable = false)
+    @Column(name = "MEMBER_PWD", length = 100, nullable = false)
     private String memberPwd;
     //비밀번호
 

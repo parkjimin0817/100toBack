@@ -37,6 +37,10 @@ export const useLoginForm = () => {
       const { memberId, memberPwd } = formData;
 
       const memberData = await memberService.login(memberId, memberPwd);
+
+      //토큰
+      console.log('JWT Token:', memberData.accessToken);
+
       login(memberData);
 
       toast.success('로그인 성공하였습니다.');

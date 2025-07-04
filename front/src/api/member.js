@@ -100,6 +100,7 @@ export const memberService = {
       const { data } = await api.post(API_ENDPOINTS.MEMBERS.LOGIN, { memberId, memberPwd });
 
       const camelData = {
+        accessToken: data.accessToken,
         memberNo: data.member_no,
         memberName: data.member_name,
         memberId: data.member_id,
