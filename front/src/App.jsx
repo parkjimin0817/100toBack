@@ -63,6 +63,7 @@ import BoardUpdatePage from './pages/BoardUpdatePage';
 import PhotoPage from './pages/PhotoPage';
 import MealPlanPage from './pages/MealPlanPage';
 import ClassListPage from './pages/ClassListPage';
+import TeacherIntroDetail from './pages/manager/TeacherIntroDetail';
 
 function App() {
   return (
@@ -134,6 +135,7 @@ function App() {
             <Route path="/manager/introteacher" element={<TeacherIntroList />} />
             <Route path="/manager/classmanage" element={<ClassRoomManage />} />
             <Route path="/manager/schedule" element={<ScheduleManager />} />
+            <Route path="/manager/teacherIntroDetail/:teacherNo" element={<TeacherIntroDetail />} />
 
             {/**
              * 교사, 시설장 공용

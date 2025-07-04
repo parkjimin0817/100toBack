@@ -83,7 +83,6 @@ public class MemberController {
     public ResponseEntity<MemberDto.SearchId> searchId(@RequestBody MemberDto.SearchId dto){
         return ResponseEntity.ok(memberService.searchId(dto));
     }
-
     //마이페이지에서 정보 조회
     @GetMapping("/mypage")
     public ResponseEntity<MemberDto.MyPageResponse> myPage(@RequestParam int id){
@@ -145,6 +144,12 @@ public class MemberController {
     @PatchMapping("/updateclass")
     public ResponseEntity<MemberDto.updateClass> updateClass(@RequestParam int member_no,@RequestParam int class_no){
         return ResponseEntity.ok(memberService.updateClass(member_no,class_no));
+    }
+
+    //센터 번호로 교사 소개 리스트 가져오기
+    @GetMapping("/introList")
+    public ResponseEntity<List<MemberDto.TeacherIntroList>> introList(@RequestParam int centerNo){
+        return ResponseEntity.ok(memberService.teacherIntroList(centerNo));
     }
 
 }
