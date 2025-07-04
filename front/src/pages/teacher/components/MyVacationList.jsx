@@ -67,7 +67,7 @@ const MyVacationList = ({ vacations, onDeleteSuccess }) => {
               <td>{TYPE[vacation.type] || vacation.type}</td>
               <td>{vacation.typeDetail}</td>
               <td>
-                {vacation.startDate}-{vacation.endDate}
+                {vacation.startDate} ~ {vacation.endDate}
               </td>
               <td>{vacation.reason}</td>
               <td>{vacation.file || ''}</td>

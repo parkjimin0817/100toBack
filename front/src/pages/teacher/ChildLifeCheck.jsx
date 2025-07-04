@@ -39,12 +39,12 @@ const ChildLifeCheck = () => {
     const formattedDate = format(selectedDate, 'yyyy-MM-dd');
 
     if (!selectedDate) {
-      alert('날짜를 선택해주세요.');
+      toast.error('날짜를 선택해주세요.');
       return;
     }
 
     if (memberType !== 'PARENT' && !selectedClassNo) {
-      alert('반과 날짜를 모두 선택해주세요.');
+      toast.error('반과 날짜를 모두 선택해주세요.');
       return;
     }
 

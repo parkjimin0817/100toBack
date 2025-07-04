@@ -56,4 +56,7 @@ public interface MemberService {
     //멤버 번호로 반 배정
     MemberDto.updateClass updateClass(int member_no, int class_no);
 
+    //센터 번호로 교사 소개 리스트 가져오기
+    List<MemberDto.TeacherIntroList> teacherIntroList(int centerNo);
+
 }

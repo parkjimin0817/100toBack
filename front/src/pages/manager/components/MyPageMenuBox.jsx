@@ -3,10 +3,14 @@ import styled, { ThemeConsumer } from 'styled-components';
 import Button from '../../../components/Common/Button';
 import { useNavigate } from 'react-router-dom';
 
-const MyPageMenuBox = ({ menuName, icon, url, color }) => {
+const MyPageMenuBox = ({ menuName, icon, url, color, data }) => {
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate(url);
+    if (data) {
+      navigate(url, { state: data });
+    } else {
+      navigate(url);
+    }
   };
   return (
     <Wrapper>

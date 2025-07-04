@@ -8,6 +8,8 @@ import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.enums.CommonEnums;
+import com.bridge.kinder.enums.CommonEnums.AdmissionStatus;
+import java.util.Comparator;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -267,8 +269,10 @@ public class MemberDto {
     @NoArgsConstructor
     @Builder
     public static class MyPageResponse {
+        private int member_no;
         private String member_name;
         private LocalDate member_birth;
+        private String address;
         private CommonEnums.MemberType member_type;
         private String center_name;
         private String center_tel;
@@ -277,8 +281,10 @@ public class MemberDto {
 
         public static MyPageResponse toDto(Center center, Member member) {
             return MyPageResponse.builder()
+                    .member_no(member.getMemberNo())
                     .member_name(member.getMemberName())
                     .member_birth(member.getMemberBirth())
+                    .address(member.getAddress())
                     .member_type(member.getMemberType())
                     .center_name(center.getCenterName())
                     .center_tel(center.getCenterTel())
@@ -379,6 +385,46 @@ public class MemberDto {
                     .member_phone(member.getMemberPhone())
                     .build();
 
+        }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class TeacherIntroList{
+        private int member_no;
+        private String member_name;
+        private String member_phone;
+        private String member_profile;
+
+        private int center_no;
+
+        private LocalDateTime decision_date;
+
+        private int class_no;
+        private String class_name;
+
+        public static TeacherIntroList toDto(Member member) {
+
+            Approval approval = member.getApprovals().stream()
+                    .filter(app -> app.getCenter().equals(member.getCenter()))
+                    .filter(app -> app.getStatus().equals(AdmissionStatus.APPROVED))
+                    .max(Comparator.comparing(Approval::getDecisionDate))
+                    .orElse(null);
+
+            LocalDateTime decisionDate = approval != null ? approval.getDecisionDate() : null;
+
+            return TeacherIntroList.builder()
+                    .member_no(member.getMemberNo())
+                    .member_name(member.getMemberName())
+                    .member_phone(member.getMemberPhone())
+                    .member_profile(member.getMemberProfile())
+                    .decision_date(decisionDate)
+                    .class_no(member.getClassRoom() != null ? member.getClassRoom().getClassNo() : 0)
+                    .class_name(member.getClassRoom() != null ? member.getClassRoom().getClassName() : null)
+                    .build();
         }
     }
 

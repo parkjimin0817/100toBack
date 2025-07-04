@@ -218,7 +218,7 @@ const parentSidebar = [
     icon: <FaSchoolFlag />,
     color: 'green',
     subItems: [
-      { label: '유치원 일정', link: '*' },
+      { label: '유치원 일정', link: '/manager/schedule' },
       { label: '일과표', link: '/daily' },
       { label: '사진 게시판', link: '/photo/list' },
     ],

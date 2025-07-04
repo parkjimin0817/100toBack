@@ -5,6 +5,7 @@ import ContentHeader from '../../components/Common/ContentHeader';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import useLoginStore from '../../store/loginStore';
+import { toast } from 'react-toastify';
 
 const ChildList = () => {
   const member = useLoginStore((state) => state.member);
@@ -14,7 +15,7 @@ const ChildList = () => {
 
   useEffect(() => {
     if (!member) {
-      alert('로그인이 필요합니다.');
+      toast.error('로그인이 필요합니다.');
       navigator('/'); // 로그인 페이지로 이동
     }
   }, [member, navigator]);
