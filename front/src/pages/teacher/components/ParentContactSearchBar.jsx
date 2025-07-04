@@ -2,19 +2,16 @@ import React from 'react';
 import styled from 'styled-components';
 import { IoSearch } from 'react-icons/io5';
 
-const classdata = [
-  { value: '햇님반', name: '햇님반' },
-  { value: '달님반', name: '달님반' },
-];
-
-const ParentContactSearchBar = ({ selectedClass, setSelectedClass, searchKeyword, setSearchKeyword }) => {
+const ParentContactSearchBar = ({ selectedClass, setSelectedClass, searchKeyword, setSearchKeyword, value }) => {
+  const uniqueClassNames = [...new Set(value.map((item) => item.class_name))];
   return (
     <Wrapper>
       <SearchDiv>
         <Select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}>
-          {classdata.map((item, index) => (
-            <option key={index} value={item.value}>
-              {item.name}
+          <option value="">전체</option>
+          {uniqueClassNames.map((className) => (
+            <option key={className} value={className}>
+              {className}
             </option>
           ))}
         </Select>
@@ -53,6 +50,7 @@ const Select = styled.select`
   border-radius: 5px;
   border: 1px solid ${({ theme }) => theme.colors.gray[400]};
   font-size: ${({ theme }) => theme.fontSizes.base};
+  text-align: center;
 `;
 
 const InputWrapper = styled.div`
