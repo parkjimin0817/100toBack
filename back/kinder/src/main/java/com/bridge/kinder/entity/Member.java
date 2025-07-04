@@ -124,6 +124,11 @@ public class Member {// 멤버
     List<MemberHealthLog> memberHealthLogs = new ArrayList<>();
     //건강 기록
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    List<Counsel> counsels = new ArrayList<>();
+    //상담
+
 
     //---------------------------------------------------------------------------------------------
     @PrePersist
