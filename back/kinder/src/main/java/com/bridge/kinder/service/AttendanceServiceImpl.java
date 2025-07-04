@@ -163,7 +163,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         //출근 기록 Map<date, attendance>
         Map<LocalDate, Attendance> attendanceMap = monthlyList.stream()
-                .collect(Collectors.toMap(a -> a.getInTime().toLocalDate(), a -> a)); //날짜랑 출근내용
+                .collect(Collectors.toMap(Attendance::getAttendanceDate, a -> a)); //날짜랑 출근내용
         //공휴일 정보
         List<Holiday> holidays = holidayRepository.findByHolidayDateBetween(startDate, endDate);
         Set<LocalDate> holidaySet = holidays.stream()
@@ -179,28 +179,35 @@ public class AttendanceServiceImpl implements AttendanceService {
             dto.setCenter_no(centerNo);
             dto.setAttendance_date(date);
 
-            if(holidaySet.contains(date)){
-                dto.setStatus(TeacherAttendanceStatus.HOLIDAY); //공휴일
-            } else if (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY){
-                dto.setStatus(TeacherAttendanceStatus.WEEKEND); //주말
-            } else if ( attendance != null) {
+
+            if(attendance != null) {
+                System.out.println("[" + date + "] status야호: " + attendance.getStatus());
                 dto.setAttendance_no(attendance.getAttendanceNo());
                 dto.setIn_time(attendance.getInTime());
                 dto.setOut_time(attendance.getOutTime());
 
-                if (attendance.getOutTime() == null) {
-                    dto.setStatus(TeacherAttendanceStatus.WORKING); //근무중
+                if (attendance.getStatus() != null) {
+                    dto.setStatus(attendance.getStatus());
+                } else if (attendance.getOutTime() == null) {
+                    dto.setStatus(TeacherAttendanceStatus.WORKING);
                 } else {
-                    dto.setStatus(TeacherAttendanceStatus.PRESENT); //출퇴근 완료
+                    dto.setStatus(TeacherAttendanceStatus.PRESENT);
                 }
+
+            } else if(holidaySet.contains(date)){
+                dto.setStatus(TeacherAttendanceStatus.HOLIDAY); //공휴일
+            } else if (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY){
+                dto.setStatus(TeacherAttendanceStatus.WEEKEND); //주말
             } else {
                 dto.setStatus(TeacherAttendanceStatus.ABSENT); //위에 중 아무것도 아니면 결근
             }
             result.add(dto);
         }
+
         return result;
     }
 
+    //근태 수정
     @Override
     public void updateTeacherAttendance(int attendanceNo, UpdateTeacherAttendance updateDto) {
 

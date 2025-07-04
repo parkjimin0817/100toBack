@@ -19,11 +19,13 @@ import com.bridge.kinder.entity.ChildActivityLog;
 import com.bridge.kinder.entity.ChildAttendance;
 import com.bridge.kinder.entity.ChildHealthData;
 import com.bridge.kinder.entity.ChildHealthLog;
+import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.entity.MemberChild;
 import com.bridge.kinder.repository.ApprovalRepository;
 import com.bridge.kinder.repository.CenterRepository;
 import com.bridge.kinder.repository.ChildRepository;
+import com.bridge.kinder.repository.ClassRoomRepository;
 import com.bridge.kinder.repository.MemberChildRepository;
 import com.bridge.kinder.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -50,6 +52,7 @@ public class ChildServiceImpl implements ChildService {
     private final MemberChildRepository memberChildRepository;
     private final CenterRepository centerRepository;
     private final ApprovalRepository approvalRepository;
+    private final ClassRoomRepository classRoomRepository;
     private final String UPLOAD_PATH = "C://test_upload/"; //aws S3 연결시 관련 코드 수정할 것.
 
     //아동 생성
@@ -305,5 +308,11 @@ public class ChildServiceImpl implements ChildService {
                 .collect(Collectors.toList());
     }
 
-
+    //학부모 전화번호 조회
+    @Override
+    public List<ChildDto.ParentPhoneNumberResponse> findByCenterNoPhoneNumber(int centerNo) {
+        return childRepository.findByCenterNo(centerNo).stream()
+                .map(ChildDto.ParentPhoneNumberResponse::toEntity)
+                .collect(Collectors.toList());
+    }
 }

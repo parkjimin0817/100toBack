@@ -323,6 +323,7 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
+    //비밀번호 변경
     @Override
     public MemberDto.PwdUpdate updatePwd(MemberDto.PwdUpdate dto) {
         Member member = memberRepository.findByMemberId(dto.getMember_id())

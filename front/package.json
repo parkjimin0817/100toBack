@@ -13,6 +13,7 @@
     "server": "json-server --watch db.json --port 3001"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.1.1",
     "@tiptap/extension-highlight": "^2.14.0",
     "@tiptap/extension-image": "^2.14.0",
     "@tiptap/extension-subscript": "^2.14.0",
@@ -24,7 +25,6 @@
     "@tiptap/extension-underline": "^2.14.0",
     "@tiptap/react": "^2.14.0",
     "@tiptap/starter-kit": "^2.14.0",
-    "@hookform/resolvers": "^5.1.1",
     "axios": "^1.9.0",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",

@@ -1,38 +1,43 @@
 import { format, addDays, isSameDay, isAfter, parse } from 'date-fns';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-
-const schedules = [
-  { date: '2025-06-19', time: '13:00', text: '김승기 부모님과 대면 상담' },
-  { date: '2025-06-19', time: '15:00', text: '김승기 부모님과 대면 상담' },
-  { date: '2025-06-19', time: '18:00', text: '김승기 부모님과 대면 상담' },
-  { date: '2025-06-19', time: '19:00', text: '여자친구랑 통화' },
-  { date: '2025-06-19', time: '23:00', text: '부모님이랑 코스요리' },
-  { date: '2025-06-19', time: '22:00', text: '정의철 아동 생일파티' },
-  { date: '2025-06-19', time: '21:00', text: '양동민 아동 생일파티' },
-  { date: '2025-06-19', time: '21:00', text: '양동민 아동 생일파티' },
-  { date: '2025-06-19', time: '21:00', text: '양동민 아동 생일파티' },
-];
+import useLoginStore from '../../../../store/loginStore';
+import { useScheduleService } from '../../../../api/schedule';
 
 const MainSchedule = () => {
   const navigate = useNavigate();
+  const { member } = useLoginStore();
+  const memberNo = member?.memberNo;
+  const centerNo = member?.centerNo;
+
+  const [schedules, setSchedules] = useState([]);
+
   //요일 일자
   const today = new Date();
   const week = getWeek(today);
+  const todayString = format(today, 'yyyy-MM-dd');
+
+  useEffect(() => {
+    if (!memberNo || !centerNo) return;
+
+    useScheduleService
+      .getTodayScheduleList(centerNo, memberNo, todayString)
+      .then((data) => setSchedules(data))
+      .catch((err) => console.error('메인 페이지 스케줄 불러오기 실패 : ', err));
+  }, [memberNo, centerNo]);
 
   //일정
-  const todayString = format(today, 'yyyy-MM-dd');
   const todaySchedules = schedules
-    .filter((s) => s.date === todayString)
-    .sort((a, b) => a.time.localeCompare(b.time))
+    .filter((s) => s.schedule_date === todayString)
+    .sort((a, b) => a.start_time.localeCompare(b.start_time))
     .slice(0, 7);
 
   const now = new Date();
   const nextIndex = todaySchedules.findIndex((s) => {
-    if (!s.time) return false;
-    const datetime = parse(`${s.date} ${s.time}`, 'yyyy-MM-dd HH:mm', new Date());
+    if (!s.start_time) return false;
+    const datetime = parse(`${s.schedule_date} ${s.start_time}`, 'yyyy-MM-dd HH:mm:ss', new Date());
     return isAfter(datetime, now);
   });
 
@@ -54,21 +59,28 @@ const MainSchedule = () => {
       {/* 구분선 */}
       <Line />
       <ScheduleWrapper>
-        <VerticalLine />
-        {todaySchedules.map((s, i) => {
-          const isNow = i === nextIndex;
-          return (
-            <ScheduleItem key={i}>
-              <Circle $highlight={isNow} />
-              <Content>
-                <Time $highlight={isNow}>{s.time}</Time>
-                <Text $highlight={isNow}>{s.text}</Text>
-              </Content>
-            </ScheduleItem>
-          );
-        })}
+        {todaySchedules.length > 0 && <VerticalLine />}
+        {todaySchedules.length === 0 ? (
+          <NoScheduleText>오늘 일정이 없습니다.</NoScheduleText>
+        ) : (
+          todaySchedules.map((s, i) => {
+            const isNow = i === nextIndex;
+            return (
+              <ScheduleItem key={s.schedule_no}>
+                <Circle $highlight={isNow} />
+                <Content>
+                  <Time $highlight={isNow}> {format(parse(s.start_time, 'HH:mm:ss', new Date()), 'HH:mm')}</Time>
+                  <Text $highlight={isNow}>{s.title}</Text>
+                </Content>
+              </ScheduleItem>
+            );
+          })
+        )}
       </ScheduleWrapper>
-      <Button onClick={() => navigate('/scheduleteacher')}>일정 더보기</Button>
+
+      <Button onClick={() => navigate('/scheduleteacher')}>
+        {todaySchedules.length === 0 ? '일정 등록하기' : '일정 더보기'}
+      </Button>
     </Wrapper>
   );
 };
@@ -92,6 +104,8 @@ const getWeek = (today) => {
 const Wrapper = styled.div`
   width: 100%;
   padding: ${({ theme }) => theme.spacing[6]};
+  height: 480px;
+  position: relative;
 `;
 
 const DaysRow = styled.div`
@@ -140,7 +154,7 @@ const ScheduleWrapper = styled.div`
 const VerticalLine = styled.div`
   position: absolute;
   top: ${({ theme }) => theme.spacing[2]};
-  left: 21px;
+  left: 20px;
   bottom: ${({ theme }) => theme.spacing[4]};
   width: 1px;
   border-left: 3px dotted ${({ theme }) => theme.colors.gray[400]};
@@ -178,7 +192,7 @@ const Time = styled.div`
 const Text = styled.div`
   display: flex;
   align-items: center;
-  font-size: ${({ theme }) => theme.fontSizes.sm};
+  font-size: ${({ theme }) => theme.fontSizes.base};
   font-weight: ${({ $highlight }) => ($highlight ? 'bold' : 'normal')};
   color: ${({ $highlight }) => ($highlight ? '#000' : '#888')};
 `;
@@ -190,8 +204,19 @@ const Button = styled.button`
   background-color: ${({ theme }) => theme.colors.orange};
   padding: ${({ theme }) => theme.spacing[1]};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
 
   :hover {
     cursor: pointer;
   }
+`;
+
+const NoScheduleText = styled.div`
+  color: ${({ theme }) => theme.colors.gray[500]};
+  text-align: center;
+  margin-top: ${({ theme }) => theme.spacing[4]};
+  font-size: ${({ theme }) => theme.fontSizes.base};
 `;

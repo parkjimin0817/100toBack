@@ -7,6 +7,7 @@ import ChildrenList from '../../components/ChildrenList';
 import Modal from '../../components/ClassPlacementModal';
 import useLoginStore from '../../store/loginStore';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 const ClassPlacement = () => {
   const member = useLoginStore((state) => state.member);
@@ -16,13 +17,13 @@ const ClassPlacement = () => {
 
   useEffect(() => {
     if (!member) {
-      alert('로그인이 필요합니다.');
+      toast.error('로그인이 필요합니다.');
       navigate('/login'); // 로그인 페이지로 이동
       return;
     }
 
     if (member.memberType === 'TEACHER' || member.memberType === 'PARENT') {
-      alert('접근 권한이 없습니다.');
+      toast.error('접근 권한이 없습니다.');
       setAccessDenied(true);
       navigate(-1);
     }
@@ -31,7 +32,10 @@ const ClassPlacement = () => {
   if (!member || accessDenied) return null; // ❗️렌더링 차단
 
   const centerNo = member.centerNo;
-  const headerButtons = [{ Title: '반 목록', func: () => navigate('/manager/classmanage') }];
+  const headerButtons = [
+    { Title: '반 목록', func: () => navigate('/manager/classmanage') },
+    { Title: '뒤로가기', func: () => navigate(-1) },
+  ];
 
   const [showAll, setShowAll] = useState(true);
   const [openModal, setOpenModal] = useState(false);

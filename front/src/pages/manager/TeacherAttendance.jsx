@@ -68,7 +68,11 @@ const TeacherAttendance = () => {
         <Div1>
           <TeacherAttendanceCalendar
             onDateClick={(date) => setSelectedDate(date)}
-            onMonthChange={(date) => setCurrentMonth(date)}
+            onMonthChange={(date) => {
+              setCurrentMonth(date);
+              const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+              setSelectedDate(firstDayOfMonth);
+            }}
             monthlyAttendanceList={attendances}
             disableFuture={true}
             minDate={startDate}
@@ -97,7 +101,6 @@ export default TeacherAttendance;
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
-  min-height: 600px;
   background-color: #ffffff;
   border-radius: 20px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
@@ -113,7 +116,7 @@ const Content = styled.div`
 
 const Div1 = styled.div`
   width: 60%;
-  min-height: 500px;
+  min-height: 630px;
   margin: 10;
   border-radius: 20px;
   display: flex;

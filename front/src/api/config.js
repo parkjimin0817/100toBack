@@ -19,6 +19,12 @@ export const API_ENDPOINTS = {
     LISTS: `/api/schedule/lists`,
     EDIT: `/api/schedule/edit`,
     DELETE: `/api/schedule/delete`,
+    TODAYLISTS: '/api/schedule/lists/main',
+    DAILYSCHEDULE: `/api/schedule/dailyCreate`,
+    DAILYSCHEDULELIST: (centerNo, classNo, scheduleDate) =>
+      `/api/schedule/dailyList?centerNo=${centerNo}&classNo=${classNo}&scheduleDate=${scheduleDate}`,
+    UPDATEDAILY: `/api/schedule/dailyUpdate`,
+    DELETEDAILY: (scheduleNo) => `/api/schedule/dailyDelete/${scheduleNo}`,
   },
   MEMBERS: {
     BASE: '/api/members',
@@ -89,6 +95,7 @@ export const API_ENDPOINTS = {
     GETALL: '/api/childs/all',
     GET: '/api/childs/get',
     PARENTCHILDLIST: (memberNo) => `/api/childs/parentChild?memberNo=${memberNo}`,
+    PARENTPHONENUMBER: (centerNo) => `/api/childs/phoneNumber/${centerNo}`,
   },
   BOARDS: {
     BASE: '/api/boards',
@@ -96,6 +103,7 @@ export const API_ENDPOINTS = {
     DETAIL: (id) => `/api/boards/${id}`,
     DELETE: (id) => `/api/boards/${id}`,
     TYPE: (type, centerNo, page) => `/api/boards/type/${type}?centerNo=${centerNo}&page=${page}`,
+    GETRECENT3: (centerNo) => `api/boards/recent3/${centerNo}`,
   },
   VACATION: {
     BASE: '/api/vacation',
@@ -110,5 +118,9 @@ export const API_ENDPOINTS = {
   LEAVE: {
     BASE: '/api/leave',
     GETLEAVE: (memberNo) => `/api/leave/${memberNo}`,
+  },
+  HOLIDAY: {
+    BASE: '/api/holiday',
+    GET: (year, month) => `api/holiday?year=${year}&month=${month}`,
   },
 };

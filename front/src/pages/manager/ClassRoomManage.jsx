@@ -32,15 +32,14 @@ const ClassRoomManage = () => {
       <ContentHeader
         Title={'반 목록'}
         Color={'blue'}
-        ButtonProps={[{ Title: '반 생성하기', func: () => setIsModalOpen(true) }]}
+        ButtonProps={[
+          { Title: '반 생성하기', func: () => setIsModalOpen(true) },
+          { Title: '뒤로가기', func: () => navigate(-1) },
+        ]}
       />
 
       <Div>
-        <Hint>
-          <ImInfo />
-          확인하실 반을 선택해주세요.
-        </Hint>
-        <ClassRoomCard classrooms={classrooms} address={'/childattendance'} />
+        <ClassRoomCard classrooms={classrooms} isDisabled={true} />
       </Div>
       {isModalOpen && (
         <CreateClassModal
@@ -57,16 +56,6 @@ const Div = styled.div`
   padding: ${({ theme }) => theme.spacing[10]};
 `;
 
-const Hint = styled.h2`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 8px;
-  font-size: ${({ theme }) => theme.fontSizes.base};
-  text-align: left;
-  padding-left: ${({ theme }) => theme.spacing[8]};
-  padding-bottom: ${({ theme }) => theme.spacing[8]};
-`;
 const Content = styled.div`
   width: 100%;
   min-height: 600px;

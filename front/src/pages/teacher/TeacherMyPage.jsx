@@ -25,7 +25,7 @@ const TeacherMyPage = () => {
 
   useEffect(() => {
     if (!isAuthenticated || !member) {
-      alert('로그인이 필요합니다');
+      toast.error('로그인이 필요합니다');
       navigate('/');
       return;
     }
@@ -50,7 +50,7 @@ const TeacherMyPage = () => {
           centerType: data.center_type,
         });
       } catch (error) {
-        alert('불러오기 실패');
+        toast.error('불러오기 실패', error);
       }
     };
 

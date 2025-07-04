@@ -71,4 +71,14 @@ export const childService = {
       throw error;
     }
   },
+
+  //학부모 연락처 조회
+  getParentPhoneNumber: async (centerNo) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.CHILDS.PARENTPHONENUMBER(centerNo));
+      return data;
+    } catch (error) {
+      throw new Error('서버 통신 불량: ' + error.message);
+    }
+  },
 };
