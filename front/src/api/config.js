@@ -88,6 +88,7 @@ export const API_ENDPOINTS = {
     DETAIL: (memberHealthLogNo) => `/api/members/health/detail?memberHealthLogNo=${memberHealthLogNo}`,
     EDIT: `/api/members/health/edit`,
     DELETE: `/api/members/health/delete`,
+    GETAVG: (memberNo) => `/api/members/health/main/avg/${memberNo}`,
   },
   CHILDS: {
     BASE: '/api/childs',

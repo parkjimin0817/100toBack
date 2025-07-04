@@ -112,4 +112,18 @@ public class MemberHealthLogDto {
 
         }
     }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class HealthAvgResponse {
+        private int member_no;
+        private int lastWeekSleep;
+        private int thisWeekSleep;
+        private int lastWeekStress;
+        private int thisWeekStress;
+
+    }
 }

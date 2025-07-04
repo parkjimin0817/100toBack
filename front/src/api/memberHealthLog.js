@@ -70,4 +70,12 @@ export const memberHealthLogService = {
       throw new Error(error, '서버 통신 불량');
     }
   },
+  getAvg: async (memberNo) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.MEMBER_HEALTH.GETAVG(memberNo));
+      return data;
+    } catch (err) {
+      throw new Error('서버 통신 불량' + err.message);
+    }
+  },
 };
