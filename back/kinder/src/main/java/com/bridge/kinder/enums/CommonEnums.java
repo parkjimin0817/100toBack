@@ -4,13 +4,13 @@ public class CommonEnums {
     public enum CenterType {
         DAYCARE,        //어린이집
         KINDERGARTEN,   //유치원
-        CHILD_CENTER,    //지역아동센터
+        CHILD_CENTER,   //지역아동센터
         ETC,            //기타
     }
 
     public enum MemberType {
         ADMIN,          //관리자
-        MANAGER,       //시설장
+        MANAGER,        //시설장
         TEACHER,        //교사
         PARENT,         //학부모
     }
@@ -46,7 +46,7 @@ public class CommonEnums {
 
     public enum BoardType {
         NOTICE,         //공지사항
-        FAMILY_NOTICE,    //가정통신문
+        FAMILY_NOTICE,  //가정통신문
         NOTE,           //알림장
         PHOTO,          //사진
         PRIVATE_DOC,    //개인서류
@@ -59,13 +59,23 @@ public class CommonEnums {
     }
 
     public enum TeacherAttendanceStatus {
-        ABSENT,        //결근
-        PRESENT,       //정상 출근
-        WORKING,       //출근 중
-        HOLIDAY,       //공휴일
-        WEEKEND,       //주말
-        VACATION,      //휴가
-        WORKCATION,    //워케이션
+        ABSENT,         //결근
+        PRESENT,        //정상 출근
+        WORKING,        //출근 중
+        HOLIDAY,        //공휴일
+        WEEKEND,        //주말
+        VACATION,       //휴가
+        WORKCATION,     //워케이션
+    }
+
+    public enum CounselType {
+        CHAT,           //채팅
+        FTOF            //대면
+    }
+
+    public enum CounselStatus {
+        PENDING,        //상담 대기
+        COMPLETED,      //상담 완료
     }
 
 

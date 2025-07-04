@@ -5,6 +5,7 @@ import ChildImg from '../../assets/Child.png';
 import AttendanceChildSchedule from '../AttendanceChildSchedule';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const ChildDetailInfoArea = ({ childNo }) => {
   const [childData, setChildData] = useState(null);
@@ -13,7 +14,32 @@ const ChildDetailInfoArea = ({ childNo }) => {
     life: false,
     attendance: false,
   });
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [editHealth, setEditHealth] = useState({});
   const navigate = useNavigate();
+
+  const handleInputChange = (field, value) => {
+    setEditHealth((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleEditClick = () => {
+    if (!isEditing) {
+      setEditHealth({ ...childData.health });
+      setIsEditing(true);
+    } else {
+      axios
+        .patch(`http://localhost:8888/api/childs/updatehealthdata?childNo=${childNo}`, editHealth)
+        .then((res) => {
+          setChildData((prev) => ({ ...prev, health: res.data }));
+          setIsEditing(false);
+          toast.success('건강 정보 수정이 완료되었습니다.');
+        })
+        .catch((err) => {
+          toast.error('건강 정보 수정에 실패했습니다.', err);
+        });
+    }
+  };
 
   useEffect(() => {
     const fetchChildDetail = async () => {
@@ -143,39 +169,81 @@ const ChildDetailInfoArea = ({ childNo }) => {
                     <tbody>
                       <tr>
                         <FooterTd1>약 이름</FooterTd1>
-                        <FooterTd2>{childData.health.medication_name}</FooterTd2>
+                        <FooterTd2>
+                          {isEditing ? (
+                            <Input
+                              value={editHealth.medication_name || ''}
+                              onChange={(e) => handleInputChange('medication_name', e.target.value)}
+                            />
+                          ) : (
+                            childData.health.medication_name
+                          )}
+                        </FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>복용 용량</FooterTd1>
-                        <FooterTd2>{childData.health.medication_amount}</FooterTd2>
+                        <FooterTd2>
+                          {isEditing ? (
+                            <Input
+                              value={editHealth.medication_amount || ''}
+                              onChange={(e) => handleInputChange('medication_amount', e.target.value)}
+                            />
+                          ) : (
+                            childData.health.medication_amount
+                          )}
+                        </FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>복용 시간</FooterTd1>
-                        <FooterTd2>{childData.health.medication_time}</FooterTd2>
+                        <FooterTd2>
+                          {isEditing ? (
+                            <Input
+                              value={editHealth.medication_time || ''}
+                              onChange={(e) => handleInputChange('medication_time', e.target.value)}
+                            />
+                          ) : (
+                            childData.health.medication_time
+                          )}
+                        </FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>복용 기간</FooterTd1>
-                        <FooterTd2>{childData.health.medication_period}</FooterTd2>
+                        <FooterTd2>
+                          {isEditing ? (
+                            <Input
+                              value={editHealth.medication_period || ''}
+                              onChange={(e) => handleInputChange('medication_period', e.target.value)}
+                            />
+                          ) : (
+                            childData.health.medication_period
+                          )}
+                        </FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>복용 목적</FooterTd1>
-                        <FooterTd2>{childData.health.medication_purpose}</FooterTd2>
+                        <FooterTd2>
+                          {isEditing ? (
+                            <Input
+                              value={editHealth.medication_purpose || ''}
+                              onChange={(e) => handleInputChange('medication_purpose', e.target.value)}
+                            />
+                          ) : (
+                            childData.health.medication_purpose
+                          )}
+                        </FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>메모</FooterTd1>
-                        <FooterTd2>{childData.health.medication_memo}</FooterTd2>
-                      </tr>
-                    </tbody>
-                  </FooterTable>
-                </FooterBox>
-
-                <FooterBox>
-                  <FooterTitle>예방접종</FooterTitle>
-                  <FooterTable>
-                    <tbody>
-                      <tr>
-                        <FooterTd1>예방접종</FooterTd1>
-                        <FooterTd2>{childData.health.vaccination}</FooterTd2>
+                        <FooterTd2>
+                          {isEditing ? (
+                            <Input
+                              value={editHealth.medication_memo || ''}
+                              onChange={(e) => handleInputChange('medication_memo', e.target.value)}
+                            />
+                          ) : (
+                            childData.health.medication_memo
+                          )}
+                        </FooterTd2>
                       </tr>
                     </tbody>
                   </FooterTable>
@@ -187,24 +255,74 @@ const ChildDetailInfoArea = ({ childNo }) => {
                     <tbody>
                       <tr>
                         <FooterTd1>알레르기</FooterTd1>
-                        <FooterTd2>{childData.health.allergy}</FooterTd2>
+                        <FooterTd2>
+                          {isEditing ? (
+                            <Input
+                              value={editHealth.allergy || ''}
+                              onChange={(e) => handleInputChange('allergy', e.target.value)}
+                            />
+                          ) : (
+                            childData.health.allergy
+                          )}
+                        </FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>반응</FooterTd1>
-                        <FooterTd2>{childData.health.allergy_reaction}</FooterTd2>
+                        <FooterTd2>
+                          {isEditing ? (
+                            <Input
+                              value={editHealth.allergy_reaction || ''}
+                              onChange={(e) => handleInputChange('allergy_reaction', e.target.value)}
+                            />
+                          ) : (
+                            childData.health.allergy_reaction
+                          )}
+                        </FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>심각도</FooterTd1>
-                        <FooterTd2>{childData.health.allergy_severity}</FooterTd2>
+                        <FooterTd2>
+                          {isEditing ? (
+                            <Input
+                              value={editHealth.allergy_severity || ''}
+                              onChange={(e) => handleInputChange('allergy_severity', e.target.value)}
+                            />
+                          ) : (
+                            childData.health.allergy_severity
+                          )}
+                        </FooterTd2>
+                      </tr>
+                      <tr>
+                        <FooterTd1>예방접종</FooterTd1>
+                        <FooterTd2>
+                          {isEditing ? (
+                            <Input
+                              value={editHealth.vaccination || ''}
+                              onChange={(e) => handleInputChange('vaccination', e.target.value)}
+                            />
+                          ) : (
+                            childData.health.vaccination
+                          )}
+                        </FooterTd2>
                       </tr>
                       <tr>
                         <FooterTd1>메모</FooterTd1>
-                        <FooterTd2>{childData.health.allergy_memo}</FooterTd2>
+                        <FooterTd2>
+                          {isEditing ? (
+                            <Input
+                              value={editHealth.allergy_memo || ''}
+                              onChange={(e) => handleInputChange('allergy_memo', e.target.value)}
+                            />
+                          ) : (
+                            childData.health.allergy_memo
+                          )}
+                        </FooterTd2>
                       </tr>
                     </tbody>
                   </FooterTable>
                 </FooterBox>
               </FooterInfoLine>
+              <LoadMoreButton onClick={handleEditClick}>{isEditing ? '수정완료' : '수정'}</LoadMoreButton>
             </>
           )}
 
@@ -438,13 +556,13 @@ const FooterTable = styled.table`
 `;
 
 const FooterTd1 = styled.td`
-  width: 30%;
+  width: 35%;
   text-align: left;
   font-weight: ${({ theme }) => theme.fontWeights.bold};
 `;
 
 const FooterTd2 = styled.td`
-  width: 50%;
+  width: 65%;
   text-align: left;
 `;
 
@@ -584,7 +702,7 @@ const FooterInfoLine = styled.div`
 const FooterBox = styled.div`
   display: flex;
   flex-direction: column;
-  width: 280px;
+  width: 400px;
   height: 330px;
   background-color: rgba(255, 206, 101, 0.25);
   border-radius: 10px;
@@ -605,4 +723,8 @@ const FooterTitle = styled.div`
   font-size: 18px;
   font-weight: bold;
   padding: ${({ theme }) => theme.spacing[4]} 0;
+`;
+
+const Input = styled.input`
+  padding-left: 10px;
 `;

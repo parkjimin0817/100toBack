@@ -125,7 +125,7 @@ const ParentMyPage = () => {
             console.log(data);
             const { age, gender, birthday } = childInfo(data.child_resident_no);
             return (
-              <Card key={data.child_no} onClick={() => navigate(`/child/detail?id=${data.child_no}`)}>
+              <Card key={data.child_no} onClick={() => navigate(`/child/detail/${data.child_no}`)}>
                 <ProfileDiv>
                   <NameDiv>{data.child_name}</NameDiv>
                   <AgeDiv>

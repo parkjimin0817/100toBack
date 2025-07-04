@@ -91,7 +91,7 @@ const ChildAddModal = ({ isOpen, onClose }) => {
     try {
       await childService.createChild(mergedData);
       toast.success('자녀가 등록되었습니다.');
-      toast.success('승인을 받아야 합니다.');
+      toast.info('승인을 받아야 합니다.');
       resetForm();
       onClose();
     } catch (error) {

@@ -1,14 +1,31 @@
-import React from 'react';
+import React, { use, useState, useEffect } from 'react';
 import ContentHeader from '../../components/Common/ContentHeader';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { List } from '../../components/ChildDummyData';
 import TeacherPicture from '../../assets/Child.png';
+import { memberService } from '../../api/member';
+import useLoginStore from '../../store/loginStore';
 
 const TeacherIntroList = () => {
   const navigate = useNavigate();
+  const { member } = useLoginStore();
+  const [teachers, setTeachers] = useState([]);
 
-  const teachers = List.filter((person) => person.role === 'teacher').slice(0, 4);
+  //교사 목록 불러오기
+  const fetchData = async () => {
+    try {
+      const data = await memberService.teacherIntroList(member.centerNo);
+      setTeachers(data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    if (member?.centerNo) {
+      fetchData();
+    }
+  }, []);
 
   return (
     <Content>
@@ -16,17 +33,17 @@ const TeacherIntroList = () => {
       <CardGrid>
         {teachers.map((teacher) => (
           <Card
-            key={teacher.id}
+            key={teacher.member_no}
             onClick={() => {
-              navigate(`/manager/teacherdetail?id=${teacher.id}`);
+              navigate(`/manager/teacherIntroDetail/${teacher.member_no}`);
             }}
           >
             <TeacherImage src={TeacherPicture} alt="교사 사진" />
             <TextBox>
-              <Name>{teacher.name} 선생님</Name>
-              <Info>담당 반 | {teacher.className}</Info>
-              <Info>전화번호 | {teacher.phone.father}</Info>
-              <Info>입사일 | {teacher.createDate}</Info>
+              <Name>{teacher.member_name} 선생님</Name>
+              <Info>담당 반 | {teacher.class_name || '배정되지 않음'}</Info>
+              <Info>전화번호 | {teacher.member_phone}</Info>
+              <Info>입사일 | {teacher.decision_date && teacher.decision_date.split('T')[0]}</Info>
             </TextBox>
           </Card>
         ))}

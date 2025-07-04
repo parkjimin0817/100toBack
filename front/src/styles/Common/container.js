@@ -14,3 +14,35 @@ export const ContentArea = styled.div`
 
   text-align: left;
 `;
+
+//반이 없을 때 나오는 컨테이너
+export const ErrorDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 580px;
+  padding: ${({ theme }) => theme.spacing[10]};
+  gap: ${({ theme }) => theme.spacing[6]};
+`;
+
+//각 페이지의 힌트 구역
+export const Hint = styled.h2`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  font-size: ${({ theme }) => theme.fontSizes.base};
+  text-align: left;
+  padding-left: ${({ theme }) => theme.spacing[8]};
+  padding-bottom: ${({ theme }) => theme.spacing[8]};
+`;
+
+//반 목록이 없으면 뜨는 컨테이너
+export const NoneDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing[6]};
+`;

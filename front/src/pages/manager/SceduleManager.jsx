@@ -7,17 +7,18 @@ import useLoginStore from '../../store/loginStore';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 import { useScheduleService } from '../../api/schedule';
-
+import { toast } from 'react-toastify';
 import ScheduleModal from '../../components/ScheduleModal';
 
 dayjs.locale('ko');
 
-const ScheduleTeacher = () => {
+const ScheduleManager = () => {
   const [selectedSchedules, setSelectedSchedules] = useState([]);
   const [selectedDate, setSelectedDate] = useState(dayjs().format('YYYY-MM-DD (ddd)'));
   const { member } = useLoginStore();
   const [data, setData] = useState([]);
   const [scheduleType, setScheduleType] = useState('');
+  const [viewMode, setViewMode] = useState(false); // 수정X , 보기모드
 
   const fetchData = async (targetDate = dayjs().format('YYYY-MM-DD')) => {
     try {
@@ -36,7 +37,7 @@ const ScheduleTeacher = () => {
       setSelectedSchedules(matchedSchedules);
       setSelectedDate(dayjs(targetDate).format('YYYY-MM-DD (ddd)'));
     } catch (error) {
-      console.error('스케줄 데이터 로딩 실패:', error.message);
+      toast.error('스케줄 데이터 로딩 실패:', error.message);
     }
   };
 
@@ -58,6 +59,7 @@ const ScheduleTeacher = () => {
 
   const handleEditClick = (item) => {
     setEditSchedule(item);
+    setViewMode(false);
     setOpenModal(true);
   };
 
@@ -66,10 +68,17 @@ const ScheduleTeacher = () => {
       try {
         await useScheduleService.deleteSchedule(scheduleNo);
         fetchData(selectedDate.split(' ')[0]);
+        toast.success('일정이 정상적으로 삭제되었습니다.');
       } catch (error) {
-        console.error('일정 삭제 실패:', error.message);
+        toast.error('일정 삭제 실패:', error.message);
       }
     }
+  };
+
+  const handShowClick = (item) => {
+    setEditSchedule(item);
+    setViewMode(true);
+    setOpenModal(true);
   };
 
   return (
@@ -81,44 +90,51 @@ const ScheduleTeacher = () => {
             <CustomCalendar scheduleData={data} onDateClick={handleDateClick} />
           </ContentLeft>
           <ContentRight>
-            <ContentRightTop>
-              <ContentHeader
-                Title={'개인 일정'}
-                Color={'purple'}
-                FontSize={'xl'}
-                ButtonProps={[
-                  {
-                    Title: '일정 추가',
-                    func: () => {
-                      setOpenModal(true), setEditSchedule(null), setScheduleType('MEMBER');
+            {member.memberType !== 'PARENT' && (
+              <ContentRightTop>
+                <ContentHeader
+                  Title={'개인 일정'}
+                  Color={'purple'}
+                  FontSize={'xl'}
+                  ButtonProps={[
+                    {
+                      Title: '일정 추가',
+                      func: () => {
+                        setOpenModal(true), setEditSchedule(null), setScheduleType('MEMBER'), setViewMode(false);
+                      },
                     },
-                  },
-                ]}
-              />
-              <ContentSceduleArea>
-                <AreaDate>{selectedDate}</AreaDate>
-                <AreaList>
-                  <ScheduleList
-                    schedules={selectedSchedules.filter((item) => item.type === 'MEMBER')}
-                    onEditClick={handleEditClick}
-                    onDeleteClick={handleDeleteClick}
-                  />
-                </AreaList>
-              </ContentSceduleArea>
-            </ContentRightTop>
+                  ]}
+                />
+                <ContentSceduleArea>
+                  <AreaDate>{selectedDate}</AreaDate>
+                  <AreaList>
+                    <ScheduleList
+                      schedules={selectedSchedules.filter((item) => item.type === 'MEMBER')}
+                      onEditClick={handleEditClick}
+                      onDeleteClick={handleDeleteClick}
+                      onShowClick={handShowClick}
+                    />
+                  </AreaList>
+                </ContentSceduleArea>
+              </ContentRightTop>
+            )}
             <ContentRightBottom>
               <ContentHeader
                 Title={'유치원 일정'}
                 Color={'purple'}
                 FontSize={'xl'}
-                ButtonProps={[
-                  {
-                    Title: '일정 추가',
-                    func: () => {
-                      setOpenModal(true), setEditSchedule(null), setScheduleType('CENTER');
-                    },
-                  },
-                ]}
+                ButtonProps={
+                  member.memberType !== 'PARENT'
+                    ? [
+                        {
+                          Title: '일정 추가',
+                          func: () => {
+                            setOpenModal(true), setEditSchedule(null), setScheduleType('CENTER'), setViewMode(false);
+                          },
+                        },
+                      ]
+                    : []
+                }
               />
               <ContentSceduleArea>
                 <AreaDate>{selectedDate}</AreaDate>
@@ -127,6 +143,7 @@ const ScheduleTeacher = () => {
                     schedules={selectedSchedules.filter((item) => item.type === 'CENTER')}
                     onEditClick={handleEditClick}
                     onDeleteClick={handleDeleteClick}
+                    onShowClick={handShowClick}
                   />
                 </AreaList>
               </ContentSceduleArea>
@@ -140,6 +157,7 @@ const ScheduleTeacher = () => {
         selectedDate={selectedDate.split(' ')[0]}
         initialData={editSchedule}
         type={scheduleType}
+        viewMode={viewMode}
         onSuccess={(date) => fetchData(date)}
       />
     </>
@@ -225,4 +243,4 @@ const ContentRightBottom = styled.div`
   box-shadow: ${({ theme }) => theme.shadows.md};
 `;
 
-export default ScheduleTeacher;
+export default ScheduleManager;
