@@ -91,10 +91,10 @@ const TeacherMainPage = () => {
             <>
               <CareContainer>
                 <AttendanceBox>
-                  <TeacherMainAttendance />
+                  <TeacherMainAttendance centerNo={centerNo} />
                 </AttendanceBox>
                 <AttendanceBox>
-                  <TeacherMainChild />
+                  <TeacherMainChild centerNo={centerNo} />
                 </AttendanceBox>
               </CareContainer>
             </>
@@ -104,7 +104,7 @@ const TeacherMainPage = () => {
           {activeTab === '건강관리' && (
             <>
               <HealthContainer>
-                <TeacherMainHealth />
+                <TeacherMainHealth member={member} />
               </HealthContainer>
             </>
           )}

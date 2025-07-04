@@ -1,6 +1,7 @@
 package com.bridge.kinder.controller;
 
 import com.bridge.kinder.dto.ClassRoomDto;
+import com.bridge.kinder.dto.ClassRoomDto.HealthLogProgressResponse;
 import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.service.ClassRoomService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,18 @@ public class ClassRoomController {
     @GetMapping("/list/{centerNo}")
     public ResponseEntity<List<ClassRoomDto.Response>> findClasses(@PathVariable int centerNo) {
         return ResponseEntity.ok(classRoomService.findClassesByCenterNo(centerNo));
+    }
+
+    //반별 출석률
+    @GetMapping("/main/attendance-rate/{centerNo}")
+    public ResponseEntity<List<ClassRoomDto.AttendanceRateResponse>> getAttendanceRate(@PathVariable int centerNo){
+        return ResponseEntity.ok(classRoomService.getAttendanceRate(centerNo));
+    }
+
+    //반별 건강 로그 완료 현황
+    @GetMapping("/main/healthlog-progress/{centerNo}")
+    public ResponseEntity<List<HealthLogProgressResponse>> getHealthLogProgress(@PathVariable int centerNo){
+        return ResponseEntity.ok(classRoomService.getHealthLogProgress(centerNo));
     }
 
 }

@@ -41,6 +41,15 @@ const MainSchedule = () => {
     return isAfter(datetime, now);
   });
 
+  //일정 더보기 / 등록하기 버튼
+  const handleClickButton = () => {
+    if (member.memberType === 'PARENT') {
+      navigate('나중에 생기는 학부모 유치원 일정페이지');
+    } else {
+      navigate('/scheduleteacher');
+    }
+  };
+
   return (
     <Wrapper>
       {/* 상단: 요일 + 날짜 */}
@@ -78,8 +87,12 @@ const MainSchedule = () => {
         )}
       </ScheduleWrapper>
 
-      <Button onClick={() => navigate('/scheduleteacher')}>
-        {todaySchedules.length === 0 ? '일정 등록하기' : '일정 더보기'}
+      <Button onClick={handleClickButton}>
+        {member?.memberType === 'PARENT'
+          ? '일정 더보기'
+          : todaySchedules.length === 0
+            ? '일정 등록하기'
+            : '일정 더보기'}
       </Button>
     </Wrapper>
   );

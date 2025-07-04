@@ -3,8 +3,9 @@ import styled from 'styled-components';
 import defaultImg from '../../../assets/defaultImg.png';
 import { CiSquarePlus } from 'react-icons/ci';
 import { useNavigate } from 'react-router-dom';
+import { BounceLoader } from 'react-spinners';
 
-const ParenctContactList = ({ selectedClass, searchKeyword, value }) => {
+const ParenctContactList = ({ selectedClass, searchKeyword, value, status }) => {
   const navigate = useNavigate();
 
   const handleClick = (childNo) => {
@@ -16,6 +17,8 @@ const ParenctContactList = ({ selectedClass, searchKeyword, value }) => {
     const matchedName = data.child_name.includes(searchKeyword);
     return matchedClass && matchedName;
   });
+
+  console.log(filtered);
 
   return (
     <Wrapper>
@@ -30,23 +33,41 @@ const ParenctContactList = ({ selectedClass, searchKeyword, value }) => {
           </tr>
         </thead>
         <tbody>
-          {filtered.map((data) => (
-            <Tr key={data.child_no}>
-              <Td>
-                <Img src={defaultImg} />
-              </Td>
-              <Td>{data.child_name}</Td>
-              <Td>{data.class_name === null ? '선택된 반이 없습니다.' : data.class_name}</Td>
-              <Td>
-                <CiSquarePlus size={30} style={{ cursor: 'pointer' }} onClick={() => handleClick(data.child_no)} />
-                {/*여기 누르면 아동 상세보기 페이지로 이동하게 하기 */}
-              </Td>
-              <Dvitd>
-                <div>아버지: {data.f_parent_phone}</div>
-                <div>어머니: {data.m_parent_phone}</div>
-              </Dvitd>
-            </Tr>
-          ))}
+          {filtered.length !== 0 ? (
+            filtered.map((data) => (
+              <Tr key={data.child_no}>
+                <Td>
+                  <Img src={defaultImg} />
+                </Td>
+                <Td>{data.child_name}</Td>
+                <Td>{data.class_name === null ? '선택된 반이 없습니다.' : data.class_name}</Td>
+                <Td>
+                  <CiSquarePlus size={30} style={{ cursor: 'pointer' }} onClick={() => handleClick(data.child_no)} />
+                  {/*여기 누르면 아동 상세보기 페이지로 이동하게 하기 */}
+                </Td>
+                <Dvitd>
+                  <div>아버지: {data.f_parent_phone}</div>
+                  <div>어머니: {data.m_parent_phone}</div>
+                </Dvitd>
+              </Tr>
+            ))
+          ) : (
+            <tr>
+              <ErrorTd colSpan={5}>
+                <ErrorTdDiv>
+                  <BounceLoader color="#1A748E" />
+                  <h1>{status}</h1>
+                  {status === '연락처 불러오기 실패' ? (
+                    <BackButton type="button" onClick={() => navigate(-1)}>
+                      돌아가기
+                    </BackButton>
+                  ) : (
+                    ''
+                  )}
+                </ErrorTdDiv>
+              </ErrorTd>
+            </tr>
+          )}
         </tbody>
       </Table>
     </Wrapper>
@@ -66,8 +87,7 @@ const Wrapper = styled.div`
 `;
 
 const Table = styled.table`
-  border-collapse: collapse;
-  table-layout: fixed;
+  width: 100%;
   min-width: 600px;
 `;
 
@@ -90,11 +110,10 @@ const Tr = styled.tr`
 const Dvitd = styled.td`
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   flex-direction: column;
-  white-space: nowrap;
   height: 90px;
-  padding: 10px;
+  padding: ${({ theme }) => theme.spacing[3]};
   gap: ${({ theme }) => theme.spacing[3]};
 `;
 
@@ -105,4 +124,23 @@ const Td = styled.td`
 const Img = styled.img`
   width: 50px;
   border-radius: 50px;
+`;
+
+const ErrorTd = styled.td`
+  height: 300px;
+`;
+
+const ErrorTdDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing[8]};
+`;
+
+const BackButton = styled.button`
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  background-color: ${({ theme }) => theme.colors.lightblue};
+  color: ${({ theme }) => theme.colors.white};
+  padding: ${({ theme }) => theme.spacing[2]} ${({ theme }) => theme.spacing[4]};
 `;
