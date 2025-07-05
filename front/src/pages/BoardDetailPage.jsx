@@ -4,7 +4,7 @@ import BoardEditor from '../components/Board/BoardEditor';
 import ContentHeader from '../components/Common/ContentHeader';
 import styled from 'styled-components';
 import BoardDetail from '../components/Board/BoardDetail';
-import content from "../components/Board/content.json";
+// import content from "../components/Board/content.json";
 import { boardService } from '../api/boards';
 import useLoginStore from '../store/loginStore';
 
