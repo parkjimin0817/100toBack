@@ -15,6 +15,7 @@ const SideBar = ({ type }) => {
   };
 
   const handleMenuToggle = (menuId) => {
+    if(openMenus[menuId] === true) return; // 다시 버튼에 올린다고 메뉴 사라지는 문제 수정
     setOpenMenus((prev) => ({ ...prev, [menuId]: !prev[menuId] }));
   };
 
@@ -41,12 +42,13 @@ const SideBar = ({ type }) => {
               $SidebarColor={menu.color}
               $isExpanded={isExpanded}
               onMouseEnter={() => handleMenuToggle(menu.id)}
+              $active={openMenus[menu.id]}
             >
               {menu.icon}
               <p>{menu.label}</p>
             </SidebarItemButton>
 
-            {openMenus[menu.id] && isExpanded && (
+            {openMenus[menu.id] /*&& isExpanded*/ && (
               <SidebarSublist $SidebarColor={menu.color}>
                 {menu.subItems.map((item, idx) => (
                   <NavLink to={item.link} key={idx}>
@@ -245,7 +247,8 @@ const parentSidebar = [
 ];
 
 const SidebarContainer = styled.div`
-  width: ${({ $isExpanded }) => ($isExpanded ? '300px' : '120px')};
+  /* width: ${({ $isExpanded }) => ($isExpanded ? '300px' : '120px')}; */
+  width: 120px;
   transition: width 0.3s ease;
   background-color: white;
   padding: 20px;
@@ -258,7 +261,8 @@ const SidebarList = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  align-items: ${({ $isExpanded }) => ($isExpanded ? 'flex-start' : 'center')};
+  /* align-items: ${({ $isExpanded }) => ($isExpanded ? 'flex-start' : 'center')}; */
+  align-items: center;
   z-index: 100;
 `;
 
@@ -273,27 +277,38 @@ const SidebarItem = styled.li`
 const SidebarItemButton = styled.div`
   display: flex;
   align-items: center;
-  flex-direction: ${({ $isExpanded }) => ($isExpanded ? 'row' : 'column')};
-  justify-content: ${({ $isExpanded }) => ($isExpanded ? 'flex-start' : 'center')};
-  width: ${({ $isExpanded }) => ($isExpanded ? '260px' : '80px')};
+  /* flex-direction: ${({ $isExpanded }) => ($isExpanded ? 'row' : 'column')}; */
+  flex-direction: column;
+  /* justify-content: ${({ $isExpanded }) => ($isExpanded ? 'flex-start' : 'center')}; */
+  justify-content: center;
+  /* width: ${({ $isExpanded }) => ($isExpanded ? '260px' : '80px')}; */
+  width: 80px;
   height: 80px;
   border: 3px solid ${({ theme, $SidebarColor }) => theme.colors[$SidebarColor]};
   border-radius: 10px;
   transition: all 0.3s ease;
   font-size: 12px;
 
+  background-color: ${({ theme, $SidebarColor, $active }) => ($active ? theme.colors[$SidebarColor] : 'white')};
+  color: ${({ theme, $SidebarColor, $active }) => ($active ? 'white' : theme.colors[$SidebarColor])};
+  font-weight: ${({ $active }) => ($active ? 'bold' : 'normal')};
+
   & > svg {
     width: 35px;
     height: 40px;
-    margin-left: ${({ $isExpanded }) => ($isExpanded ? '20px' : '0')};
+    /* margin-left: ${({ $isExpanded }) => ($isExpanded ? '20px' : '0')};
     margin-right: ${({ $isExpanded }) => ($isExpanded ? '15px' : '0')};
-    margin-bottom: ${({ $isExpanded }) => ($isExpanded ? '0' : '5px')};
+    margin-bottom: ${({ $isExpanded }) => ($isExpanded ? '0' : '5px')}; */
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 5px;
   }
 
   &:hover {
     background-color: ${({ theme, $SidebarColor }) => theme.colors[$SidebarColor]};
     color: white;
-    font-size: 16px;
+    font-weight: bold;
+    /* font-size: 14px; */ // 폰트 크기 증가시 깨져서 비활성화.
   }
 `;
 
@@ -302,19 +317,28 @@ const SidebarSublist = styled.ul`
   flex-direction: column;
   overflow: hidden;
   animation: slideDown 0.3s ease forwards;
-  margin-left: 40px;
-  position: relative;
+  margin-left: 80px;
+  /* position: relative; */
+  position: absolute;
   gap: 10px;
+  background-color: white;
+
+  width: 200px;
+  padding: 10px;
+  border-top-right-radius : 10px;
+  border-bottom-right-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 
   &::before {
     content: '';
     position: absolute;
     left: 0;
-    top: 0;
+    top: 10px;
     width: 4px;
-    height: 100%;
+    height: calc(100% - 20px);
     background-color: ${({ theme, $SidebarColor }) => theme.colors[$SidebarColor]};
     border-radius: 2px;
+    margin-left: 10px;
   }
 
   @keyframes slideDown {
