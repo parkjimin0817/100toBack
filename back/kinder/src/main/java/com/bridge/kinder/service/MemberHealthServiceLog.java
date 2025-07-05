@@ -17,4 +17,7 @@ public interface MemberHealthServiceLog {
     String updateHealthLog(MemberHealthLogDto.Update dto);
     //기록 삭제
     void deleteHealthLog(int memberHealthLogNo);
+
+    //메인 - 2주 평균 값
+    MemberHealthLogDto.HealthAvgResponse getWeeklyAvg(int memberNo);
 }

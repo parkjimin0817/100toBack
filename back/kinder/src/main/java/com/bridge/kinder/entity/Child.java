@@ -105,6 +105,11 @@ public class Child {// 아동
     List<ChildActivityLog> childActivityLogs = new ArrayList<>();
     //아동 생활 기록
 
+    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    List<Counsel> counsels = new ArrayList<>();
+    //상담
+
 
     //---------------------------------------------------------------------------------------------
     @PrePersist

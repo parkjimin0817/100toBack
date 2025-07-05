@@ -221,10 +221,21 @@ export const memberService = {
       throw new Error('서버 통신 불량: ' + error.message);
     }
   },
+
   //교사 개별 상세 불러오기 (memberNo)
   getTeacherDetail: async (memberNo) => {
     try {
       const { data } = await api.get(API_ENDPOINTS.MEMBERS.TEACHER_DETAIL(memberNo));
+      return data;
+    } catch (error) {
+      throw new Error('서버 통신 불량: ' + error.message);
+    }
+  },
+
+  //교사 소개 목록 불러오기
+  teacherIntroList: async (centerNo) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.MEMBERS.TEACHER_INTRO_LIST(centerNo));
       return data;
     } catch (error) {
       throw new Error('서버 통신 불량: ' + error.message);

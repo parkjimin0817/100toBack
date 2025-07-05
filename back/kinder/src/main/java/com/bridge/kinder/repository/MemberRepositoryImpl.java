@@ -124,11 +124,12 @@ public class MemberRepositoryImpl implements MemberRepository {
     //마이페이지 수정
     @Override
     public Optional<Member> myPageUpdate(int id, MypageDto.Update dto) {
-        String jpql = "UPDATE Member m SET m.memberName = :name, m.memberBirth = :birth WHERE m.memberNo = :memberNo";
+        String jpql = "UPDATE Member m SET m.memberName = :name, m.memberBirth = :birth, m.address =:address WHERE m.memberNo = :memberNo";
 
         int updated = em.createQuery(jpql)
                 .setParameter("name", dto.getMemberName())
                 .setParameter("birth", dto.getMemberBirth())
+                .setParameter("address", dto.getAddress())
                 .setParameter("memberNo", String.valueOf(id))
                 .executeUpdate();
 

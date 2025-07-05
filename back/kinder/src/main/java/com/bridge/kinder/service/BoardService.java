@@ -1,6 +1,7 @@
 package com.bridge.kinder.service;
 
 import com.bridge.kinder.dto.BoardDto;
+import com.bridge.kinder.dto.RecentBoardDto;
 import com.bridge.kinder.enums.CommonEnums;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,4 +21,7 @@ public interface BoardService {
     Page<BoardDto.MealPlanBoardDto> getMealPlanBoards(CommonEnums.BoardType type, int centerNo, int page, int size);
 
     int updateBoard(Integer boardNo, BoardDto.Update dto, MultipartFile file, List<MultipartFile> contentFiles) throws IOException;
+
+    //메인페이지 시설별 최근 3개 게시물
+    List<RecentBoardDto.Response> getRecentBoards(int centerNo);
 }

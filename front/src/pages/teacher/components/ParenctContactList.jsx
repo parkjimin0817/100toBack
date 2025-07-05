@@ -3,33 +3,23 @@ import styled from 'styled-components';
 import defaultImg from '../../../assets/defaultImg.png';
 import { CiSquarePlus } from 'react-icons/ci';
 import { useNavigate } from 'react-router-dom';
+import { BounceLoader } from 'react-spinners';
 
-const contactData = [
-  { img: defaultImg, class: '햇님반', name: '박지민', phone: '010-1234-5678' },
-  { img: defaultImg, class: '햇님반', name: '김승기', phone: '010-2222-3333' },
-  { img: defaultImg, class: '달님반', name: '양동민', phone: '010-9999-8888' },
-  { img: defaultImg, class: '햇님반', name: '정형일', phone: '010-1234-5678' },
-  { img: defaultImg, class: '햇님반', name: '김승기', phone: '010-2222-3333' },
-  { img: defaultImg, class: '달님반', name: '양동민', phone: '010-9999-8888' },
-  { img: defaultImg, class: '햇님반', name: '정형일', phone: '010-1234-5678' },
-  { img: defaultImg, class: '햇님반', name: '정의철', phone: '010-2222-3333' },
-  { img: defaultImg, class: '달님반', name: '홍길동', phone: '010-9999-8888' },
-  { img: defaultImg, class: '햇님반', name: '박길동', phone: '010-1234-5678' },
-  { img: defaultImg, class: '햇님반', name: '김지수', phone: '010-2222-3333' },
-  { img: defaultImg, class: '달님반', name: '똥쟁이', phone: '010-9999-8888' },
-];
-
-const ParenctContactList = ({ selectedClass, searchKeyword }) => {
+const ParenctContactList = ({ selectedClass, searchKeyword, value, status }) => {
   const navigate = useNavigate();
-  const handleClick = () => {
-    //아동 id 추가해야함
-    navigate('/child/detail');
+
+  const handleClick = (childNo) => {
+    navigate(`/child/detail/${childNo}`);
   };
-  const filtered = contactData.filter((data) => {
-    const matchedClass = selectedClass === '' || data.class === selectedClass;
-    const matchedName = data.name.includes(searchKeyword);
+
+  const filtered = value.filter((data) => {
+    const matchedClass = selectedClass === '' || data.class_name === selectedClass;
+    const matchedName = data.child_name.includes(searchKeyword);
     return matchedClass && matchedName;
   });
+
+  console.log(filtered);
+
   return (
     <Wrapper>
       <Table>
@@ -43,20 +33,41 @@ const ParenctContactList = ({ selectedClass, searchKeyword }) => {
           </tr>
         </thead>
         <tbody>
-          {filtered.map((data, index) => (
-            <Tr key={index}>
-              <Td>
-                <Img src={data.img} />
-              </Td>
-              <Td>{data.name}</Td>
-              <Td>{data.class}</Td>
-              <Td>
-                <CiSquarePlus size={30} style={{ cursor: 'pointer' }} onClick={() => handleClick()} />
-                {/*여기 누르면 아동 상세보기 페이지로 이동하게 하기 */}
-              </Td>
-              <Td>{data.phone}</Td>
-            </Tr>
-          ))}
+          {filtered.length !== 0 ? (
+            filtered.map((data) => (
+              <Tr key={data.child_no}>
+                <Td>
+                  <Img src={defaultImg} />
+                </Td>
+                <Td>{data.child_name}</Td>
+                <Td>{data.class_name === null ? '선택된 반이 없습니다.' : data.class_name}</Td>
+                <Td>
+                  <CiSquarePlus size={30} style={{ cursor: 'pointer' }} onClick={() => handleClick(data.child_no)} />
+                  {/*여기 누르면 아동 상세보기 페이지로 이동하게 하기 */}
+                </Td>
+                <Dvitd>
+                  <div>아버지: {data.f_parent_phone}</div>
+                  <div>어머니: {data.m_parent_phone}</div>
+                </Dvitd>
+              </Tr>
+            ))
+          ) : (
+            <tr>
+              <ErrorTd colSpan={5}>
+                <ErrorTdDiv>
+                  <BounceLoader color="#1A748E" />
+                  <h1>{status}</h1>
+                  {status === '연락처 불러오기 실패' ? (
+                    <BackButton type="button" onClick={() => navigate(-1)}>
+                      돌아가기
+                    </BackButton>
+                  ) : (
+                    ''
+                  )}
+                </ErrorTdDiv>
+              </ErrorTd>
+            </tr>
+          )}
         </tbody>
       </Table>
     </Wrapper>
@@ -72,36 +83,64 @@ const Wrapper = styled.div`
   border-radius: 10px;
   overflow: auto;
   overflow-y: scroll;
-  overflow-x: auto;
+  overflow-x: hidden;
 `;
 
 const Table = styled.table`
   width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
   min-width: 600px;
 `;
 
 const Th = styled.th`
-  padding: 12px;
-  font-size: ${({ theme }) => theme.fontSizes.base};
-  font-weight: bold;
+  padding: ${({ theme }) => theme.spacing[3]};
+  font-size: ${({ theme }) => theme.fontSizes.lg};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
   text-align: center;
 `;
 
 const Tr = styled.tr`
+  letter-spacing: 2px;
+  font-size: ${({ theme }) => theme.fontSizes.base};
+  font-weight: ${({ theme }) => theme.fontWeights.medium};
   &:hover {
     background-color: ${({ theme }) => theme.colors.gray[200]};
   }
 `;
 
+const Dvitd = styled.td`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 90px;
+  padding: ${({ theme }) => theme.spacing[3]};
+  gap: ${({ theme }) => theme.spacing[3]};
+`;
+
 const Td = styled.td`
-  padding: 10px;
-  font-size: ${({ theme }) => theme.fontSizes.base};
-  text-align: center;
+  height: 90px;
 `;
 
 const Img = styled.img`
   width: 50px;
   border-radius: 50px;
+`;
+
+const ErrorTd = styled.td`
+  height: 300px;
+`;
+
+const ErrorTdDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing[8]};
+`;
+
+const BackButton = styled.button`
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  background-color: ${({ theme }) => theme.colors.lightblue};
+  color: ${({ theme }) => theme.colors.white};
+  padding: ${({ theme }) => theme.spacing[2]} ${({ theme }) => theme.spacing[4]};
 `;

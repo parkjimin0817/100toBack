@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import ContentHeader from '../components/Common/ContentHeader';
 import ImagePost from '../components/Board/ImagePost';
@@ -16,15 +16,15 @@ const MealPlanPage = () => {
   useEffect(() => {
     const getPostList = async () => {
       try {
-        const responseData = await boardService.typeBoardList("MEAL_PLAN", member.centerNo, page);
+        const responseData = await boardService.typeBoardList('MEAL_PLAN', member.centerNo, page);
         console.log(responseData);
         setData(responseData);
         // alert("게시글 조회 성공");
       } catch (error) {
-        console.error("게시글 조회 실패 : ", error);
-        alert("게시글 조회 실패");
+        console.error('게시글 조회 실패 : ', error);
+        alert('게시글 조회 실패');
       }
-    }
+    };
     getPostList();
   }, [page]);
 
@@ -42,18 +42,20 @@ const MealPlanPage = () => {
     <PageContainer>
       <ContentHeader
         Title={'식단표 게시판'}
-        Color={'green'}
+        Color={member.memberType === 'PARENT' ? 'purple' : 'green'}
         // 교사면 버튼 추가, 학부모면 없음.
         ButtonProps={
-          member.memberType === "FARENT" ? 
-          []
-          : [
-          { Title: '작성하기', 
-            func: () => {
-              navigate("/meal_plan/write", { state: { category: "meal_plan" }, })
-            } 
-          },
-        ]}
+          member.memberType === 'PARENT'
+            ? []
+            : [
+                {
+                  Title: '작성하기',
+                  func: () => {
+                    navigate('/meal_plan/write', { state: { category: 'meal_plan' } });
+                  },
+                },
+              ]
+        }
       ></ContentHeader>
       {data && (
         <BoardContainer>
@@ -66,15 +68,11 @@ const MealPlanPage = () => {
         </BoardContainer>
       )}
       {data && (
-        <Pagination
-          currentPage={data.number + 1}
-          totalPages={data.totalPages}
-          onPageChange={handlePageChange}
-        />
+        <Pagination currentPage={data.number + 1} totalPages={data.totalPages} onPageChange={handlePageChange} />
       )}
     </PageContainer>
-  )
-}
+  );
+};
 
 const PageContainer = styled.div`
   width: 100%;

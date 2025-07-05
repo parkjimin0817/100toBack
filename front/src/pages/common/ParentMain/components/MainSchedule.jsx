@@ -6,20 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import useLoginStore from '../../../../store/loginStore';
 import { useScheduleService } from '../../../../api/schedule';
 
-//sheduleNo, title, scheduleDate, startTime, type=member,
-
-const schedules = [
-  { date: '2025-06-19', time: '13:00', text: '김승기 부모님과 대면 상담' },
-  { date: '2025-06-19', time: '15:00', text: '김승기 부모님과 대면 상담' },
-  { date: '2025-06-19', time: '18:00', text: '김승기 부모님과 대면 상담' },
-  { date: '2025-06-19', time: '19:00', text: '여자친구랑 통화' },
-  { date: '2025-06-19', time: '23:00', text: '부모님이랑 코스요리' },
-  { date: '2025-06-19', time: '22:00', text: '정의철 아동 생일파티' },
-  { date: '2025-06-19', time: '21:00', text: '양동민 아동 생일파티' },
-  { date: '2025-06-19', time: '21:00', text: '양동민 아동 생일파티' },
-  { date: '2025-06-19', time: '21:00', text: '양동민 아동 생일파티' },
-];
-
 const MainSchedule = () => {
   const navigate = useNavigate();
   const { member } = useLoginStore();
@@ -55,6 +41,15 @@ const MainSchedule = () => {
     return isAfter(datetime, now);
   });
 
+  //일정 더보기 / 등록하기 버튼
+  const handleClickButton = () => {
+    if (member.memberType === 'PARENT') {
+      navigate('나중에 생기는 학부모 유치원 일정페이지');
+    } else {
+      navigate('/scheduleteacher');
+    }
+  };
+
   return (
     <Wrapper>
       {/* 상단: 요일 + 날짜 */}
@@ -73,21 +68,32 @@ const MainSchedule = () => {
       {/* 구분선 */}
       <Line />
       <ScheduleWrapper>
-        <VerticalLine />
-        {todaySchedules.map((s, i) => {
-          const isNow = i === nextIndex;
-          return (
-            <ScheduleItem key={s.schedule_no}>
-              <Circle $highlight={isNow} />
-              <Content>
-                <Time $highlight={isNow}> {format(parse(s.start_time, 'HH:mm:ss', new Date()), 'HH:mm')}</Time>
-                <Text $highlight={isNow}>{s.title}</Text>
-              </Content>
-            </ScheduleItem>
-          );
-        })}
+        {todaySchedules.length > 0 && <VerticalLine />}
+        {todaySchedules.length === 0 ? (
+          <NoScheduleText>오늘 일정이 없습니다.</NoScheduleText>
+        ) : (
+          todaySchedules.map((s, i) => {
+            const isNow = i === nextIndex;
+            return (
+              <ScheduleItem key={s.schedule_no}>
+                <Circle $highlight={isNow} />
+                <Content>
+                  <Time $highlight={isNow}> {format(parse(s.start_time, 'HH:mm:ss', new Date()), 'HH:mm')}</Time>
+                  <Text $highlight={isNow}>{s.title}</Text>
+                </Content>
+              </ScheduleItem>
+            );
+          })
+        )}
       </ScheduleWrapper>
-      <Button onClick={() => navigate('/scheduleteacher')}>일정 더보기</Button>
+
+      <Button onClick={handleClickButton}>
+        {member?.memberType === 'PARENT'
+          ? '일정 더보기'
+          : todaySchedules.length === 0
+            ? '일정 등록하기'
+            : '일정 더보기'}
+      </Button>
     </Wrapper>
   );
 };
@@ -111,6 +117,8 @@ const getWeek = (today) => {
 const Wrapper = styled.div`
   width: 100%;
   padding: ${({ theme }) => theme.spacing[6]};
+  height: 480px;
+  position: relative;
 `;
 
 const DaysRow = styled.div`
@@ -209,8 +217,19 @@ const Button = styled.button`
   background-color: ${({ theme }) => theme.colors.orange};
   padding: ${({ theme }) => theme.spacing[1]};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
 
   :hover {
     cursor: pointer;
   }
+`;
+
+const NoScheduleText = styled.div`
+  color: ${({ theme }) => theme.colors.gray[500]};
+  text-align: center;
+  margin-top: ${({ theme }) => theme.spacing[4]};
+  font-size: ${({ theme }) => theme.fontSizes.base};
 `;

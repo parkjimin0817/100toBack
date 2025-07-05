@@ -21,8 +21,8 @@ export const API_ENDPOINTS = {
     DELETE: `/api/schedule/delete`,
     TODAYLISTS: '/api/schedule/lists/main',
     DAILYSCHEDULE: `/api/schedule/dailyCreate`,
-    DAILYSCHEDULELIST: (centerNo, memberNo, classNo, scheduleDate) =>
-      `/api/schedule/dailyList?centerNo=${centerNo}&memberNo=${memberNo}&classNo=${classNo}&scheduleDate=${scheduleDate}`,
+    DAILYSCHEDULELIST: (centerNo, classNo, scheduleDate) =>
+      `/api/schedule/dailyList?centerNo=${centerNo}&classNo=${classNo}&scheduleDate=${scheduleDate}`,
     UPDATEDAILY: `/api/schedule/dailyUpdate`,
     DELETEDAILY: (scheduleNo) => `/api/schedule/dailyDelete/${scheduleNo}`,
   },
@@ -42,6 +42,7 @@ export const API_ENDPOINTS = {
     TEACHERLIST: (centerNo) => `/api/members/teacher/select/${centerNo}`,
     TEACHER_DETAIL_LIST: (centerNo) => `/api/members/teacher/list/${centerNo}`,
     TEACHER_DETAIL: (memberNo) => `/api/members/teacher/${memberNo}`,
+    TEACHER_INTRO_LIST: (centerNo) => `/api/members/introList?centerNo=${centerNo}`,
   },
   APPLOVALLIST: {
     BASE: 'api/approval',
@@ -59,6 +60,8 @@ export const API_ENDPOINTS = {
     BASE: '/api/classroom',
     CREATE: '/api/classroom/create',
     CLASSROOMLIST: (centerNo) => `/api/classroom/list/${centerNo}`,
+    GETRATE: (centerNo) => `/api/classroom/main/attendance-rate/${centerNo}`,
+    GETHEALTHPROGRESS: (centerNo) => `/api/classroom/main/healthlog-progress/${centerNo}`,
   },
   ATTENDANCE: {
     BASE: '/api/attendance',
@@ -86,6 +89,7 @@ export const API_ENDPOINTS = {
     DETAIL: (memberHealthLogNo) => `/api/members/health/detail?memberHealthLogNo=${memberHealthLogNo}`,
     EDIT: `/api/members/health/edit`,
     DELETE: `/api/members/health/delete`,
+    GETAVG: (memberNo) => `/api/members/health/main/avg/${memberNo}`,
   },
   CHILDS: {
     BASE: '/api/childs',
@@ -94,6 +98,7 @@ export const API_ENDPOINTS = {
     GETALL: '/api/childs/all',
     GET: '/api/childs/get',
     PARENTCHILDLIST: (memberNo) => `/api/childs/parentChild?memberNo=${memberNo}`,
+    PARENTPHONENUMBER: (centerNo) => `/api/childs/phoneNumber/${centerNo}`,
   },
   BOARDS: {
     BASE: '/api/boards',
@@ -101,6 +106,7 @@ export const API_ENDPOINTS = {
     DETAIL: (id) => `/api/boards/${id}`,
     DELETE: (id) => `/api/boards/${id}`,
     TYPE: (type, centerNo, page) => `/api/boards/type/${type}?centerNo=${centerNo}&page=${page}`,
+    GETRECENT3: (centerNo) => `api/boards/recent3/${centerNo}`,
   },
   VACATION: {
     BASE: '/api/vacation',

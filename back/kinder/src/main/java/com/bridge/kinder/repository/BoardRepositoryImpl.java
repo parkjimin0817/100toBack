@@ -2,6 +2,7 @@ package com.bridge.kinder.repository;
 
 import com.bridge.kinder.entity.Board;
 import com.bridge.kinder.enums.CommonEnums;
+import com.bridge.kinder.enums.CommonEnums.BoardType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
@@ -62,5 +63,19 @@ public class BoardRepositoryImpl implements BoardRepository {
                 .setParameter("type", type)
                 .setParameter("centerNo", centerNo)
                 .getSingleResult();
+    }
+
+    @Override
+    public List<Board> getRecent3Boards(int centerNo, List<BoardType> types) {
+        String jpql = "SELECT b FROM Board b " +
+                "WHERE b.center.centerNo = :centerNo " +
+                "AND b.type IN :types " +
+                "ORDER BY b.createDate DESC";
+
+        return em.createQuery(jpql, Board.class)
+                .setParameter("centerNo", centerNo)
+                .setParameter("types", types)
+                .setMaxResults(3)
+                .getResultList();
     }
 }

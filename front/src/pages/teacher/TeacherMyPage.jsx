@@ -12,8 +12,6 @@ import { useNavigate } from 'react-router-dom';
 import api from '../../api/axios.js';
 import { toast } from 'react-toastify';
 
-// 생략된 import 및 스타일 코드는 유지되고, 핵심 수정 관련 부분만 보여줍니다
-
 const TeacherMyPage = () => {
   const member = useLoginStore((state) => state.member);
   const setMember = useLoginStore((state) => state.setMember);
@@ -27,7 +25,7 @@ const TeacherMyPage = () => {
 
   useEffect(() => {
     if (!isAuthenticated || !member) {
-      alert('로그인이 필요합니다');
+      toast.error('로그인이 필요합니다');
       navigate('/');
       return;
     }
@@ -41,6 +39,7 @@ const TeacherMyPage = () => {
         setEditableInfo({
           memberName: data.member_name,
           memberBirth: data.member_birth,
+          address: data.address,
           memberType: data.member_type,
         });
 
@@ -51,7 +50,7 @@ const TeacherMyPage = () => {
           centerType: data.center_type,
         });
       } catch (error) {
-        alert('불러오기 실패');
+        toast.error('불러오기 실패', error);
       }
     };
 
@@ -68,6 +67,7 @@ const TeacherMyPage = () => {
         await api.patch(`/api/members/mypage?id=${member.memberNo}`, {
           memberName: editableInfo.memberName,
           memberBirth: editableInfo.memberBirth,
+          address: editableInfo.address,
           centerName: centerInfo.centerName,
           centerTel: centerInfo.centerTel,
           centerAddress: centerInfo.centerAddress,
@@ -77,6 +77,7 @@ const TeacherMyPage = () => {
           ...member,
           memberName: editableInfo.memberName,
           memberBirth: editableInfo.memberBirth,
+          address: editableInfo.address,
           memberPhone: editableInfo.memberPhone,
         });
         toast.success('수정이 성공적으로 완료되었습니다.');
@@ -164,13 +165,11 @@ const ProfileImgBox = styled.div`
 `;
 
 const MyInfoBox = styled.div`
-  width: 30%;
-  min-width: 300px;
+  width: 40%;
 `;
 
 const CenterInfoBox = styled.div`
-  width: 50%;
-  min-width: 500px;
+  width: 40%;
 `;
 
 const MenuBox = styled.div`

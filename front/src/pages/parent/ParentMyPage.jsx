@@ -32,6 +32,7 @@ const ParentMyPage = () => {
   const fetchChildList = async () => {
     try {
       const result = await childService.getParentChildList(member.memberNo);
+      console.log('아동정보:', result);
       setChildList(result);
     } catch (error) {
       console.error('자녀 목록을 가져오는 데 실패했습니다:', error);
@@ -124,7 +125,7 @@ const ParentMyPage = () => {
             console.log(data);
             const { age, gender, birthday } = childInfo(data.child_resident_no);
             return (
-              <Card key={data.child_no} onClick={() => navigate(`/child/detail?id=${data.child_no}`)}>
+              <Card key={data.child_no} onClick={() => navigate(`/child/detail/${data.child_no}`)}>
                 <ProfileDiv>
                   <NameDiv>{data.child_name}</NameDiv>
                   <AgeDiv>

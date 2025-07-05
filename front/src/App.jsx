@@ -1,48 +1,36 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/common/LoginPage';
-
 import { ThemeProvider } from 'styled-components';
 import theme from './styles/theme';
 import GlobalStyle from './styles/GlobalStyle';
 import Layout from './components/Common/Layout';
 import Home from './pages/Home';
 import SearchId from './pages/common/SearchId';
-import SeachIdSuccss from './pages/common/SeachIdSuccss';
-
 import UserTypeSelect from './pages/common/signup/UserTypeSelect';
 import TermsAgreement from './pages/common/signup/TermsAgreement';
 import SignUpBasicInfo from './pages/common/signup/SignUpBasicInfo';
 import ChildList from '././pages/teacher/ChildList';
-import SearchFormNav from './components/Common/SearchFormNav';
 import SearchPassword from './pages/common/SearchPassword';
 import AuthenticationUser from './pages/common/AuthenticationUser';
 import ChangePassword from './pages/common/ChangePassword';
-
 import SignUpWorkSpaceInfo from './pages/common/signup/SignUpWorkSpaceInfo';
 import SignUpComplete from './pages/common/signup/SignUpComplete';
-
 import ApprovalList from './pages/manager/ApprovalList';
 import ApprovalListAdmin from './pages/admin/ApprovalListAdmin';
 import VacationList from './pages/manager/VacationList';
-
 import SignUpChildInfo from './pages/common/signup/SignUpChildInfo';
 import SignUpCenterInfo from './pages/common/signup/SignUpCenterInfo';
 import MyVacation from './pages/teacher/MyVacation';
 import ChildHealthCheck from './pages/teacher/ChildHealthCheck';
-
 import SeachIdSuccess from './pages/common/SeachIdSuccss';
 import AttendanceClassList from './pages/teacher/AttendanceClassList';
-
 import ClassPlacement from './pages/manager/ClassPlacement';
 import DailySchedule from './pages/teacher/DailySchedule';
 import DailyScheduleDetail from './pages/teacher/DailyScheduleDetail';
 import { ToastContainer } from 'react-toastify';
-
 import ChildDetail from './pages/teacher/ChildDetail';
-
 import FamilyNoticePage from './pages/teacher/FamilyNoticePage';
-import ManagerMyPage from './pages/manager/ManagerMyPage';
 import BoardWritePage from './pages/BoardWritePage';
 import NoticePage from './pages/NoticePage';
 import NotePage from './pages/NotePage';
@@ -75,6 +63,9 @@ import BoardUpdatePage from './pages/BoardUpdatePage';
 import PhotoPage from './pages/PhotoPage';
 import MealPlanPage from './pages/MealPlanPage';
 import ClassListPage from './pages/ClassListPage';
+import TeacherIntroDetail from './pages/manager/TeacherIntroDetail';
+import CouncelClassList from './pages/manager/CouncelClassList';
+import CouncelSettingPage from './pages/manager/CouncelSettingPage';
 
 function App() {
   return (
@@ -136,6 +127,7 @@ function App() {
              * 10. 시설장 유치원 일정 페이지
              *
              *  */}
+            <Route path="/manager/main" element={<TeacherMainPage />} />
             <Route path="/manager/mypage" element={<TeacherMyPage />} />
             <Route path="/manager/classplacement" element={<ClassPlacement />} />
             <Route path="/manager/teacherlist" element={<TeacherList />} />
@@ -145,6 +137,7 @@ function App() {
             <Route path="/manager/introteacher" element={<TeacherIntroList />} />
             <Route path="/manager/classmanage" element={<ClassRoomManage />} />
             <Route path="/manager/schedule" element={<ScheduleManager />} />
+            <Route path="/manager/teacherIntroDetail/:teacherNo" element={<TeacherIntroDetail />} />
 
             {/**
              * 교사, 시설장 공용
@@ -163,6 +156,8 @@ function App() {
              * 10-2. 작성
              * 10-3. 상세
              * 10-4. 수정
+             * 11. 상담일정 반 선택 목록 페이지
+             * 12. 상담일정 조회,수정 페이지
              *
              *  */}
             <Route path="/childlist" element={<ChildList />} />
@@ -182,7 +177,8 @@ function App() {
               <Route path=":id" element={<BoardDetailPage />} />
               <Route path="update/:id" element={<BoardUpdatePage />} />
             </Route>
-
+            <Route path="/councel/classlist" element={<CouncelClassList />} />
+            <Route path="/councel/detail/:classNo" element={<CouncelSettingPage />} />
             {/**
              * 공용
              *

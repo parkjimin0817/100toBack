@@ -26,7 +26,6 @@ public class ClassRoomRepositoryImpl implements ClassRoomRepository {
         return em.createQuery("select c from ClassRoom c where c.center.centerNo =:centerNo", ClassRoom.class)
                 .setParameter("centerNo", centerNo)
                 .getResultList();
-
     }
 
     //반 번호로 조회

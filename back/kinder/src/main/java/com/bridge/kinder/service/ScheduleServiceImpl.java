@@ -13,6 +13,7 @@ import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.entity.Schedule;
 import com.bridge.kinder.enums.CommonEnums;
+import com.bridge.kinder.enums.CommonEnums.MemberType;
 import com.bridge.kinder.repository.CenterRepository;
 import com.bridge.kinder.repository.ClassRoomRepository;
 import com.bridge.kinder.repository.MemberRepository;
@@ -99,11 +100,20 @@ public class ScheduleServiceImpl implements ScheduleService {
         Member member = memberRepository.findByMemberNo(memberNo)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
 
-        List<Schedule> memberSchedules = scheduleRepository.findMemberTodaySchedule(center.getCenterNo(), member.getMemberNo(), today);
 
-        return memberSchedules.stream()
-                .map(schedule -> ScheduleSimpleResponse.toDto(schedule, schedule.getCenter(), schedule.getMember()))
-                .collect(Collectors.toList());
+        if(member.getMemberType() == MemberType.TEACHER || member.getMemberType() == MemberType.MANAGER) {
+            List<Schedule> memberSchedules = scheduleRepository.findMemberTodaySchedule(center.getCenterNo(), member.getMemberNo(), today);
+            return memberSchedules.stream()
+                    .map(schedule -> ScheduleSimpleResponse.toDto(schedule, schedule.getCenter(), schedule.getMember()))
+                    .collect(Collectors.toList());
+        } else {
+            List<Schedule> memberSchedules = scheduleRepository.findCenterTodaySchedule(center.getCenterNo(), today);
+            return memberSchedules.stream()
+                    .map(schedule -> ScheduleSimpleResponse.toDto(schedule, schedule.getCenter(), schedule.getMember()))
+                    .collect(Collectors.toList());
+        }
+
+
     }
 
     //스케줄 수정
@@ -166,18 +176,15 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     //반 일과표 조회
     @Override
-    public List<DailyResponse> dailyList(int centerNo, int memberNo, int classNo , LocalDate scheduleDate) {
+    public List<DailyResponse> dailyList(int centerNo, int classNo , LocalDate scheduleDate) {
         Center center = centerRepository.findById(centerNo)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
-
-        Member member = memberRepository.findByMemberNo(memberNo)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
 
         ClassRoom classRoom = classRoomRepository.findByClassNo(classNo)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 반입니다."));
 
 
-        return scheduleRepository.findDailyList(center.getCenterNo(), member.getMemberNo(), classRoom.getClassNo(), scheduleDate)
+        return scheduleRepository.findDailyList(center.getCenterNo(), classRoom.getClassNo(), scheduleDate)
                 .stream().map(DailyResponse::toDto)
                 .collect(Collectors.toList());
     }
@@ -189,7 +196,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         for (DailyScheduleUpdateDto dto : dtoList) {
             int centerNo = dto.getCenter_no();
-            int memberNo = dto.getMember_no();
             int classNo = dto.getClass_no();
             int scheduleNo = dto.getSchedule_no();
             LocalDate scheduleDate = dto.getSchedule_date();
@@ -198,7 +204,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             LocalTime endTime = dto.getEnd_time();
 
             // 각 DTO에 해당하는 Schedule을 조회
-            List<Schedule> schedules = scheduleRepository.findDailySchedule(centerNo, memberNo, classNo, scheduleNo, scheduleDate);
+            List<Schedule> schedules = scheduleRepository.findDailySchedule(centerNo, classNo, scheduleNo, scheduleDate);
 
             for (Schedule schedule : schedules) {
                 schedule.updateDailySchedule(description, startTime, endTime);

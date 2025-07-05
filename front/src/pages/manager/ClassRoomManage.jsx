@@ -7,6 +7,8 @@ import CreateClassModal from './components/CreateClassModal';
 import useLoginStore from '../../store/loginStore';
 import { classService } from '../../api/class';
 import { ImInfo } from 'react-icons/im';
+import { BounceLoader } from 'react-spinners';
+import { ErrorDiv, Hint, NoneDiv } from '../../styles/Common/Container';
 
 //출석 체크 시 반별 페이지(모든 반이 나옴)
 const ClassRoomManage = () => {
@@ -16,16 +18,44 @@ const ClassRoomManage = () => {
   const navigate = useNavigate();
 
   const [classrooms, setClassrooms] = useState([]);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const selectClassRoom = async () => {
+    try {
+      setLoading(true);
+      setError('');
+
+      const classList = await classService.classroomlist(centerNo);
+
+      if (classList.length === 0) {
+        setClassrooms([]);
+      } else {
+        setClassrooms(classList);
+      }
+    } catch (error) {
+      console.error('반 목록 불러오기 실패: ', error.message);
+      setError('반 목록 불러오는데 실패하였습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   //반 목록 불러오기
   useEffect(() => {
-    if (!centerNo) return;
+    if (!centerNo) {
+      alert('잘못된 접근입니다.');
+      if (member) {
+        navigate('/manager/main');
+        return;
+      } else {
+        navigate('/');
+        return;
+      }
+    }
 
-    classService
-      .classroomlist(centerNo)
-      .then((data) => setClassrooms(data))
-      .catch((err) => console.error('반 목록 불러오기 실패 : ', err));
-  }, [centerNo]);
+    selectClassRoom();
+  }, []);
 
   return (
     <Content>
@@ -37,14 +67,29 @@ const ClassRoomManage = () => {
           { Title: '뒤로가기', func: () => navigate(-1) },
         ]}
       />
+      {loading ? (
+        <ErrorDiv>
+          <BounceLoader color="#1A748E" />
+        </ErrorDiv>
+      ) : error ? (
+        <ErrorDiv>
+          <h1>{error}</h1>
+        </ErrorDiv>
+      ) : classrooms.length === 0 ? (
+        <NoneDiv>
+          <h1>현재 개설된 반이 없습니다.</h1>
+          <h1>새로운 반이 개설되면 이곳에 표시됩니다</h1>
+        </NoneDiv>
+      ) : (
+        <Div>
+          <Hint>
+            <ImInfo />
+            해당 반을 선택하시면 수정하실 수 있습니다.
+          </Hint>
+          <ClassRoomCard classrooms={classrooms} isDisabled={true} />
+        </Div>
+      )}
 
-      <Div>
-        <Hint>
-          <ImInfo />
-          확인하실 반을 선택해주세요.
-        </Hint>
-        <ClassRoomCard classrooms={classrooms} address={'/childattendance'} />
-      </Div>
       {isModalOpen && (
         <CreateClassModal
           onClose={() => setIsModalOpen(false)}
@@ -57,19 +102,10 @@ const ClassRoomManage = () => {
 };
 
 const Div = styled.div`
+  min-height: 580px;
   padding: ${({ theme }) => theme.spacing[10]};
 `;
 
-const Hint = styled.h2`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 8px;
-  font-size: ${({ theme }) => theme.fontSizes.base};
-  text-align: left;
-  padding-left: ${({ theme }) => theme.spacing[8]};
-  padding-bottom: ${({ theme }) => theme.spacing[8]};
-`;
 const Content = styled.div`
   width: 100%;
   min-height: 600px;

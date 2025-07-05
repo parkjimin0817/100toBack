@@ -2,6 +2,7 @@ package com.bridge.kinder.repository;
 
 import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.ChildActivityData;
+import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.entity.MemberChild;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -34,6 +35,11 @@ public class MemberChildRepositoryImpl implements MemberChildRepository {
         }
 
         return memberNos.get(0); // 첫 번째 부모의 memberNo 반환
+    }
+
+    @Override
+    public Member findByMemberNo(int memberNo){
+        return em.find(Member.class, memberNo);
     }
 
 }

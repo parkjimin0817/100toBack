@@ -1,33 +1,68 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import TeacherImage from '../../../assets/img/teacherpicture.png';
 import Progressbar1 from '../../../assets/img/progressbar1.png';
 import Progressbar2 from '../../../assets/img/progressbar2.png';
 import YellowFace from '../../../assets/img/yellowface.png';
 import Go from '../../../assets/img/go.png';
+import { memberHealthLogService } from '../../../api/memberHealthLog';
+import { useNavigate } from 'react-router-dom';
 
-const TeacherMainHealth = () => {
+const TeacherMainHealth = ({ member }) => {
+  const memberNo = member?.memberNo;
+  const navigate = useNavigate();
+  const [avg, setAvg] = useState([]);
+
+  useEffect(() => {
+    if (!memberNo) return;
+
+    memberHealthLogService
+      .getAvg(memberNo)
+      .then((data) => setAvg(data))
+      .catch((err) => console.error('건강 지수 불러오기 실패 :', err));
+  }, [memberNo]);
+
+  const noData =
+    avg.lastWeekStress === 0 && avg.thisWeekStress === 0 && avg.lastWeekSleep === 0 && avg.thisWeekSleep === 0;
+
   return (
     <>
       <HealthContainer>
         <FirstSecondLine>
           <Greeting>좋은 하루에요.</Greeting>
-          <Greeting>정형일 선생님!</Greeting>
+          <Greeting>{member.memberName} 선생님!</Greeting>
           <Greeting2>오늘도 힘내볼까요?</Greeting2>
           <TeacherPic src={TeacherImage}></TeacherPic>
         </FirstSecondLine>
         <SecondLine>
           <LineHeader>주간 건강 정보</LineHeader>
-          <SecondStressLine>
+          <Info>
+            {noData && (
+              <>
+                이번주와 지난주
+                <br />
+                건강 기록이 아직 없어요
+              </>
+            )}
+          </Info>
+          <StressDiv>
             <SecondLineTitle>스트레스 지수</SecondLineTitle>
-            <ProgressBar src={Progressbar1}></ProgressBar>
-            <ProgressBar src={Progressbar2}></ProgressBar>
-          </SecondStressLine>
-          <SecondStressLine>
+            <Bar>
+              <BarFill $width={avg.lastWeekStress} $color={'lightblue'} />
+            </Bar>
+            <Bar>
+              <BarFill $width={avg.thisWeekStress} $color={'blue'} />
+            </Bar>
+          </StressDiv>
+          <StressDiv>
             <SecondLineTitle>평균 수면 시간</SecondLineTitle>
-            <ProgressBar src={Progressbar1}></ProgressBar>
-            <ProgressBar src={Progressbar2}></ProgressBar>
-          </SecondStressLine>
+            <Bar>
+              <BarFill $width={avg.lastWeekSleep} $color={'lightblue'} />
+            </Bar>
+            <Bar>
+              <BarFill $width={avg.thisWeekSleep} $color={'blue'} />
+            </Bar>
+          </StressDiv>
           <SecondLineFooter>
             <Rectangle1 />
             <FooterInfo>지난주 데이터</FooterInfo>
@@ -46,7 +81,7 @@ const TeacherMainHealth = () => {
           </FeedbackLine>
           <SelfDiagnosisLine>
             <LineHeader>자가진단</LineHeader>
-            <SelfDiagnosisBox>
+            <SelfDiagnosisBox onClick={() => navigate('/teacherhealth')}>
               이번주 자가진단 하기
               <img src={Go} alt="" />
             </SelfDiagnosisBox>
@@ -124,6 +159,7 @@ const SecondStressLine = styled.div`
 
 const SecondLineTitle = styled.div`
   font-size: ${({ theme }) => theme.fontSizes.sm};
+  margin-bottom: ${({ theme }) => theme.spacing[3]};
 `;
 
 const ProgressBar = styled.img``;
@@ -208,4 +244,34 @@ const SelfDiagnosisBox = styled.div`
   &:hover {
     cursor: pointer;
   }
+`;
+
+const StressDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 20px;
+`;
+
+const Bar = styled.div`
+  width: 160px;
+  height: 15px;
+  background-color: ${({ theme }) => theme.colors.gray[300]};
+  margin-bottom: 10px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+`;
+
+const BarFill = styled.div`
+  width: ${(props) => props.$width}%;
+  height: 15px;
+  background-color: ${({ theme, $color }) => theme.colors[$color]};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+`;
+
+const Info = styled.div`
+  width: 80%;
+  margin: 10px auto;
+  font-size: ${({ theme }) => theme.fontSizes.sm};
 `;

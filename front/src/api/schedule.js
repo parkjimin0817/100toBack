@@ -85,11 +85,9 @@ export const useScheduleService = {
   },
 
   //일과표 조회
-  dailyScheduleSelect: async (centerNo, memberNo, classNo, scheduleDate) => {
+  dailyScheduleSelect: async (centerNo, classNo, scheduleDate) => {
     try {
-      const { data } = await api.get(
-        API_ENDPOINTS.SCHEDULES.DAILYSCHEDULELIST(centerNo, memberNo, classNo, scheduleDate)
-      );
+      const { data } = await api.get(API_ENDPOINTS.SCHEDULES.DAILYSCHEDULELIST(centerNo, classNo, scheduleDate));
       return data;
     } catch (error) {
       throw new Error(error, '서버 통신 불량');

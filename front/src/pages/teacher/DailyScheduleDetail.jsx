@@ -13,12 +13,12 @@ import 'dayjs/locale/ko';
 import useLoginStore from '../../store/loginStore';
 import { ImInfo } from 'react-icons/im';
 import { TiDelete } from 'react-icons/ti';
-import { set } from 'react-hook-form';
-import { BarLoader } from 'react-spinners';
 
 const DailyScheduleDetail = () => {
   const { member } = useLoginStore();
   const { class_no } = useParams();
+  const navigate = useNavigate();
+
   //등록 / 수정으로 넘어가는 값
   const [writeAuthority, setWriteAuthority] = useState(false);
 
@@ -31,6 +31,7 @@ const DailyScheduleDetail = () => {
   //년도, 월, 일, 요일(숫자), 요일(글자)
   const [arWeek, setArWeek] = useState([]);
 
+  //상태를 보여주는 글
   const [status, setStatus] = useState('');
 
   const fetchdata = async (sch) => {
@@ -39,12 +40,7 @@ const DailyScheduleDetail = () => {
       const selectedDate = sch?.allDate ?? dayjs().format('YYYY-MM-DD');
       setThisday(selectedDate);
 
-      const schedule = await useScheduleService.dailyScheduleSelect(
-        member.centerNo,
-        member.memberNo,
-        class_no,
-        selectedDate
-      );
+      const schedule = await useScheduleService.dailyScheduleSelect(member.centerNo, class_no, selectedDate);
 
       if (!schedule) {
         throw new Error('일정표 없음');
@@ -57,8 +53,11 @@ const DailyScheduleDetail = () => {
     }
   };
 
+  //  PARENT가 아닌 경우에만 상태 메시지
   useEffect(() => {
-    setStatus('일정을 등록해주세요.');
+    if (member.memberType !== 'PARENT') {
+      setStatus('일정을 등록해주세요.');
+    }
   }, [thisday]);
 
   //년도, 월, 일, 요일(숫자), 요일(글자) 추가
@@ -176,24 +175,31 @@ const DailyScheduleDetail = () => {
       <ContentHeader
         Title={'일과표'}
         Color={'purple'}
-        ButtonProps={
-          writeAuthority === false
-            ? [
-                {
-                  Title: '일정표 작성하기',
-                  func: (e) => {
-                    e.preventDefault();
-                    setWriteAuthority(true);
+        ButtonProps={[
+          {
+            Title: '뒤로 가기',
+            func: () => navigate(-1),
+          },
+          // PARENT가 아닐 때만 일정표 작성/등록 버튼 노출
+          ...(member.memberType !== 'PARENT'
+            ? writeAuthority === false
+              ? [
+                  {
+                    Title: '일정표 작성하기',
+                    func: (e) => {
+                      e.preventDefault();
+                      setWriteAuthority(true);
+                    },
                   },
-                },
-              ]
-            : [
-                {
-                  Title: '일정표 등록하기',
-                  type: 'submit',
-                },
-              ]
-        }
+                ]
+              : [
+                  {
+                    Title: '일정표 등록하기',
+                    type: 'submit',
+                  },
+                ]
+            : []),
+        ]}
       />
       <Div>
         <div>
@@ -229,12 +235,11 @@ const DailyScheduleDetail = () => {
           <Form>
             <HintArea>
               <ImInfo />
-              하루 일정를 확인하고 등록하실 수 있습니다.
+              일정을 확인하고 등록해보세요!
             </HintArea>
             <InnerBorder $writeAuthority={writeAuthority}>
               {inputs.length === 0 ? (
                 <NotingAnyMore>
-                  <BarLoader />
                   <h1>일정이 없습니다.</h1>
                 </NotingAnyMore>
               ) : (
