@@ -192,7 +192,7 @@ export const memberService = {
   //아이디 찾기
   searchId: async (member_name, member_birth) => {
     try {
-      const { data } = await api.get(API_ENDPOINTS.MEMBERS.SEARCHID(member_name, member_birth));
+      const { data } = await api.post(API_ENDPOINTS.MEMBERS.SEARCHID, { member_name, member_birth });
       return data;
     } catch (error) {
       if (error.response) {

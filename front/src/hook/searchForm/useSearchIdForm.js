@@ -76,6 +76,7 @@ export const useSearchIdForm = () => {
     try {
       setIsLoading(true);
       setError('');
+      console.log(data);
 
       const user = await memberService.searchId(data.member_name, data.member_birth);
       if (!user) {
