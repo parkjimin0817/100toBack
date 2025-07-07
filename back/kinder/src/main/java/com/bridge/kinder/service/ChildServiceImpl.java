@@ -64,22 +64,7 @@ public class ChildServiceImpl implements ChildService {
         Center center = centerRepository.findById(dto.getCenter_no())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
 
-        String originName = null;
-        String profilePath = null;
-
-        if (dto.getChild_profile() != null && !dto.getChild_profile().isEmpty()) {
-            originName = dto
-                    .getChild_profile()
-                    .getOriginalFilename();
-            profilePath = UUID.randomUUID().toString() + "_child_" + originName;
-
-            File uploadDir = new File(UPLOAD_PATH);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdirs();
-            }
-
-            dto.getChild_profile().transferTo(new File(UPLOAD_PATH + profilePath));
-        }
+        String profilePath = dto.getChild_profile();
 
         Child child = dto.toEntity(center, profilePath);
         childRepository.save(child);

@@ -41,7 +41,9 @@ const TeacherMyPage = () => {
           memberBirth: data.member_birth,
           address: data.address,
           memberType: data.member_type,
+          memberProfile: data.member_profile,
         });
+        console.log(data);
 
         setCenterInfo({
           centerName: data.center_name,
@@ -101,7 +103,7 @@ const TeacherMyPage = () => {
       <Wrapper>
         <InfoBox>
           <ProfileImgBox>
-            <MyPageProfileImage />
+            <MyPageProfileImage memberProfile={editableInfo.memberProfile} isEditMode={isEditing} />
           </ProfileImgBox>
           <MyInfoBox>
             <MyPageMyInfo info={editableInfo} isEditable={isEditing} onChange={setEditableInfo} />
