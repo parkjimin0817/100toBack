@@ -15,6 +15,12 @@ const ClassPlacement = () => {
 
   const [accessDenied, setAccessDenied] = useState(false);
 
+  const [listKey, setListKey] = useState(0); // key 값으로 ChildrenList 리렌더링 유도
+
+  const refreshList = () => {
+    setListKey((prev) => prev + 1); // key 변경 → 강제 재마운트
+  };
+
   useEffect(() => {
     if (!member) {
       toast.error('로그인이 필요합니다.');
@@ -80,6 +86,7 @@ const ClassPlacement = () => {
           <PlacementButton onClick={() => setOpenModal(true)}>반 배정</PlacementButton>
         </ButtonLine>
         <ChildrenList
+          key={listKey}
           Color="blue"
           showAll={showAll}
           sortBy={sort}
@@ -97,6 +104,7 @@ const ClassPlacement = () => {
         selectedDate={selectedDate}
         selectedItem={selectedItem}
         centerNo={centerNo}
+        onRefresh={refreshList}
       />
     </>
   );

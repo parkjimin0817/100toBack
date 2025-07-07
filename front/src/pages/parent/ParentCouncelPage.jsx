@@ -9,6 +9,7 @@ import CouncelListTable from '../manager/CouncelListTable';
 import { toast } from 'react-toastify';
 import useLoginStore from '../../store/loginStore';
 import CouncelScheduleModal from '../manager/components/CouncelScheduleModal';
+import api from '../../api/axios';
 
 const ParentCouncelPage = () => {
   const { classNo } = useParams();
@@ -20,11 +21,9 @@ const ParentCouncelPage = () => {
 
   const member = useLoginStore((state) => state.member);
 
-  const [openModal, setOpenModal] = useState(false);
-
   const handleSearch = async () => {
     try {
-      const response = await axios.get(`http://localhost:8888/api/counsel`, {
+      const response = await api.get(`http://localhost:8888/api/counsel`, {
         params: {
           classNo,
         },
@@ -59,24 +58,13 @@ const ParentCouncelPage = () => {
     <Wrapper>
       <ContentHeader Title="상담 일정" Color="orange" />
       <Content>
-        <CouncelSearchBar
-          selectedStatus={selectedStatus}
-          setSelectedStatus={setSelectedStatus}
-          dateFilterType={dateFilterType}
-          setDateFilterType={setDateFilterType}
-          selectedDate={selectedDate}
-          setSelectedDate={setSelectedDate}
-          onSearch={handleSearch}
-          onCreate={() => setOpenModal(true)}
+        <CouncelListTable
+          data={checklist}
+          memberType={member.memberType}
+          onRefresh={handleSearch}
+          memberNo={member.memberNo}
         />
-        <CouncelListTable data={checklist} memberType={member.memberType} onRefresh={handleSearch} />
       </Content>
-      <CouncelScheduleModal
-        isOpen={openModal}
-        onClose={() => setOpenModal(false)}
-        classNo={classNo}
-        onSuccess={handleSearch}
-      />
     </Wrapper>
   );
 };
