@@ -27,4 +27,7 @@ public interface AttendanceRepository {
     //아동 출결 해당 조회
     ChildAttendance getChildAttendance(int classNo, int childNo, LocalDate createDate);
 
+    //반 별 출석 아동 수
+    Optional<Long> countPresentChild(int classNo, LocalDate today, ChildAttendanceStatus status);
+
 }

@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @Getter
-@Table(name = "LEAVE")
+@Table(name = "`LEAVE`")
 public class Leave {// 연차
     
     @Id

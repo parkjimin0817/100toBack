@@ -268,6 +268,10 @@ const Table = styled.table`
       color: ${({ theme }) => theme.colors.blue};
       border-bottom: 1px solid ${({ theme }) => theme.colors.gray[300]};
       word-break: break-word;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 

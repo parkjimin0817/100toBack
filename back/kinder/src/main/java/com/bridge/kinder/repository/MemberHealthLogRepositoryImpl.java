@@ -4,6 +4,7 @@ import com.bridge.kinder.entity.MemberHealthLog;
 import com.bridge.kinder.service.MemberHealthServiceLog;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
@@ -41,4 +42,29 @@ public class MemberHealthLogRepositoryImpl implements MemberHealthLogRepository 
     public void deleteByMemberHealthLogNo(MemberHealthLog memberHealthLog) {
         em.remove(memberHealthLog);
     }
+
+    @Override
+    public Double getStressAvgBetween(int memberNo, LocalDateTime monday, LocalDateTime sunday) {
+        String jpql = "SELECT AVG(l.stress) FROM MemberHealthLog l " +
+                        "WHERE l.member.memberNo = :memberNo " +
+                        "AND l.createDate BETWEEN :monday AND :sunday";
+        return em.createQuery(jpql, Double.class)
+                .setParameter("memberNo", memberNo)
+                .setParameter("monday", monday)
+                .setParameter("sunday", sunday)
+                .getSingleResult();
+    }
+
+    @Override
+    public Double getSleepAvgBetween(int memberNo, LocalDateTime monday, LocalDateTime sunday) {
+        String jpql = "SELECT AVG(l.sleep) FROM MemberHealthLog l " +
+                "WHERE l.member.memberNo = :memberNo " +
+                "AND l.createDate BETWEEN :monday AND :sunday";
+        return em.createQuery(jpql, Double.class)
+                .setParameter("memberNo", memberNo)
+                .setParameter("monday", monday)
+                .setParameter("sunday", sunday)
+                .getSingleResult();
+    }
+
 }

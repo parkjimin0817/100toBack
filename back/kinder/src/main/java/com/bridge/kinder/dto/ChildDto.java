@@ -406,7 +406,41 @@ public class ChildDto {
                     .build();
 
         }
-
     }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class ParentPhoneNumberResponse {
+        private int child_no;
+        private int center_no;
+        private int class_no;
+        private String class_name;
+        private String child_name;
+        private String f_parent_name;
+        private String f_parent_phone;
+        private String m_parent_name;
+        private String m_parent_phone;
+        private String child_profile;
+
+        public static ParentPhoneNumberResponse toEntity(Child child){
+            return ParentPhoneNumberResponse.builder()
+                    .child_no(child.getChildNo())
+                    .center_no(child.getCenter().getCenterNo())
+                    .class_no(child.getClassRoom() != null ? child.getClassRoom().getClassNo() : 0)
+                    .class_name(child.getClassRoom() != null ? child.getClassRoom().getClassName() : null)
+                    .child_name(child.getChildName())
+                    .f_parent_name(child.getFParentsName())
+                    .f_parent_phone(child.getFParentsPhone())
+                    .m_parent_name(child.getMParentsName())
+                    .m_parent_phone(child.getMParentsPhone())
+                    .child_profile(child.getChildProfile())
+                    .build();
+        }
+    }
+
+
 
 }

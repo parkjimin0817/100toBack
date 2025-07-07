@@ -1,13 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import ParentContactSearchBar from './components/ParentContactSearchBar';
 import ParenctContactList from './components/ParenctContactList';
+import useLoginStore from '../../store/loginStore';
+import { toast } from 'react-toastify';
+import { childService } from '../../api/child';
 
 const ParentContact = () => {
+  const { member } = useLoginStore();
   //페이지가 상태를 가짐
   const [selectedClass, setSelectedClass] = useState('');
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [value, setValue] = useState([]);
+  const [status, setStatus] = useState('연락처를 불러오는 중...');
+
+  const selectPhoneNumber = async () => {
+    try {
+      const parentPhone = await childService.getParentPhoneNumber(member.centerNo);
+
+      if (!parentPhone) {
+        throw new Error('학부모 연락처 불러오기 실패했습니다.');
+      }
+
+      setValue(parentPhone);
+    } catch (error) {
+      toast.error('학부모 연락처 불러오기 실패했습니다.');
+      setStatus('연락처 불러오기 실패');
+    }
+  };
+
+  useEffect(() => {
+    selectPhoneNumber();
+  }, []);
+
   return (
     <Wrapper>
       <ContentHeader Title="학부모 연락처" Color="blue" />
@@ -16,8 +42,9 @@ const ParentContact = () => {
         setSelectedClass={setSelectedClass}
         searchKeyword={searchKeyword}
         setSearchKeyword={setSearchKeyword}
+        value={value}
       />
-      <ParenctContactList selectedClass={selectedClass} searchKeyword={searchKeyword} />
+      <ParenctContactList selectedClass={selectedClass} searchKeyword={searchKeyword} value={value} status={status} />
     </Wrapper>
   );
 };

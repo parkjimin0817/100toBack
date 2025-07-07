@@ -85,6 +85,11 @@ public class Center {// 시설
     List<ClassRoom> classRooms = new ArrayList<>();
     //반
 
+    @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
+    @Builder.Default
+    List<Counsel> counsels = new ArrayList<>();
+    //상담
+
 
     //---------------------------------------------------------------------------------------------
     @PrePersist

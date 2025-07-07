@@ -2,13 +2,20 @@ package com.bridge.kinder.service;
 
 import com.bridge.kinder.dto.BoardContentDto;
 import com.bridge.kinder.dto.BoardDto;
+import com.bridge.kinder.dto.RecentBoardDto;
+import com.bridge.kinder.dto.RecentBoardDto.Response;
+import com.bridge.kinder.dto.ScheduleDto.ScheduleSimpleResponse;
 import com.bridge.kinder.entity.*;
 import com.bridge.kinder.enums.CommonEnums;
+import com.bridge.kinder.enums.CommonEnums.BoardContentType;
+import com.bridge.kinder.enums.CommonEnums.BoardType;
+import com.bridge.kinder.repository.BoardContentRepository;
 import com.bridge.kinder.repository.BoardRepository;
 import com.bridge.kinder.repository.CenterRepository;
 import com.bridge.kinder.repository.ClassRoomRepository;
 import com.bridge.kinder.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.Jsoup;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -32,6 +39,7 @@ public class BoardServiceImpl implements BoardService {
     private final CenterRepository centerRepository;
     private final MemberRepository memberRepository;
     private final ClassRoomRepository classRoomRepository;
+    private final BoardContentRepository boardContentRepository;
 
     private final String UPLOAD_PATH = "C://test_upload/";
 
@@ -274,4 +282,29 @@ public class BoardServiceImpl implements BoardService {
         return board.getBoardNo();
     }
 
+    //시설 별 최근 3개 게시물
+    @Override
+    public List<RecentBoardDto.Response> getRecentBoards(int centerNo) {
+        Center center = centerRepository.findById(centerNo)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
+
+        List<BoardType> types = List.of(BoardType.NOTICE);
+        List<Board> boards = boardRepository.getRecent3Boards(center.getCenterNo(), types);
+
+        return boards.stream()
+                .map(board -> {
+                    BoardContent boardContent =
+                            boardContentRepository.findFirstByBoard_BoardNoAndTypeOrderBySortOrderAsc(
+                                    board.getBoardNo(), BoardContentType.TEXT);
+                    String firstTextContent;
+                    if( boardContent != null ) {
+                        firstTextContent = Jsoup.parse(boardContent.getContentText()).text();
+                    } else {
+                        firstTextContent = null;
+                    }
+                    return Response.toDto(board, firstTextContent);
+
+                })
+                .toList();
+    }
 }

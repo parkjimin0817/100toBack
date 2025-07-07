@@ -1,8 +1,10 @@
 package com.bridge.kinder.controller;
 
 import com.bridge.kinder.dto.BoardDto;
+import com.bridge.kinder.dto.RecentBoardDto;
 import com.bridge.kinder.enums.CommonEnums;
 import com.bridge.kinder.service.BoardService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -122,5 +124,11 @@ public class BoardController {
             @RequestParam(defaultValue = "10") int size) {
         Page<BoardDto.MealPlanBoardDto> boardPage = boardService.getMealPlanBoards(MEAL_PLAN, centerNo, page, size);
         return ResponseEntity.ok(boardPage);
+    }
+
+    //메인페이지 최근 게시물 3개 불러오기
+    @GetMapping("/recent3/{centerNo}")
+    public ResponseEntity<List<RecentBoardDto.Response>> getRecentBoards(@PathVariable int centerNo) {
+        return ResponseEntity.ok(boardService.getRecentBoards(centerNo));
     }
 }

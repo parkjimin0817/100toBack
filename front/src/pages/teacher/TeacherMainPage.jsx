@@ -27,6 +27,7 @@ const TeacherMainPage = () => {
   const [activeTab, setActiveTab] = useState('상담');
   const [activeCounselTab, setActiveCounselTab] = useState('상담 대기');
   const { member } = useLoginStore();
+  const centerNo = member?.centerNo;
 
   useEffect(() => {}, [member]);
 
@@ -90,10 +91,10 @@ const TeacherMainPage = () => {
             <>
               <CareContainer>
                 <AttendanceBox>
-                  <TeacherMainAttendance />
+                  <TeacherMainAttendance centerNo={centerNo} />
                 </AttendanceBox>
                 <AttendanceBox>
-                  <TeacherMainChild />
+                  <TeacherMainChild centerNo={centerNo} />
                 </AttendanceBox>
               </CareContainer>
             </>
@@ -103,7 +104,7 @@ const TeacherMainPage = () => {
           {activeTab === '건강관리' && (
             <>
               <HealthContainer>
-                <TeacherMainHealth />
+                <TeacherMainHealth member={member} />
               </HealthContainer>
             </>
           )}
@@ -126,7 +127,7 @@ const TeacherMainPage = () => {
           ButtonProps={[{ Title: '더보기', func: () => alert('게시판가야함') }]}
         />
         <RecentBoards>
-          <RecentBoard />
+          <RecentBoard centerNo={centerNo} />
         </RecentBoards>
       </BoardContent>
     </Wrapper>

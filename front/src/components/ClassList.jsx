@@ -16,15 +16,17 @@ import { toast } from 'react-toastify';
  * address : 주소
  */
 
-const ClassList = ({ img, className, mateCount, capacity, teacher, classColor, address }) => {
+const ClassList = ({ img, className, mateCount, capacity, teacher, classColor, address, isDisabled }) => {
   const navigate = useNavigate();
 
   const handleCheck = () => {
+    if (isDisabled) return;
+
     navigate(address);
   };
 
   return (
-    <Card $Color={classColor} onClick={handleCheck}>
+    <Card $Color={classColor} onClick={handleCheck} $isDisabled={isDisabled}>
       <CardInfo>
         <div>
           <CardImg>{img === null ? <Icon /> : <Img src={`${img}`} alt="사진" />}</CardImg>
