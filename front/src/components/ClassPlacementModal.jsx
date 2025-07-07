@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import api from '../api/axios';
 
 const ClassPlacementModal = ({ isOpen, onClose, selectedDate, selectedItem, centerNo }) => {
   const [person, setPerson] = useState(null);
@@ -17,11 +18,11 @@ const ClassPlacementModal = ({ isOpen, onClose, selectedDate, selectedItem, cent
       try {
         let res;
         if (role === 'child') {
-          res = await axios.get(`http://localhost:8888/api/childs/get`, {
+          res = await api.get(`http://localhost:8888/api/childs/get`, {
             params: { child_no: id },
           });
         } else if (role === 'teacher') {
-          res = await axios.get(`http://localhost:8888/api/members/get`, {
+          res = await api.get(`http://localhost:8888/api/members/get`, {
             params: { member_no: id },
           });
         }
@@ -29,7 +30,7 @@ const ClassPlacementModal = ({ isOpen, onClose, selectedDate, selectedItem, cent
         const personData = res?.data;
         setPerson(personData);
 
-        const classListRes = await axios.get(`http://localhost:8888/api/classroom/list/${centerNo}`);
+        const classListRes = await api.get(`http://localhost:8888/api/classroom/list/${centerNo}`);
         const classList = classListRes?.data?.map((cls) => cls.class_name);
         setClassOptions(classListRes.data);
 
@@ -59,7 +60,7 @@ const ClassPlacementModal = ({ isOpen, onClose, selectedDate, selectedItem, cent
           ? `http://localhost:8888/api/childs/updateclass`
           : `http://localhost:8888/api/members/updateclass`;
 
-      await axios.patch(endpoint, null, {
+      await api.patch(endpoint, null, {
         params:
           role === 'child' ? { child_no: id, class_no: selectedClass } : { member_no: id, class_no: selectedClass },
       });

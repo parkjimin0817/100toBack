@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
+import api from '../../api/axios';
 
 const PersonalHealth = () => {
   const navigate = useNavigate();
@@ -17,10 +18,10 @@ const PersonalHealth = () => {
   useEffect(() => {
     const fetchChildDetail = async () => {
       try {
-        const response = await axios.get(`http://localhost:8888/api/childs/healthlog?childNo=${id}`);
+        const response = await api.get(`http://localhost:8888/api/childs/healthlog?childNo=${id}`);
         setLogs(response.data);
 
-        const response2 = await axios.get(`http://localhost:8888/api/childs/get?child_no=${id}`);
+        const response2 = await api.get(`http://localhost:8888/api/childs/get?child_no=${id}`);
         setChild(response2.data);
       } catch (error) {
         console.error('아동 건강로그 불러오기 실패:', error);
