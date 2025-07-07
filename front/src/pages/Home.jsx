@@ -5,6 +5,10 @@ import BoardTable from '../components/Board/BoardTable';
 import theme from "../styles/theme";
 // import TipTapEditor from '../components/Board/TextEditor';
 import PostEditor from '../components/Board/BoardEditor';
+// import SimpleEditor from "../components/Board/EditorComponent/tiptap-templates/InputEditor";
+import SimpleEditor from '../components/Board/TextInputBlock copy';
+import ImageInputBlock from '../components/Board/ImageInputBlock copy';
+import ImageInputBlock1 from '../components/Board/ImageInputBlock';
 
 const columns = [
   {
@@ -51,15 +55,18 @@ const Home = () => {
         ]}
       ></ContentHeader>
 
-      <BoardContainer>
+      {/* <BoardContainer>
         <BoardTable tableInfo={tableInfo} columns={columns} boardData={BoardData} />
-      </BoardContainer>
+      </BoardContainer> */}
       {/* <div style={{ padding: '2rem' }}>
         <h2>📝 게시글 작성</h2>
         <TipTapEditor />
       </div> */}
 
-      <PostEditor></PostEditor>
+      {/* <PostEditor></PostEditor> */}
+      <SimpleEditor></SimpleEditor>
+      <ImageInputBlock></ImageInputBlock>
+      <ImageInputBlock1></ImageInputBlock1>
     </Content>
   );
 };
