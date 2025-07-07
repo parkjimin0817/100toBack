@@ -4,13 +4,13 @@ import axios from 'axios';
 import { format } from 'date-fns';
 import { useParams } from 'react-router-dom';
 import ContentHeader from '../../components/Common/ContentHeader';
-import CouncelSearchBar from './CouncelSearchBar';
-import CouncelListTable from './CouncelListTable';
+import CouncelSearchBar from '../manager/CouncelSearchBar';
+import CouncelListTable from '../manager/CouncelListTable';
 import { toast } from 'react-toastify';
 import useLoginStore from '../../store/loginStore';
-import CouncelScheduleModal from './components/CouncelScheduleModal';
+import CouncelScheduleModal from '../manager/components/CouncelScheduleModal';
 
-const CouncelSettingPage = () => {
+const ParentCouncelPage = () => {
   const { classNo } = useParams();
 
   const [selectedStatus, setSelectedStatus] = useState('ALL');
@@ -81,7 +81,7 @@ const CouncelSettingPage = () => {
   );
 };
 
-export default CouncelSettingPage;
+export default ParentCouncelPage;
 
 // 스타일
 const Wrapper = styled.div`

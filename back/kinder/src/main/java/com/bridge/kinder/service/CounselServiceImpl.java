@@ -3,6 +3,8 @@ package com.bridge.kinder.service;
 import com.bridge.kinder.dto.ChildDto;
 import com.bridge.kinder.dto.CounselDto;
 import com.bridge.kinder.dto.CounselDto.CreateDto;
+import com.bridge.kinder.dto.CounselDto.Response;
+import com.bridge.kinder.dto.CounselDto.Update;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.Counsel;
@@ -12,6 +14,7 @@ import com.bridge.kinder.repository.ChildRepository;
 import com.bridge.kinder.repository.CounselRepository;
 import com.bridge.kinder.repository.CounselRepositoryCustom;
 import com.bridge.kinder.repository.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -64,6 +67,30 @@ public class CounselServiceImpl implements CounselService {
     @Override
     public List<CounselDto.Response> findCounselByClassNo(int classNo) {
         return counselRepositoryCustom.findCounselByClassNo(classNo).stream()
+                .map(CounselDto.Response::toEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public CounselDto.Update updateCounsel(CounselDto.Update dto, int counselNo) {
+        Counsel counsel = counselRepositoryCustom.updateCounsel(dto, counselNo)
+                .orElseThrow(() -> new EntityNotFoundException("정삭적으로 수정되지 않았습니다."));
+        return CounselDto.Update.toDto(counsel);
+
+    }
+
+    @Override
+    public int deleteCounsel(int counselNo) {
+        if (!counselRepository.existsById(counselNo)) {
+            return 0; // 삭제 실패 (존재하지 않음)
+        }
+        counselRepository.deleteById(counselNo);
+        return counselNo; // 삭제 성공
+    }
+
+    @Override
+    public List<Response> getCounselByMemberNo(int memberNo) {
+        return counselRepositoryCustom.getCounselByMemberNo(memberNo).stream()
                 .map(CounselDto.Response::toEntity)
                 .collect(Collectors.toList());
     }
