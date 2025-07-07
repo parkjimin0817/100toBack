@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-
 import CommonFind from '../../components/Common/CommonFind';
 import { ContentArea, SearchIdForm } from '../../styles/Common/Container';
 import SearchFormNav from '../../components/Common/SearchFormNav';
 import { Button } from '../../styles/Common/Button';
-import { useNavigate } from 'react-router-dom';
 import { useSearchIdForm } from '../../hook/searchForm/useSearchIdForm';
 
 const SearchId = () => {

@@ -32,7 +32,6 @@ const ParentMyPage = () => {
   const fetchChildList = async () => {
     try {
       const result = await childService.getParentChildList(member.memberNo);
-      console.log('아동정보:', result);
       setChildList(result);
     } catch (error) {
       console.error('자녀 목록을 가져오는 데 실패했습니다:', error);

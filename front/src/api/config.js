@@ -126,4 +126,12 @@ export const API_ENDPOINTS = {
     BASE: '/api/holiday',
     GET: (year, month) => `api/holiday?year=${year}&month=${month}`,
   },
+  RESIGN: {
+    BASE: '/api/resign',
+    MEMBER: `/api/resign/member`,
+  },
+  FILE: {
+    BASE: '/api/file',
+    PRESIGNED_URL: '/api/file/presigned-url',
+  },
 };

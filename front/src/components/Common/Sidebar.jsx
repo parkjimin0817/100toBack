@@ -243,7 +243,7 @@ const parentSidebar = [
     label: '상담일정',
     icon: <FaRegClock />,
     color: 'blue',
-    subItems: [{ label: '상담일정', link: '*' }],
+    subItems: [{ label: '상담일정', link: '/councel/parent' }],
   },
 ];
 
