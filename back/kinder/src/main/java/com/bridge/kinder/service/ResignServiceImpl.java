@@ -28,7 +28,7 @@ public class ResignServiceImpl implements ResignService {
         }
 
         Member member = optResign.get().getMember();
-        member.changeMemberStatus(AdmissionStatus.PENDING);
+        member.changeMemberStatus(AdmissionStatus.REJECTED);
 
         Resign resign = optResign.get();
         resign.updateStatus(dto.getStatus());

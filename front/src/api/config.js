@@ -128,6 +128,6 @@ export const API_ENDPOINTS = {
   },
   RESIGN: {
     BASE: '/api/resign',
-    MEMBER: `/api/resign/member/`,
+    MEMBER: `/api/resign/member`,
   },
 };

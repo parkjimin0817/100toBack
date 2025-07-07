@@ -10,24 +10,38 @@ import { RiHealthBookLine } from 'react-icons/ri';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../api/axios.js';
 import { resignService } from '../../api/resign.js';
+import useLoginStore from '../../store/loginStore.js';
+import { toast } from 'react-toastify';
 
 const TeacherIntroDetail = () => {
   const { teacherNo } = useParams();
   const navigate = useNavigate();
   const [editableInfo, setEditableInfo] = useState({});
-  const [resignData, setResignData] = useState();
+  const { member } = useLoginStore();
 
   const handleGoBack = () => {
     navigate('/manager/introteacher');
   };
 
-  const handleResignment = () => {
-    setResignData({
-      memberNo: teacherNo,
-      status: 'RESIGN',
-    });
+  const handleResignment = async () => {
+    const isConfirmed = window.confirm('정말로 해당 교사를 퇴직 처리하시겠습니까?');
+    if (!isConfirmed) {
+      return;
+    }
 
-    alert('퇴직처리 기능은 추후 구현 예정입니다.');
+    const mergedData = {
+      center_no: member.centerNo,
+      member_no: teacherNo,
+      status: 'RESIGN',
+    };
+
+    try {
+      await resignService.resignMember(mergedData);
+      toast.success('퇴직 처리가 완료되었습니다.');
+      navigate('/manager/introteacher');
+    } catch (error) {
+      toast.error('퇴직 처리 중 오류가 발생했습니다.');
+    }
   };
 
   const fetchTeacherDetail = async () => {
