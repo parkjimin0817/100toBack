@@ -13,8 +13,6 @@ import 'dayjs/locale/ko';
 import useLoginStore from '../../store/loginStore';
 import { ImInfo } from 'react-icons/im';
 import { TiDelete } from 'react-icons/ti';
-import { set } from 'react-hook-form';
-import { BounceLoader } from 'react-spinners';
 
 const DailyScheduleDetail = () => {
   const { member } = useLoginStore();
@@ -242,7 +240,6 @@ const DailyScheduleDetail = () => {
             <InnerBorder $writeAuthority={writeAuthority}>
               {inputs.length === 0 ? (
                 <NotingAnyMore>
-                  <BounceLoader color="#8772D3" />
                   <h1>일정이 없습니다.</h1>
                 </NotingAnyMore>
               ) : (

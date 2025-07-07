@@ -64,6 +64,8 @@ import PhotoPage from './pages/PhotoPage';
 import MealPlanPage from './pages/MealPlanPage';
 import ClassListPage from './pages/ClassListPage';
 import TeacherIntroDetail from './pages/manager/TeacherIntroDetail';
+import CouncelClassList from './pages/manager/CouncelClassList';
+import CouncelSettingPage from './pages/manager/CouncelSettingPage';
 
 function App() {
   return (
@@ -154,6 +156,8 @@ function App() {
              * 10-2. 작성
              * 10-3. 상세
              * 10-4. 수정
+             * 11. 상담일정 반 선택 목록 페이지
+             * 12. 상담일정 조회,수정 페이지
              *
              *  */}
             <Route path="/childlist" element={<ChildList />} />
@@ -173,7 +177,8 @@ function App() {
               <Route path=":id" element={<BoardDetailPage />} />
               <Route path="update/:id" element={<BoardUpdatePage />} />
             </Route>
-
+            <Route path="/councel/classlist" element={<CouncelClassList />} />
+            <Route path="/councel/detail/:classNo" element={<CouncelSettingPage />} />
             {/**
              * 공용
              *

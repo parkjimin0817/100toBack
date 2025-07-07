@@ -68,9 +68,9 @@ const ClassRoomManage = () => {
         ]}
       />
       {loading ? (
-        <Div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px' }}>
+        <ErrorDiv>
           <BounceLoader color="#1A748E" />
-        </Div>
+        </ErrorDiv>
       ) : error ? (
         <ErrorDiv>
           <h1>{error}</h1>
