@@ -4,6 +4,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 import ChildImg from '../assets/Child.png';
 import { toast } from 'react-toastify';
+import api from '../api/axios';
 
 const ChildrenList = ({
   showAll,
@@ -24,18 +25,19 @@ const ChildrenList = ({
     const fetchData = async () => {
       try {
         let res;
+
         if (roleBy === 'child') {
           if (classFilter) {
-            res = await axios.get(`http://localhost:8888/api/childs`, {
+            res = await api.get(`http://localhost:8888/api/childs`, {
               params: { classNo: classFilter },
             });
           } else {
-            res = await axios.get(`http://localhost:8888/api/childs/all`, {
+            res = await api.get(`http://localhost:8888/api/childs/all`, {
               params: { centerNo },
             });
           }
         } else if (roleBy === 'teacher') {
-          res = await axios.get(`http://localhost:8888/api/members/getteacher`, {
+          res = await api.get(`http://localhost:8888/api/members/getteacher`, {
             params: { id: centerNo },
           });
         }

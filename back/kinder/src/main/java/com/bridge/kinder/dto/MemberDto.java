@@ -78,9 +78,11 @@ public class MemberDto {
         private int center_no;
         private int class_no;
 
+        private String accessToken;
 
-        public static LoginResponse toDto(Member member) {
+        public static LoginResponse toDto(String jwtToken, Member member) {
             return LoginResponse.builder()
+                    .accessToken(jwtToken)
                     .member_no(member.getMemberNo())
                     .member_name(member.getMemberName())
                     .member_id(member.getMemberId())

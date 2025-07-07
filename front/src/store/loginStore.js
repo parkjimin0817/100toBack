@@ -6,7 +6,9 @@ export const useLoginStore = create(
     (set) => ({
       member: null,
       isAuthenticated: false,
+      accessToken: null,
       attendance: null,
+
       setMember: (newMember) => set({ member: newMember }),
 
       // 로그인
@@ -24,6 +26,7 @@ export const useLoginStore = create(
             classNo: memberData.classNo,
             centerTel: memberData.centerTel,
           },
+          accessToken: memberData.accessToken,
           isAuthenticated: true,
         });
       },
@@ -33,6 +36,7 @@ export const useLoginStore = create(
         set({
           member: null,
           isAuthenticated: false,
+          accessToken: null,
         });
       },
     }),
@@ -41,6 +45,7 @@ export const useLoginStore = create(
       partialize: (state) => ({
         member: state.member,
         isAuthenticated: state.isAuthenticated,
+        accessToken: state.accessToken,
       }),
     }
   )
