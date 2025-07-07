@@ -7,8 +7,7 @@ import theme from "../styles/theme";
 import PostEditor from '../components/Board/BoardEditor';
 // import SimpleEditor from "../components/Board/EditorComponent/tiptap-templates/InputEditor";
 import SimpleEditor from '../components/Board/TextInputBlock copy';
-import ImageInputBlock from '../components/Board/ImageInputBlock copy';
-import ImageInputBlock1 from '../components/Board/ImageInputBlock';
+import ImageInputBlock from '../components/Board/ImageInputBlock';
 
 const columns = [
   {
@@ -66,7 +65,6 @@ const Home = () => {
       {/* <PostEditor></PostEditor> */}
       <SimpleEditor></SimpleEditor>
       <ImageInputBlock></ImageInputBlock>
-      <ImageInputBlock1></ImageInputBlock1>
     </Content>
   );
 };
