@@ -4,6 +4,7 @@ import com.bridge.kinder.dto.ChildDto;
 import com.bridge.kinder.dto.CreateManagerDto;
 import com.bridge.kinder.dto.MemberChildDto;
 import com.bridge.kinder.dto.MemberDto;
+import com.bridge.kinder.dto.MemberDto.LoginRequest;
 import com.bridge.kinder.dto.MemberDto.PhoneAccess;
 import com.bridge.kinder.dto.MemberDto.PwdUpdate;
 import com.bridge.kinder.dto.MemberDto.DetailMemberDto;
@@ -23,6 +24,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +42,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Transactional
 public class MemberServiceImpl implements MemberService {
 
+    private final PasswordEncoder passwordEncoder;
     private final SmsUtil smsUtil;
     private final MemberRepository memberRepository;
     private final ChildRepository childRepository;
@@ -78,6 +81,10 @@ public class MemberServiceImpl implements MemberService {
             dto.getMember().getMember_profile().transferTo(new File(UPLOAD_PATH + profilePath));
         }
 
+        String originPwd = dto.getMember().getMember_pwd();
+        String encodedPwd = passwordEncoder.encode(originPwd);
+        dto.getMember().setMember_pwd(encodedPwd);
+
         Member manager = dto.getMember().toEntity(savedCenter, profilePath);
         memberRepository.save(manager);
 
@@ -112,6 +119,10 @@ public class MemberServiceImpl implements MemberService {
 
             dto.getMember().getMember_profile().transferTo(new File(UPLOAD_PATH + profilePath));
         }
+
+        String originPwd = dto.getMember().getMember_pwd();
+        String encodedPwd = passwordEncoder.encode(originPwd);
+        dto.getMember().setMember_pwd(encodedPwd);
 
         Member teacher = dto.getMember().toEntity(center, profilePath);
         memberRepository.save(teacher);
@@ -156,6 +167,10 @@ public class MemberServiceImpl implements MemberService {
 
             dto.getMember().getMember_profile().transferTo(new File(UPLOAD_PATH + profilePathMember));
         }
+
+        String originPwd = dto.getMember().getMember_pwd();
+        String encodedPwd = passwordEncoder.encode(originPwd);
+        dto.getMember().setMember_pwd(encodedPwd);
 
         Member parent = dto.getMember().toEntity(centerMember, profilePathMember);
         memberRepository.save(parent);
@@ -210,21 +225,35 @@ public class MemberServiceImpl implements MemberService {
         return String.valueOf(parent.getMemberNo());
     }
 
-    //로그인
     @Override
-    public MemberDto.LoginResponse getLoginMember(String memberId, String memberPwd) {
-        Member member = memberRepository.findByMemberId(memberId).get();
+    public Member login(MemberDto.LoginRequest dto) {
+        Optional<Member> optMember = memberRepository.findByMemberId(dto.getMemberId());
+        if(!optMember.isPresent()) {
+            throw new RuntimeException("이메일이 존재하지 않습니다.");
+        }
 
-        if(!member.getMemberPwd().equals(memberPwd)) {
+        Member member = optMember.get();
+        if(!passwordEncoder.matches(dto.getMemberPwd(), member.getMemberPwd())) {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
-
-        if(member.getStatus().equals(AdmissionStatus.PENDING) || member.getStatus().equals(AdmissionStatus.REJECTED)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "승인되지 않은 계정입니다.");
-        }
-
-        return MemberDto.LoginResponse.toDto(member);
+        return member;
     }
+
+//    //로그인
+//    @Override
+//    public MemberDto.LoginResponse getLoginMember(String memberId, String memberPwd) {
+//        Member member = memberRepository.findByMemberId(memberId).get();
+//
+//        if(!member.getMemberPwd().equals(memberPwd)) {
+//            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+//        }
+//
+//        if(member.getStatus().equals(AdmissionStatus.PENDING) || member.getStatus().equals(AdmissionStatus.REJECTED)) {
+//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "승인되지 않은 계정입니다.");
+//        }
+//
+//        return MemberDto.LoginResponse.toDto(member);
+//    }
 
     //시설 별 교사 목록 찾기 (for selectbar)
     @Override
@@ -333,6 +362,9 @@ public class MemberServiceImpl implements MemberService {
             return MemberDto.PwdUpdate.toDto("존재하지 않는 회원입니다.");
         }else {
             //멤버의 비밀번호를 변경
+            String originPwd = dto.getMember_pwd();
+            String encodedPwd = passwordEncoder.encode(originPwd);
+            dto.setMember_pwd(encodedPwd);
             member.changeMemberPwd(dto.getMember_pwd());
             return MemberDto.PwdUpdate.toDto("비밀번호를 성공적으로 변경하였습니다.");
         }
