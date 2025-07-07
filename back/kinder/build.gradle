@@ -29,6 +29,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
 
+	//AWS S3와 직접 통신하는 기본 SDK
+	implementation 'software.amazon.awssdk:s3:2.20.26'
+	//고성능 대용량 파일 업로드/다운로드를 위한 고급 추상화 계층
+	implementation 'software.amazon.awssdk:s3-transfer-manager:2.20.26'
+
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -40,12 +45,6 @@ dependencies {
 //	runtimeOnly 'com.h2database:h2'
 
 	//전화번호인증요청
-	//AWS S3와 직접 통신하는 기본 SDK
-	implementation 'software.amazon.awssdk:s3:2.20.26'
-	//고성능 대용량 파일 업로드/다운로드를 위한 고급 추상화 계층
-	implementation 'software.amazon.awssdk:s3-transfer-manager:2.20.26'
-
-
 	implementation 'net.nurigo:sdk:4.3.0'
 	//HTML 파싱 라이브러리
 	implementation 'org.jsoup:jsoup:1.17.2'

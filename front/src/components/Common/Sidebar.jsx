@@ -15,7 +15,7 @@ const SideBar = ({ type }) => {
   };
 
   const handleMenuToggle = (menuId) => {
-    if(openMenus[menuId] === true) return; // 다시 버튼에 올린다고 메뉴 사라지는 문제 수정
+    if (openMenus[menuId] === true) return; // 다시 버튼에 올린다고 메뉴 사라지는 문제 수정
     setOpenMenus((prev) => ({ ...prev, [menuId]: !prev[menuId] }));
   };
 
@@ -242,7 +242,7 @@ const parentSidebar = [
     label: '상담일정',
     icon: <FaRegClock />,
     color: 'blue',
-    subItems: [{ label: '상담일정', link: '*' }],
+    subItems: [{ label: '상담일정', link: '/councel/parent' }],
   },
 ];
 
@@ -325,7 +325,7 @@ const SidebarSublist = styled.ul`
 
   width: 200px;
   padding: 10px;
-  border-top-right-radius : 10px;
+  border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 

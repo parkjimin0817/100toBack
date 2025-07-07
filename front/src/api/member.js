@@ -2,6 +2,41 @@ import { toast } from 'react-toastify';
 import api from './axios';
 import { API_ENDPOINTS } from './config';
 
+// Presigned URL 요청
+export const getPresignedUrl = async (fileName, fileType) => {
+  try {
+    const { data } = await api.post(API_ENDPOINTS.FILE.PRESIGNED_URL, {
+      fileName,
+      fileType,
+      path: '',
+    });
+    return data;
+  } catch (error) {
+    throw new Error('Presigned URL 요청 실패: ' + error.message);
+  }
+};
+
+// S3 파일 업로드
+export const uploadFileToS3 = async (presignedUrl, file) => {
+  try {
+    const response = await fetch(presignedUrl, {
+      method: 'PUT',
+      body: file,
+      headers: {
+        'Content-Type': file.type,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('파일 업로드에 실패했습니다.');
+    }
+
+    return true;
+  } catch (error) {
+    throw new Error('S3 업로드 실패: ' + error.message);
+  }
+};
+
 export const memberService = {
   //아이디 중복체크
   checkId: async (memberId) => {
@@ -32,6 +67,46 @@ export const memberService = {
           throw new Error('알 수 없는 사용자 유형입니다.');
       }
 
+      // 프로필 이미지 S3 업로드 처리
+      let profileImageUrl = null;
+      if (mergedData.member_profile) {
+        const file =
+          mergedData.member_profile instanceof FileList || Array.isArray(mergedData.member_profile)
+            ? mergedData.member_profile[0]
+            : mergedData.member_profile;
+
+        if (file instanceof File) {
+          // Presigned URL 요청
+          const presignedData = await getPresignedUrl(file.name, file.type);
+
+          // S3에 파일 업로드
+          await uploadFileToS3(presignedData.presigned_url, file);
+
+          // 업로드된 파일 URL 저장
+          profileImageUrl = presignedData.change_name;
+        }
+      }
+
+      // 자식 프로필 이미지 S3 업로드 처리 (학부모인 경우)
+      let childProfileImageUrl = null;
+      if (mergedData.member_type === 'PARENT' && mergedData.child_profile) {
+        const childFile =
+          mergedData.child_profile instanceof FileList || Array.isArray(mergedData.child_profile)
+            ? mergedData.child_profile[0]
+            : mergedData.child_profile;
+
+        if (childFile instanceof File) {
+          // Presigned URL 요청
+          const presignedData = await getPresignedUrl(childFile.name, childFile.type);
+
+          // S3에 파일 업로드
+          await uploadFileToS3(presignedData.presigned_url, childFile);
+
+          // 업로드된 파일 URL 저장
+          childProfileImageUrl = presignedData.presigned_url;
+        }
+      }
+
       const formData = new FormData();
 
       //멤버 공통 정보
@@ -39,13 +114,13 @@ export const memberService = {
       formData.append('member.member_id', mergedData.member_id);
       formData.append('member.member_pwd', mergedData.member_pwd);
       formData.append('member.member_phone', mergedData.member_phone);
-      formData.append('member.member_birth', mergedData.member_birth); // yyyy-MM-dd
+      formData.append('member.member_birth', mergedData.member_birth);
       formData.append('member.member_type', mergedData.member_type);
       formData.append('member.address', mergedData.address);
-      if (mergedData.member_profile instanceof FileList || Array.isArray(mergedData.member_profile)) {
-        formData.append('member.member_profile', mergedData.member_profile[0]);
-      } else if (mergedData.member_profile instanceof File) {
-        formData.append('member.member_profile', mergedData.member_profile);
+
+      // S3에 업로드된 프로필 이미지 URL 추가
+      if (profileImageUrl) {
+        formData.append('member.member_profile', profileImageUrl);
       }
 
       //교사 추가 정보
@@ -63,10 +138,10 @@ export const memberService = {
         formData.append('child.f_parents_phone', mergedData.father_phone);
         formData.append('child.m_parents_name', mergedData.mother_name);
         formData.append('child.m_parents_phone', mergedData.mother_phone);
-        if (mergedData.child_profile instanceof FileList || Array.isArray(mergedData.child_profile)) {
-          formData.append('child.child_profile', mergedData.child_profile[0]);
-        } else if (mergedData.child_profile instanceof File) {
-          formData.append('child.child_profile', mergedData.child_profile);
+
+        // S3에 업로드된 자식 프로필 이미지 URL 추가
+        if (childProfileImageUrl) {
+          formData.append('child.child_profile', childProfileImageUrl);
         }
       }
 
@@ -118,7 +193,6 @@ export const memberService = {
     } catch (error) {
       if (error.response) {
         const errorMessage = error.response.data.message || '로그인에 실패했습니다.';
-        // throw new Error(errorMessage);
         toast.error(errorMessage);
       }
       throw new Error('서버와의 통신에 실패했습니다.');

@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UploadUrlResponseDto {
+public class CompleteUploadRequestDto {
+    private String original_name;
     private String change_name;
-    private String presigned_url;
+    private String content_type;
 }

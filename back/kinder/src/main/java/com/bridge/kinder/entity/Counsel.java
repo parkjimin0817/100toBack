@@ -52,11 +52,11 @@ public class Counsel {  //상담
 
     @Column(name = "COUNSEL_START")
     private LocalTime counselStart;
-    //상담 종료 시간
+    //상담 시작 시간
 
     @Column(name = "COUNSEL_END")
     private LocalTime counselEnd;
-    //상담 시작 시간
+    //상담 종료 시간
 
 
     //---------------------------------------------------------------------------------------------
@@ -88,6 +88,16 @@ public class Counsel {  //상담
     //---------------------------------------------------------------------------------------------
     public void changeStatus(CounselStatus newStatus) {
         this.counselStatus = newStatus;
+    }
+
+    //---------------------------------------------------------------------------------------------
+    public void update( CounselType counselType, CounselStatus counselStatus, LocalDate counselDate,
+                       LocalTime counselStart, LocalTime counselEnd) {
+        this.counselType = counselType;
+        this.counselStatus = counselStatus;
+        this.counselDate = counselDate;
+        this.counselStart = counselStart;
+        this.counselEnd = counselEnd;
     }
 
 }
