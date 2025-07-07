@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import BoardTable from '../components/Board/BoardTable';
-import theme from '../styles/theme';
 import ContentHeader from '../components/Common/ContentHeader';
 import ImagePost from '../components/Board/ImagePost';
 import { boardService } from '../api/boards';
@@ -61,9 +59,12 @@ const MealPlanPage = () => {
       ></ContentHeader>
       {data && (
         <BoardContainer>
-          {data.content.map((post, index) => (
+          {data.content.length > 0 ? data.content.map((post, index) => (
             <ImagePost onClick={() => handleClick(post.boardNo)} postData={post} key={index}></ImagePost>
-          ))}
+          ))
+          :
+            <div>등록된 게시글이 없습니다.</div>
+          }
         </BoardContainer>
       )}
       {data && (
