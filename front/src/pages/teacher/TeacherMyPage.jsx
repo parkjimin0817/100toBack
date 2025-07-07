@@ -72,6 +72,7 @@ const TeacherMyPage = () => {
           centerTel: centerInfo.centerTel,
           centerAddress: centerInfo.centerAddress,
           centerType: centerInfo.centerType,
+          memberProfile: editableInfo.memberProfile,
         });
         setMember({
           ...member,
@@ -165,11 +166,13 @@ const ProfileImgBox = styled.div`
 `;
 
 const MyInfoBox = styled.div`
-  width: 40%;
+  width: 30%;
+  min-width: 400px;
 `;
 
 const CenterInfoBox = styled.div`
-  width: 40%;
+  width: 30%;
+  min-width: 400px;
 `;
 
 const MenuBox = styled.div`
