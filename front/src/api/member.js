@@ -3,12 +3,12 @@ import api from './axios';
 import { API_ENDPOINTS } from './config';
 
 // Presigned URL 요청
-export const getPresignedUrl = async (fileName, fileType) => {
+export const getPresignedUrl = async (fileName, fileType, path) => {
   try {
     const { data } = await api.post(API_ENDPOINTS.FILE.PRESIGNED_URL, {
       fileName,
       fileType,
-      path: '',
+      path,
     });
     return data;
   } catch (error) {
@@ -76,8 +76,15 @@ export const memberService = {
             : mergedData.member_profile;
 
         if (file instanceof File) {
+          // 파일 경로 설정
+          let path = '';
+          if (mergedData.member_type === 'TEACHER') path = 'profile/teacher/';
+          else if (mergedData.member_type === 'PARENT') path = 'profile/parent/';
+          else if (mergedData.member_type === 'MANAGER') path = 'profile/manager/';
+          else path = 'profile/etc/';
+
           // Presigned URL 요청
-          const presignedData = await getPresignedUrl(file.name, file.type);
+          const presignedData = await getPresignedUrl(file.name, file.type, path);
 
           // S3에 파일 업로드
           await uploadFileToS3(presignedData.presigned_url, file);
@@ -97,13 +104,13 @@ export const memberService = {
 
         if (childFile instanceof File) {
           // Presigned URL 요청
-          const presignedData = await getPresignedUrl(childFile.name, childFile.type);
+          const presignedData = await getPresignedUrl(childFile.name, childFile.type, 'profile/child/');
 
           // S3에 파일 업로드
           await uploadFileToS3(presignedData.presigned_url, childFile);
 
           // 업로드된 파일 URL 저장
-          childProfileImageUrl = presignedData.presigned_url;
+          childProfileImageUrl = presignedData.change_name;
         }
       }
 
@@ -182,10 +189,21 @@ export const memberService = {
         memberBirth: data.member_birth,
         memberPhone: data.member_phone,
         memberType: data.member_type,
+        memberStatus: data.status,
         centerNo: data.center_no,
         classNo: data.class_no,
         centerTel: data.center_tel,
       };
+
+      if (camelData.memberStatus === 'PENDING') {
+        toast.error('승인 대기 중입니다.');
+        return;
+      }
+
+      if (camelData.memberStatus === 'REJECTED') {
+        toast.error('승인 거절되었습니다.');
+        return;
+      }
 
       localStorage.setItem('accessToken', camelData.accessToken);
 

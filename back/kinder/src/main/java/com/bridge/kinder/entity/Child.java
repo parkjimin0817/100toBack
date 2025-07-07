@@ -47,7 +47,7 @@ public class Child {// 아동
     private String mParentsPhone;
     //모 전화번호
 
-    @Column(name = "CHILD_PROFILE", length = 100)
+    @Column(name = "CHILD_PROFILE")
     private String childProfile;
     //아동 프로필 이미지
 
