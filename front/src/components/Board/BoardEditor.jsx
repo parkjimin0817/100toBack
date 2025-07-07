@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import ImageInputBlock from './ImageInputBlock';
 // import TextInputBlock from './TextInputBlock';
 import SimpleEditor from './TextInputBlock copy';
@@ -6,15 +6,7 @@ import styled from 'styled-components';
 import { FaMinus, FaPlus } from 'react-icons/fa';
 import { classService } from '../../api/class';
 
-const BoardEditor = (
-  { category, 
-    formState, 
-    updateFormField, 
-    addBlock, 
-    updateBlock, 
-    selectBlock, 
-    deleteBlock }
-) => {
+const BoardEditor = ({ category, formState, updateFormField, addBlock, updateBlock, selectBlock, deleteBlock }) => {
   const [classRoomList, setClassRoomList] = useState([]);
 
   useEffect(() => {
@@ -24,73 +16,86 @@ const BoardEditor = (
         console.log(responseData);
         setClassRoomList(responseData);
       } catch (error) {
-        console.error("반 조회 실패 : ", error);
-          alert("반 조회 실패");
+        console.error('반 조회 실패 : ', error);
+        alert('반 조회 실패');
       }
-    }
+    };
     getClassRoomList();
-  }, [])
+  }, []);
 
   // 블럭 추가 후, 추가 버튼 감추기 위한 함수. type이 default인 블럭이 있는지 검사
   function hasDefaultBlock(contents) {
-    return contents?.some((block) => block.type === "default");
+    return contents?.some((block) => block.type === 'default');
   }
-
 
   return (
     <FormContainer>
       {/* <form onSubmit={handleSubmit}> */}
       <div>
         <HeadBlock>
-          <HeadLabel htmlFor='title'>제 목</HeadLabel>
-          <HeadInput id='title' type="text" value={formState?.title} onChange={(e) => updateFormField("title", e.target.value)} />
+          <HeadLabel htmlFor="title">제 목</HeadLabel>
+          <HeadInput
+            id="title"
+            type="text"
+            value={formState?.title}
+            onChange={(e) => updateFormField('title', e.target.value)}
+          />
         </HeadBlock>
         <HeadBlock>
-        {(category === 'family_notice' ||
-          category === 'note') && (
-          <>
-          {/* 로딩시, api 호출해서 옵션을 채울 예정  */}
-            <HeadLabel htmlFor='classRoom'>반 선택</HeadLabel>
-            {classRoomList.length > 0 && (
-              <Select id='classRoom' type="text" value={formState?.classRoomNo} onChange={(e) => updateFormField("classRoomNo",e.target.value)} >
-              <option value="선택">반 선택</option>
-              {classRoomList.map((classRoom) => (
-                <option key={classRoom.class_no} value={classRoom.class_no}>
-                  {classRoom.class_name}
-                </option>
-              ))}
-            </Select>
-            )}
-          </>
-          )
-        }
-          <HeadLabel htmlFor='writer'>작성자</HeadLabel>
-          <HeadInput id='writer' type="text" value={formState?.memberName} onChange={(e) => updateFormField("memberName", e.target.value)} readOnly />
+          {(category === 'family_notice' || category === 'note') && (
+            <>
+              {/* 로딩시, api 호출해서 옵션을 채울 예정  */}
+              <HeadLabel htmlFor="classRoom">반 선택</HeadLabel>
+              {classRoomList.length > 0 && (
+                <Select
+                  id="classRoom"
+                  type="text"
+                  value={formState?.classRoomNo}
+                  onChange={(e) => updateFormField('classRoomNo', e.target.value)}
+                >
+                  <option value="선택">반 선택</option>
+                  {classRoomList.map((classRoom) => (
+                    <option key={classRoom.class_no} value={classRoom.class_no}>
+                      {classRoom.class_name}
+                    </option>
+                  ))}
+                </Select>
+              )}
+            </>
+          )}
+          <HeadLabel htmlFor="writer">작성자</HeadLabel>
+          <HeadInput
+            id="writer"
+            type="text"
+            value={formState?.memberName}
+            onChange={(e) => updateFormField('memberName', e.target.value)}
+            readOnly
+          />
         </HeadBlock>
         {category !== 'photo' && (
           <HeadBlock>
-            <HeadLabel htmlFor='file'>첨부 파일</HeadLabel>
-            <HeadInput id='file' type="file" onChange={(e) => updateFormField("file", e.target.files[0])} />
+            <HeadLabel htmlFor="file">첨부 파일</HeadLabel>
+            <HeadInput id="file" type="file" onChange={(e) => updateFormField('file', e.target.files[0])} />
           </HeadBlock>
         )}
 
-        <div style={{ marginTop: "1rem" }}>
+        <div style={{ marginTop: '1rem' }}>
           {formState?.contents.map((block) => (
             // <div key={block.boardContentNo} style={{ marginBottom: "1rem" }}>
             <>
-              {block.type === "default" ? (
+              {block.type === 'default' ? (
                 <ButtonBox>
-                  <AddBlockButton type="button" onClick={() => selectBlock("TEXT", block.boardContentNo)}>
+                  <AddBlockButton type="button" onClick={() => selectBlock('TEXT', block.boardContentNo)}>
                     텍스트 추가
                   </AddBlockButton>
-                  <AddBlockButton type="button" onClick={() => selectBlock("IMG", block.boardContentNo)}>
+                  <AddBlockButton type="button" onClick={() => selectBlock('IMG', block.boardContentNo)}>
                     이미지 추가
                   </AddBlockButton>
-                  <AddBlockButton type='button' onClick={() => deleteBlock(block.boardContentNo)}>
+                  <AddBlockButton type="button" onClick={() => deleteBlock(block.boardContentNo)}>
                     <FaMinus></FaMinus>
                   </AddBlockButton>
                 </ButtonBox>
-              ) : block.type === "TEXT" ? (
+              ) : block.type === 'TEXT' ? (
                 <SimpleEditor /*TextInputBlock*/
                   key={block.boardContentNo}
                   onChange={(value) => updateBlock(block.boardContentNo, value)}
@@ -105,17 +110,16 @@ const BoardEditor = (
                   blockDelete={() => deleteBlock(block.boardContentNo)}
                 />
               )}
-            {/* </div> */}
+              {/* </div> */}
             </>
           ))}
           {hasDefaultBlock(formState?.contents) ? (
             <></>
           ) : (
-            <AddBlockButton type="button" onClick={() => addBlock("default")}>
+            <AddBlockButton type="button" onClick={() => addBlock('default')}>
               <FaPlus></FaPlus>
             </AddBlockButton>
           )}
-          
         </div>
 
         {/* <button type="submit">작성 완료</button> */}
@@ -141,8 +145,8 @@ const HeadLabel = styled.label`
   color: white;
 `;
 const HeadInput = styled.input`
-  flex : 1;
-  border: 1px solid #BEBEBE;
+  flex: 1;
+  border: 1px solid #bebebe;
   padding: 10px;
 `;
 const FormContainer = styled.div`
@@ -158,13 +162,13 @@ const AddBlockButton = styled.button`
   width: 80px;
   height: 80px;
   border-radius: 5px;
-  border: 1px solid #BEBEBE;
+  border: 1px solid #bebebe;
   margin-top: 1rem;
   margin-bottom: 1rem;
 `;
 const Select = styled.select`
-  flex : 1;
-  border: 1px solid #BEBEBE;
+  flex: 1;
+  border: 1px solid #bebebe;
   padding: 10px;
 `;
 

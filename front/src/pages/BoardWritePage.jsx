@@ -8,6 +8,7 @@ import { boardService } from '../api/boards';
 import axios from 'axios';
 import { useBlockNavigation } from '../hook/useBlockNavigation';
 import { getUploadUrl, uploadFileToS3 } from '../api/fileApi';
+import api from '../api/axios';
 
 const categoryName = {
   family_notice: '가정통신문',
@@ -122,20 +123,19 @@ const BoardWritePage = () => {
 
     console.log(formState);
 
-    // console.log("전송할 데이터:", payload);
-    const path = 'board-img/';
-    // 1. Presigned URL 발급 (path와 fileName 분리해서 전송)
-    const { presignedUrl, changeName } = await getUploadUrl(formState.file.name, formState.file.type, path);
-    console.log(formState.file.type);
-    console.log(formState.file);
-    console.log('fetch Content-Type header:', {
-      'Content-Type': formState.file.type,
-    });
-    // 2. S3에 파일 업로드
-    await uploadFileToS3(presignedUrl, formState.file);
+    // // console.log("전송할 데이터:", payload);
+    // const path = 'board-img/';
+    // // 1. Presigned URL 발급 (path와 fileName 분리해서 전송)
+    // const { presignedUrl, changeName } = await getUploadUrl(formState.file.name, formState.file.type, path);
+    // console.log(formState.file.name);
+    // console.log(formState.file.type);
+    // console.log(path);
+
+    // // 2. S3에 파일 업로드
+    // await uploadFileToS3(presignedUrl, formState.file);
 
     // axios 전송 예시
-    await axios.post('http://localhost:8888/api/boards', formData, {
+    await api.post('http://localhost:8888/api/boards', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
     allowNavigation();

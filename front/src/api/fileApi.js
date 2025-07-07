@@ -21,6 +21,9 @@ export const getPresignedUploadUrl = async ({ filename, contentType }) => {
 };
 
 export const getUploadUrl = async (fileName, contentType, path = '') => {
+  console.log(typeof fileName);
+  console.log(typeof contentType);
+  console.log(typeof path);
   const response = await api.post('/api/AWS/upload-url', null, {
     params: {
       file_name: fileName,
