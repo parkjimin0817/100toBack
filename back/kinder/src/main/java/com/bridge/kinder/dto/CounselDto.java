@@ -49,6 +49,7 @@ public class CounselDto {
     @NoArgsConstructor
     @Builder
     public static class Response {
+        private int counsel_no;
         private String child_name;
         private CommonEnums.CounselType counsel_type;
         private LocalTime counsel_start;
@@ -59,7 +60,31 @@ public class CounselDto {
 
         public static Response toEntity(Counsel counsel) {
             return Response.builder()
+                    .counsel_no(counsel.getCounselNo())
                     .child_name(counsel.getChild().getChildName())
+                    .counsel_type(counsel.getCounselType())
+                    .counsel_start(counsel.getCounselStart())
+                    .counsel_end(counsel.getCounselEnd())
+                    .counsel_date(counsel.getCounselDate())
+                    .counsel_status(counsel.getCounselStatus())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class Update{
+        private CommonEnums.CounselType counsel_type;
+        private LocalTime counsel_start;
+        private LocalTime counsel_end;
+        private LocalDate counsel_date;
+        private CounselStatus counsel_status;
+
+        public static Update toDto(Counsel counsel) {
+            return Update.builder()
                     .counsel_type(counsel.getCounselType())
                     .counsel_start(counsel.getCounselStart())
                     .counsel_end(counsel.getCounselEnd())
