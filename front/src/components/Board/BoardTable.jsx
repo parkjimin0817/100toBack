@@ -47,6 +47,7 @@ const BoardTable = ({ tableInfo, columns, boardData }) => {
   };
 
   return (
+    <>
     <BoardTableContainer>
       <BoardTHead 
         $fontSize={tableInfo?.thFontSize}
@@ -83,6 +84,10 @@ const BoardTable = ({ tableInfo, columns, boardData }) => {
         ))}
       </BoardTBody>
     </BoardTableContainer>
+    {(boardData.length < 1) && (
+      <div>작성된 게시글이 없습니다.</div>
+    )}
+    </>
   )
 }
 

@@ -7,6 +7,7 @@ import com.bridge.kinder.dto.MemberDto;
 import com.bridge.kinder.dto.MemberTeacherDto;
 import com.bridge.kinder.dto.MypageDto;
 
+import com.bridge.kinder.entity.Member;
 import java.io.IOException;
 import java.util.List;
 
@@ -21,7 +22,8 @@ public interface MemberService {
     //학부모 생성, 아동 등록
     String createParentChild(MemberChildDto dto) throws IOException;
     //멤버 로그인
-    MemberDto.LoginResponse getLoginMember(String memberId, String memberPwd);
+    Member login(MemberDto.LoginRequest dto);
+    //MemberDto.LoginResponse getLoginMember(String memberId, String memberPwd);
     //멤버 ID 조회(이름, 생년월일)
     MemberDto.SearchId searchId(MemberDto.SearchId dto);
     //멤버 PWD 조회(아이디)
