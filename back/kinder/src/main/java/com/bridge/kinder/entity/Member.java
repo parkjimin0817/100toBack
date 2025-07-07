@@ -68,7 +68,6 @@ public class Member {// 멤버
     private CommonEnums.AdmissionStatus status;
     //상태(승인, 거절, 대기)
 
-
     //---------------------------------------------------------------------------------------------
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CENTER_NO")

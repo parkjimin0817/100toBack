@@ -24,6 +24,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, CorsConfigurationSource corsConfigurationSource) throws Exception {
+        System.out.println("✅ SecurityFilterChain 생성됨");
+        System.out.println("✅ jwtTokenFilter = " + jwtTokenFilter);
         return http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)  //rest api 에선 불필요(=disable)
@@ -31,15 +33,18 @@ public class SecurityConfig {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                //로그인
                                 "/api/members/login",
-                                "/api/members/manager",
-                                "/api/members/teacher",
-                                "/api/members/parent",
-                                "/api/members/checkId",
+                                //아이디 비밀번호 찾기
                                 "/api/members/searchId",
                                 "/api/members/pwdSearchId",
                                 "/api/members/sendOne",
                                 "/api/members/pwdUpdate",
+                                //회원가입
+                                "/api/members/manager",
+                                "/api/members/teacher",
+                                "/api/members/parent",
+                                "/api/members/checkId",
                                 "/api/center",
                                 //시설장 승인
                                 "/api/approval/lists",

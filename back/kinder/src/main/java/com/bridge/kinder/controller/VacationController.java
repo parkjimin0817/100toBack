@@ -1,5 +1,6 @@
 package com.bridge.kinder.controller;
 
+import com.bridge.kinder.auth.JwtTokenProvider;
 import com.bridge.kinder.dto.VacationDto;
 import com.bridge.kinder.dto.VacationDto.Response;
 import com.bridge.kinder.entity.Leave;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class VacationController {
 
     private final VacationService vacationService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     //휴가 신청
     @PostMapping("/request/{memberNo}")

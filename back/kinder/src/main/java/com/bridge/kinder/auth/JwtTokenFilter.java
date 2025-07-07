@@ -27,10 +27,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
 @Component
-public class JwtTokenFilter extends GenericFilter {
+public class JwtTokenFilter extends GenericFilterBean {
 
     //JWT를 생성하거나 검증할 때 사용하는 key 객체
     private final Key SECRET_KEY;
@@ -58,8 +60,6 @@ public class JwtTokenFilter extends GenericFilter {
                 if(!token.startsWith("Bearer ")) {
                     throw new AuthenticationServiceException("Bearer 형식이 아닙니다.");
                 }
-
-                System.out.println("[TOKEN FILTER   ] secretKey = " + secretKey);
                 //Bearer 뒤에 담긴 실제 jwt 문자열 추출
                 String jwtToken = token.substring(7);
                 //jwt 토큰 파싱하고 서명 검증
@@ -82,8 +82,8 @@ public class JwtTokenFilter extends GenericFilter {
                 //현재 요청에 대한 인증 정보 등록
                 //이후 SecurityContext에서 이 사용자로 인식
                 SecurityContextHolder.getContext().setAuthentication(auth);
-            }
 
+            }
             chain.doFilter(request, response);
         } catch (Exception e) {
             e.printStackTrace();

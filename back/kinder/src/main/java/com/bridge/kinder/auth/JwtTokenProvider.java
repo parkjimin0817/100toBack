@@ -1,5 +1,6 @@
 package com.bridge.kinder.auth;
 
+import com.bridge.kinder.enums.CommonEnums;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -33,14 +34,13 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date expire = new Date(now.getTime() + (expiration * 1000L * 60));
 
-        System.out.println("[TOKEN PROVIDER] secretKey = " + secretKey);
-
         return Jwts.builder() // header + payload + signature
                 .setClaims(claims) // payload에 담길 사용자 정보 (id, type)
                 .setIssuedAt(now) //토큰 발급 시간
                 .setExpiration(expire) //토큰 만료 시간
                 .signWith(SECRET_KEY, SignatureAlgorithm.HS512) //signature
                 .compact();
+
     }
 
     public String getMemberIdFromToken() {

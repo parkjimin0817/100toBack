@@ -112,6 +112,8 @@ export const memberService = {
         centerTel: data.center_tel,
       };
 
+      localStorage.setItem('accessToken', camelData.accessToken);
+
       return camelData;
     } catch (error) {
       if (error.response) {
