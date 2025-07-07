@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 import styled from 'styled-components';
-import { IoDownloadOutline } from "react-icons/io5";
+import { IoDownloadOutline } from 'react-icons/io5';
 import defaultImg from '../../assets/img/img.png';
 
 import "./EditorComponent/tiptap-templates/editor.scss";
@@ -29,7 +29,7 @@ const BoardDetail = ({ category, post }) => {
       <PostDescriptionBox>
         <PostDescription>{formatKoreanDate(post.createDate)}</PostDescription>
         <PostDescriptionBox>
-          {(category === "NOTE" || category === "LETTERHOME") && (
+          {(category === 'NOTE' || category === 'LETTERHOME') && (
             <>
               <PostLabel>반 이름</PostLabel>
               <PostDescription>{post.className}</PostDescription>
@@ -40,31 +40,38 @@ const BoardDetail = ({ category, post }) => {
         </PostDescriptionBox>
       </PostDescriptionBox>
       {/* 게시글 내용 */}
-      <PostContentList id='editorBox'>
-        {post.boardContents && post.boardContents.map((content) => (
-          <PostContentBox>
-            {content.type === "TEXT" ?
-            (
-              <div className={"tiptap ProseMirror"} dangerouslySetInnerHTML={{__html : content.contentText}}></div>
-            ) : (
-              <PostImg src={content.contentFile ?? defaultImg} onError={(e) => {e.currentTarget.src = defaultImg}}></PostImg>
-            )}
-          </PostContentBox>
-        ))}
+      <PostContentList  id='editorBox'>
+        {post.boardContents &&
+          post.boardContents.map((content, index) => (
+            <PostContentBox key={index}>
+              {content.type === 'TEXT' ? (
+                <div className={"tiptap ProseMirror"} dangerouslySetInnerHTML={{ __html: content.contentText }}></div>
+              ) : (
+                <PostImg
+                  src={content.contentFile ?? defaultImg}
+                  onError={(e) => {
+                    e.currentTarget.src = defaultImg;
+                  }}
+                ></PostImg>
+              )}
+            </PostContentBox>
+          ))}
       </PostContentList>
       {/* 파일이 있는 경우에만 나오도록. */}
-      {(post && post.attachment) && (
+      {post && post.attachment && (
         <>
           <AttachmentLabel>첨부파일</AttachmentLabel>
           <AttachmentBox>
             <IoDownloadOutline />
-            <FileLink href={post && post.attachment ? post.attachment : ""} download>{post && post.attachment ? post.attachment : ""}</FileLink>
+            <FileLink href={post && post.attachment ? post.attachment : ''} download>
+              {post && post.attachment ? post.attachment : ''}
+            </FileLink>
           </AttachmentBox>
         </>
       )}
     </DetailContainer>
-  )
-}
+  );
+};
 
 const DetailContainer = styled.div`
   /* margin: 40px; */
@@ -107,9 +114,14 @@ const PostContentList = styled.div`
   margin-bottom: 1.5rem;
   border: 1px solid #333;
   border-radius: 4px;
+  min-height: 300px;
 `;
 
 const PostContentBox = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
   /* border: 1px solid #333; */
   padding: 1rem;
   /* min-height: 200px; */
@@ -124,7 +136,7 @@ const PostImg = styled.img`
   max-height: 500px;
 `;
 
-export default BoardDetail
+export default BoardDetail;
 
 const AttachmentLabel = styled.div`
   font-weight: bold;
