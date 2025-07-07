@@ -3,6 +3,10 @@ import styled from 'styled-components';
 import { IoDownloadOutline } from "react-icons/io5";
 import defaultImg from '../../assets/img/img.png';
 
+import "./EditorComponent/tiptap-templates/editor.scss";
+import "./EditorComponent/tiptap-node/list-node.scss";
+import "./EditorComponent/tiptap-node/paragraph-node.scss";
+
 const BoardDetail = ({ category, post }) => {
   const formatKoreanDate = (isoString) => {
     if (!isoString) return '';
@@ -36,12 +40,12 @@ const BoardDetail = ({ category, post }) => {
         </PostDescriptionBox>
       </PostDescriptionBox>
       {/* 게시글 내용 */}
-      <PostContentList>
+      <PostContentList id='editorBox'>
         {post.boardContents && post.boardContents.map((content) => (
           <PostContentBox>
             {content.type === "TEXT" ?
             (
-              <div dangerouslySetInnerHTML={{__html : content.contentText}}></div>
+              <div className={"tiptap ProseMirror"} dangerouslySetInnerHTML={{__html : content.contentText}}></div>
             ) : (
               <PostImg src={content.contentFile ?? defaultImg} onError={(e) => {e.currentTarget.src = defaultImg}}></PostImg>
             )}
