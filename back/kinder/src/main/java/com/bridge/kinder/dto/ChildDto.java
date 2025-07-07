@@ -33,7 +33,7 @@ public class ChildDto {
         private String f_parents_phone;
         private String m_parents_name;
         private String m_parents_phone;
-        private MultipartFile child_profile;
+        private String child_profile;
         
 
         private int member_no;

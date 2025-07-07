@@ -16,7 +16,6 @@ public class ResignDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class updateResign {
-        private int resign_no;
         private CommonEnums.ResignStatus status;
 
         private int center_no;

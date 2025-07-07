@@ -30,7 +30,7 @@ public class MemberDto {
         private String member_pwd;
         private String member_phone;
         private CommonEnums.MemberType member_type;
-        private MultipartFile member_profile;
+        private String member_profile;
         private String address;
 
         private int center_no;
@@ -72,6 +72,7 @@ public class MemberDto {
         private LocalDate member_birth;
         private String member_phone;
         private CommonEnums.MemberType member_type;
+        private CommonEnums.AdmissionStatus status;
 
         //만약 멤버정보 필요한거 있으시면 그냥 추가하시면 됩니다.
         private String center_tel;
@@ -89,6 +90,7 @@ public class MemberDto {
                     .member_birth(member.getMemberBirth())
                     .member_phone(member.getMemberPhone())
                     .member_type(member.getMemberType())
+                    .status(member.getStatus())
                     .center_no(member.getCenter().getCenterNo())
                     .center_tel(member.getCenter().getCenterTel())
                     .class_no(member.getClassRoom() != null ? member.getClassRoom().getClassNo() : 0) // (시설장 혹은 반 미배정 교사는 로그인 시 반 번호가 null이기 때문에 임의로 지정)
@@ -276,6 +278,7 @@ public class MemberDto {
         private LocalDate member_birth;
         private String address;
         private CommonEnums.MemberType member_type;
+        private String member_profile;
         private String center_name;
         private String center_tel;
         private String center_address;
@@ -288,6 +291,7 @@ public class MemberDto {
                     .member_birth(member.getMemberBirth())
                     .address(member.getAddress())
                     .member_type(member.getMemberType())
+                    .member_profile(member.getMemberProfile())
                     .center_name(center.getCenterName())
                     .center_tel(center.getCenterTel())
                     .center_address(center.getCenterAddress())
