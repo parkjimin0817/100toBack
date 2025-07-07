@@ -66,6 +66,7 @@ import ClassListPage from './pages/ClassListPage';
 import TeacherIntroDetail from './pages/manager/TeacherIntroDetail';
 import CouncelClassList from './pages/manager/CouncelClassList';
 import CouncelSettingPage from './pages/manager/CouncelSettingPage';
+import ParentCouncelPage from './pages/parent/ParentCouncelPage';
 
 function App() {
   return (
@@ -80,9 +81,11 @@ function App() {
              * 학부모
              *
              * 1. 학부모 메인페이지
+             * 2. 상담일정 페이지
              *
              * */}
             <Route path="/parent/main" element={<ParentMainPage />} />
+            <Route path="/councel/parent" element={<ParentCouncelPage />} />
             <Route path="/parent/mychild" element={<ParentChildList />} />
             <Route path="/parent/mypage" element={<ParentMyPage />} />
 
