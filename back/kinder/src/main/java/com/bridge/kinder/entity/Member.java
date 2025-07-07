@@ -51,7 +51,7 @@ public class Member {// 멤버
     private CommonEnums.MemberType memberType;
     //분류(시설장,교사,학부모)
 
-    @Column(name = "MEMBER_PROFILE", length = 100)
+    @Column(name = "MEMBER_PROFILE")
     private String memberProfile;
     //프로필 이미지
 

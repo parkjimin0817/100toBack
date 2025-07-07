@@ -30,7 +30,7 @@ public class MemberDto {
         private String member_pwd;
         private String member_phone;
         private CommonEnums.MemberType member_type;
-        private MultipartFile member_profile;
+        private String member_profile;
         private String address;
 
         private int center_no;

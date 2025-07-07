@@ -130,4 +130,8 @@ export const API_ENDPOINTS = {
     BASE: '/api/resign',
     MEMBER: `/api/resign/member`,
   },
+  FILE: {
+    BASE: '/api/file',
+    PRESIGNED_URL: '/api/file/presigned-url',
+  },
 };

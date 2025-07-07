@@ -20,8 +20,10 @@ import com.bridge.kinder.enums.CommonEnums.AdmissionStatus;
 import com.bridge.kinder.repository.*;
 import com.bridge.kinder.util.SmsUtil;
 import jakarta.persistence.EntityNotFoundException;
+import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.web.server.ResponseStatusException;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +53,9 @@ public class MemberServiceImpl implements MemberService {
     private final MemberChildRepository memberChildRepository;
     private final String UPLOAD_PATH = "C://test_upload/"; //aws S3 연결시 관련 코드 수정할 것.
     private final LeaveRepository leaveRepository;
+
+    @Value("${aws.s3.bucket}") private String bucket;
+    private final S3Presigner s3Presigner;
 
     //회원가입 시 아이디 중복 체크
     @Override
@@ -65,18 +73,18 @@ public class MemberServiceImpl implements MemberService {
         String originName = null;
         String profilePath = null;
 
-        if(dto.getMember().getMember_profile() != null && !dto.getMember().getMember_profile().isEmpty()) {
-            originName = dto.getMember().getMember_profile()
-                    .getOriginalFilename();
-            profilePath = UUID.randomUUID().toString() + "_manager_" + originName;
-
-            File uploadDir = new File(UPLOAD_PATH);
-            if(!uploadDir.exists()) {
-                uploadDir.mkdirs();
-            }
-
-            dto.getMember().getMember_profile().transferTo(new File(UPLOAD_PATH + profilePath));
-        }
+//        if(dto.getMember().getMember_profile() != null && !dto.getMember().getMember_profile().isEmpty()) {
+//            originName = dto.getMember().getMember_profile()
+//                    .getOriginalFilename();
+//            profilePath = UUID.randomUUID().toString() + "_manager_" + originName;
+//
+//            File uploadDir = new File(UPLOAD_PATH);
+//            if(!uploadDir.exists()) {
+//                uploadDir.mkdirs();
+//            }
+//
+//            dto.getMember().getMember_profile().transferTo(new File(UPLOAD_PATH + profilePath));
+//        }
 
         Member manager = dto.getMember().toEntity(savedCenter, profilePath);
         memberRepository.save(manager);
@@ -98,20 +106,16 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
 
         String originName = null;
-        String profilePath = null;
+        String profilePath = dto.getMember().getMember_profile();
 
-        if(dto.getMember().getMember_profile() != null && !dto.getMember().getMember_profile().isEmpty()) {
-            originName = dto.getMember().getMember_profile()
-                    .getOriginalFilename();
-            profilePath = UUID.randomUUID().toString() + "_member_" + originName;
+//        if(dto.getMember().getMember_profile() != null && !dto.getMember().getMember_profile().isEmpty()) {
+//            originName = dto.getMember().getMember_profile()
+//                    .getOriginalFilename();
+//            profilePath = UUID.randomUUID().toString() + "_member_" + originName;
+//
+//            dto.getMember().getMember_profile().transferTo(new File(UPLOAD_PATH + profilePath));
+//        }
 
-            File uploadDir = new File(UPLOAD_PATH);
-            if(!uploadDir.exists()) {
-                uploadDir.mkdirs();
-            }
-
-            dto.getMember().getMember_profile().transferTo(new File(UPLOAD_PATH + profilePath));
-        }
 
         Member teacher = dto.getMember().toEntity(center, profilePath);
         memberRepository.save(teacher);
@@ -143,19 +147,19 @@ public class MemberServiceImpl implements MemberService {
         String originNameMember = null;
         String profilePathMember = null;
 
-        if(dto.getMember().getMember_profile() != null && !dto.getMember().getMember_profile().isEmpty()) {
-            originNameMember = dto.getMember()
-                    .getMember_profile()
-                    .getOriginalFilename();
-            profilePathMember = UUID.randomUUID().toString() + "_member_" + originNameMember;
-
-            File uploadDir = new File(UPLOAD_PATH);
-            if(!uploadDir.exists()) {
-                uploadDir.mkdirs();
-            }
-
-            dto.getMember().getMember_profile().transferTo(new File(UPLOAD_PATH + profilePathMember));
-        }
+//        if(dto.getMember().getMember_profile() != null && !dto.getMember().getMember_profile().isEmpty()) {
+//            originNameMember = dto.getMember()
+//                    .getMember_profile()
+//                    .getOriginalFilename();
+//            profilePathMember = UUID.randomUUID().toString() + "_member_" + originNameMember;
+//
+//            File uploadDir = new File(UPLOAD_PATH);
+//            if(!uploadDir.exists()) {
+//                uploadDir.mkdirs();
+//            }
+//
+//            dto.getMember().getMember_profile().transferTo(new File(UPLOAD_PATH + profilePathMember));
+//        }
 
         Member parent = dto.getMember().toEntity(centerMember, profilePathMember);
         memberRepository.save(parent);

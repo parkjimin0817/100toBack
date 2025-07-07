@@ -72,6 +72,7 @@ const TeacherMyPage = () => {
           centerTel: centerInfo.centerTel,
           centerAddress: centerInfo.centerAddress,
           centerType: centerInfo.centerType,
+          memberProfile: editableInfo.memberProfile,
         });
         setMember({
           ...member,

@@ -20,6 +20,7 @@ public class ResignServiceImpl implements ResignService {
     private final ResignRepository resignRepository;
     private final MemberRepository memberRepository;
 
+    //퇴사 처리
     @Override
     public String resignMember(ResignDto.updateResign dto) {
         Optional<Resign> optResign = resignRepository.findByCenter_CenterNoAndMember_MemberNo(dto.getCenter_no(), dto.getMember_no());
