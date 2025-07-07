@@ -47,12 +47,19 @@ const BoardDetail = ({ category, post }) => {
               {content.type === 'TEXT' ? (
                 <div className={"tiptap ProseMirror"} dangerouslySetInnerHTML={{ __html: content.contentText }}></div>
               ) : (
-                <PostImg
-                  src={content.contentFile ?? defaultImg}
-                  onError={(e) => {
-                    e.currentTarget.src = defaultImg;
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
                   }}
-                ></PostImg>
+                >
+                  <PostImg
+                    src={content.contentFile ?? defaultImg}
+                    onError={(e) => {
+                      e.currentTarget.src = defaultImg;
+                    }}
+                  ></PostImg>
+                </div>
               )}
             </PostContentBox>
           ))}
@@ -118,10 +125,10 @@ const PostContentList = styled.div`
 `;
 
 const PostContentBox = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: column;
+  /* display: flex; */
+  /* justify-content: flex-start; */
+  /* align-items: center; */
+  /* flex-direction: column; */
   /* border: 1px solid #333; */
   padding: 1rem;
   /* min-height: 200px; */
