@@ -44,6 +44,7 @@ dependencies {
 
 //	runtimeOnly 'com.h2database:h2'
 
+	//전화번호인증요청
 	implementation 'net.nurigo:sdk:4.3.0'
 	//HTML 파싱 라이브러리
 	implementation 'org.jsoup:jsoup:1.17.2'
