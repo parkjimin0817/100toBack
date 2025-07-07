@@ -175,6 +175,7 @@ export const memberService = {
       const { data } = await api.post(API_ENDPOINTS.MEMBERS.LOGIN, { memberId, memberPwd });
 
       const camelData = {
+        accessToken: data.accessToken,
         memberNo: data.member_no,
         memberName: data.member_name,
         memberId: data.member_id,
@@ -185,6 +186,8 @@ export const memberService = {
         classNo: data.class_no,
         centerTel: data.center_tel,
       };
+
+      localStorage.setItem('accessToken', camelData.accessToken);
 
       return camelData;
     } catch (error) {

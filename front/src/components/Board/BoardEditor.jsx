@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import ImageInputBlock from './ImageInputBlock';
-import TextInputBlock from './TextInputBlock';
+// import TextInputBlock from './TextInputBlock';
+import SimpleEditor from './TextInputBlock copy';
 import styled from 'styled-components';
 import { FaMinus, FaPlus } from 'react-icons/fa';
 import { classService } from '../../api/class';
@@ -29,6 +30,12 @@ const BoardEditor = (
     }
     getClassRoomList();
   }, [])
+
+  // 블럭 추가 후, 추가 버튼 감추기 위한 함수. type이 default인 블럭이 있는지 검사
+  function hasDefaultBlock(contents) {
+    return contents?.some((block) => block.type === "default");
+  }
+
 
   return (
     <FormContainer>
@@ -84,7 +91,7 @@ const BoardEditor = (
                   </AddBlockButton>
                 </ButtonBox>
               ) : block.type === "TEXT" ? (
-                <TextInputBlock
+                <SimpleEditor /*TextInputBlock*/
                   key={block.boardContentNo}
                   onChange={(value) => updateBlock(block.boardContentNo, value)}
                   content={block.contentText}
@@ -101,9 +108,14 @@ const BoardEditor = (
             {/* </div> */}
             </>
           ))}
-          <AddBlockButton type="button" onClick={() => addBlock("default")}>
-            <FaPlus></FaPlus>
-          </AddBlockButton>
+          {hasDefaultBlock(formState?.contents) ? (
+            <></>
+          ) : (
+            <AddBlockButton type="button" onClick={() => addBlock("default")}>
+              <FaPlus></FaPlus>
+            </AddBlockButton>
+          )}
+          
         </div>
 
         {/* <button type="submit">작성 완료</button> */}

@@ -1,5 +1,6 @@
 package com.bridge.kinder.controller;
 
+import com.bridge.kinder.auth.JwtTokenProvider;
 import com.bridge.kinder.dto.ChildDto;
 import com.bridge.kinder.dto.CreateManagerDto;
 import com.bridge.kinder.dto.MemberChildDto;
@@ -24,6 +25,7 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     //아이디 중복체크
     @GetMapping("/checkId")
@@ -55,8 +57,11 @@ public class MemberController {
 
     //로그인
     @PostMapping("/login")
-    public ResponseEntity<MemberDto.LoginResponse> loginMember(@RequestBody MemberDto.LoginRequest dto) throws IOException {
-        MemberDto.LoginResponse response = memberService.getLoginMember(dto.getMemberId(), dto.getMemberPwd());
+    public ResponseEntity<MemberDto.LoginResponse> loginMember(@RequestBody MemberDto.LoginRequest dto) {
+        Member member = memberService.login(dto);
+        String jwtToken = jwtTokenProvider.createToken(member.getMemberId(), member.getMemberType().toString());
+
+        MemberDto.LoginResponse response = MemberDto.LoginResponse.toDto(jwtToken, member);
         return ResponseEntity.ok(response);
     }
 
