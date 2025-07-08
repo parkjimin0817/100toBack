@@ -105,7 +105,6 @@ public class MemberController {
     //학부모 마이페이지 수정
     @PatchMapping("/mypage/parent")
     public ResponseEntity<MemberDto.updateParentInfo> updateParentIfo(@RequestBody MemberDto.updateParentInfo dto){
-        System.out.println(dto.getMember_no());
         return ResponseEntity.ok(memberService.updateParentInfo(dto));
     }
 

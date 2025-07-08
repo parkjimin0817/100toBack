@@ -27,7 +27,7 @@ api.interceptors.response.use(
       switch (status) {
         case 401:
           //인증에러
-          window.location.href = '/login';
+          window.location.href = '/';
           break;
         case 403:
           console.error('접근권한이 없습니다.');

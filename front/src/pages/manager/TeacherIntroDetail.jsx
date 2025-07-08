@@ -53,6 +53,7 @@ const TeacherIntroDetail = () => {
         memberName: data.member_name,
         memberBirth: data.member_birth,
         memberType: data.member_type,
+        memberProfile: data.member_profile,
         address: data.address,
       });
     } catch {
@@ -81,7 +82,7 @@ const TeacherIntroDetail = () => {
       <Wrapper>
         <InfoBox>
           <ProfileImgBox>
-            <MyPageProfileImage />
+            <MyPageProfileImage memberProfile={editableInfo.memberProfile} />
           </ProfileImgBox>
           <MyInfoBox>
             <MyPageMyInfo info={editableInfo} />
