@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import styled from 'styled-components';
 import ChildImg from '../../assets/Child.png';
 import AttendanceChildSchedule from '../AttendanceChildSchedule';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import api from '../../api/axios';
 
 const ChildDetailInfoArea = ({ childNo }) => {
   const [childData, setChildData] = useState(null);
@@ -28,7 +28,7 @@ const ChildDetailInfoArea = ({ childNo }) => {
       setEditHealth({ ...childData.health });
       setIsEditing(true);
     } else {
-      axios
+      api
         .patch(`http://localhost:8888/api/childs/updatehealthdata?childNo=${childNo}`, editHealth)
         .then((res) => {
           setChildData((prev) => ({ ...prev, health: res.data }));
@@ -44,10 +44,10 @@ const ChildDetailInfoArea = ({ childNo }) => {
   useEffect(() => {
     const fetchChildDetail = async () => {
       try {
-        const response = await axios.get(`http://localhost:8888/api/childs/detail?childNo=${childNo}`);
+        const response = await api.get(`http://localhost:8888/api/childs/detail?childNo=${childNo}`);
         setChildData(response.data);
       } catch (error) {
-        console.error('아동 상세 정보 불러오기 실패:', error);
+        toast.error('아동 상세 정보 불러오기 실패:', error);
       }
     };
 
