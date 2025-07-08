@@ -6,7 +6,6 @@ import CommonFind from '../../components/Common/CommonFind';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../styles/Common/Button';
 import SearchFormNav from '../../components/Common/SearchFormNav';
-import axios from 'axios';
 import { memberService } from '../../api/member';
 import useSearchIdStore from '../../store/searchStore';
 import { toast } from 'react-toastify';
