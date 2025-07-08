@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { format } from 'date-fns';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ContentHeader from '../../components/Common/ContentHeader';
 import CouncelSearchBar from './CouncelSearchBar';
 import CouncelListTable from './CouncelListTable';
@@ -22,6 +22,8 @@ const CouncelSettingPage = () => {
   const member = useLoginStore((state) => state.member);
 
   const [openModal, setOpenModal] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleSearch = async () => {
     try {
@@ -58,7 +60,16 @@ const CouncelSettingPage = () => {
 
   return (
     <Wrapper>
-      <ContentHeader Title="상담 일정" Color="orange" />
+      <ContentHeader
+        Title="상담 일정"
+        Color="purple"
+        ButtonProps={[
+          {
+            Title: '뒤로가기',
+            func: () => navigate(-1),
+          },
+        ]}
+      />
       <Content>
         <CouncelSearchBar
           selectedStatus={selectedStatus}

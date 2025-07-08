@@ -19,7 +19,6 @@ import jakarta.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -62,7 +61,7 @@ public class ChildRepositoryImpl implements ChildRepository {
     //시설 번호로 아동들 전부 조회
     @Override
     public List<Child> findByCenterNo(int centerNo) {
-        return em.createQuery("SELECT c FROM Child c WHERE c.center.centerNo  = :centerNo", Child.class)
+        return em.createQuery("SELECT c FROM Child c WHERE c.center.centerNo  = :centerNo AND c.status = com.bridge.kinder.enums.CommonEnums.AdmissionStatus.APPROVED ", Child.class)
                 .setParameter("centerNo", centerNo)
                 .getResultList();
     }

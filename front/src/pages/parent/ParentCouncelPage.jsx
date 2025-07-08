@@ -56,7 +56,7 @@ const ParentCouncelPage = () => {
 
   return (
     <Wrapper>
-      <ContentHeader Title="상담 일정" Color="orange" />
+      <ContentHeader Title="상담 일정" Color="blue" />
       <Content>
         <CouncelListTable
           data={checklist}
