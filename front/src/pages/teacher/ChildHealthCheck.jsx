@@ -9,19 +9,21 @@ import { toast } from 'react-toastify';
 import api from '../../api/axios';
 
 const ChildHealthCheck = () => {
+  const member = useLoginStore((state) => state.member);
+  const classNo = member.classNo;
+  const centerNo = member.centerNo;
+  const memberType = member.memberType;
+  
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedClassNo, setSelectedClassNo] = useState('');
+  const [selectedClassNo, setSelectedClassNo] = useState(classNo ? classNo : '');
   const [classList, setClassList] = useState([]);
   const [checklist, setChecklist] = useState([]);
 
-  const member = useLoginStore((state) => state.member);
-  const centerNo = member.centerNo;
-  const memberType = member.memberType;
-
-  // 시설별 반 목록 가져오기, 학부모가 들어올 경우 반 목록 안 불러오기
   useEffect(() => {
+    // 시설별 반 목록 가져오기, 학부모가 들어올 경우 반 목록 안 불러오기
     if (!centerNo || !memberType || memberType === 'PARENT') return;
 
+    // 반 목록 불러오기
     const fetchClassList = async () => {
       try {
         const response = await api.get(`http://localhost:8888/api/classroom/list/${centerNo}`);
@@ -33,6 +35,14 @@ const ChildHealthCheck = () => {
 
     fetchClassList();
   }, [centerNo, memberType]);
+
+  useEffect(() => {
+    // 부모가 아니고, 반이 미소속인 경우 불러오지 않음.
+    if(memberType !== 'PARENT' && !selectedClassNo) return;
+
+    // 소속된 반이 있는 경우 바로 조회
+    handleSearch();
+  }, [])
 
   // 검색 시 실행
   const handleSearch = async () => {
