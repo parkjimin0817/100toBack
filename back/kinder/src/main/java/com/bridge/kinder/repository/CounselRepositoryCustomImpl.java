@@ -49,6 +49,14 @@ public class CounselRepositoryCustomImpl implements CounselRepositoryCustom {
 
     @Override
     public List<Counsel> getCounselByMemberNo(int memberNo) {
-        return List.of();
+        return em.createQuery("""
+        SELECT c
+        FROM MemberChild mc
+        JOIN mc.child child
+        JOIN Counsel c ON c.child = child
+        WHERE mc.member.memberNo = :memberNo
+        """, Counsel.class)
+                .setParameter("memberNo", memberNo)
+                .getResultList();
     }
 }

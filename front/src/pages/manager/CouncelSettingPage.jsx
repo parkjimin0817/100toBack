@@ -9,6 +9,7 @@ import CouncelListTable from './CouncelListTable';
 import { toast } from 'react-toastify';
 import useLoginStore from '../../store/loginStore';
 import CouncelScheduleModal from './components/CouncelScheduleModal';
+import api from '../../api/axios';
 
 const CouncelSettingPage = () => {
   const { classNo } = useParams();
@@ -24,7 +25,7 @@ const CouncelSettingPage = () => {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.get(`http://localhost:8888/api/counsel`, {
+      const response = await api.get(`http://localhost:8888/api/counsel`, {
         params: {
           classNo,
         },

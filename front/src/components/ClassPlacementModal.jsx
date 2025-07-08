@@ -4,7 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import api from '../api/axios';
 
-const ClassPlacementModal = ({ isOpen, onClose, selectedDate, selectedItem, centerNo }) => {
+const ClassPlacementModal = ({ isOpen, onClose, selectedDate, selectedItem, centerNo, onRefresh }) => {
   const [person, setPerson] = useState(null);
   const [classOptions, setClassOptions] = useState([]);
   const [selectedClass, setSelectedClass] = useState(0);
@@ -67,6 +67,7 @@ const ClassPlacementModal = ({ isOpen, onClose, selectedDate, selectedItem, cent
 
       toast.success('반 배정이 성공적으로 완료되었습니다.');
       onClose();
+      onRefresh?.();
     } catch (err) {
       toast.error('반 배정에 실패하였습니다.') + err;
     }

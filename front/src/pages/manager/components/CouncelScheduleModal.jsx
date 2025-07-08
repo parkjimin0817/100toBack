@@ -8,6 +8,7 @@ import axios from 'axios';
 import useLoginStore from '../../../store/loginStore';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CiCalendar } from 'react-icons/ci';
+import api from '../../../api/axios';
 
 const CounselScheduleModal = ({ isOpen, onClose, classNo, onSuccess }) => {
   const [childList, setChildList] = useState([]);
@@ -22,7 +23,7 @@ const CounselScheduleModal = ({ isOpen, onClose, classNo, onSuccess }) => {
     if (!isOpen || !classNo) return;
     const fetchChildren = async () => {
       try {
-        const res = await axios.get(`http://localhost:8888/api/childs`, {
+        const res = await api.get(`http://localhost:8888/api/childs`, {
           params: { classNo },
         });
         setChildList(res.data);
@@ -64,7 +65,7 @@ const CounselScheduleModal = ({ isOpen, onClose, classNo, onSuccess }) => {
         childNo: selectedChild,
       };
 
-      await axios.post('http://localhost:8888/api/counsel/add', payload);
+      await api.post('http://localhost:8888/api/counsel/add', payload);
       toast.success('일정이 등록되었습니다.');
       onClose();
       onSuccess?.();
