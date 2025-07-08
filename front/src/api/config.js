@@ -102,7 +102,7 @@ export const API_ENDPOINTS = {
   },
   BOARDS: {
     BASE: '/api/boards',
-    ADD: '/api/boards',
+    ADD: '/api/boards/create',
     DETAIL: (id) => `/api/boards/${id}`,
     DELETE: (id) => `/api/boards/${id}`,
     TYPE: (type, centerNo, page) => `/api/boards/type/${type}?centerNo=${centerNo}&page=${page}`,

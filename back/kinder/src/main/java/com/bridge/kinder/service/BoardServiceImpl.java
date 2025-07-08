@@ -44,7 +44,7 @@ public class BoardServiceImpl implements BoardService {
     private final String UPLOAD_PATH = "C://test_upload/";
 
     @Override
-    public int createBoard(BoardDto.Create dto, MultipartFile file, List<MultipartFile> contentFiles) throws IOException {
+    public int createBoard(BoardDto.Create dto) throws IOException {
         Member member = memberRepository.findByParentNo(dto.getMemberId())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
         Center center = centerRepository.findById(dto.getCenterId())
@@ -55,15 +55,9 @@ public class BoardServiceImpl implements BoardService {
                     .orElseThrow(() -> new RuntimeException("존재하지 않는 반입니다."));
         }
 
-        // 🟡 메인 첨부파일 저장
-        String attachmentPath = null;
-        if (file != null && !file.isEmpty()) {
-            attachmentPath = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            file.transferTo(new File(UPLOAD_PATH + attachmentPath));
-        }
 
         // 🟢 Board 엔티티 생성
-        dto.setAttachment(attachmentPath);
+//        dto.setAttachment(dto.getAttachment());
         Board board = dto.toEntity(center, member, classRoom);
 
         AtomicInteger order = new AtomicInteger(0);
@@ -72,18 +66,17 @@ public class BoardServiceImpl implements BoardService {
         List<BoardContent> contents = new ArrayList<>();
 
         for (BoardContentDto.Create contentDto : dto.getContents()) {
-            String contentFilePath = null;
+//            String contentFilePath = null;
 
-            if (contentDto.getType() == CommonEnums.BoardContentType.IMG && contentFiles != null) {
-                MultipartFile contentFile = contentFiles.get(imageIndex.getAndIncrement());
-                if (contentFile != null && !contentFile.isEmpty()) {
-                    String originName = contentFile.getOriginalFilename();
-                    contentFilePath = UUID.randomUUID() + "_content_" + originName;
-                    contentFile.transferTo(new File(UPLOAD_PATH + contentFilePath));
-                }
-            }
+//            if (contentDto.getType() == CommonEnums.BoardContentType.IMG ) {
+//                if (contentFile != null && !contentFile.isEmpty()) {
+//                    String originName = contentFile.getOriginalFilename();
+//                    contentFilePath = UUID.randomUUID() + "_content_" + originName;
+//                    contentFile.transferTo(new File(UPLOAD_PATH + contentFilePath));
+//                }
+//            }
 
-            contentDto.setContentFile(contentFilePath);
+//            contentDto.setContentFile(contentFilePath);
             BoardContent content = contentDto.toEntity(board, order.getAndIncrement());
             contents.add(content);
         }
@@ -91,17 +84,17 @@ public class BoardServiceImpl implements BoardService {
         board.getBoardContents().addAll(contents);
 
         // 사진 게시판의 경우, 첨부파일은 썸네일이 되도록 함.
-        if(dto.getType() == CommonEnums.BoardType.PHOTO) {
-            Optional<BoardContent> firstImageContent = contents.stream()
-                    .filter(content -> content.getType() == CommonEnums.BoardContentType.IMG)
-                    .findFirst();
-            attachmentPath = firstImageContent
-                    .map(BoardContent::getContentFile)
-                    .orElse(null);
-            System.out.println("사진 경로" + attachmentPath);
-            board.update(board.getTitle(), board.getType(), attachmentPath);
-            System.out.println(board.getAttachment());
-        }
+//        if(dto.getType() == CommonEnums.BoardType.PHOTO) {
+//            Optional<BoardContent> firstImageContent = contents.stream()
+//                    .filter(content -> content.getType() == CommonEnums.BoardContentType.IMG)
+//                    .findFirst();
+//            fileName = firstImageContent
+//                    .map(BoardContent::getContentFile)
+//                    .orElse(null);
+//            System.out.println("사진 경로" + fileName);
+//            board.update(board.getTitle(), board.getType(), fileName);
+//            System.out.println(board.getAttachment());
+//        }
 
         boardRepository.save(board);
         System.out.println("final attachment: " + board.getAttachment());
