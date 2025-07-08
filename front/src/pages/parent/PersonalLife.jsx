@@ -1,7 +1,6 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import ContentHeader from '../../components/Common/ContentHeader';
 import styled from 'styled-components';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import api from '../../api/axios';

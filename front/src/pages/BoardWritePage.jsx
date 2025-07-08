@@ -5,9 +5,7 @@ import ContentHeader from '../components/Common/ContentHeader';
 import styled from 'styled-components';
 import useLoginStore from '../store/loginStore';
 import { boardService } from '../api/boards';
-import axios from 'axios';
 import { useBlockNavigation } from '../hook/useBlockNavigation';
-import { getUploadUrl, uploadFileToS3 } from '../api/fileApi';
 import api from '../api/axios';
 
 const categoryName = {
@@ -134,9 +132,9 @@ const BoardWritePage = () => {
     // // 2. S3에 파일 업로드
     // await uploadFileToS3(presignedUrl, formState.file);
 
-    // axios 전송 예시
-    await api.post('http://localhost:8888/api/boards', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+    // api 전송 예시
+    await api.post("http://localhost:8888/api/boards", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
     allowNavigation();
     navigate(`/${category}/list`);

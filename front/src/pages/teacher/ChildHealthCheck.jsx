@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 import ContentHeader from '../../components/Common/ContentHeader';
 import CheckListSearchBar from './components/CheckListSearchBar';
 import HealthCheckListTable from './components/HealthCheckListTable';

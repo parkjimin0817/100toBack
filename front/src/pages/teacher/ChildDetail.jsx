@@ -6,7 +6,6 @@ import ChildImg from '../../assets/Child.png';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AttendanceChildSchedule from '../../components/AttendanceChildSchedule';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import api from '../../api/axios';
 
