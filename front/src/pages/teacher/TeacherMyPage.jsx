@@ -18,7 +18,6 @@ const TeacherMyPage = () => {
   const navigate = useNavigate();
   const isAuthenticated = useLoginStore((state) => state.isAuthenticated);
 
-  const [myInfo, setMyInfo] = useState(null);
   const [editableInfo, setEditableInfo] = useState(null);
   const [centerInfo, setCenterInfo] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -34,7 +33,6 @@ const TeacherMyPage = () => {
       try {
         const url = `/api/members/mypage?id=${member.memberNo}`;
         const { data } = await api.get(url);
-        setMyInfo(data);
 
         setEditableInfo({
           memberName: data.member_name,
@@ -61,6 +59,13 @@ const TeacherMyPage = () => {
 
   if (!member || !editableInfo || !centerInfo) return null;
 
+  const handleProfileUpdate = (newProfileName) => {
+    setEditableInfo((prev) => ({
+      ...prev,
+      memberProfile: newProfileName,
+    }));
+  };
+
   const handleSave = async () => {
     if (!isEditing) {
       setIsEditing(true);
@@ -81,7 +86,7 @@ const TeacherMyPage = () => {
           memberName: editableInfo.memberName,
           memberBirth: editableInfo.memberBirth,
           address: editableInfo.address,
-          memberPhone: editableInfo.memberPhone,
+          memberProfile: editableInfo.memberProfile,
         });
         toast.success('수정이 성공적으로 완료되었습니다.');
         setIsEditing(false);
@@ -103,7 +108,12 @@ const TeacherMyPage = () => {
       <Wrapper>
         <InfoBox>
           <ProfileImgBox>
-            <MyPageProfileImage memberProfile={editableInfo.memberProfile} isEditMode={isEditing} />
+            <MyPageProfileImage
+              memberProfile={editableInfo.memberProfile}
+              memberType={editableInfo.memberType}
+              isEditMode={isEditing}
+              onProfileUpdate={handleProfileUpdate}
+            />
           </ProfileImgBox>
           <MyInfoBox>
             <MyPageMyInfo info={editableInfo} isEditable={isEditing} onChange={setEditableInfo} />
