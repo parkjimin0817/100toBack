@@ -18,7 +18,6 @@ const TeacherMyPage = () => {
   const navigate = useNavigate();
   const isAuthenticated = useLoginStore((state) => state.isAuthenticated);
 
-  const [myInfo, setMyInfo] = useState(null);
   const [editableInfo, setEditableInfo] = useState(null);
   const [centerInfo, setCenterInfo] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -34,7 +33,6 @@ const TeacherMyPage = () => {
       try {
         const url = `/api/members/mypage?id=${member.memberNo}`;
         const { data } = await api.get(url);
-        setMyInfo(data);
 
         setEditableInfo({
           memberName: data.member_name,
@@ -81,7 +79,7 @@ const TeacherMyPage = () => {
           memberName: editableInfo.memberName,
           memberBirth: editableInfo.memberBirth,
           address: editableInfo.address,
-          memberPhone: editableInfo.memberPhone,
+          memberProfile: editableInfo.memberProfile,
         });
         toast.success('수정이 성공적으로 완료되었습니다.');
         setIsEditing(false);
