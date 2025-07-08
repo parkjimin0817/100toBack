@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import useLoginStore from '../store/loginStore';
 import { boardService } from '../api/boards';
 import { useBlockNavigation } from '../hook/useBlockNavigation';
-import { getPresignedUrl, uploadFileToS3 } from '../api/member';
+import { getPresignedUrl, uploadFileToS3 } from '../api/fileApi';
 
 const categoryName = {
   family_notice: '가정통신문',
