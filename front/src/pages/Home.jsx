@@ -65,6 +65,10 @@ const Home = () => {
       {/* <PostEditor></PostEditor> */}
       <SimpleEditor></SimpleEditor>
       <ImageInputBlock></ImageInputBlock>
+      <div>
+        <FolderCard selected={true} title="내 문서" date="2025.07.08" />
+        <FolderCard selected={false} title="내 문서" date="2025.07.08" />
+      </div>
     </Content>
   );
 };
@@ -84,3 +88,77 @@ const BoardContainer = styled.div`
 `;
 
 export default Home;
+
+const FolderWrapper = styled.div`
+  position: relative;
+  width: 160px;
+  height: 120px;
+  background-color: ${({ selected }) => (selected ? '#03a9f4' : '#e0e0e0')};
+  border-radius: 12px;
+  padding: 16px;
+  box-sizing: border-box;
+  color: ${({ selected }) => (selected ? '#ffffff' : '#1c1c1c')};
+  font-family: 'Pretendard', sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-shadow: ${({ selected }) => (selected ? '0 2px 8px rgba(0, 0, 0, 0.1)' : 'none')};
+`;
+
+const FolderTab = styled.div`
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 0;
+  width: 40px;
+  height: 20px;
+  background-color: ${({ selected }) => (selected ? '#03a9f4' : '#e0e0e0')};
+  border-top-left-radius: 12px;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 10px;
+  z-index: 2;
+`;
+
+const FolderRightTab = styled.div`
+  position: absolute;
+  top: -12px;
+  left: 15px;
+  width: 44px;
+  height: 24px;
+  background-color: ${({ selected }) => (selected ? '#03a9f4' : '#e0e0e0')};
+  /* clip-path: polygon(0 0, 50% 0, 0 100%, 0 0); */
+  clip-path: polygon(0 0, 60% 0, 100% 100%, 0 100%);
+  border-top-right-radius: 10px;
+  z-index: 2;
+`;
+
+const Title = styled.div`
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 12px;
+`;
+
+const Subtitle = styled.div`
+  font-size: 12px;
+  margin-top: 12px;
+  opacity: 0.8;
+`;
+
+const DateText = styled.div`
+  font-size: 14px;
+  font-weight: bold;
+`;
+
+const FolderCard = ({ selected = false, title = '문서 제목', date = '2025.03.01' }) => {
+  return (
+    <FolderWrapper selected={selected}>
+      <FolderTab selected={selected} />
+      <FolderRightTab selected={selected} />
+      <Title>{title}</Title>
+      <Subtitle>마지막 수정일</Subtitle>
+      <DateText>{date}</DateText>
+    </FolderWrapper>
+  );
+};
+
+

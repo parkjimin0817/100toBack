@@ -1,9 +1,9 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import ContentHeader from '../../components/Common/ContentHeader';
 import styled from 'styled-components';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
+import api from '../../api/axios';
 
 const PersonalLife = () => {
   const navigate = useNavigate();
@@ -17,10 +17,10 @@ const PersonalLife = () => {
   useEffect(() => {
     const fetchChildDetail = async () => {
       try {
-        const response = await axios.get(`http://localhost:8888/api/childs/activitylog?childNo=${id}`);
+        const response = await api.get(`http://localhost:8888/api/childs/activitylog?childNo=${id}`);
         setLogs(response.data);
 
-        const response2 = await axios.get(`http://localhost:8888/api/childs/get?child_no=${id}`);
+        const response2 = await api.get(`http://localhost:8888/api/childs/get?child_no=${id}`);
         setChild(response2.data);
       } catch (error) {
         console.error('아동 생활로그 불러오기 실패:', error);

@@ -80,6 +80,8 @@ function App() {
              * 학부모
              *
              * 1. 학부모 메인페이지
+             * 2. 나의 아동 목록
+             * 3. 학부모 마이페이지
              *
              * */}
             <Route path="/parent/main" element={<ParentMainPage />} />

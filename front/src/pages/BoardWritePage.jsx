@@ -5,8 +5,8 @@ import ContentHeader from '../components/Common/ContentHeader';
 import styled from 'styled-components';
 import useLoginStore from '../store/loginStore';
 import { boardService } from '../api/boards';
-import axios from 'axios';
 import { useBlockNavigation } from '../hook/useBlockNavigation';
+import api from '../api/axios';
 
 const categoryName = {
   family_notice : "가정통신문",
@@ -121,8 +121,8 @@ const BoardWritePage = () => {
 
     // console.log("전송할 데이터:", payload);
 
-    // axios 전송 예시
-    await axios.post("http://localhost:8888/api/boards", formData, {
+    // api 전송 예시
+    await api.post("http://localhost:8888/api/boards", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     allowNavigation();

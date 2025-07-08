@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import ChildImg from '../assets/Child.png';
-import axios from 'axios';
+import api from '../api/axios';
 
 const ParentChildrenList = ({ childFilter, onChildClick }) => {
   const [childList, setChildList] = useState([]);
@@ -9,7 +9,7 @@ const ParentChildrenList = ({ childFilter, onChildClick }) => {
   const fetchChildren = useCallback(async () => {
     console.log('fetchChildren 실행됨, childFilter:', childFilter);
     try {
-      const response = await axios.get(`http://localhost:8888/api/childs/parentChild?memberNo=${childFilter}`);
+      const response = await api.get(`http://localhost:8888/api/childs/parentChild?memberNo=${childFilter}`);
       console.log('자녀 목록 조회 성공:', response.data);
       setChildList(response.data);
     } catch (error) {

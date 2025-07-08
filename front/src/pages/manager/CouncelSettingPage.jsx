@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 import ContentHeader from '../../components/Common/ContentHeader';
 import CheckListSearchBar from '../teacher/components/CheckListSearchBar';
 import HealthCheckListTable from '../teacher/components/HealthCheckListTable';
 import { format } from 'date-fns';
 import useLoginStore from '../../store/loginStore';
 import { toast } from 'react-toastify';
+import api from '../../api/axios';
 
 const CouncelSettingPage = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -24,7 +24,7 @@ const CouncelSettingPage = () => {
 
     const fetchClassList = async () => {
       try {
-        const response = await axios.get(`http://localhost:8888/api/classroom/list/${centerNo}`);
+        const response = await api.get(`http://localhost:8888/api/classroom/list/${centerNo}`);
         setClassList(response.data);
       } catch (error) {
         toast.error('반 목록 불러오기 실패', error);
@@ -54,23 +54,23 @@ const CouncelSettingPage = () => {
 
       if (memberType === 'PARENT') {
         //로그 데이터가 없을 경우에도 아동의 이름과 빈칸을 띄워야 하기 때문에 불러와서 로그 데이터들과 병합을 한다.
-        const childRes = await axios.get(`http://localhost:8888/api/childs/parentChild`, {
+        const childRes = await api.get(`http://localhost:8888/api/childs/parentChild`, {
           params: { memberNo: member.memberNo },
         });
         children = childRes.data;
 
-        const logRes = await axios.get(`http://localhost:8888/api/childs/healthlog/parent`, {
+        const logRes = await api.get(`http://localhost:8888/api/childs/healthlog/parent`, {
           params: { memberNo: member.memberNo, date: formattedDate },
         });
         logs = logRes.data;
       } else {
         //로그 데이터가 없을 경우에도 아동의 이름과 빈칸을 띄워야 하기 때문에 불러와서 로그 데이터들과 병합을 한다.
-        const childRes = await axios.get(`http://localhost:8888/api/childs`, {
+        const childRes = await api.get(`http://localhost:8888/api/childs`, {
           params: { classNo: selectedClassNo },
         });
         children = childRes.data;
 
-        const logRes = await axios.get(`http://localhost:8888/api/childs/healthlog/class`, {
+        const logRes = await api.get(`http://localhost:8888/api/childs/healthlog/class`, {
           params: { classNo: selectedClassNo, date: formattedDate },
         });
         logs = logRes.data;
@@ -103,7 +103,7 @@ const CouncelSettingPage = () => {
 
     if (item.editable) {
       try {
-        await axios.patch(
+        await api.patch(
           `http://localhost:8888/api/childs/updatehealthlog`,
           {
             temperature: item.temp,
