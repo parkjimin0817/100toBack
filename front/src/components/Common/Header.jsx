@@ -162,6 +162,7 @@ const Dropdown = styled.div`
 const DropdownItem = styled.div`
   padding: 10px 15px;
   font-size: 14px;
+  border-radius: 8px;
   cursor: pointer;
   &:hover {
     background-color: #f5f5f5;

@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import useLoginStore from '../../store/loginStore';
 import { classService } from '../../api/class';
 import { ImInfo } from 'react-icons/im';
+import { toast } from 'react-toastify';
 
 //일과표 반별 리스트 페이지(모든 반이 나옴)
 const CouncelClassList = () => {
@@ -23,7 +24,7 @@ const CouncelClassList = () => {
     classService
       .classroomlist(centerNo)
       .then((data) => setClassrooms(data))
-      .catch((err) => console.error('반 목록 불러오기 실패 : ', err));
+      .catch((err) => toast.error('반 목록 불러오기 실패 : ', err));
   }, []);
   return (
     <Content>
