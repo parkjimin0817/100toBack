@@ -7,15 +7,27 @@ import { format } from 'date-fns';
 import useLoginStore from '../../store/loginStore';
 import { toast } from 'react-toastify';
 import api from '../../api/axios';
+import { useSearchParams } from 'react-router-dom';
 
 const ChildHealthCheck = () => {
+  // 반 번호를 url 파라미터로 받음.
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const classNo = searchParams.get('classNo') ?? '';
+
+  const changeClass = (newClassNo) => {
+    // 기존 파라미터 유지 + page만 교체
+    searchParams.set('classNo', newClassNo.toString());
+    setSearchParams(searchParams); // 페이지 이동 없이 URL만 바뀜
+  };
+
   const member = useLoginStore((state) => state.member);
-  const classNo = member.classNo;
+  const MclassNo = member.classNo;
   const centerNo = member.centerNo;
   const memberType = member.memberType;
   
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedClassNo, setSelectedClassNo] = useState(classNo ? classNo : '');
+  const [selectedClassNo, setSelectedClassNo] = useState(classNo ? classNo : MclassNo ? MclassNo : '');
   const [classList, setClassList] = useState([]);
   const [checklist, setChecklist] = useState([]);
 
@@ -101,6 +113,7 @@ const ChildHealthCheck = () => {
         };
       });
 
+      changeClass(selectedClassNo);
       setChecklist(checklist);
     } catch (error) {
       toast.error('건강 체크리스트 불러오기 실패', error);
