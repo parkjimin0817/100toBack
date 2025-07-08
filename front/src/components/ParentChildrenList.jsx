@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import ChildImg from '../assets/Child.png';
-import axios from 'axios';
 import api from '../api/axios';
 import { toast } from 'react-toastify';
 
