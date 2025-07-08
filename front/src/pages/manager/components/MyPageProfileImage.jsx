@@ -52,17 +52,16 @@ const MyPageProfileImage = ({ isEditMode, memberProfile, memberType, onProfileUp
       let presignedUrl, changeName;
       if (memberType === 'MANAGER') {
         const result = await getPresignedUrl(file.name, file.type, 'profile/manager/');
-        presignedUrl = result.presignedUrl;
-        changeName = result.changeName;
+        presignedUrl = result.presigned_url;
+        changeName = result.change_name;
       } else if (memberType === 'TEACHER') {
         const result = await getPresignedUrl(file.name, file.type, 'profile/teacher/');
-        presignedUrl = result.presignedUrl;
-        changeName = result.changeName;
-      } else {
-        // 오류
-        const result = await getPresignedUrl(file.name, file.type, 'profile/etc');
-        presignedUrl = result.presignedUrl;
-        changeName = result.changeName;
+        presignedUrl = result.presigned_url;
+        changeName = result.change_name;
+      } else if (memberType === 'PARENT') {
+        const result = await getPresignedUrl(file.name, file.type, 'profile/parent/');
+        presignedUrl = result.presigned_url;
+        changeName = result.change_name;
       }
 
       await uploadFileToS3(presignedUrl, file);
