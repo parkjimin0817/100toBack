@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface BoardService {
-    int createBoard(BoardDto.Create dto, MultipartFile attachment, List<MultipartFile> contentFiles) throws IOException;
+    int createBoard(BoardDto.Create dto) throws IOException;
     BoardDto.Detail getBoard(int boardNo);
     List<BoardDto.Simple> getAllBoards();
     void deleteBoard(int boardNo);

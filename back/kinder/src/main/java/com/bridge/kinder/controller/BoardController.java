@@ -28,13 +28,9 @@ public class BoardController {
     /**
      * 게시글 생성
      */
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Integer> createBoard(
-            @RequestPart("data") BoardDto.Create dto,
-            @RequestPart(value = "file", required = false) MultipartFile file,
-            @RequestPart(required = false) List<MultipartFile> contentFiles  // contentFiles
-    ) throws IOException {
-        int boardNo = boardService.createBoard(dto, file, contentFiles);
+    @PostMapping("/create")
+    public ResponseEntity<Integer> createBoard(@RequestBody BoardDto.Create dto) throws IOException {
+        int boardNo = boardService.createBoard(dto);
         return ResponseEntity.ok(boardNo);
     }
 
