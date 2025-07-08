@@ -23,7 +23,7 @@ public class BoardDto {
     public static class Create {
         private String title;
         private CommonEnums.BoardType type;
-        private String attachment;
+        private String fileName;
         private int centerId;
         private Integer classRoomId;
         private int memberId;
@@ -33,7 +33,7 @@ public class BoardDto {
             return Board.builder()
                     .title(this.title)
                     .type(this.type)
-                    .attachment(this.attachment)
+                    .attachment(this.fileName)
                     .center(center)
                     .classRoom(classRoom)
                     .member(member)
