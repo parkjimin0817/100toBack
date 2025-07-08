@@ -59,6 +59,13 @@ const TeacherMyPage = () => {
 
   if (!member || !editableInfo || !centerInfo) return null;
 
+  const handleProfileUpdate = (newProfileName) => {
+    setEditableInfo((prev) => ({
+      ...prev,
+      memberProfile: newProfileName,
+    }));
+  };
+
   const handleSave = async () => {
     if (!isEditing) {
       setIsEditing(true);
@@ -101,7 +108,12 @@ const TeacherMyPage = () => {
       <Wrapper>
         <InfoBox>
           <ProfileImgBox>
-            <MyPageProfileImage memberProfile={editableInfo.memberProfile} isEditMode={isEditing} />
+            <MyPageProfileImage
+              memberProfile={editableInfo.memberProfile}
+              memberType={editableInfo.memberType}
+              isEditMode={isEditing}
+              onProfileUpdate={handleProfileUpdate}
+            />
           </ProfileImgBox>
           <MyInfoBox>
             <MyPageMyInfo info={editableInfo} isEditable={isEditing} onChange={setEditableInfo} />

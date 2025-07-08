@@ -7,7 +7,6 @@ import useLoginStore from '../store/loginStore';
 import { boardService } from '../api/boards';
 import axios from 'axios';
 import { useBlockNavigation } from '../hook/useBlockNavigation';
-import { getUploadUrl, uploadFileToS3 } from '../api/fileApi';
 import api from '../api/axios';
 
 const categoryName = {
