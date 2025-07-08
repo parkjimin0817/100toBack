@@ -32,7 +32,7 @@ const DailyScheduleDetail = () => {
   const [arWeek, setArWeek] = useState([]);
 
   //상태를 보여주는 글
-  const [status, setStatus] = useState('');
+  // const [status, setStatus] = useState('');
 
   const fetchdata = async (sch) => {
     try {
@@ -54,11 +54,11 @@ const DailyScheduleDetail = () => {
   };
 
   //  PARENT가 아닌 경우에만 상태 메시지
-  useEffect(() => {
-    if (member.memberType !== 'PARENT') {
-      setStatus('일정을 등록해주세요.');
-    }
-  }, [thisday]);
+  // useEffect(() => {
+  //   if (member.memberType !== 'PARENT') {
+  //     setStatus('일정을 등록해주세요.');
+  //   }
+  // }, [thisday]);
 
   //년도, 월, 일, 요일(숫자), 요일(글자) 추가
   useEffect(() => {
@@ -111,7 +111,7 @@ const DailyScheduleDetail = () => {
 
       setInputs((prev) => [...prev, newItemWithScheduleNo]);
 
-      setStatus('일정 등록에 성공했습니다.');
+      // setStatus('일정 등록에 성공했습니다.');
     } catch (error) {
       toast.error('일정 등록에 실패했습니다.');
       console.error('일정 등록 실패 : ', error);
@@ -144,10 +144,10 @@ const DailyScheduleDetail = () => {
       }
 
       toast.success('일정 등록에 성공했습니다.');
-      setStatus('일정 등록에 성공했습니다.');
+      // setStatus('일정 등록에 성공했습니다.');
     } catch (error) {
       toast.error('일정 등록에 실패했습니다.');
-      setStatus('일정 등록에 실패했습니다.');
+      // setStatus('일정 등록에 실패했습니다.');
     }
     setWriteAuthority(false);
   };
@@ -161,12 +161,12 @@ const DailyScheduleDetail = () => {
         throw new Error('일정 삭제 실패했습니다.');
       }
 
-      setStatus('일정 삭제 성공했습니다.');
+      // setStatus('일정 삭제 성공했습니다.');
       fetchdata({ allDate: thisday });
       setWriteAuthority(true);
     } catch (error) {
       toast.error('일정 삭제 실패했습니다.');
-      setStatus('일정 삭제 실패했습니다.');
+      // setStatus('일정 삭제 실패했습니다.');
     }
   };
 
@@ -233,17 +233,20 @@ const DailyScheduleDetail = () => {
 
         <Border>
           <Form>
-            <HintArea>
-              <ImInfo />
-              일정을 확인하고 등록해보세요!
-            </HintArea>
+            {member && (member.memberType !== "PARENT" ) && ( // 학부모 인경우에는 힌트 메세지가 필요 없음.
+              <HintArea>
+                <ImInfo />
+                일정을 확인하고 등록해보세요!
+              </HintArea>
+            )}
             <InnerBorder $writeAuthority={writeAuthority}>
-              {inputs.length === 0 ? (
+              {(inputs.length === 0 && !writeAuthority) ? (
                 <NotingAnyMore>
                   <h1>일정이 없습니다.</h1>
                 </NotingAnyMore>
               ) : (
-                inputs.map((input, index) => (
+                <div>
+                {inputs.map((input, index) => (
                   <Line key={index}>
                     <OutIconDiv>
                       <IconDiv>
@@ -253,7 +256,7 @@ const DailyScheduleDetail = () => {
                     <TimeInputLine>
                       {writeAuthority === true ? (
                         <TableInput
-                          type="text"
+                          type="time"
                           name="startTime"
                           value={input?.start_time ?? ''}
                           onChange={(e) => handleChange(index, 'start_time', e.target.value)}
@@ -267,7 +270,7 @@ const DailyScheduleDetail = () => {
                       -
                       {writeAuthority === true ? (
                         <TableInput
-                          type="text"
+                          type="time"
                           name="endTime"
                           value={input?.end_time ?? ''}
                           onChange={(e) => handleChange(index, 'end_time', e.target.value)}
@@ -306,7 +309,8 @@ const DailyScheduleDetail = () => {
                       )}
                     </ActivityLine>
                   </Line>
-                ))
+                ))}
+                </div>
               )}
               {writeAuthority === true ? (
                 <AddButtonDiv>
@@ -318,7 +322,7 @@ const DailyScheduleDetail = () => {
                 ''
               )}
             </InnerBorder>
-            <StatusDiv>{status}</StatusDiv>
+            {/* <StatusDiv>{status}</StatusDiv> */}
           </Form>
         </Border>
       </Div>
@@ -401,7 +405,7 @@ const Line = styled.div`
 `;
 
 const TableInput = styled.input`
-  width: 70px;
+  width: 120px;
   border-radius: ${({ theme }) => theme.borderRadius.base};
   box-shadow: ${({ theme }) => theme.shadows.md};
   text-align: center;
@@ -479,7 +483,7 @@ const Div = styled.div`
 `;
 
 const Border = styled.div`
-  min-width: 570px;
+  min-width: 700px;
   min-height: 300px;
   border: 1px solid ${({ theme }) => theme.colors.gray[400]};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
