@@ -8,6 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import AttendanceChildSchedule from '../../components/AttendanceChildSchedule';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import api from '../../api/axios';
 
 const ChildDetail = () => {
   const navigate = useNavigate();
@@ -62,7 +63,7 @@ const ChildDetail = () => {
   useEffect(() => {
     const fetchChildDetail = async () => {
       try {
-        const response = await axios.get(`http://localhost:8888/api/childs/detail?childNo=${id}`);
+        const response = await api.get(`http://localhost:8888/api/childs/detail?childNo=${id}`);
         setChild(response.data);
       } catch (error) {
         console.error('아동 상세정보 불러오기 실패:', error);
@@ -88,7 +89,7 @@ const ChildDetail = () => {
       setEditHealth({ ...child.health });
       setIsEditing(true);
     } else {
-      axios
+      api
         .patch(`http://localhost:8888/api/childs/updatehealthdata?childNo=${id}`, editHealth)
         .then((res) => {
           setChild((prev) => ({ ...prev, health: res.data }));
@@ -111,7 +112,7 @@ const ChildDetail = () => {
       setEditActivity({ ...child.activity });
       setIsLifeEditing(true);
     } else {
-      axios
+      api
         .patch(`http://localhost:8888/api/childs/updateactivitydata?childNo=${id}`, editActivity)
         .then((res) => {
           setChild((prev) => ({ ...prev, activity: res.data }));

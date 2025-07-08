@@ -124,6 +124,7 @@ const teacherSidebar = (classNo) => [
       { label: '근태 관리', link: '/teacher/myattendance' },
       { label: '휴가 관리', link: '/teacher/workcation' },
       { label: '학부모 연락처 관리', link: '/teacher/parentcontactinfo' },
+      { label: '서류 관리', link: '/teacher/mydocument' },
     ],
   },
   {
