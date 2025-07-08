@@ -38,11 +38,7 @@ export const childService = {
       formData.append('f_parents_phone', mergedData.fParentPhone);
       formData.append('m_parents_name', mergedData.mParentName);
       formData.append('m_parents_phone', mergedData.mParentPhone);
-      if (mergedData.childProfile instanceof FileList || Array.isArray(mergedData.childProfile)) {
-        formData.append('child_profile', mergedData.childProfile[0]);
-      } else if (mergedData.childProfile instanceof File) {
-        formData.append('child_profile', mergedData.childProfile);
-      }
+      formData.append('child_profile', mergedData.childProfile);
 
       const { data } = await api.post(API_ENDPOINTS.CHILDS.ADD, formData, {
         headers: {
