@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from 'react-router-dom';
 import BoardEditor from '../components/Board/BoardEditor';
 import ContentHeader from '../components/Common/ContentHeader';
 import styled from 'styled-components';
@@ -9,30 +9,30 @@ import { useBlockNavigation } from '../hook/useBlockNavigation';
 import api from '../api/axios';
 
 const categoryName = {
-  family_notice : "가정통신문",
-  notice : "공지사항",
-  note : "알림장",
-  photo : "사진 게시판",
-  meal_plan : "식단표",
-  default : "테스트"
-}
+  family_notice: '가정통신문',
+  notice: '공지사항',
+  note: '알림장',
+  photo: '사진 게시판',
+  meal_plan: '식단표',
+  default: '테스트',
+};
 
 const BoardWritePage = () => {
   const location = useLocation();
-  const category = location.state?.category || "default";
+  const category = location.state?.category || 'default';
   const navigate = useNavigate();
   const member = useLoginStore((state) => state.member);
-/**
- * 페이지 최상위 컴포넌트에서 상태 관리
- */
+  /**
+   * 페이지 최상위 컴포넌트에서 상태 관리
+   */
   const [formState, setFormState] = useState({
-    title: "",
-    type : String(category).toUpperCase(),
+    title: '',
+    type: String(category).toUpperCase(),
     classRoomNo: null,
     file: null,
     memberName: member.memberName,
-    memberId : member.memberNo,
-    centerId : member.centerNo,
+    memberId: member.memberNo,
+    centerId: member.centerNo,
     contents: [],
   });
 
@@ -59,31 +59,31 @@ const BoardWritePage = () => {
 
     // ✅ 1. 제목 유효성 검사
     if (!formState.title.trim()) {
-      alert("제목을 입력해주세요.");
+      alert('제목을 입력해주세요.');
       return;
     }
 
     // ✅ 2. 반 선택 유효성 검사 (category가 반이 필요한 경우만)
     if ((category === 'family_notice' || category === 'note') && !formState.classRoomNo) {
-      alert("반을 선택해주세요.");
+      alert('반을 선택해주세요.');
       return;
     }
 
     // ✅ 3. 콘텐츠가 최소 1개 이상 있어야 함
     if (formState.contents.length === 0) {
-      alert("내용을 최소 1개 이상 작성해주세요.");
+      alert('내용을 최소 1개 이상 작성해주세요.');
       return;
     }
 
     // ✅ 4. 콘텐츠 내용 검증 (빈 텍스트 or 이미지 파일 없음 등)
     const hasInvalidBlock = formState.contents.some((item) => {
-      if (item.type === "TEXT" && !item.contentText?.trim()) return true;
-      if (item.type === "IMG" && !item.contentFile) return true;
+      if (item.type === 'TEXT' && !item.contentText?.trim()) return true;
+      if (item.type === 'IMG' && !item.contentFile) return true;
       return false;
     });
 
     if (hasInvalidBlock) {
-      alert("빈 텍스트 블록이나 이미지가 누락된 블록이 있습니다.");
+      alert('빈 텍스트 블록이나 이미지가 누락된 블록이 있습니다.');
       return;
     }
 
@@ -119,7 +119,18 @@ const BoardWritePage = () => {
       }
     });
 
-    // console.log("전송할 데이터:", payload);
+    console.log(formState);
+
+    // // console.log("전송할 데이터:", payload);
+    // const path = 'board-img/';
+    // // 1. Presigned URL 발급 (path와 fileName 분리해서 전송)
+    // const { presignedUrl, changeName } = await getUploadUrl(formState.file.name, formState.file.type, path);
+    // console.log(formState.file.name);
+    // console.log(formState.file.type);
+    // console.log(path);
+
+    // // 2. S3에 파일 업로드
+    // await uploadFileToS3(presignedUrl, formState.file);
 
     // api 전송 예시
     await api.post("http://localhost:8888/api/boards", formData, {
@@ -139,7 +150,7 @@ const BoardWritePage = () => {
   const addBlock = () => {
     const newBlock = {
       boardContentNo: Date.now(),
-      type: "default", // or 'text' or 'image'
+      type: 'default', // or 'text' or 'image'
     };
     setFormState((prev) => ({
       ...prev,
@@ -154,9 +165,7 @@ const BoardWritePage = () => {
         content.boardContentNo === id
           ? {
               ...content,
-              ...(content.type === 'IMG'
-                ? { contentFile: newData }
-                : { contentText: newData }),
+              ...(content.type === 'IMG' ? { contentFile: newData } : { contentText: newData }),
             }
           : content
       ),
@@ -176,7 +185,7 @@ const BoardWritePage = () => {
           : content
       ),
     }));
-  }
+  };
 
   const deleteBlock = (id) => {
     setFormState((prev) => ({
@@ -186,22 +195,16 @@ const BoardWritePage = () => {
   };
 
   return (
-    <PageContainer 
-      onSubmit={handleSubmit}
-      onChange={() => setIsDirty(true)}
-    >
+    <PageContainer onSubmit={handleSubmit} onChange={() => setIsDirty(true)}>
       <ContentHeader
         Title={categoryName[category]}
         Color={'green'}
-        ButtonProps={[
-          { Title: '작성하기', type : 'submit' },
-          { Title: '뒤로가기', func: () => handleGoBack()},,
-        ]}
+        ButtonProps={[{ Title: '작성하기', type: 'submit' }, { Title: '뒤로가기', func: () => handleGoBack() }, ,]}
       ></ContentHeader>
 
       {/* 공통 에디터 컴포넌트 */}
-      <BoardEditor 
-        category={category} 
+      <BoardEditor
+        category={category}
         formState={formState}
         updateFormField={updateFormField}
         updateBlock={updateBlock}
@@ -211,7 +214,7 @@ const BoardWritePage = () => {
       />
     </PageContainer>
   );
-}
+};
 
 const PageContainer = styled.form`
   width: 100%;

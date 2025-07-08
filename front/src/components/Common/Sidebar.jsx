@@ -15,7 +15,7 @@ const SideBar = ({ type }) => {
   };
 
   const handleMenuToggle = (menuId) => {
-    if(openMenus[menuId] === true) return; // 다시 버튼에 올린다고 메뉴 사라지는 문제 수정
+    if (openMenus[menuId] === true) return; // 다시 버튼에 올린다고 메뉴 사라지는 문제 수정
     setOpenMenus((prev) => ({ ...prev, [menuId]: !prev[menuId] }));
   };
 
@@ -99,7 +99,7 @@ const teacherSidebar = (classNo) => [
     subItems: [
       { label: '유치원 일정', link: '/scheduleTeacher' },
       { label: '일과표', link: '/daily' },
-      { label: '학부모 상담 일정', link: '*' },
+      { label: '학부모 상담 일정', link: '/councel/classlist' },
     ],
   },
   {
@@ -124,6 +124,7 @@ const teacherSidebar = (classNo) => [
       { label: '근태 관리', link: '/teacher/myattendance' },
       { label: '휴가 관리', link: '/teacher/workcation' },
       { label: '학부모 연락처 관리', link: '/teacher/parentcontactinfo' },
+      { label: '서류 관리', link: '/teacher/mydocument' },
     ],
   },
   {
@@ -242,7 +243,7 @@ const parentSidebar = [
     label: '상담일정',
     icon: <FaRegClock />,
     color: 'blue',
-    subItems: [{ label: '상담일정', link: '*' }],
+    subItems: [{ label: '상담일정', link: '/councel/parent' }],
   },
 ];
 
@@ -325,7 +326,7 @@ const SidebarSublist = styled.ul`
 
   width: 200px;
   padding: 10px;
-  border-top-right-radius : 10px;
+  border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 

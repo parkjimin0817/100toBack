@@ -41,7 +41,9 @@ const TeacherMyPage = () => {
           memberBirth: data.member_birth,
           address: data.address,
           memberType: data.member_type,
+          memberProfile: data.member_profile,
         });
+        console.log(data);
 
         setCenterInfo({
           centerName: data.center_name,
@@ -72,6 +74,7 @@ const TeacherMyPage = () => {
           centerTel: centerInfo.centerTel,
           centerAddress: centerInfo.centerAddress,
           centerType: centerInfo.centerType,
+          memberProfile: editableInfo.memberProfile,
         });
         setMember({
           ...member,
@@ -100,7 +103,7 @@ const TeacherMyPage = () => {
       <Wrapper>
         <InfoBox>
           <ProfileImgBox>
-            <MyPageProfileImage />
+            <MyPageProfileImage memberProfile={editableInfo.memberProfile} isEditMode={isEditing} />
           </ProfileImgBox>
           <MyInfoBox>
             <MyPageMyInfo info={editableInfo} isEditable={isEditing} onChange={setEditableInfo} />
@@ -165,11 +168,13 @@ const ProfileImgBox = styled.div`
 `;
 
 const MyInfoBox = styled.div`
-  width: 40%;
+  width: 30%;
+  min-width: 400px;
 `;
 
 const CenterInfoBox = styled.div`
-  width: 40%;
+  width: 30%;
+  min-width: 400px;
 `;
 
 const MenuBox = styled.div`

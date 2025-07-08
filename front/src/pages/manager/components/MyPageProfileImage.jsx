@@ -3,11 +3,13 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import defaultImg from '../../../assets/defaultImg.png';
 
+const CLOUDFRONT_URL = 'https://d1t1hkzvyjpjnd.cloudfront.net';
+
 const infodata = {
   imageUrl: defaultImg,
 };
 
-const MyPageProfileImage = ({ isEditMode }) => {
+const MyPageProfileImage = ({ isEditMode, memberProfile }) => {
   const [data, setData] = useState(infodata);
   const fileInputRef = useRef(null);
 
@@ -31,7 +33,12 @@ const MyPageProfileImage = ({ isEditMode }) => {
   return (
     <Wrapper>
       <ImageWrapper onClick={handleImgClick}>
-        <Img src={data.imageUrl} alt="profileImage" onClick={handleImgClick} $isEditMode={isEditMode} />
+        <Img
+          src={memberProfile ? `${CLOUDFRONT_URL}/${memberProfile}` : defaultImg}
+          alt="profileImage"
+          onClick={handleImgClick}
+          $isEditMode={isEditMode}
+        />
         {isEditMode && <Overlay>+</Overlay>}
       </ImageWrapper>
       {isEditMode && <HiddenInput type="file" accept="image/*" ref={fileInputRef} onChange={handleImgChange} />}

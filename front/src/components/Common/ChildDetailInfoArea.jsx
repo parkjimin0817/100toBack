@@ -47,7 +47,7 @@ const ChildDetailInfoArea = ({ childNo }) => {
         const response = await api.get(`http://localhost:8888/api/childs/detail?childNo=${childNo}`);
         setChildData(response.data);
       } catch (error) {
-        console.error('아동 상세 정보 불러오기 실패:', error);
+        toast.error('아동 상세 정보 불러오기 실패:', error);
       }
     };
 

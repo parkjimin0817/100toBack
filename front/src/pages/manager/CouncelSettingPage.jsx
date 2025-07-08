@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import ContentHeader from '../../components/Common/ContentHeader';
-import CheckListSearchBar from '../teacher/components/CheckListSearchBar';
-import HealthCheckListTable from '../teacher/components/HealthCheckListTable';
 import { format } from 'date-fns';
+import { useParams } from 'react-router-dom';
+import ContentHeader from '../../components/Common/ContentHeader';
+import CouncelSearchBar from './CouncelSearchBar';
+import CouncelListTable from './CouncelListTable';
+import { toast } from 'react-toastify';
 import useLoginStore from '../../store/loginStore';
 import { toast } from 'react-toastify';
+import CouncelScheduleModal from './components/CouncelScheduleModal';
 import api from '../../api/axios';
 
 const CouncelSettingPage = () => {
+  const { classNo } = useParams();
+
+  const [selectedStatus, setSelectedStatus] = useState('ALL');
+  const [dateFilterType, setDateFilterType] = useState('ALL');
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedClassNo, setSelectedClassNo] = useState('');
   const [classList, setClassList] = useState([]);
   const [checklist, setChecklist] = useState([]);
 
@@ -35,6 +41,9 @@ const CouncelSettingPage = () => {
   }, [centerNo, memberType]);
 
   // 검색 시 실행
+
+  const [openModal, setOpenModal] = useState(false);
+
   const handleSearch = async () => {
     const formattedDate = format(selectedDate, 'yyyy-MM-dd');
 
@@ -134,18 +143,26 @@ const CouncelSettingPage = () => {
 
   return (
     <Wrapper>
-      <ContentHeader Title="아동 건강 체크리스트" Color="orange" />
+      <ContentHeader Title="상담 일정" Color="orange" />
       <Content>
-        <CheckListSearchBar
+        <CouncelSearchBar
+          selectedStatus={selectedStatus}
+          setSelectedStatus={setSelectedStatus}
+          dateFilterType={dateFilterType}
+          setDateFilterType={setDateFilterType}
           selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
-          selectedClassNo={selectedClassNo}
-          setSelectedClassNo={setSelectedClassNo}
           onSearch={handleSearch}
-          classList={classList}
+          onCreate={() => setOpenModal(true)}
         />
-        <HealthCheckListTable data={checklist} onEdit={toggleEdit} onChange={handleChange} memberType={memberType} />
+        <CouncelListTable data={checklist} memberType={member.memberType} onRefresh={handleSearch} />
       </Content>
+      <CouncelScheduleModal
+        isOpen={openModal}
+        onClose={() => setOpenModal(false)}
+        classNo={classNo}
+        onSuccess={handleSearch}
+      />
     </Wrapper>
   );
 };
