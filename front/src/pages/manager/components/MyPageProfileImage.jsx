@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import defaultImg from '../../../assets/defaultImg.png';
 
-const CLOUDFRONT_URL = 'https://d1t1hkzvyjpjnd.cloudfront.net';
+const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
 const infodata = {
   imageUrl: defaultImg,
