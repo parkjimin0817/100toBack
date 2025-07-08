@@ -48,19 +48,19 @@ const TeacherMainHealth = ({ member }) => {
           <StressDiv>
             <SecondLineTitle>스트레스 지수</SecondLineTitle>
             <Bar>
-              <BarFill $width={avg.lastWeekStress} $color={'lightblue'} />
+              <BarFill $width={Math.min(avg.lastWeekStress, 100)} $color={'lightblue'} />
             </Bar>
             <Bar>
-              <BarFill $width={avg.thisWeekStress} $color={'blue'} />
+              <BarFill $width={Math.min(avg.thisWeekStress, 100)} $color={'blue'} />
             </Bar>
           </StressDiv>
           <StressDiv>
             <SecondLineTitle>평균 수면 시간</SecondLineTitle>
             <Bar>
-              <BarFill $width={avg.lastWeekSleep} $color={'lightblue'} />
+              <BarFill $width={Math.min(avg.lastWeekSleep, 100)} $color={'lightblue'} />
             </Bar>
             <Bar>
-              <BarFill $width={avg.thisWeekSleep} $color={'blue'} />
+              <BarFill $width={Math.min(avg.thisWeekSleep, 100)} $color={'blue'} />
             </Bar>
           </StressDiv>
           <SecondLineFooter>

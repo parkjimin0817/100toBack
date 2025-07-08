@@ -1,5 +1,6 @@
 import api from './axios';
 import { API_ENDPOINTS } from './config';
+import { getPresignedUrl, uploadFileToS3 } from './member';
 
 export const boardService = {
   // 게시글 작성
@@ -60,6 +61,40 @@ export const boardService = {
       return data;
     } catch (error) {
       throw new Error('서버 통신 불량' + error.message);
+    }
+  },
+  uploadDoc: async (formData) => {
+    try {
+      let fileUrl = null;
+      const rawFile = formData.get('file'); //폼데이터라 이렇게 해야됨
+
+      if (rawFile) {
+        const file = rawFile instanceof FileList || Array.isArray(rawFile) ? rawFile[0] : rawFile;
+
+        if (file instanceof File) {
+          let path = '';
+          path = 'board/private_doc/';
+
+          const presignedData = await getPresignedUrl(file.name, file.type, path);
+
+          await uploadFileToS3(presignedData.presigned_url, file);
+
+          fileUrl = presignedData.change_name;
+
+          formData.append('fileUrl', fileUrl);
+          formData.delete('file');
+        }
+      }
+
+      const { data } = await api.post(API_ENDPOINTS.BOARDS.UPLOADDOC, formData);
+
+      return data;
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.message || '파일 업로드에 실패했습니다.';
+        throw new Error(errorMessage);
+      }
+      throw new Error('서버 통신 실패');
     }
   },
 };

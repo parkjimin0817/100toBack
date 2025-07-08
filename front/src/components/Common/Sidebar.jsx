@@ -99,7 +99,7 @@ const teacherSidebar = (classNo) => [
     subItems: [
       { label: '유치원 일정', link: '/scheduleTeacher' },
       { label: '일과표', link: '/daily' },
-      { label: '학부모 상담 일정', link: '*' },
+      { label: '학부모 상담 일정', link: '/councel/classlist' },
     ],
   },
   {
@@ -124,6 +124,7 @@ const teacherSidebar = (classNo) => [
       { label: '근태 관리', link: '/teacher/myattendance' },
       { label: '휴가 관리', link: '/teacher/workcation' },
       { label: '학부모 연락처 관리', link: '/teacher/parentcontactinfo' },
+      { label: '서류 관리', link: '/teacher/mydocument' },
     ],
   },
   {

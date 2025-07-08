@@ -5,10 +5,7 @@ import ContentHeader from '../components/Common/ContentHeader';
 import styled from 'styled-components';
 import useLoginStore from '../store/loginStore';
 import { boardService } from '../api/boards';
-import axios from 'axios';
 import { useBlockNavigation } from '../hook/useBlockNavigation';
-
-import api from '../api/axios';
 import { getPresignedUrl, uploadFileToS3 } from '../api/member';
 
 const categoryName = {

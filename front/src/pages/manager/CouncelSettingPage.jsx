@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { format } from 'date-fns';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ContentHeader from '../../components/Common/ContentHeader';
 import CouncelSearchBar from './CouncelSearchBar';
 import CouncelListTable from './CouncelListTable';
 import { toast } from 'react-toastify';
 import useLoginStore from '../../store/loginStore';
 import CouncelScheduleModal from './components/CouncelScheduleModal';
+import api from '../../api/axios';
 
 const CouncelSettingPage = () => {
   const { classNo } = useParams();
@@ -22,9 +23,11 @@ const CouncelSettingPage = () => {
 
   const [openModal, setOpenModal] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleSearch = async () => {
     try {
-      const response = await axios.get(`http://localhost:8888/api/counsel`, {
+      const response = await api.get(`http://localhost:8888/api/counsel`, {
         params: {
           classNo,
         },
@@ -57,7 +60,16 @@ const CouncelSettingPage = () => {
 
   return (
     <Wrapper>
-      <ContentHeader Title="상담 일정" Color="orange" />
+      <ContentHeader
+        Title="상담 일정"
+        Color="purple"
+        ButtonProps={[
+          {
+            Title: '뒤로가기',
+            func: () => navigate(-1),
+          },
+        ]}
+      />
       <Content>
         <CouncelSearchBar
           selectedStatus={selectedStatus}

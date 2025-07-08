@@ -1,19 +1,18 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import ChildImg from '../assets/Child.png';
-import axios from 'axios';
+import api from '../api/axios';
+import { toast } from 'react-toastify';
 
 const ParentChildrenList = ({ childFilter, onChildClick }) => {
   const [childList, setChildList] = useState([]);
 
   const fetchChildren = useCallback(async () => {
-    console.log('fetchChildren 실행됨, childFilter:', childFilter);
     try {
-      const response = await axios.get(`http://localhost:8888/api/childs/parentChild?memberNo=${childFilter}`);
-      console.log('자녀 목록 조회 성공:', response.data);
+      const response = await api.get(`http://localhost:8888/api/childs/parentChild?memberNo=${childFilter}`);
       setChildList(response.data);
     } catch (error) {
-      console.error('아동 목록 조회 실패:', error);
+      toast.error('아동 목록 조회 실패:', error);
     }
   }, [childFilter]);
 
@@ -25,10 +24,8 @@ const ParentChildrenList = ({ childFilter, onChildClick }) => {
 
   // 자녀 목록 새로고침 함수를 전역으로 노출
   useEffect(() => {
-    console.log('전역 함수 refreshChildList 설정');
     window.refreshChildList = fetchChildren;
     return () => {
-      console.log('전역 함수 refreshChildList 제거');
       delete window.refreshChildList;
     };
   }, [fetchChildren]);

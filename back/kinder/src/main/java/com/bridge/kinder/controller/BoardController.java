@@ -127,4 +127,11 @@ public class BoardController {
     public ResponseEntity<List<RecentBoardDto.Response>> getRecentBoards(@PathVariable int centerNo) {
         return ResponseEntity.ok(boardService.getRecentBoards(centerNo));
     }
+
+    //개인 서류 업로드
+    @PostMapping("/documents")
+    public ResponseEntity<Integer> createDocument(@ModelAttribute BoardDto.DocumentRequest request) {
+        return ResponseEntity.ok(boardService.createDocument(request));
+    }
+
 }

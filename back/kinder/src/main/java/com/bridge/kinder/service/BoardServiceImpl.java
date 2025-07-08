@@ -300,4 +300,22 @@ public class BoardServiceImpl implements BoardService {
                 })
                 .toList();
     }
+
+    @Override
+    public int createDocument(BoardDto.DocumentRequest request) {
+
+        Member member = memberRepository.findByMemberNo(request.getMemberNo())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
+
+        Board board = Board.builder()
+                .title(request.getTitle())
+                .type(BoardType.PRIVATE_DOC)
+                .attachment(request.getFileUrl())
+                .member(member)
+                .build();
+
+        boardRepository.save(board);
+
+        return board.getBoardNo();
+    }
 }

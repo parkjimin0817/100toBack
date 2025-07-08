@@ -23,6 +23,7 @@ public class MypageDto {
         private LocalDate memberBirth;
         private String memberPhone;
         private String address;
+        private String memberProfile;
 
         //center 시설명, 연락처, 주소, 유형
         private String centerName;

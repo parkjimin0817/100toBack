@@ -24,4 +24,6 @@ public interface BoardService {
 
     //메인페이지 시설별 최근 3개 게시물
     List<RecentBoardDto.Response> getRecentBoards(int centerNo);
+    //개인 서류 업로드
+    int createDocument(BoardDto.DocumentRequest request);
 }
