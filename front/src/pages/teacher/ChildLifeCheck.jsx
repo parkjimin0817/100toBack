@@ -178,6 +178,7 @@ const Wrapper = styled.div`
 
 const Content = styled.div`
   width: 100%;
+  min-height: 600px;
   display: flex;
   flex-direction: column;
 `;

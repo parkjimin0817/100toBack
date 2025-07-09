@@ -44,5 +44,6 @@ export const NoneDiv = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  min-height: 600px;
   gap: ${({ theme }) => theme.spacing[6]};
 `;

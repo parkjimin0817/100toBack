@@ -261,6 +261,7 @@ public class BoardDto {
                     .boardNo(board.getBoardNo())
                     .title(board.getTitle())
                     .createDate(board.getCreateDate())
+                    .attachment(board.getAttachment())
                     .views(board.getViews())
                     .type(board.getType())
                     .build();

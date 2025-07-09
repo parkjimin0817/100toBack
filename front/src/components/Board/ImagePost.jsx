@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import defaultImg from '../../assets/img/img.png';
 
+const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
+
 const ImagePost = ({ postData, onClick }) => {
   const formatDate = (isoDate) => {
     if (!isoDate) return '';
@@ -17,7 +19,7 @@ const ImagePost = ({ postData, onClick }) => {
 
   return (
     <ImagePostContainer onClick={onClick}>
-      <ImageContent src={postData.attachment ?? defaultImg} />
+      <ImageContent src={postData.attachment ? `${CLOUDFRONT_URL}/${postData.attachment}` : defaultImg} />
       <Title>{postData.title}</Title>
       <DescriptionBox>
         <Description>{formatDate(postData.createDate)}</Description>
