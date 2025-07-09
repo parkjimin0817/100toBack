@@ -162,9 +162,10 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
 const InfoBox = styled.div`
   width: 100%;
-  height: 200px;
+  height: 30%;
   display: flex;
   justify-content: space-between;
   margin: 10px 0;
@@ -188,7 +189,7 @@ const CenterInfoBox = styled.div`
 
 const MenuBox = styled.div`
   width: 100%;
-  height: 100%;
+  height: 70%;
   display: flex;
   margin: 30px 0;
 `;

@@ -274,7 +274,7 @@ public class BoardDto {
     @Builder
     public static class DocumentRequest {
 
-        private String memberNo;
+        private int memberNo;
         private String title;
         private String fileUrl;
 
