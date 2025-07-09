@@ -261,6 +261,7 @@ public class BoardDto {
                     .boardNo(board.getBoardNo())
                     .title(board.getTitle())
                     .createDate(board.getCreateDate())
+                    .attachment(board.getAttachment())
                     .views(board.getViews())
                     .type(board.getType())
                     .build();
@@ -274,7 +275,7 @@ public class BoardDto {
     @Builder
     public static class DocumentRequest {
 
-        private String memberNo;
+        private int memberNo;
         private String title;
         private String fileUrl;
 
