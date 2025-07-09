@@ -1,6 +1,6 @@
 import api from './axios';
 import { API_ENDPOINTS } from './config';
-import { getPresignedUrl, uploadFileToS3 } from './fileApi';  
+import { getPresignedUrl, uploadFileToS3 } from './fileApi';
 
 export const boardService = {
   // 게시글 작성
@@ -63,28 +63,25 @@ export const boardService = {
       throw new Error('서버 통신 불량' + error.message);
     }
   },
-  uploadDoc: async (formData) => {
+  uploadDoc: async (request, file) => {
     try {
       let fileUrl = null;
-      const rawFile = formData.get('file'); //폼데이터라 이렇게 해야됨
 
-      if (rawFile) {
-        const file = rawFile instanceof FileList || Array.isArray(rawFile) ? rawFile[0] : rawFile;
+      if (file instanceof File) {
+        const path = 'board/private_doc/';
 
-        if (file instanceof File) {
-          let path = '';
-          path = 'board/private_doc/';
+        const presignedData = await getPresignedUrl(file.name, file.type, path);
 
-          const presignedData = await getPresignedUrl(file.name, file.type, path);
+        await uploadFileToS3(presignedData.presigned_url, file);
 
-          await uploadFileToS3(presignedData.presigned_url, file);
+        fileUrl = presignedData.change_name;
 
-          fileUrl = presignedData.change_name;
-
-          formData.append('fileUrl', fileUrl);
-          formData.delete('file');
-        }
+        request.fileUrl = fileUrl;
       }
+
+      console.log(formData.memberNo);
+      const formData = new FormData();
+      formData.append('request', JSON.stringify(request));
 
       const { data } = await api.post(API_ENDPOINTS.BOARDS.UPLOADDOC, formData);
 

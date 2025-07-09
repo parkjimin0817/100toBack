@@ -9,6 +9,7 @@ import fileimg from '../../assets/img/fileimg.png';
 import filehover from '../../assets/img/filehover.png';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import useLoginStore from '../../store/loginStore';
+import { boardService } from '../../api/boards';
 
 const file = [
   { title: '길dfdfdfdfdfdfdfdf면', modifyDate: '2025-03-01', file: 'xxx.png' },
@@ -27,7 +28,17 @@ const data = [
 const TeacherDocument = () => {
   const { member } = useLoginStore();
   const memberNo = member?.memberNo;
+  const [documents, setDocuments] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+
+  const fetchDocuments = async() => {
+    if(!memberNo) return;
+
+    try{
+      const data = await boardService.getDocumentList(memberNo);
+      setDocuments(data)
+    }
+  }
 
   return (
     <Wrapper>
@@ -56,12 +67,14 @@ const TeacherDocument = () => {
       <BottomContent>
         <Table>
           <Thead>
-            <th>번호</th>
-            <th>생성일</th>
-            <th>제목</th>
-            <th>미리보기</th>
-            <th>다운로드</th>
-            <th>삭제</th>
+            <tr>
+              <th>번호</th>
+              <th>생성일</th>
+              <th>제목</th>
+              <th>미리보기</th>
+              <th>다운로드</th>
+              <th>삭제</th>
+            </tr>
           </Thead>
           <tbody>
             {data.map((d, index) => (

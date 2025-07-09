@@ -131,6 +131,8 @@ public class BoardController {
     //개인 서류 업로드
     @PostMapping("/documents")
     public ResponseEntity<Integer> createDocument(@ModelAttribute BoardDto.DocumentRequest request) {
+        System.out.printf("Creating document: %s\n", request);
+        System.out.printf(request.toString());
         return ResponseEntity.ok(boardService.createDocument(request));
     }
 

@@ -3,10 +3,13 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { boardService } from '../../../api/boards';
+import { PulseLoader } from 'react-spinners';
 
 const FileUploadModal = ({ onClose, memberNo }) => {
   const [title, setTitle] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
+
+  const [loading, setLoading] = useState(false);
 
   //파일 선택
   const handleFileChange = (e) => {
@@ -25,21 +28,21 @@ const FileUploadModal = ({ onClose, memberNo }) => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append('memberNo', memberNo);
-    formData.append('title', title);
-    formData.append('file', selectedFile);
-    formData.forEach((value, key) => {
-      console.log(`${key}:`, value);
-    });
+    const request = {
+      memberNo,
+      title,
+    };
 
     try {
-      await boardService.uploadDoc(formData);
+      setLoading(true);
+      await boardService.uploadDoc(request, selectedFile);
       toast.success('파일 업로드 완료');
       onClose();
     } catch (error) {
       toast.error('파일 업로드를 다시 시도해주세요.');
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,10 +67,16 @@ const FileUploadModal = ({ onClose, memberNo }) => {
 
         <ButtonRow>
           <ActionButton onClick={onClose}>닫기</ActionButton>
-          <ActionButton $primary onClick={handleUpload}>
+          <ActionButton $primary onClick={handleUpload} disabled={loading}>
             업로드
           </ActionButton>
         </ButtonRow>
+
+        {loading && (
+          <SpinnerOverlay>
+            <PulseLoader color="#8FD7EB" loading={loading} size={15} />
+          </SpinnerOverlay>
+        )}
       </Content>
     </Overlay>
   );
@@ -88,12 +97,27 @@ const Overlay = styled.div`
   align-items: center;
 `;
 
+const SpinnerOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* 모달과 동일한 레벨로 설정 */
+  backdrop-filter: blur(5px); /* 모달 배경 흐리게 처리 */
+  border-radius: 12px; /* 모달의 둥근 테두리와 일치시킴 */
+`;
+
 const Content = styled.div`
   width: 400px;
   padding: 24px;
   border-radius: 12px;
   background-color: ${({ theme }) => theme.colors.white};
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  position: relative; /* SpinnerOverlay가 이 Content의 크기에 맞게 배치되도록 */
 `;
 
 const Title = styled.h2`

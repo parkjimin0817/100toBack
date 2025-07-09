@@ -273,10 +273,8 @@ public class BoardDto {
     @AllArgsConstructor
     @Builder
     public static class DocumentRequest {
-
         private int memberNo;
         private String title;
         private String fileUrl;
-
     }
 }
