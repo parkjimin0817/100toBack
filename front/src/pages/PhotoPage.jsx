@@ -68,7 +68,12 @@ const PhotoPage = () => {
         </BoardContainer>
       )}
       {data && (
-        <Pagination currentPage={data.number + 1} totalPages={data.totalPages} onPageChange={handlePageChange} />
+        <Pagination
+          currentPage={data.number + 1} 
+          totalPages={data.totalPages} 
+          onPageChange={handlePageChange} 
+          $Color={'green'}
+        />
       )}
     </PageContainer>
   );

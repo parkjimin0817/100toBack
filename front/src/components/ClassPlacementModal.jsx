@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
+import api from '../api/axios';
 
 const ClassPlacementModal = ({ isOpen, onClose, selectedDate, selectedItem, centerNo, onRefresh }) => {
   const [person, setPerson] = useState(null);

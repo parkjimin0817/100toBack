@@ -1,6 +1,7 @@
 import React from 'react';
+import styled from 'styled-components';
 
-const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+const Pagination = ({ currentPage, totalPages, onPageChange, Color }) => {
   const getVisiblePages = () => {
     const maxVisible = 5;
     let start = Math.max(currentPage - Math.floor(maxVisible / 2), 1);
@@ -24,25 +25,28 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   return (
     <div style={{ marginTop: '20px', paddingBottom: '20px', textAlign: 'center' }}>
       {pages.map((page) => (
-        <button
+        <PagenationButton
           key={page}
           onClick={() => onPageChange(page)}
-          style={{
-            margin: '0 5px',
-            padding: '5px 10px',
-            backgroundColor: page === currentPage ? '#4FD377' : '#e5e7eb',
-            color: page === currentPage ? '#fff' : '#000',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontWeight: page === currentPage ? 'bold' : 'normal'
-          }}
+          $Color={Color}
+          $currentPage={page === currentPage}
         >
           {page}
-        </button>
+        </PagenationButton>
       ))}
     </div>
   );
 };
 
 export default Pagination;
+
+const PagenationButton = styled.button`
+  margin: 0 5px;
+  padding: 5px 10px;
+  background-color: ${({ $currentPage, $Color, theme }) => $currentPage ? theme.colors[$Color] : '#e5e7eb'};
+  color: ${({ $currentPage }) => $currentPage ? '#fff' : '#000'};
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: ${({ $currentPage }) => $currentPage ? 'bold' : 'normal'};
+`;
