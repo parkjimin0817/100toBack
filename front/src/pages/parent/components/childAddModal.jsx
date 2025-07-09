@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import useLoginStore from '../../../store/loginStore';
 import { toast } from 'react-toastify';
 import ProfileImageUpload from '../../common/signup/components/ProfileImageUpload';
 import { childService } from '../../../api/child';
+import { getPresignedUrl, uploadFileToS3 } from '../../../api/fileApi';
 
 const formatPhoneNumber = (value = '') => {
   const onlyNums = value.replace(/\D/g, '');
@@ -74,6 +75,19 @@ const ChildAddModal = ({ isOpen, onClose }) => {
     }
     if (!(fParentName && fParentPhone) && !(mParentName && mParentPhone)) {
       toast.error('부모 중 한명은 입력해주세요');
+      return;
+    }
+
+    let uploadedProfileName = '';
+    if (childProfile && typeof childProfile !== 'string') {
+      try {
+        const presignedData = await getPresignedUrl(childProfile.name, childProfile.type, 'profile/child/');
+        await uploadFileToS3(presignedData.presigned_url, childProfile);
+        uploadedProfileName = presignedData.change_name;
+      } catch (err) {
+        toast.error('프로필 이미지 업로드 실패: ' + err.message);
+        return;
+      }
     }
 
     const mergedData = {
@@ -85,7 +99,7 @@ const ChildAddModal = ({ isOpen, onClose }) => {
       fParentPhone,
       mParentName,
       mParentPhone,
-      childProfile,
+      childProfile: uploadedProfileName,
     };
 
     try {

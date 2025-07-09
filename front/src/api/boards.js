@@ -1,6 +1,6 @@
 import api from './axios';
 import { API_ENDPOINTS } from './config';
-import { getPresignedUrl, uploadFileToS3 } from './member';
+import { getPresignedUrl, uploadFileToS3 } from './fileApi';  
 
 export const boardService = {
   // 게시글 작성

@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import People from '../../../assets/img/people.png';
 import { classService } from '../../../api/class';
+import { useNavigate } from 'react-router-dom';
 
 const TeacherMainChild = ({ centerNo }) => {
+  const navigate = useNavigate();
   const [progress, setProgress] = useState([]);
 
   useEffect(() => {
@@ -22,7 +24,7 @@ const TeacherMainChild = ({ centerNo }) => {
       </ChildHeaderRow>
       <ContentLine>
         {progress.map((item) => (
-          <Content key={item.class_no}>
+          <Content key={item.class_no} onClick={() => navigate(`/childhealthcheck?classNo=${item.class_no}`)}>
             <ContentHeader>{item.class_name}반 건강체크</ContentHeader>
             <ContentProgress>
               <ProgressHeader>건강 체크 완료</ProgressHeader>
@@ -68,6 +70,7 @@ const Content = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.lightblue};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   margin-bottom: 15px;
+  cursor: pointer;
 `;
 
 const ContentHeader = styled.div`

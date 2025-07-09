@@ -6,6 +6,8 @@ import TeacherPicture from '../../assets/Child.png';
 import { memberService } from '../../api/member';
 import useLoginStore from '../../store/loginStore';
 
+const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
+
 const TeacherIntroList = () => {
   const navigate = useNavigate();
   const { member } = useLoginStore();
@@ -38,7 +40,7 @@ const TeacherIntroList = () => {
               navigate(`/manager/teacherIntroDetail/${teacher.member_no}`);
             }}
           >
-            <TeacherImage src={TeacherPicture} alt="교사 사진" />
+            <TeacherImage src={`${CLOUDFRONT_URL}/${teacher.member_profile}`} alt="교사 사진" />
             <TextBox>
               <Name>{teacher.member_name} 선생님</Name>
               <Info>담당 반 | {teacher.class_name || '배정되지 않음'}</Info>

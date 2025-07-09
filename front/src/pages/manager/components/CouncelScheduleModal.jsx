@@ -77,7 +77,7 @@ const CounselScheduleModal = ({ isOpen, onClose, classNo, onSuccess }) => {
   if (!isOpen) return null;
 
   return (
-    <Backdrop onClick={onClose}>
+    <Backdrop /*onClick={onClose}*/>
       <ModalContainer onClick={(e) => e.stopPropagation()}>
         <ModalHeader>상담 일정 생성</ModalHeader>
         <ModalContent>
@@ -147,7 +147,7 @@ const Backdrop = styled.div`
 const ModalContainer = styled.div`
   background: ${({ theme }) => theme.colors.white};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
-  width: 30%;
+  width: 600px;
   padding: ${({ theme }) => theme.spacing[5]};
 `;
 

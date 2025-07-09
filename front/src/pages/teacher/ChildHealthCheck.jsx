@@ -7,21 +7,35 @@ import { format } from 'date-fns';
 import useLoginStore from '../../store/loginStore';
 import { toast } from 'react-toastify';
 import api from '../../api/axios';
+import { useSearchParams } from 'react-router-dom';
 
 const ChildHealthCheck = () => {
+  // 반 번호를 url 파라미터로 받음.
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const classNo = searchParams.get('classNo') ?? '';
+
+  const changeClass = (newClassNo) => {
+    // 기존 파라미터 유지 + page만 교체
+    searchParams.set('classNo', newClassNo.toString());
+    setSearchParams(searchParams); // 페이지 이동 없이 URL만 바뀜
+  };
+
+  const member = useLoginStore((state) => state.member);
+  const MclassNo = member.classNo;
+  const centerNo = member.centerNo;
+  const memberType = member.memberType;
+  
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedClassNo, setSelectedClassNo] = useState('');
+  const [selectedClassNo, setSelectedClassNo] = useState(classNo ? classNo : MclassNo ? MclassNo : '');
   const [classList, setClassList] = useState([]);
   const [checklist, setChecklist] = useState([]);
 
-  const member = useLoginStore((state) => state.member);
-  const centerNo = member.centerNo;
-  const memberType = member.memberType;
-
-  // 시설별 반 목록 가져오기, 학부모가 들어올 경우 반 목록 안 불러오기
   useEffect(() => {
+    // 시설별 반 목록 가져오기, 학부모가 들어올 경우 반 목록 안 불러오기
     if (!centerNo || !memberType || memberType === 'PARENT') return;
 
+    // 반 목록 불러오기
     const fetchClassList = async () => {
       try {
         const response = await api.get(`http://localhost:8888/api/classroom/list/${centerNo}`);
@@ -33,6 +47,14 @@ const ChildHealthCheck = () => {
 
     fetchClassList();
   }, [centerNo, memberType]);
+
+  useEffect(() => {
+    // 부모가 아니고, 반이 미소속인 경우 불러오지 않음.
+    if(memberType !== 'PARENT' && !selectedClassNo) return;
+
+    // 소속된 반이 있는 경우 바로 조회
+    handleSearch();
+  }, [])
 
   // 검색 시 실행
   const handleSearch = async () => {
@@ -91,6 +113,7 @@ const ChildHealthCheck = () => {
         };
       });
 
+      changeClass(selectedClassNo);
       setChecklist(checklist);
     } catch (error) {
       toast.error('건강 체크리스트 불러오기 실패', error);

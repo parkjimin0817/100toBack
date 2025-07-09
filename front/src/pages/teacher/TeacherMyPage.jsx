@@ -41,7 +41,6 @@ const TeacherMyPage = () => {
           memberType: data.member_type,
           memberProfile: data.member_profile,
         });
-        console.log(data);
 
         setCenterInfo({
           centerName: data.center_name,

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import styled from 'styled-components';
 import ChildImg from '../assets/Child.png';
 import { toast } from 'react-toastify';
@@ -84,15 +83,9 @@ const ChildrenList = ({
               className={classPlacement && selectedItem?.id === id && selectedItem?.role === role ? 'selected' : ''}
               onClick={() => {
                 const id = item.child_no || item.member_no;
-
                 if (classPlacement) {
-                  // 이미 선택된 항목을 다시 누르면 선택 해제
-                  if (selectedItem?.id === id && selectedItem?.role === role) {
-                    setSelectedItem(null);
-                  } else {
-                    const classNo = item.class_no || 0;
-                    setSelectedItem({ id, role, class_no: classNo });
-                  }
+                  const classNo = item.class_no || 0;
+                  setSelectedItem({ id, role, class_no: classNo });
                 } else {
                   if (role === 'child') {
                     navigate(`/child/detail/${id}`);
