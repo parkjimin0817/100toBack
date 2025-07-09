@@ -84,7 +84,10 @@ const ScheduleManager = () => {
   return (
     <>
       <Content>
-        <ContentHeader Title={'유치원 일정'} Color={'purple'}></ContentHeader>
+        <ContentHeader
+          Title={'유치원 일정'}
+          Color={member.memberType === 'PARENT' ? 'green' : 'purple'}
+        ></ContentHeader>
         <ContentWrapper>
           <ContentLeft>
             <CustomCalendar scheduleData={data} onDateClick={handleDateClick} />
@@ -121,7 +124,7 @@ const ScheduleManager = () => {
             <ContentRightBottom>
               <ContentHeader
                 Title={'유치원 일정'}
-                Color={'purple'}
+                Color={member.memberType === 'PARENT' ? 'green' : 'purple'}
                 FontSize={'xl'}
                 ButtonProps={
                   member.memberType !== 'PARENT'

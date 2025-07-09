@@ -36,7 +36,7 @@ const Label = styled.label`
 
 const SelectCenter = styled.select`
   width: 400px;
-  height: 40px;
+  height: 42px;
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   border: 1px solid ${({ theme }) => theme.colors.gray[300]};
   padding: ${({ theme }) => theme.spacing[3]};

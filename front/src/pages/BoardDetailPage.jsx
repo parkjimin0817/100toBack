@@ -67,7 +67,7 @@ const BoardDetailPage = () => {
     <PageContainer>
       <ContentHeader
         Title={categoryName[category]}
-        Color={'green'}
+        Color={member.memberType === 'PARENT' ? 'purple' : 'green'}
         ButtonProps={
           boardContent?.memberNo === member.memberNo
             ? [

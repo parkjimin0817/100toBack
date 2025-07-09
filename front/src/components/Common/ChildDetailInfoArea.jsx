@@ -579,14 +579,10 @@ const HealthContentTr = styled.tr`
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray[400]};
 `;
 
-const BasicInfoContainer = styled.div`
-  min-width: 1024px;
-`;
-
 const HealthInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  min-width: 1024px;
+
   margin-top: 10px;
 `;
 
@@ -657,7 +653,6 @@ const DetailInfoContainer = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  min-width: 1024px;
 
   border: 8px solid ${({ theme }) => theme.colors.yellow};
   border-radius: 20px;
