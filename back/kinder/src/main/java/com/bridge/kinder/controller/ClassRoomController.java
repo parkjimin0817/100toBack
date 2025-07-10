@@ -43,4 +43,12 @@ public class ClassRoomController {
         return ResponseEntity.ok(classRoomService.getHealthLogProgress(centerNo));
     }
 
+    //반 수정하기
+    @PatchMapping("/update")
+    public ResponseEntity<ClassRoomDto.Response> updateClass(@RequestParam int classNo) {
+//        return ResponseEntity.ok(classRoomService.updateClass(classNo));
+        return null;
+    }
+
+
 }
