@@ -2,12 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { IoDownloadOutline } from 'react-icons/io5';
 import defaultImg from '../../assets/img/img.png';
-
 import './EditorComponent/tiptap-templates/editor.scss';
 import './EditorComponent/tiptap-node/list-node.scss';
 import './EditorComponent/tiptap-node/paragraph-node.scss';
-
-const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
 const BoardDetail = ({ category, post }) => {
   const formatKoreanDate = (isoString) => {
@@ -56,7 +53,7 @@ const BoardDetail = ({ category, post }) => {
                   }}
                 >
                   <PostImg
-                    src={post.attachment ? `${CLOUDFRONT_URL}/${content.contentFile}` : defaultImg}
+                    src={content.contentFile ?? defaultImg}
                     onError={(e) => {
                       e.currentTarget.src = defaultImg;
                     }}

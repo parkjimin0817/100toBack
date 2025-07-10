@@ -1,6 +1,6 @@
 import api from './axios';
 import { API_ENDPOINTS } from './config';
-import { getPresignedUrl, uploadFileToS3 } from './fileApi';  
+import { getPresignedUrl, uploadFileToS3 } from './fileApi';
 
 export const boardService = {
   // 게시글 작성
@@ -55,6 +55,7 @@ export const boardService = {
       throw new Error('서버와의 통신에 실패했습니다.');
     }
   },
+
   getRecent3Boards: async (centerNo) => {
     try {
       const { data } = await api.get(API_ENDPOINTS.BOARDS.GETRECENT3(centerNo));
@@ -63,6 +64,7 @@ export const boardService = {
       throw new Error('서버 통신 불량' + error.message);
     }
   },
+
   uploadDoc: async (formData) => {
     try {
       let fileUrl = null;

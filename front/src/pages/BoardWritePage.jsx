@@ -103,9 +103,10 @@ const BoardWritePage = () => {
     const presigned = await getPresignedUrl(otherFile.name, otherFile.type, path);
 
     console.log(presigned);
+    console.log(otherFile.type);
 
     // 2. S3에 업로드 [첨부파일]
-    await uploadFileToS3(presigned.presignedUrl, otherFile);
+    await uploadFileToS3(presigned.presigned_url, otherFile);
 
     // 1. Presigned URL 요청 [컨텐츠 부분에 있는 파일]
     const presignedResults = await Promise.all(
@@ -114,14 +115,14 @@ const BoardWritePage = () => {
 
     // 2. S3에 업로드 [컨텐츠 부분에 있는 파일]
     await Promise.all(
-      presignedResults.map((presigned, index) => uploadFileToS3(presigned.presignedUrl, filterData[index].contentFile))
+      presignedResults.map((presigned, index) => uploadFileToS3(presigned.presigned_url, filterData[index].contentFile))
     );
 
     let imgFileIndex = 0;
 
     const contents = formState.contents.map((item, index) => {
       if (item.type === 'IMG') {
-        const changeName = presignedResults[imgFileIndex]?.changeName;
+        const changeName = presignedResults[imgFileIndex]?.change_name;
         imgFileIndex += 1;
 
         return {
@@ -143,7 +144,7 @@ const BoardWritePage = () => {
     const payload = {
       title: formState.title,
       type: formState.type,
-      fileName: presigned?.changeName || null,
+      fileName: presigned?.change_name || null,
       centerId: formState.centerId,
       classRoomId: formState.classRoomNo,
       memberId: formState.memberId,

@@ -5,6 +5,7 @@ import SimpleEditor from './TextInputBlock copy';
 import styled from 'styled-components';
 import { FaMinus, FaPlus } from 'react-icons/fa';
 import { classService } from '../../api/class';
+import { th } from 'date-fns/locale';
 
 const BoardEditor = ({ category, formState, updateFormField, addBlock, updateBlock, selectBlock, deleteBlock }) => {
   const [classRoomList, setClassRoomList] = useState([]);
@@ -74,15 +75,33 @@ const BoardEditor = ({ category, formState, updateFormField, addBlock, updateBlo
         </HeadBlock>
         {category !== 'photo' && (
           <HeadBlock>
-            <HeadLabel htmlFor="file">첨부 파일</HeadLabel>
-            <HeadInput id="file" type="file" onChange={(e) => updateFormField('file', e.target.files[0])} />
+            <HeadLabel>첨부 파일</HeadLabel>
+            {formState.attachment ? (
+              <OtherFile>
+                <label>
+                  현재 파일 :{' '}
+                  {typeof formState.attachment === 'string'
+                    ? formState.attachment.split('/').pop()
+                    : formState.attachment.name}
+                </label>
+                <OtherFileChange htmlFor="file">파일 변경</OtherFileChange>
+                <input
+                  id="file"
+                  type="file"
+                  hidden
+                  onChange={(e) => updateFormField('attachment', e.target.files[0])}
+                />
+              </OtherFile>
+            ) : (
+              <HeadInput id="file" type="file" onChange={(e) => updateFormField('attachment', e.target.files[0])} />
+            )}
           </HeadBlock>
         )}
 
         <div style={{ marginTop: '1rem' }}>
-          {formState?.contents.map((block) => (
+          {formState?.contents.map((block, index) => (
             // <div key={block.boardContentNo} style={{ marginBottom: "1rem" }}>
-            <>
+            <div key={index}>
               {block.type === 'default' ? (
                 <ButtonBox>
                   <AddBlockButton type="button" onClick={() => selectBlock('TEXT', block.boardContentNo)}>
@@ -111,7 +130,7 @@ const BoardEditor = ({ category, formState, updateFormField, addBlock, updateBlo
                 />
               )}
               {/* </div> */}
-            </>
+            </div>
           ))}
           {hasDefaultBlock(formState?.contents) ? (
             <></>
@@ -128,6 +147,28 @@ const BoardEditor = ({ category, formState, updateFormField, addBlock, updateBlo
   );
 };
 
+const OtherFileChange = styled.label`
+  font-size: ${({ theme }) => theme.fontSizes.base};
+  font-weight: ${({ theme }) => theme.fontWeights.semibold};
+  cursor: pointer;
+  background: ${({ theme }) => theme.colors.gray[200]};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: 0 5px;
+
+  &:hover {
+    scale: 0.98;
+  }
+`;
+
+const OtherFile = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex: 1;
+  border: 1px solid #bebebe;
+  padding: 10px;
+`;
+
 const HeadBlock = styled.div`
   display: flex;
   gap: 10px;
@@ -136,7 +177,7 @@ const HeadBlock = styled.div`
 const HeadLabel = styled.label`
   display: flex;
   width: 150px;
-  height: 45px;
+
   border-radius: 5px;
   align-items: center;
   justify-content: center;

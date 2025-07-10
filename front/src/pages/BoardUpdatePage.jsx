@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import BoardEditor from '../components/Board/BoardEditor';
 import ContentHeader from '../components/Common/ContentHeader';
 import styled from 'styled-components';
@@ -7,6 +7,9 @@ import useLoginStore from '../store/loginStore';
 import { boardService } from '../api/boards';
 import { useBlockNavigation } from '../hook/useBlockNavigation';
 import api from '../api/axios';
+import { getPresignedUrl, uploadFileToS3 } from '../api/fileApi';
+
+const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
 const categoryName = {
   family_notice: '가정통신문',
@@ -27,16 +30,20 @@ const BoardUpdatePage = () => {
   /**
    * 페이지 최상위 컴포넌트에서 상태 관리
    */
+
   const [formState, setFormState] = useState({
     title: postData.title,
     type: postData.type,
     classRoomNo: postData.classNo,
-    file: null,
+    attachment: postData.attachment,
     memberName: member.memberName,
     memberId: member.memberNo,
     centerId: member.centerNo,
     contents: postData.boardContents,
   });
+
+  console.log(postData);
+  console.log(formState);
 
   /**
    * 수정중 페이지 이동 감지시 경고창 띄움.
@@ -52,6 +59,16 @@ const BoardUpdatePage = () => {
     if (!isDirty || window.confirm('작성 중인 내용이 저장되지 않았습니다. 정말 이동하시겠습니까?')) {
       navigate(-1);
     }
+  };
+
+  const isPrefixed = (path) => {
+    return typeof path === 'string' && path.startsWith(CLOUDFRONT_URL);
+  };
+  const removePrefix = (path) => {
+    if (isPrefixed(path)) {
+      return path.slice(CLOUDFRONT_URL.length); // 길이만큼 잘라냄
+    }
+    return path || '';
   };
 
   const handleSubmit = async (e) => {
@@ -87,51 +104,89 @@ const BoardUpdatePage = () => {
       return;
     }
 
-    // console.log("formState : ", formState);
-    // console.log("responseData : ", postData);
+    //S3 게시판 첨부파일 저장 위치
+    const path = `board/${category}/`;
 
-    const formData = new FormData();
+    //S3 게시판 컨텐츠 파일 저장 위치
+    const detailPath = 'board/content/';
 
-    // 📦 JSON으로 직렬화한 게시글 본문 데이터
+    //컨텐츠 부분에 있는 파일들
+    const filterData = formState.contents.filter((item) => item.type === 'IMG');
+
+    console.log(filterData);
+    //첨부파일
+    const otherFile = formState.attachment;
+
+    //파일 타입
+    const fileType = formState.attachment.substring(formState.attachment.lastIndexOf('.') + 1);
+    console.log(fileType);
+
+    // 1. Presigned URL 요청 [첨부파일]
+    const presigned = await getPresignedUrl(otherFile, fileType, path);
+
+    console.log(presigned);
+
+    // 2. S3에 업로드 [첨부파일]
+    await uploadFileToS3(presigned.presigned_url, otherFile);
+
+    // 1. Presigned URL 요청 [컨텐츠 부분에 있는 파일]
+    const presignedResults = await Promise.all(
+      filterData.map((item) => getPresignedUrl(item.contentFile.name, item.contentFile.type, detailPath))
+    );
+
+    // 2. S3에 업로드 [컨텐츠 부분에 있는 파일]
+    await Promise.all(
+      presignedResults.map((presigned, index) => uploadFileToS3(presigned.presigned_url, filterData[index].contentFile))
+    );
+
+    let imgFileIndex = 0;
+
+    const contents = formState.contents.map((item, index) => {
+      if (item.type === 'IMG') {
+        const changeName = presignedResults[imgFileIndex]?.change_name;
+        imgFileIndex += 1;
+
+        return {
+          type: item.type, // "IMG"
+          contentText: null,
+          contentFile: removePrefix(changeName), // "board/content/xxx.jpg"
+          contentFileKey: `contentFile_${index}`,
+        };
+      } else {
+        return {
+          type: item.type, // "TEXT"
+          contentText: item.contentText,
+          contentFile: null,
+          contentFileKey: null,
+        };
+      }
+    });
+
     const payload = {
       title: formState.title,
       type: formState.type,
       classRoomId: formState.classRoomNo,
       centerId: formState.centerId,
       memberId: formState.memberId,
-      contents: formState.contents.map((item, index) => ({
-        contentId: item.boardContentNo || null,
-        type: item.type,
-        contentText: item.contentText || null,
-        contentFile: item.contentFile?.name ? item.contentFile.name : item.contentFile,
-        sortOrder: index,
-      })),
+      contents: contents,
     };
 
-    // console.log("payload : ", payload);
+    console.log(payload);
 
-    // 👉 JSON 문자열로 보내기
-    formData.append('data', new Blob([JSON.stringify(payload)], { type: 'application/json' }));
-
-    // 📁 첨부된 메인 파일이 있다면
-    if (formState.file) {
-      formData.append('file', formState.file);
-    }
-
-    // 📁 contents 내부 이미지 파일들
-    formState.contents.forEach((item) => {
-      // console.log(postData.boardContents[index].contentFile);
-      if (item.type === 'IMG') {
-        formData.append(`contentFiles`, item.contentFile);
-      }
-    });
-
-    // console.log("전송할 데이터:", formData);
+    // const payload = {
+    //   title: formState.title,
+    //   type: formState.type,
+    //   fileName: presigned?.changeName || null,
+    //   centerId: formState.centerId,
+    //   classRoomId: formState.classRoomNo,
+    //   memberId: formState.memberId,
+    //   contents: contents,
+    // };
 
     // api 전송 예시
-    await api.put(`http://localhost:8888/api/boards/${postData.boardNo}`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    // await api.put(`http://localhost:8888/api/boards/${postData.boardNo}`, formData, {
+    //   headers: { 'Content-Type': 'multipart/form-data' },
+    // });
     allowNavigation();
     navigate(`/${category}/${postData.boardNo}`);
   };
