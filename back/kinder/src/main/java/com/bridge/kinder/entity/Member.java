@@ -59,7 +59,7 @@ public class Member {// 멤버
     private String address;
     //주소
 
-    @Column(name = "CREATE_DATE", nullable = false)
+    @Column(name = "CREATE_DATE", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createDate;
     //생성일
 

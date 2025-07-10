@@ -139,6 +139,7 @@ const InfoBox = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 10px 0;
+  box-sizing: border-box;
   gap: 20px;
 `;
 

@@ -47,7 +47,7 @@ public class Vacation { //휴가, 워케이션
     private String attachment;
     //첨부파일
 
-    @Column(name = "CREATE_DATE")
+    @Column(name = "CREATE_DATE", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createDate;
     //생성일
 
@@ -58,6 +58,7 @@ public class Vacation { //휴가, 워케이션
 
     @Column(name = "DECISION_DATE")
     private LocalDateTime decisionDate;
+    //결정일
 
 
     //---------------------------------------------------------------------------------------------

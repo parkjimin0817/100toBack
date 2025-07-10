@@ -149,7 +149,7 @@ const ParentMyPage = () => {
           {childList.map((data) => {
             const { age, gender, birthday } = childInfo(data.child_resident_no);
             return (
-              <Card key={data.child_no} onClick={() => navigate(`/child/detail/${data.child_no}`)}>
+              <Card key={data.child_no} onClick={() => navigate(`/parent/mychild?childNo=${data.child_no}`)}>
                 <ProfileDiv>
                   <NameDiv>{data.child_name}</NameDiv>
                   <AgeDiv>
@@ -212,23 +212,22 @@ const InfoBox = styled.div`
 const ProfileImgBox = styled.div`
   width: 20%;
   min-width: 170px;
-  margin-right: 35px;
 `;
 
 const MyInfoBox = styled.div`
   width: 30%;
-  min-width: 300px;
+  min-width: 400px;
 `;
 
 const CenterInfoBox = styled.div`
-  width: 50%;
-  min-width: 500px;
+  width: 30%;
+  min-width: 400px;
 `;
 
 const MenuBox = styled.div`
   padding: 20px;
   width: 100%;
-  height: 100%;
+  height: 70%;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;

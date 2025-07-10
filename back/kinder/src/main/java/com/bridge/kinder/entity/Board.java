@@ -35,7 +35,7 @@ public class Board {// 게시판
     private int views;
     //조회수
 
-    @Column(name = "CREATE_DATE")
+    @Column(name = "CREATE_DATE", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createDate;
     //생성일
 
@@ -43,6 +43,8 @@ public class Board {// 게시판
     private String attachment;
     //첨부파일
 
+    @Column(name = "VIEWED_DATE")
+    private LocalDateTime viewedDate;
 
     //---------------------------------------------------------------------------------------------
     @ManyToOne(fetch = FetchType.LAZY)
@@ -86,5 +88,7 @@ public class Board {// 게시판
     public void increaseViewCount() {
         this.views += 1;
     }
+
+    public void setViewedDate() { this.viewedDate = LocalDateTime.now(); }
 
 }

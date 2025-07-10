@@ -108,7 +108,7 @@ export const API_ENDPOINTS = {
     TYPE: (type, centerNo, page) => `/api/boards/type/${type}?centerNo=${centerNo}&page=${page}`,
     GETRECENT3: (centerNo) => `api/boards/recent3/${centerNo}`,
     UPLOADDOC: '/api/boards/documents',
-    UPDATEBOARD: (boardNo) => `/api/boards/${boardNo}`,
+    GETDOCLIST: '/api/boards/documents/list',
   },
   VACATION: {
     BASE: '/api/vacation',

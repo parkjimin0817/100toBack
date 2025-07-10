@@ -120,7 +120,7 @@ const PostContentList = styled.div`
   margin-bottom: 1.5rem;
   border: 1px solid #333;
   border-radius: 4px;
-  min-height: 300px;
+  min-height: 500px;
 `;
 
 const PostContentBox = styled.div`

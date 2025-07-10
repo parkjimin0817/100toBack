@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import ContentHeader from '../../components/Common/ContentHeader';
-import ClassRoomCard from '../../components/ClassRoomCard';
+import ClassRoomList from '../../components/ClassRoomList';
 import styled from 'styled-components';
 import useLoginStore from '../../store/loginStore';
 import { classService } from '../../api/class';
 import { ImInfo } from 'react-icons/im';
 import { BounceLoader } from 'react-spinners';
 import { ErrorDiv, Hint, NoneDiv } from '../../styles/Common/Container';
+import { useNavigate } from 'react-router-dom';
 
 //일과표 반별 리스트 페이지(모든 반이 나옴)
 const DailySchedule = () => {
@@ -15,6 +16,7 @@ const DailySchedule = () => {
   const [classrooms, setClassrooms] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const selectClassRoom = async () => {
     try {
@@ -66,7 +68,7 @@ const DailySchedule = () => {
             <ImInfo />
             해당 반을 선택하시면 일과표가 나옵니다.
           </Hint>
-          <ClassRoomCard classrooms={classrooms} address={'/dailyDetail'} />
+          <ClassRoomList classrooms={classrooms} clickEventFunc={(no) => navigate(`/dailyDetail/${no}`)} />
         </Div>
       )}
     </Content>

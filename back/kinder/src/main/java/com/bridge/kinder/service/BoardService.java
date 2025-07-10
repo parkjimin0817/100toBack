@@ -26,4 +26,7 @@ public interface BoardService {
     List<RecentBoardDto.Response> getRecentBoards(int centerNo);
     //개인 서류 업로드
     int createDocument(BoardDto.DocumentRequest request);
+    //개인 서류 목록 불러오기
+    List<BoardDto.DocumentResponse> getDocuments(String memberId);
+
 }
