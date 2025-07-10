@@ -17,9 +17,16 @@ const ImagePost = ({ postData, onClick }) => {
     return `${year}-${month}-${day}`;
   };
 
+  console.log(postData);
+
   return (
     <ImagePostContainer onClick={onClick}>
-      <ImageContent src={postData.attachment ? `${CLOUDFRONT_URL}/${postData.attachment}` : defaultImg} />
+      <OutlineImage>
+        <ImageContent
+          src={postData.boardContents ? `${CLOUDFRONT_URL}/${postData.boardContents[0].contentFile}` : defaultImg}
+        />
+      </OutlineImage>
+
       <Title>{postData.title}</Title>
       <DescriptionBox>
         <Description>{formatDate(postData.createDate)}</Description>
@@ -28,6 +35,16 @@ const ImagePost = ({ postData, onClick }) => {
     </ImagePostContainer>
   );
 };
+
+const OutlineImage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 230px;
+  border: 1px solid ${({ theme }) => theme.colors.gray[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+`;
 
 const ImagePostContainer = styled.div`
   width: 300px;
@@ -38,8 +55,8 @@ const ImagePostContainer = styled.div`
   cursor: pointer;
 `;
 const ImageContent = styled.img`
-  width: 300px;
-  height: 230px;
+  width: 150px;
+  height: 150px;
 `;
 const Title = styled.h2``;
 const DescriptionBox = styled.div`

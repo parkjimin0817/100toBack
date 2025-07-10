@@ -7,6 +7,8 @@ import { boardService } from '../api/boards';
 import useLoginStore from '../store/loginStore';
 import { toast } from 'react-toastify';
 
+const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
+
 const categoryName = {
   family_notice: '가정통신문',
   notice: '공지사항',
@@ -24,6 +26,7 @@ const BoardDetailPage = () => {
   const navigate = useNavigate();
   const [boardContent, setBoardContent] = useState(null);
   const member = useLoginStore((state) => state.member);
+  const [contentImg, setContentImg] = useState([]);
 
   const handleGoBack = () => {
     navigate(`/${category}/list`); // 브라우저의 이전 페이지로 이동
@@ -34,7 +37,23 @@ const BoardDetailPage = () => {
       try {
         const responseData = await boardService.boardDetail(boardNo);
         console.log(responseData);
+
+        if (responseData?.boardContents) {
+          responseData.boardContents = responseData.boardContents.map((content) => {
+            if (content.contentFile !== null) {
+              return {
+                ...content,
+                contentFile: `${CLOUDFRONT_URL}/${content.contentFile}`,
+              };
+            }
+            return content;
+          });
+        }
+
+        console.log(responseData); // 수정된 데이터 확인용
+
         setBoardContent(responseData);
+
         // alert("게시글 조회 성공");
       } catch (error) {
         console.error('게시글 조회 실패 : ', error);
@@ -47,7 +66,7 @@ const BoardDetailPage = () => {
 
   const handleDelete = async () => {
     try {
-      const isConfirmed = window.confirm("확인 버튼을 누르면 게시물이 삭제됩니다. 삭제하시겠습니까?");
+      const isConfirmed = window.confirm('확인 버튼을 누르면 게시물이 삭제됩니다. 삭제하시겠습니까?');
       if (!isConfirmed) return;
 
       const responseData = await boardService.boardDelete(boardNo);
