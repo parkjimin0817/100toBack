@@ -76,7 +76,14 @@ const TeacherDocument = () => {
         <TeacherDocumentList documents={documents} onDelete={fetchDocuments} onViewed={fetchRecentDocuments} />
       </BottomContent>
       {openModal && (
-        <FileUploadModal onClose={() => setOpenModal(false)} memberNo={memberNo} onSuccess={fetchDocuments} />
+        <FileUploadModal
+          onClose={() => setOpenModal(false)}
+          memberNo={memberNo}
+          onSuccess={() => {
+            fetchDocuments();
+            fetchRecentDocuments();
+          }}
+        />
       )}
     </Wrapper>
   );
