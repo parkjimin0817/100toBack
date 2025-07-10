@@ -1,28 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ContentHeader from '../../components/Common/ContentHeader';
 import styled from 'styled-components';
-import { IoMdDownload } from 'react-icons/io';
-import { TiDocumentText } from 'react-icons/ti';
 import { useState } from 'react';
 import FileUploadModal from './components/FileUploadModal';
 import fileimg from '../../assets/img/fileimg.png';
 import filehover from '../../assets/img/filehover.png';
-import { RiDeleteBin6Line } from 'react-icons/ri';
+
 import useLoginStore from '../../store/loginStore';
 import { boardService } from '../../api/boards';
+import TeacherDocumentList from './components/TeacherDocumentList';
 
 const file = [
   { title: '길dfdfdfdfdfdfdfdf면', modifyDate: '2025-03-01', file: 'xxx.png' },
   { title: '문서 2dfdfdfd', modifyDate: '2025-03-01', file: 'xxx.png' },
   { title: '문서 3', modifyDate: '2025-03-01', file: 'xxx.png' },
-];
-
-const data = [
-  { no: 1, title: '제목 1', createDate: '2024-01-23', type: '서류' },
-  { no: 2, title: '제목 1', createDate: '2024-01-23', type: '서류' },
-  { no: 3, title: '제목 1', createDate: '2024-01-23', type: '서류' },
-  { no: 1, title: '제목 1', createDate: '2024-01-23', type: '서류' },
-  { no: 2, title: '제목 1', createDate: '2024-01-23', type: '서류' },
 ];
 
 const TeacherDocument = () => {
@@ -31,14 +22,20 @@ const TeacherDocument = () => {
   const [documents, setDocuments] = useState([]);
   const [openModal, setOpenModal] = useState(false);
 
-  const fetchDocuments = async() => {
-    if(!memberNo) return;
+  const fetchDocuments = async () => {
+    if (!memberNo) return;
 
-    try{
+    try {
       const data = await boardService.getDocumentList(memberNo);
-      setDocuments(data)
+      setDocuments(data);
+    } catch (err) {
+      console.error('서류 목록 조회 실패 : ', err);
     }
-  }
+  };
+
+  useEffect(() => {
+    fetchDocuments();
+  }, [memberNo]);
 
   return (
     <Wrapper>
@@ -65,38 +62,8 @@ const TeacherDocument = () => {
         </Documents>
       </TopContent>
       <BottomContent>
-        <Table>
-          <Thead>
-            <tr>
-              <th>번호</th>
-              <th>생성일</th>
-              <th>제목</th>
-              <th>미리보기</th>
-              <th>다운로드</th>
-              <th>삭제</th>
-            </tr>
-          </Thead>
-          <tbody>
-            {data.map((d, index) => (
-              <tr key={index}>
-                <td>{d.no}</td>
-                <td>{d.createDate}</td>
-                <td>{d.title}</td>
-                <td>
-                  <TiDocumentText />
-                </td>
-                <td>
-                  <IoMdDownload />
-                </td>
-                <td>
-                  <RiDeleteBin6Line />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <TeacherDocumentList documents={documents} />
       </BottomContent>
-
       {openModal && <FileUploadModal onClose={() => setOpenModal(false)} memberNo={memberNo} />}
     </Wrapper>
   );
@@ -106,10 +73,11 @@ export default TeacherDocument;
 
 const Wrapper = styled.div`
   width: 100%;
-  min-height: 600px;
+  min-height: 625px;
   background-color: #ffffff;
   border-radius: 20px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  position: relative;
 `;
 
 const TopContent = styled.div`
@@ -127,7 +95,6 @@ const BottomContent = styled.div`
   width: 90%;
   margin: 10px auto;
   border-radius: 10px;
-  height: 350px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -200,7 +167,7 @@ const Table = styled.table`
     word-wrap: break-word;
   }
 
-  tr {
+  tbody tr {
     &:hover {
       cursor: pointer;
       background-color: ${({ theme }) => theme.colors.gray[300]};
@@ -246,5 +213,29 @@ const Thead = styled.thead`
 
   & th:last-child {
     border-top-right-radius: 10px;
+  }
+`;
+
+const Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+`;
+
+const PageButton = styled.button`
+  padding: 5px 10px;
+  margin: 0 5px;
+  border-radius: ${({ theme }) => theme.borderRadius.base};
+  border: 1px solid ${({ theme }) => theme.colors.gray[300]};
+  background-color: ${({ $active, theme }) => ($active ? theme.colors.blue : theme.colors.white)};
+  color: ${({ $active, theme }) => ($active ? theme.colors.white : theme.colors.text)};
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.gray[100]};
   }
 `;

@@ -28,14 +28,9 @@ const FileUploadModal = ({ onClose, memberNo }) => {
       return;
     }
 
-    const request = {
-      memberNo,
-      title,
-    };
-
     try {
       setLoading(true);
-      await boardService.uploadDoc(request, selectedFile);
+      await boardService.uploadDoc(memberNo, title, selectedFile);
       toast.success('파일 업로드 완료');
       onClose();
     } catch (error) {

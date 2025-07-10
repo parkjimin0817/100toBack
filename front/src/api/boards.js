@@ -63,7 +63,7 @@ export const boardService = {
       throw new Error('서버 통신 불량' + error.message);
     }
   },
-  uploadDoc: async (request, file) => {
+  uploadDoc: async (memberNo, title, file) => {
     try {
       let fileUrl = null;
 
@@ -75,15 +75,15 @@ export const boardService = {
         await uploadFileToS3(presignedData.presigned_url, file);
 
         fileUrl = presignedData.change_name;
-
-        request.fileUrl = fileUrl;
       }
 
-      console.log(formData.memberNo);
-      const formData = new FormData();
-      formData.append('request', JSON.stringify(request));
+      const request = {
+        memberNo,
+        title,
+        fileUrl,
+      };
 
-      const { data } = await api.post(API_ENDPOINTS.BOARDS.UPLOADDOC, formData);
+      const { data } = await api.post(API_ENDPOINTS.BOARDS.UPLOADDOC, request);
 
       return data;
     } catch (error) {
@@ -92,6 +92,14 @@ export const boardService = {
         throw new Error(errorMessage);
       }
       throw new Error('서버 통신 실패');
+    }
+  },
+  getDocumentList: async () => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.BOARDS.GETDOCLIST);
+      return data;
+    } catch (error) {
+      throw new Error('서버 통신 불량' + error.message);
     }
   },
 };

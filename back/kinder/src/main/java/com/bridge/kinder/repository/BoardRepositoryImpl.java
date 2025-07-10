@@ -74,4 +74,16 @@ public class BoardRepositoryImpl implements BoardRepository {
                 .setMaxResults(3)
                 .getResultList();
     }
+
+    @Override
+    public List<Board> findByMemberNoAndType(int memberNo, BoardType type) {
+        String jpql =  "SELECT b FROM Board b " +
+                "WHERE b.member.memberNo = :memberNo " +
+                "AND b.type = :type ";
+
+        return em.createQuery(jpql, Board.class)
+                .setParameter("memberNo", memberNo)
+                .setParameter("type", type)
+                .getResultList();
+    }
 }
