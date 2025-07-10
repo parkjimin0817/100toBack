@@ -45,7 +45,11 @@ public class Vacation { //휴가, 워케이션
 
     @Column(name = "ATTACHMENT", length = 100)
     private String attachment;
-    //첨부파일
+    //첨부파일 경로
+
+    @Column(name = "ATTACHMENT_ORIGIN", length = 100)
+    private String attachmentOrigin;
+    //첨부파일 원본
 
     @Column(name = "CREATE_DATE", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createDate;

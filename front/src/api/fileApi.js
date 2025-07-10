@@ -35,3 +35,16 @@ export const uploadFileToS3 = async (presignedUrl, file) => {
     throw new Error('S3 업로드 실패: ' + error.message);
   }
 };
+
+//다운로드 완성 x
+export const getDownloadUrl = async (filePath, fileName) => {
+  try {
+    const { data } = await api.post(API_ENDPOINTS.FILE.DOWNLOAD_URL, {
+      filePath,
+      fileName,
+    });
+    return data;
+  } catch (error) {
+    throw new Error('Presigned 다운로드 URL 요청 실패 :' + error.message);
+  }
+};

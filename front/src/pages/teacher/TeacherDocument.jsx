@@ -64,7 +64,9 @@ const TeacherDocument = () => {
       <BottomContent>
         <TeacherDocumentList documents={documents} />
       </BottomContent>
-      {openModal && <FileUploadModal onClose={() => setOpenModal(false)} memberNo={memberNo} />}
+      {openModal && (
+        <FileUploadModal onClose={() => setOpenModal(false)} memberNo={memberNo} onSuccess={fetchDocuments} />
+      )}
     </Wrapper>
   );
 };
