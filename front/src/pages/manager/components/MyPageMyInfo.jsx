@@ -134,6 +134,7 @@ const InfoRow = styled.div`
   width: 100%;
   display: flex;
   align-items: start;
+  margin-bottom: 10px;
 `;
 const InfoType = styled.div`
   width: 100px;
@@ -151,6 +152,7 @@ const InfoType = styled.div`
     margin-right: 10px;
   }
 `;
+
 const Info = styled.span`
   font-size: ${({ theme }) => theme.fontSizes.xl};
 `;
@@ -202,7 +204,7 @@ const LongInput = styled.input`
 `;
 
 const SearchButton = styled.button`
-  padding: 0 16px;
+  padding: ${({ theme }) => theme.spacing[0]} ${({ theme }) => theme.spacing[2]};
   height: 40px;
   outline: none;
   background-color: ${({ theme }) => theme.colors.lightblue};
