@@ -1,5 +1,6 @@
 package com.bridge.kinder.entity;
 
+import com.bridge.kinder.entity.chat.ChatMessage;
 import com.bridge.kinder.enums.CommonEnums;
 import jakarta.persistence.*;
 import lombok.*;
@@ -127,6 +128,11 @@ public class Member {// 멤버
     @Builder.Default
     List<Counsel> counsels = new ArrayList<>();
     //상담
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    List<ChatMessage> messages = new ArrayList<>();
+    //채팅 메세지
 
 
     //---------------------------------------------------------------------------------------------
