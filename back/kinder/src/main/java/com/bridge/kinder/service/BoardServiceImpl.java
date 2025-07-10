@@ -2,6 +2,7 @@ package com.bridge.kinder.service;
 
 import com.bridge.kinder.dto.BoardContentDto;
 import com.bridge.kinder.dto.BoardDto;
+import com.bridge.kinder.dto.BoardDto.DocumentResponse;
 import com.bridge.kinder.dto.RecentBoardDto;
 import com.bridge.kinder.dto.RecentBoardDto.Response;
 import com.bridge.kinder.dto.ScheduleDto.ScheduleSimpleResponse;
@@ -14,6 +15,7 @@ import com.bridge.kinder.repository.BoardRepository;
 import com.bridge.kinder.repository.CenterRepository;
 import com.bridge.kinder.repository.ClassRoomRepository;
 import com.bridge.kinder.repository.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.springframework.data.domain.Page;
@@ -290,5 +292,19 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.save(board);
 
         return board.getBoardNo();
+    }
+
+    @Override
+    public List<DocumentResponse> getDocuments(String memberId) {
+        Member member = memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
+
+        List<Board> documents = boardRepository
+                .findByMemberNoAndType(member.getMemberNo(), BoardType.PRIVATE_DOC);
+
+        return documents.stream()
+                .map(DocumentResponse::toDto)
+                .toList();
+
     }
 }

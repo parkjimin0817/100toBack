@@ -45,8 +45,10 @@ const MainSchedule = () => {
   const handleClickButton = () => {
     if (member.memberType === 'PARENT') {
       navigate('나중에 생기는 학부모 유치원 일정페이지');
-    } else {
+    } else if (member.memberType === 'TEACHER') {
       navigate('/scheduleteacher');
+    } else {
+      navigate('/manager/schedule');
     }
   };
 
