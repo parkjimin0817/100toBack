@@ -101,7 +101,7 @@ const SpinnerOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* 모달과 동일한 레벨로 설정 */
+  z-index: 1400; /* 모달과 동일한 레벨로 설정 */
   backdrop-filter: blur(5px); /* 모달 배경 흐리게 처리 */
   border-radius: 12px; /* 모달의 둥근 테두리와 일치시킴 */
 `;
