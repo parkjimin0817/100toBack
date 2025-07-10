@@ -18,11 +18,7 @@ public class BoardRepositoryImpl implements BoardRepository {
 
     @Override
     public Board save(Board board) {
-        if (board.getBoardNo() == 0) {
-            em.persist(board);
-        } else {
-            board = em.merge(board);
-        }
+        em.persist(board);
         return board;
     }
 
@@ -76,6 +72,18 @@ public class BoardRepositoryImpl implements BoardRepository {
                 .setParameter("centerNo", centerNo)
                 .setParameter("types", types)
                 .setMaxResults(3)
+                .getResultList();
+    }
+
+    @Override
+    public List<Board> findByMemberNoAndType(int memberNo, BoardType type) {
+        String jpql =  "SELECT b FROM Board b " +
+                "WHERE b.member.memberNo = :memberNo " +
+                "AND b.type = :type ";
+
+        return em.createQuery(jpql, Board.class)
+                .setParameter("memberNo", memberNo)
+                .setParameter("type", type)
                 .getResultList();
     }
 }

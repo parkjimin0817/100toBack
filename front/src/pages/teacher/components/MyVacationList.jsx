@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { vacationService } from '../../../api/vacation';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
-import { set } from 'date-fns';
 
 const MyVacationList = ({ vacations, onDeleteSuccess }) => {
   const [currentPage, setCurrentPage] = useState(1);

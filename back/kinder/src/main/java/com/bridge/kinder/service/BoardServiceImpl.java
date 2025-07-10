@@ -2,6 +2,7 @@ package com.bridge.kinder.service;
 
 import com.bridge.kinder.dto.BoardContentDto;
 import com.bridge.kinder.dto.BoardDto;
+import com.bridge.kinder.dto.BoardDto.DocumentResponse;
 import com.bridge.kinder.dto.RecentBoardDto;
 import com.bridge.kinder.dto.RecentBoardDto.Response;
 import com.bridge.kinder.dto.ScheduleDto.ScheduleSimpleResponse;
@@ -14,6 +15,7 @@ import com.bridge.kinder.repository.BoardRepository;
 import com.bridge.kinder.repository.CenterRepository;
 import com.bridge.kinder.repository.ClassRoomRepository;
 import com.bridge.kinder.repository.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.springframework.data.domain.Page;
@@ -55,46 +57,19 @@ public class BoardServiceImpl implements BoardService {
                     .orElseThrow(() -> new RuntimeException("존재하지 않는 반입니다."));
         }
 
-
-        // 🟢 Board 엔티티 생성
-//        dto.setAttachment(dto.getAttachment());
         Board board = dto.toEntity(center, member, classRoom);
 
         AtomicInteger order = new AtomicInteger(0);
-        AtomicInteger imageIndex = new AtomicInteger(0);
 
         List<BoardContent> contents = new ArrayList<>();
 
         for (BoardContentDto.Create contentDto : dto.getContents()) {
-//            String contentFilePath = null;
-
-//            if (contentDto.getType() == CommonEnums.BoardContentType.IMG ) {
-//                if (contentFile != null && !contentFile.isEmpty()) {
-//                    String originName = contentFile.getOriginalFilename();
-//                    contentFilePath = UUID.randomUUID() + "_content_" + originName;
-//                    contentFile.transferTo(new File(UPLOAD_PATH + contentFilePath));
-//                }
-//            }
-
-//            contentDto.setContentFile(contentFilePath);
             BoardContent content = contentDto.toEntity(board, order.getAndIncrement());
             contents.add(content);
         }
 
         board.getBoardContents().addAll(contents);
 
-        // 사진 게시판의 경우, 첨부파일은 썸네일이 되도록 함.
-//        if(dto.getType() == CommonEnums.BoardType.PHOTO) {
-//            Optional<BoardContent> firstImageContent = contents.stream()
-//                    .filter(content -> content.getType() == CommonEnums.BoardContentType.IMG)
-//                    .findFirst();
-//            fileName = firstImageContent
-//                    .map(BoardContent::getContentFile)
-//                    .orElse(null);
-//            System.out.println("사진 경로" + fileName);
-//            board.update(board.getTitle(), board.getType(), fileName);
-//            System.out.println(board.getAttachment());
-//        }
 
         boardRepository.save(board);
         System.out.println("final attachment: " + board.getAttachment());
@@ -317,5 +292,19 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.save(board);
 
         return board.getBoardNo();
+    }
+
+    @Override
+    public List<DocumentResponse> getDocuments(String memberId) {
+        Member member = memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
+
+        List<Board> documents = boardRepository
+                .findByMemberNoAndType(member.getMemberNo(), BoardType.PRIVATE_DOC);
+
+        return documents.stream()
+                .map(DocumentResponse::toDto)
+                .toList();
+
     }
 }
