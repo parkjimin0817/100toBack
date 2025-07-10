@@ -35,7 +35,7 @@ public class Board {// 게시판
     private int views;
     //조회수
 
-    @Column(name = "CREATE_DATE")
+    @Column(name = "CREATE_DATE", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createDate;
     //생성일
 
