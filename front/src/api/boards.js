@@ -105,4 +105,19 @@ export const boardService = {
       throw new Error('서버 통신 불량' + error.message);
     }
   },
+  updateViewedDate: async (boardNo) => {
+    try {
+      await api.patch(API_ENDPOINTS.BOARDS.UPDATEVIEWED(boardNo));
+    } catch (error) {
+      throw new Error('서버 통신 불량' + error.message);
+    }
+  },
+  getRecentViewdDocs: async () => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.BOARDS.GETRECENTVIEWED);
+      return data;
+    } catch (error) {
+      throw new Error('서버 통신 불량' + error.message);
+    }
+  },
 };

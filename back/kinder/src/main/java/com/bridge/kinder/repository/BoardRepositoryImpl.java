@@ -87,4 +87,18 @@ public class BoardRepositoryImpl implements BoardRepository {
                 .setParameter("type", type)
                 .getResultList();
     }
+
+    @Override
+    public List<Board> findByMemberNoAndTypeOrderByViewedDate(int memberNo, BoardType type) {
+        String jpql =  "SELECT b FROM Board b " +
+                "WHERE b.member.memberNo = :memberNo " +
+                "AND b.type = :type " +
+                "ORDER BY b.viewedDate DESC ";
+
+        return em.createQuery(jpql, Board.class)
+                .setParameter("memberNo", memberNo)
+                .setParameter("type", type)
+                .setMaxResults(5)
+                .getResultList();
+    }
 }
