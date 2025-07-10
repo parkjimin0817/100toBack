@@ -58,7 +58,7 @@ const TeacherDocumentList = ({ documents }) => {
                 <TiDocumentText size={20} onClick={() => handlePreview(d)} style={{ cursor: 'pointer' }} />
               </td>
               <td>
-                <FileName onClick={() => handleDownload(d)}>{d.fileUrl}</FileName>
+                <FileName onClick={() => handleDownload(d)}></FileName>
                 <IoMdDownload size={20} onClick={() => handleDownload(d)} style={{ cursor: 'pointer' }} />
               </td>
               <td>
@@ -69,7 +69,7 @@ const TeacherDocumentList = ({ documents }) => {
         </tbody>
       </Table>
 
-      {totalPages > 1 && (
+      {totalPages > 0 && (
         <Pagination>
           {Array.from({ length: totalPages }, (_, i) => (
             <PageButton key={i} $active={currentPage === i + 1} onClick={() => setCurrentPage(i + 1)}>
@@ -99,6 +99,10 @@ const Table = styled.table`
   }
 
   tbody tr {
+    &:hover {
+      cursor: pointer;
+      background-color: ${({ theme }) => theme.colors.gray[300]};
+    }
   }
 
   th:nth-child(1),
