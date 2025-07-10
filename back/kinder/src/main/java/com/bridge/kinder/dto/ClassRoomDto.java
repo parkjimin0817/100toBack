@@ -104,4 +104,29 @@ public class ClassRoomDto {
                     .build();
         }
     }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    //반 목록
+    public static class Update {
+        private String class_name;
+        private int capacity;
+        private String color;
+        private String class_image;
+
+        public static Update toDto(ClassRoom classRoom) {
+            return Update.builder()
+                    .class_name(classRoom.getClassName())
+                    .capacity(classRoom.getCapacity())
+                    .color(classRoom.getColor())
+                    .class_image(classRoom.getClassImage())
+                    .build();
+        }
+
+
+
+    }
 }

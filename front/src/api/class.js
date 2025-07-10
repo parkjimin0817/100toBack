@@ -1,5 +1,7 @@
 import api from './axios';
 import { API_ENDPOINTS } from './config';
+import { getPresignedUrl, uploadFileToS3 } from './fileApi';
+import { toast } from 'react-toastify';
 
 export const classService = {
   createClass: async ({ className, capacity, teacherNo, classColor, centerNo, classImage }) => {

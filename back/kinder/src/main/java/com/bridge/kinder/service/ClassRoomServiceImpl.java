@@ -3,6 +3,7 @@ package com.bridge.kinder.service;
 import com.bridge.kinder.dto.ClassRoomDto;
 import com.bridge.kinder.dto.ClassRoomDto.AttendanceRateResponse;
 import com.bridge.kinder.dto.ClassRoomDto.HealthLogProgressResponse;
+import com.bridge.kinder.dto.ClassRoomDto.Response;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.entity.Member;
@@ -13,6 +14,7 @@ import com.bridge.kinder.repository.CenterRepository;
 import com.bridge.kinder.repository.ChildRepository;
 import com.bridge.kinder.repository.ClassRoomRepository;
 import com.bridge.kinder.repository.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -137,6 +139,22 @@ public class ClassRoomServiceImpl implements ClassRoomService {
                     return HealthLogProgressResponse.toDto(classRoom, completed, childCount);
                         })
                 .toList();
+    }
+
+    @Override
+    public ClassRoomDto.Update updateClass(ClassRoomDto.Update dto, int classNo) {
+        ClassRoom classRoom = classRoomRepository.updateClass(dto,classNo)
+                .orElseThrow(() -> new EntityNotFoundException("수정에 실패하였습니다."));
+
+
+        return ClassRoomDto.Update.toDto(classRoom);
+    }
+
+    @Override
+    public int deleteClass(int classNo) {
+        int no = classRoomRepository.deleteClass(classNo);
+
+        return no;
     }
 }
 

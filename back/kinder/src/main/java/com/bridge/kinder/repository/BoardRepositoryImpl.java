@@ -1,6 +1,7 @@
 package com.bridge.kinder.repository;
 
 import com.bridge.kinder.entity.Board;
+import com.bridge.kinder.entity.ChildAttendance;
 import com.bridge.kinder.enums.CommonEnums;
 import com.bridge.kinder.enums.CommonEnums.BoardType;
 import jakarta.persistence.EntityManager;
@@ -86,4 +87,15 @@ public class BoardRepositoryImpl implements BoardRepository {
                 .setParameter("type", type)
                 .getResultList();
     }
+
+    @Override
+    public List<Board> findByClassNo(int classNo) {
+        return em.createQuery(
+                        "SELECT b FROM Board b WHERE b.classRoom.classNo = :classNo",
+                        Board.class)
+                .setParameter("classNo", classNo)
+                .getResultList();
+    }
+
+
 }

@@ -38,4 +38,7 @@ public interface ScheduleRepository {
     //반 일과표 조회
     List<Schedule> findDailySchedule(int centerNo, int classNo, int scheduleNo, LocalDate scheduleDate);
 
+    //반 번호로 스케줄 조회
+    List<Schedule> findByClassNo(int classNo);
+
 }

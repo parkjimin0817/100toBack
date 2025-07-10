@@ -1,6 +1,8 @@
 package com.bridge.kinder.entity;
 
+import com.bridge.kinder.enums.CommonEnums;
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -43,12 +45,12 @@ public class ClassRoom {// 반
     private Center center;
     //시설
 
-    @OneToMany(mappedBy = "classRoom", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "classRoom")
     @Builder.Default
     List<Member> members = new ArrayList<>();
     //멤버
 
-    @OneToMany(mappedBy = "classRoom", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "classRoom")
     @Builder.Default
     List<Child> childs= new ArrayList<>();
     //아동
@@ -62,5 +64,19 @@ public class ClassRoom {// 반
     @Builder.Default
     List<Board> boards = new ArrayList<>();
     //게시판
+
+    //---------------------------------------------------------------------------------------------
+
+    public void changeClassName(String newClassName) {
+        this.className = newClassName;
+    }
+
+    public void changeCapacity(int newCapacity) {
+        this.capacity = newCapacity;
+    }
+
+    public void changeClassImage(String newClassImage) {this.classImage = newClassImage; }
+
+    public void changeColor(String newColor) {this.color = newColor;}
 
 }

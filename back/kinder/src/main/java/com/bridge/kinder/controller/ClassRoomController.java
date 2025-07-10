@@ -2,6 +2,7 @@ package com.bridge.kinder.controller;
 
 import com.bridge.kinder.dto.ClassRoomDto;
 import com.bridge.kinder.dto.ClassRoomDto.HealthLogProgressResponse;
+import com.bridge.kinder.dto.CounselDto;
 import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.service.ClassRoomService;
 import lombok.RequiredArgsConstructor;
@@ -45,10 +46,14 @@ public class ClassRoomController {
 
     //반 수정하기
     @PatchMapping("/update")
-    public ResponseEntity<ClassRoomDto.Response> updateClass(@RequestParam int classNo) {
-//        return ResponseEntity.ok(classRoomService.updateClass(classNo));
-        return null;
+    public ResponseEntity<ClassRoomDto.Update> updateClass(@RequestBody ClassRoomDto.Update dto, @RequestParam int classNo) {
+        return ResponseEntity.ok(classRoomService.updateClass(dto,classNo));
     }
 
 
+    //반 삭제하기
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteClass(@RequestParam int classNo) {
+        return ResponseEntity.ok(classRoomService.deleteClass(classNo));
+    }
 }

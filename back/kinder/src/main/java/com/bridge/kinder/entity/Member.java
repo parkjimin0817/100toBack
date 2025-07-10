@@ -167,4 +167,8 @@ public class Member {// 멤버
     public void changeAddress(String newAddress) {
         this.address = newAddress;
     }
+
+    public void changeClassRoom(ClassRoom newClassRoom) {
+        this.classRoom = newClassRoom;
+    }
 }
