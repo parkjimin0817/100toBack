@@ -230,7 +230,7 @@ const DetailContent = styled.div`
 `;
 
 const Table = styled.table`
-  width: 50%;
+  /* width: 50%; */
   table-layout: fixed;
   margin: 0 auto;
   border-collapse: collapse;

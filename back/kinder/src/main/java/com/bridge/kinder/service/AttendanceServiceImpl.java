@@ -181,7 +181,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 
             if(attendance != null) {
-                System.out.println("[" + date + "] status야호: " + attendance.getStatus());
                 dto.setAttendance_no(attendance.getAttendanceNo());
                 dto.setIn_time(attendance.getInTime());
                 dto.setOut_time(attendance.getOutTime());

@@ -11,7 +11,7 @@ const ChildCard = ({ data }) => {
       {data.map((item) => {
         const { age, gender, birthday } = childInfo(item.child_resident_no);
         return (
-          <Card key={item.child_no} onClick={() => navigate('/child/detail?id=1')}>
+          <Card key={item.child_no} onClick={() => navigate(`/parent/mychild?childNo=${item.child_no}`)}>
             <ProfileDiv>
               <NameDiv> 씩씩한 {item.child_name} </NameDiv>
               <AgeDiv>

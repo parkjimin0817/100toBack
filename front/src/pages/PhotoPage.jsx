@@ -45,7 +45,7 @@ const PhotoPage = () => {
         Color={'green'}
         // 교사면 버튼 추가, 학부모면 없음.
         ButtonProps={
-          member.memberType === 'FARENT'
+          member.memberType === 'PARENT'
             ? []
             : [
                 {
@@ -59,16 +59,22 @@ const PhotoPage = () => {
       ></ContentHeader>
       {data && (
         <BoardContainer>
-          {data.content.length > 0 ? data.content.map((post, index) => (
-            <ImagePost onClick={() => handleClick(post.boardNo)} postData={post} key={index}></ImagePost>
-          ))
-          :
+          {data.content.length > 0 ? (
+            data.content.map((post, index) => (
+              <ImagePost onClick={() => handleClick(post.boardNo)} postData={post} key={index}></ImagePost>
+            ))
+          ) : (
             <div>등록된 게시글이 없습니다.</div>
-          }
+          )}
         </BoardContainer>
       )}
       {data && (
-        <Pagination currentPage={data.number + 1} totalPages={data.totalPages} onPageChange={handlePageChange} />
+        <Pagination
+          currentPage={data.number + 1} 
+          totalPages={data.totalPages} 
+          onPageChange={handlePageChange} 
+          $Color={'green'}
+        />
       )}
     </PageContainer>
   );

@@ -24,8 +24,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, CorsConfigurationSource corsConfigurationSource) throws Exception {
-        System.out.println("✅ SecurityFilterChain 생성됨");
-        System.out.println("✅ jwtTokenFilter = " + jwtTokenFilter);
         return http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)  //rest api 에선 불필요(=disable)

@@ -9,14 +9,15 @@ import { toast } from 'react-toastify';
 import api from '../../api/axios';
 
 const ChildLifeCheck = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedClassNo, setSelectedClassNo] = useState('');
-  const [classList, setClassList] = useState([]);
-  const [checklist, setChecklist] = useState([]);
-
   const member = useLoginStore((state) => state.member);
   const centerNo = member.centerNo;
   const memberType = member.memberType;
+  const classNo = member.classNo;
+
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedClassNo, setSelectedClassNo] = useState(classNo ? classNo : '');
+  const [classList, setClassList] = useState([]);
+  const [checklist, setChecklist] = useState([]);
 
   // 반 목록: 교사/시설장만
   useEffect(() => {
@@ -33,6 +34,14 @@ const ChildLifeCheck = () => {
 
     fetchClassList();
   }, [centerNo, memberType]);
+
+  useEffect(() => {
+    // 부모가 아니고, 반이 미소속인 경우 불러오지 않음.
+    if(memberType !== 'PARENT' && !selectedClassNo) return;
+
+    // 부모이거나 소속된 반이 있는 경우 바로 조회
+    handleSearch();
+  }, [])
 
   // 검색 실행
   const handleSearch = async () => {
@@ -169,6 +178,7 @@ const Wrapper = styled.div`
 
 const Content = styled.div`
   width: 100%;
+  min-height: 600px;
   display: flex;
   flex-direction: column;
 `;

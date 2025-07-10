@@ -15,4 +15,5 @@ public interface BoardRepository {
     List<Board> findByType(CommonEnums.BoardType type, int centerNo, int offset, int limit);
     long countByType(CommonEnums.BoardType type, int centerNo);
     List<Board> getRecent3Boards(int centerNo, List<BoardType> types);
+    List<Board> findByMemberNoAndType(int memberNo, BoardType type);
 }

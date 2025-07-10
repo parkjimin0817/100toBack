@@ -25,6 +25,10 @@ const CouncelSettingPage = () => {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    handleSearch();
+  }, []);
+
   const handleSearch = async () => {
     try {
       const response = await api.get(`http://localhost:8888/api/counsel`, {
@@ -105,6 +109,7 @@ const Wrapper = styled.div`
 
 const Content = styled.div`
   width: 100%;
+  min-height: 600px;
   display: flex;
   flex-direction: column;
 `;

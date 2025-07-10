@@ -1,9 +1,10 @@
-import React from 'react'
-import styled from 'styled-components'
-import defaultImg from '../../assets/img/img.png'
+import React from 'react';
+import styled from 'styled-components';
+import defaultImg from '../../assets/img/img.png';
+
+const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
 const ImagePost = ({ postData, onClick }) => {
-
   const formatDate = (isoDate) => {
     if (!isoDate) return '';
 
@@ -18,15 +19,15 @@ const ImagePost = ({ postData, onClick }) => {
 
   return (
     <ImagePostContainer onClick={onClick}>
-      <ImageContent src={postData.attachment ?? defaultImg} />
+      <ImageContent src={postData.attachment ? `${CLOUDFRONT_URL}/${postData.attachment}` : defaultImg} />
       <Title>{postData.title}</Title>
       <DescriptionBox>
         <Description>{formatDate(postData.createDate)}</Description>
         <Description>조회수 : {postData.views}</Description>
       </DescriptionBox>
     </ImagePostContainer>
-  )
-}
+  );
+};
 
 const ImagePostContainer = styled.div`
   width: 300px;
@@ -40,8 +41,7 @@ const ImageContent = styled.img`
   width: 300px;
   height: 230px;
 `;
-const Title = styled.h2`
-`;
+const Title = styled.h2``;
 const DescriptionBox = styled.div`
   width: 100%;
   display: flex;
@@ -50,4 +50,4 @@ const DescriptionBox = styled.div`
 `;
 const Description = styled.p``;
 
-export default ImagePost
+export default ImagePost;

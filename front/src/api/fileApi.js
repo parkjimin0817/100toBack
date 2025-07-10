@@ -1,16 +1,18 @@
 import api from '../api/axios';
 import { API_ENDPOINTS } from './config';
 
-export const getPresignedUrl = async (fileName, contentType, path) => {
-  const response = await api.post(API_ENDPOINTS.FILE.PRESIGNED_URL, {
-    fileName: fileName,
-    fileType: contentType,
-    path: path,
-  });
-  return {
-    presignedUrl: response.data.presigned_url,
-    changeName: response.data.change_name,
-  };
+// Presigned URL 요청
+export const getPresignedUrl = async (fileName, fileType, path) => {
+  try {
+    const { data } = await api.post(API_ENDPOINTS.FILE.PRESIGNED_URL, {
+      fileName,
+      fileType,
+      path,
+    });
+    return data;
+  } catch (error) {
+    throw new Error('Presigned URL 요청 실패: ' + error.message);
+  }
 };
 
 // S3 파일 업로드

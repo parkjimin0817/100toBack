@@ -1,5 +1,6 @@
 package com.bridge.kinder.dto;
 
+import com.bridge.kinder.dto.RecentBoardDto.Response;
 import com.bridge.kinder.entity.Board;
 import com.bridge.kinder.entity.BoardContent;
 import com.bridge.kinder.entity.Center;
@@ -23,7 +24,7 @@ public class BoardDto {
     public static class Create {
         private String title;
         private CommonEnums.BoardType type;
-        private String attachment;
+        private String fileName;
         private int centerId;
         private Integer classRoomId;
         private int memberId;
@@ -33,7 +34,7 @@ public class BoardDto {
             return Board.builder()
                     .title(this.title)
                     .type(this.type)
-                    .attachment(this.attachment)
+                    .attachment(this.fileName)
                     .center(center)
                     .classRoom(classRoom)
                     .member(member)
@@ -261,6 +262,7 @@ public class BoardDto {
                     .boardNo(board.getBoardNo())
                     .title(board.getTitle())
                     .createDate(board.getCreateDate())
+                    .attachment(board.getAttachment())
                     .views(board.getViews())
                     .type(board.getType())
                     .build();
@@ -273,10 +275,30 @@ public class BoardDto {
     @AllArgsConstructor
     @Builder
     public static class DocumentRequest {
-
         private int memberNo;
         private String title;
         private String fileUrl;
-
     }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class DocumentResponse {
+        private int board_no;
+        private LocalDateTime create_date;
+        private String title;
+        private String fileUrl;
+
+        public static DocumentResponse toDto(Board board) {
+            return DocumentResponse.builder()
+                    .board_no(board.getBoardNo())
+                    .create_date(board.getCreateDate())
+                    .title(board.getTitle())
+                    .fileUrl(board.getAttachment())
+                    .build();
+        }
+    }
+
 }

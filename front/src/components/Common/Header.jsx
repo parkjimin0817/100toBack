@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import logo from '../../assets/img/KinderBridge.png';
-import userProfile from '../../assets/img/userProfile.png';
+import userProfile from '../../assets/defaultimg.png';
 import { IoCallOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import useLoginStore from '../../store/loginStore';
 import AttendanceButton from './AttendanceButton';
 import useAttendanceStore from '../../store/attendanceStore';
+
+const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
 const Header = ({ member }) => {
   //헤더 정보
@@ -81,7 +83,10 @@ const Header = ({ member }) => {
       <HeaderRightBox>
         {type === '교사' && <AttendanceButton member={member} />}
         <UserProfile ref={dropdownRef} onClick={() => setIsOpen(!isOpen)}>
-          <Img src={userProfile} alt="사용자 프로필" />
+          <Img
+            src={member.memberProfile ? `${CLOUDFRONT_URL}/${member.memberProfile}` : userProfile}
+            alt="사용자 프로필"
+          />
           <UserNameAndRole>
             <p>{name}</p>
             <p>{type}</p>
@@ -171,6 +176,9 @@ const DropdownItem = styled.div`
 
 const Img = styled.img`
   cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: ${({ theme }) => theme.borderRadius.full};
 `;
 
 export default Header;

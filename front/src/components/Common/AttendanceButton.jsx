@@ -37,6 +37,10 @@ const AttendanceButton = ({ member }) => {
   //퇴근 기록하기
   const handleWorkOut = async () => {
     try {
+      // 퇴근 확인 메세지 출력
+      const isConfirmed = window.confirm("퇴근하시겠습니까?");
+      if (!isConfirmed) return;
+
       const data = await attendanceService.workOut(memberNo);
       setAttendance(data);
       toast.success('퇴근 완료되었습니다.');

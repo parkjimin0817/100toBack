@@ -71,6 +71,7 @@ public class MemberDto {
         private String member_id;
         private LocalDate member_birth;
         private String member_phone;
+        private String member_profile;
         private CommonEnums.MemberType member_type;
         private CommonEnums.AdmissionStatus status;
 
@@ -89,6 +90,7 @@ public class MemberDto {
                     .member_id(member.getMemberId())
                     .member_birth(member.getMemberBirth())
                     .member_phone(member.getMemberPhone())
+                    .member_profile(member.getMemberProfile())
                     .member_type(member.getMemberType())
                     .status(member.getStatus())
                     .center_no(member.getCenter().getCenterNo())
@@ -277,6 +279,7 @@ public class MemberDto {
         private String member_name;
         private LocalDate member_birth;
         private String address;
+        private String member_phone;
         private CommonEnums.MemberType member_type;
         private String member_profile;
         private String center_name;
@@ -290,6 +293,7 @@ public class MemberDto {
                     .member_name(member.getMemberName())
                     .member_birth(member.getMemberBirth())
                     .address(member.getAddress())
+                    .member_phone(member.getMemberPhone())
                     .member_type(member.getMemberType())
                     .member_profile(member.getMemberProfile())
                     .center_name(center.getCenterName())

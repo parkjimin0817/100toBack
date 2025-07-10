@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import BoardEditor from '../components/Board/BoardEditor';
 import ContentHeader from '../components/Common/ContentHeader';
@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import useLoginStore from '../store/loginStore';
 import { boardService } from '../api/boards';
 import { useBlockNavigation } from '../hook/useBlockNavigation';
-import api from '../api/axios';
+import { getPresignedUrl, uploadFileToS3 } from '../api/fileApi';
 
 const categoryName = {
   family_notice: '가정통신문',
@@ -87,55 +87,75 @@ const BoardWritePage = () => {
       return;
     }
 
-    const formData = new FormData();
+    //S3 게시판 첨부파일 저장 위치
+    const path = `board/${category}/`;
 
-    // 📦 JSON으로 직렬화한 게시글 본문 데이터
-    const payload = {
-      title: formState.title,
-      type: formState.type,
-      classRoomId: formState.classRoomNo,
-      centerId: formState.centerId,
-      memberId: formState.memberId,
-      contents: formState.contents.map((item, index) => ({
-        type: item.type,
-        contentText: item.contentText || null,
-        contentFileKey: item.contentFile ? `contentFile_${index}` : null,
-        sortOrder: index,
-      })),
-    };
+    //S3 게시판 컨텐츠 파일 저장 위치
+    const detailPath = 'board/content/';
 
-    // 👉 JSON 문자열로 보내기
-    formData.append('data', new Blob([JSON.stringify(payload)], { type: 'application/json' }));
+    //컨텐츠 부분에 있는 파일들
+    const filterData = formState.contents.filter((item) => item.type === 'IMG');
 
-    // 📁 첨부된 메인 파일이 있다면
-    if (formState.file) {
-      formData.append('file', formState.file);
-    }
+    //첨부파일
+    const otherFile = formState.file;
 
-    // 📁 contents 내부 이미지 파일들
-    formState.contents.forEach((item) => {
-      if (item.type === 'IMG' && item.contentFile) {
-        formData.append(`contentFiles`, item.contentFile);
+    // 1. Presigned URL 요청 [첨부파일]
+    const presigned = await getPresignedUrl(otherFile.name, otherFile.type, path);
+
+    console.log(presigned);
+
+    // 2. S3에 업로드 [첨부파일]
+    await uploadFileToS3(presigned.presignedUrl, otherFile);
+
+    // 1. Presigned URL 요청 [컨텐츠 부분에 있는 파일]
+    const presignedResults = await Promise.all(
+      filterData.map((item) => getPresignedUrl(item.contentFile.name, item.contentFile.type, detailPath))
+    );
+
+    // 2. S3에 업로드 [컨텐츠 부분에 있는 파일]
+    await Promise.all(
+      presignedResults.map((presigned, index) => uploadFileToS3(presigned.presignedUrl, filterData[index].contentFile))
+    );
+
+    let imgFileIndex = 0;
+
+    const contents = formState.contents.map((item, index) => {
+      if (item.type === 'IMG') {
+        const changeName = presignedResults[imgFileIndex]?.changeName;
+        imgFileIndex += 1;
+
+        return {
+          type: item.type, // "IMG"
+          contentText: null,
+          contentFile: changeName, // "board/content/xxx.jpg"
+          contentFileKey: `contentFile_${index}`,
+        };
+      } else {
+        return {
+          type: item.type, // "TEXT"
+          contentText: item.contentText,
+          contentFile: null,
+          contentFileKey: null,
+        };
       }
     });
 
-    console.log(formState);
+    const payload = {
+      title: formState.title,
+      type: formState.type,
+      fileName: presigned?.changeName || null,
+      centerId: formState.centerId,
+      classRoomId: formState.classRoomNo,
+      memberId: formState.memberId,
+      contents: contents,
+    };
 
-    // // console.log("전송할 데이터:", payload);
-    // const path = 'board-img/';
-    // // 1. Presigned URL 발급 (path와 fileName 분리해서 전송)
-    // const { presignedUrl, changeName } = await getUploadUrl(formState.file.name, formState.file.type, path);
-    // console.log(formState.file.name);
-    // console.log(formState.file.type);
-    // console.log(path);
+    // 게시판 저장
+    const boardNo = await boardService.createBoard(payload);
+    if (!boardNo) {
+      throw new Error('게시판 생성 실패했습니다.');
+    }
 
-    // // 2. S3에 파일 업로드
-    // await uploadFileToS3(presignedUrl, formState.file);
-
-    // api 전송 예시
-    await api.post("http://localhost:8888/api/boards", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
     allowNavigation();
     navigate(`/${category}/list`);
   };
@@ -198,7 +218,7 @@ const BoardWritePage = () => {
     <PageContainer onSubmit={handleSubmit} onChange={() => setIsDirty(true)}>
       <ContentHeader
         Title={categoryName[category]}
-        Color={'green'}
+        Color={member.memberType === 'PARENT' ? 'purple' : 'green'}
         ButtonProps={[{ Title: '작성하기', type: 'submit' }, { Title: '뒤로가기', func: () => handleGoBack() }, ,]}
       ></ContentHeader>
 

@@ -202,7 +202,8 @@ const MemberType = styled.span`
   color: ${({ theme }) => theme.colors.blue};
   transition: color 0.3s;
 
-  border-bottom: ${({ isActive, theme }) => (isActive ? `3px solid ${theme.colors.blue}` : 'none')};
+  /* border-bottom: ${({ isActive, theme }) => (isActive ? `3px solid ${theme.colors.blue}` : 'none')}; */
+  border-bottom: ${({ isActive, theme }) => (isActive ? `3px solid ${theme.colors.blue}` : `3px solid transparent`)};
 
   &:hover {
     border-bottom: 2px solid ${({ theme }) => theme.colors.blue};

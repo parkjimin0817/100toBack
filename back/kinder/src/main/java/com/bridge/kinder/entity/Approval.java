@@ -21,7 +21,7 @@ public class Approval {// 승인, 거부 신텅
     private int approvalNo;
     //승인요청 번호
 
-    @Column(name = "APPROVAL_REQUEST_DATE", nullable = false)
+    @Column(name = "APPROVAL_REQUEST_DATE", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime approvalRequestDate;
     //승인요청일
 

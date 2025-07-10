@@ -10,6 +10,7 @@ import useLoginStore from '../../../store/loginStore';
 import { childService } from '../../../api/child';
 
 const ParentMainPage = () => {
+  const navigate = useNavigate();
   const { member } = useLoginStore();
   const centerNo = member?.centerNo;
   const memberNo = member?.memberNo;
@@ -49,7 +50,14 @@ const ParentMainPage = () => {
         <ContentHeader
           Title={'공지사항'}
           Color={'yellow'}
-          ButtonProps={[{ Title: '더보기', func: () => alert('게시판가야함') }]}
+          ButtonProps={[
+            {
+              Title: '더보기',
+              func: () => {
+                navigate('/notice/list');
+              },
+            },
+          ]}
         />
         <RecentBoards>
           <RecentBoard centerNo={centerNo} />
@@ -133,7 +141,7 @@ const RecentBoards = styled.div`
   height: 70%;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
   margin: 0 auto;
   margin-top: ${({ theme }) => theme.spacing[4]};
+  gap: 20px;
 `;

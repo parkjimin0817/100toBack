@@ -34,7 +34,7 @@ const RecentBoard = ({ centerNo }) => {
                 {year}.{month}
               </MonthDiv>
             </DateDiv>
-            <ContentWrapper onClick={() => navigate('/familycommunity/list')}>
+            <ContentWrapper onClick={() => navigate(`/notice/${item.board_no}`)}>
               <TitleDiv>
                 [{TYPE[item.type]}] {item.title}
               </TitleDiv>

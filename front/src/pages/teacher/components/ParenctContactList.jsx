@@ -46,8 +46,8 @@ const ParenctContactList = ({ selectedClass, searchKeyword, value, status }) => 
                   {/*여기 누르면 아동 상세보기 페이지로 이동하게 하기 */}
                 </Td>
                 <Dvitd>
-                  <div>아버지: {data.f_parent_phone}</div>
-                  <div>어머니: {data.m_parent_phone}</div>
+                  <div>{data.f_parent_name}(부): {data.f_parent_phone}</div>
+                  <div>{data.m_parent_name}(모): {data.m_parent_phone}</div>
                 </Dvitd>
               </Tr>
             ))

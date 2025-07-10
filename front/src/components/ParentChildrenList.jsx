@@ -3,14 +3,38 @@ import styled from 'styled-components';
 import ChildImg from '../assets/Child.png';
 import api from '../api/axios';
 import { toast } from 'react-toastify';
+import { useSearchParams } from 'react-router-dom';
 
 const ParentChildrenList = ({ childFilter, onChildClick }) => {
+  // url 파라미터로 아동의 아이디를 받아옴.
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const childNo = searchParams.get('childNo') ?? '';
+
+  const changeChild = (newChild) => {
+    // 기존 파라미터 유지 + page만 교체
+    searchParams.set('childNo', newChild.child_no.toString());
+    setSearchParams(searchParams); // 페이지 이동 없이 URL만 바뀜
+    onChildClick(newChild);
+  };
+
   const [childList, setChildList] = useState([]);
 
   const fetchChildren = useCallback(async () => {
     try {
       const response = await api.get(`http://localhost:8888/api/childs/parentChild?memberNo=${childFilter}`);
+      console.log(response.data);
       setChildList(response.data);
+      if(childNo) {
+        const matchedChild = response.data.find(
+          (child) => child.child_no === Number(childNo)
+        );
+  
+        onChildClick(matchedChild ?? null);
+      } else {
+        const firstChild = response.data.length > 0 ? response.data[0] : null;
+        onChildClick(firstChild ?? null);
+      }
     } catch (error) {
       toast.error('아동 목록 조회 실패:', error);
     }
@@ -34,7 +58,7 @@ const ParentChildrenList = ({ childFilter, onChildClick }) => {
     <Container>
       <CardLine>
         {childList.map((child) => (
-          <Card key={child.child_no} onClick={() => onChildClick(child)}>
+          <Card key={child.child_no} onClick={() => changeChild(child)}>
             <PictureBox>
               <ChildPic src={ChildImg} alt="아이사진" />
             </PictureBox>

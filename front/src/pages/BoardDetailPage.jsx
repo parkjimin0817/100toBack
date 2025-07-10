@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import BoardDetail from '../components/Board/BoardDetail';
 import { boardService } from '../api/boards';
 import useLoginStore from '../store/loginStore';
+import { toast } from 'react-toastify';
 
 const categoryName = {
   family_notice: '가정통신문',
@@ -37,7 +38,8 @@ const BoardDetailPage = () => {
         // alert("게시글 조회 성공");
       } catch (error) {
         console.error('게시글 조회 실패 : ', error);
-        alert('게시글 조회 실패');
+        // alert('게시글 조회 실패');
+        toast.error('게시글 조회 실패');
       }
     };
     getPost();
@@ -45,12 +47,17 @@ const BoardDetailPage = () => {
 
   const handleDelete = async () => {
     try {
+      const isConfirmed = window.confirm("확인 버튼을 누르면 게시물이 삭제됩니다. 삭제하시겠습니까?");
+      if (!isConfirmed) return;
+
       const responseData = await boardService.boardDelete(boardNo);
       console.log(responseData);
+      toast.error('게시글 삭제 성공');
       handleGoBack();
     } catch (error) {
       console.error('게시글 삭제 실패 : ', error);
-      alert('게시글 삭제 실패');
+      // alert('게시글 삭제 실패');
+      toast.error('게시글 삭제 실패');
     }
   };
 
@@ -60,7 +67,7 @@ const BoardDetailPage = () => {
     <PageContainer>
       <ContentHeader
         Title={categoryName[category]}
-        Color={'green'}
+        Color={member.memberType === 'PARENT' ? 'purple' : 'green'}
         ButtonProps={
           boardContent?.memberNo === member.memberNo
             ? [

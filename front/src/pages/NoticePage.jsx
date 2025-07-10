@@ -99,7 +99,12 @@ const NoticePage = () => {
         </BoardContainer>
       )}
       {data && (
-        <Pagination currentPage={data.number + 1} totalPages={data.totalPages} onPageChange={handlePageChange} />
+        <Pagination 
+          currentPage={data.number + 1} 
+          totalPages={data.totalPages} 
+          onPageChange={handlePageChange} 
+          Color={member.memberType === 'PARENT' ? 'purple' : 'green'}
+        />
       )}
     </PageContainer>
   );

@@ -9,6 +9,7 @@ import TeacherMainHealth from './components/TeacherMainHealth';
 import RecentBoard from '../common/ParentMain/components/RecentBoard';
 import MainSchedule from '../common/ParentMain/components/MainSchedule';
 import useLoginStore from '../../store/loginStore';
+import { useNavigate } from 'react-router-dom';
 
 const data = [
   { name: '박지민', age: '5', time: '10:00~12:00', type: '채팅' },
@@ -28,6 +29,7 @@ const TeacherMainPage = () => {
   const [activeCounselTab, setActiveCounselTab] = useState('상담 대기');
   const { member } = useLoginStore();
   const centerNo = member?.centerNo;
+  const navigate = useNavigate();
 
   useEffect(() => {}, [member]);
 
@@ -124,7 +126,14 @@ const TeacherMainPage = () => {
         <ContentHeader
           Title={'공지사항'}
           Color={'yellow'}
-          ButtonProps={[{ Title: '더보기', func: () => alert('게시판가야함') }]}
+          ButtonProps={[
+            {
+              Title: '더보기',
+              func: () => {
+                navigate('/notice/list');
+              },
+            },
+          ]}
         />
         <RecentBoards>
           <RecentBoard centerNo={centerNo} />
@@ -274,9 +283,10 @@ const RecentBoards = styled.div`
   height: 70%;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  /* justify-content: space-around; */
   margin: 0 auto;
   margin-top: ${({ theme }) => theme.spacing[4]};
+  gap: 20px;
 `;
 
 const AttendanceBox = styled.div`

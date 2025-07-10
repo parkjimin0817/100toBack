@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { classService } from '../../../api/class';
+import { useNavigate } from 'react-router-dom';
 
 const TeacherMainAttendance = ({ centerNo }) => {
   const [rate, setRate] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!centerNo) return;
@@ -21,7 +23,7 @@ const TeacherMainAttendance = ({ centerNo }) => {
       </AttendanceHeaderRow>
       <AttendanceGrid>
         {rate.map((item) => (
-          <MainAttendanceCard key={item.class_no}>
+          <MainAttendanceCard key={item.class_no} onClick={() => navigate(`/childattendance/${item.class_no}`)}>
             <MainAttendanceClass>{item.class_name}반 출석률</MainAttendanceClass>
             <MainAttendanceEmoji>{item.icon}🙋</MainAttendanceEmoji>
             <MainAttendanceRate>{item.attendance_rate}%</MainAttendanceRate>

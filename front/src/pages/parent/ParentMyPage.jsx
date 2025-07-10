@@ -3,7 +3,6 @@ import ContentHeader from '../../components/Common/ContentHeader';
 import styled from 'styled-components';
 import MyPageProfileImage from '../manager/components/MyPageProfileImage';
 import MyPageMyInfo from './components/MyPageMyInfo';
-import MyPageCenterInfo from '../manager/components/MyPageCenterInfo';
 import { useNavigate } from 'react-router-dom';
 import ChildPicture from './components/childpic.png';
 import AddImage from './components/addsquare.png';
@@ -13,91 +12,113 @@ import { childService } from '../../api/child';
 import { childInfo } from '../../api/childInfo';
 import api from '../../api/axios.js';
 import { toast } from 'react-toastify';
-
 import ChildAddModal from './components/childAddModal.jsx';
 import ChildBringModal from './components/childBringModal.jsx';
+import MyPageCenterInfo from '../manager/components/MyPageCenterInfo.jsx';
+
+const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
 const ParentMyPage = () => {
-  const [isEditMode, setIsEditMode] = useState(false);
   const member = useLoginStore((state) => state.member);
   const setMember = useLoginStore((state) => state.setMember);
-  const [editableInfo, setEditableInfo] = useState({
-    memberName: member.memberName,
-    memberBirth: member.memberBirth,
-    memberPhone: member.memberPhone,
-  });
-  const [childList, setChildList] = useState([]);
   const navigate = useNavigate();
+  const isAuthenticated = useLoginStore((state) => state.isAuthenticated);
 
-  const fetchChildList = async () => {
-    try {
-      const result = await childService.getParentChildList(member.memberNo);
-      setChildList(result);
-    } catch (error) {
-      console.error('자녀 목록을 가져오는 데 실패했습니다:', error);
+  const [editableInfo, setEditableInfo] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const [childList, setChildList] = useState([]);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isBringModalOpen, setIsBringModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isAuthenticated || !member) {
+      toast.error('로그인이 필요합니다');
+      navigate('/');
+      return;
+    }
+
+    const fetchMyInfo = async () => {
+      try {
+        const url = `/api/members/mypage?id=${member.memberNo}`;
+        const { data } = await api.get(url);
+
+        setEditableInfo({
+          memberName: data.member_name,
+          memberBirth: data.member_birth,
+          address: data.address,
+          memberPhone: data.member_phone,
+          memberProfile: data.member_profile,
+          memberType: data.member_type,
+        });
+      } catch (error) {
+        toast.error('불러오기 실패', error);
+      }
+    };
+    fetchMyInfo();
+  }, [isAuthenticated, member, navigate]);
+
+  const handleProfileUpdate = (newProfileName) => {
+    setEditableInfo((prev) => ({
+      ...prev,
+      memberProfile: newProfileName,
+    }));
+  };
+
+  const handleSave = async () => {
+    if (!isEditing) {
+      setIsEditing(true);
+    } else {
+      try {
+        await api.patch(`/api/members/mypage/parent`, {
+          member_no: member.memberNo,
+          member_name: editableInfo.memberName,
+          member_birth: editableInfo.memberBirth,
+          member_phone: editableInfo.memberPhone,
+          address: editableInfo.address,
+          member_profile: editableInfo.memberProfile,
+        });
+        setMember({
+          ...member,
+          memberName: editableInfo.memberName,
+          memberBirth: editableInfo.memberBirth,
+          memberPhone: editableInfo.memberPhone,
+          address: editableInfo.address,
+          memberProfile: editableInfo.memberProfile,
+        });
+        toast.success('수정이 성공적으로 완료되었습니다.');
+        setIsEditing(false);
+      } catch (e) {
+        toast.error('수정 실패: ' + e.message);
+      }
     }
   };
 
+  //child
   useEffect(() => {
+    if (!member) return;
+    const fetchChildList = async () => {
+      try {
+        const result = await childService.getParentChildList(member.memberNo);
+        setChildList(result);
+      } catch (error) {
+        console.error('자녀 목록을 가져오는 데 실패했습니다:', error);
+      }
+    };
+    fetchChildList();
     window.refreshChildList = fetchChildList;
     return () => {
       delete window.refreshChildList;
     };
-  }, []);
+  }, [member]);
 
-  //info 수정
-  const handleEditSubmit = async () => {
-    try {
-      const { data } = await api.patch(`/api/members/mypage/parent`, {
-        member_no: member.memberNo,
-        member_name: editableInfo.memberName,
-        member_birth: editableInfo.memberBirth,
-        member_phone: editableInfo.memberPhone,
-      });
-
-      setMember({
-        ...member,
-        memberName: editableInfo.memberName,
-        memberBirth: editableInfo.memberBirth,
-        memberPhone: editableInfo.memberPhone,
-      });
-
-      setIsEditMode(false);
-    } catch (e) {
-      toast.error('수정 실패: ' + e.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchChildList();
-    handleEditSubmit();
-  }, []);
-
-  const handleChange = (key, value) => {
-    setEditableInfo((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const handleEditClick = () => {
-    if (!isEditMode) {
-      setEditableInfo({
-        memberNo: member.memberNo,
-        memberName: member.memberName,
-        memberBirth: member.memberBirth,
-        memberPhone: member.memberPhone,
-      });
-      setIsEditMode(true);
-    } else {
-      handleEditSubmit();
-    }
-  };
-
-  //modal
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isBringModalOpen, setIsBringModalOpen] = useState(false);
+  //child-modal
   const openAddModal = () => setIsAddModalOpen(true);
   const closeAddModal = () => setIsAddModalOpen(false);
   const openBringModal = () => setIsBringModalOpen(true);
   const closeBringModal = () => setIsBringModalOpen(false);
+
+  if (!member || !editableInfo) return null;
 
   return (
     <Content>
@@ -105,23 +126,27 @@ const ParentMyPage = () => {
         Title={'마이페이지'}
         Color={'orange'}
         FontSize="xl"
-        ButtonProps={[{ Title: isEditMode ? '저장하기' : '수정하기', func: handleEditClick }]}
+        ButtonProps={[{ Title: isEditing ? '수정완료' : '수정하기', func: handleSave }]}
       />
       <Wrapper>
         <InfoBox>
           <ProfileImgBox>
-            <MyPageProfileImage isEditMode={isEditMode} />
+            <MyPageProfileImage
+              memberProfile={editableInfo.memberProfile}
+              memberType={editableInfo.memberType}
+              isEditMode={isEditing}
+              onProfileUpdate={handleProfileUpdate}
+            />
           </ProfileImgBox>
           <MyInfoBox>
-            <MyPageMyInfo isEditMode={isEditMode} editableInfo={editableInfo} onChange={handleChange} />
+            <MyPageMyInfo info={editableInfo} isEditable={isEditing} onChange={setEditableInfo} />
           </MyInfoBox>
           <CenterInfoBox>
-            <MyPageCenterInfo isEditMode={isEditMode} />
+            <MyPageCenterInfo />
           </CenterInfoBox>
         </InfoBox>
         <MenuBox>
           {childList.map((data) => {
-            console.log(data);
             const { age, gender, birthday } = childInfo(data.child_resident_no);
             return (
               <Card key={data.child_no} onClick={() => navigate(`/child/detail/${data.child_no}`)}>
@@ -133,7 +158,10 @@ const ParentMyPage = () => {
                   <BirthDiv>생일 {birthday}</BirthDiv>
                 </ProfileDiv>
                 <ImgDiv>
-                  <Img src={data.child_profile || ChildPicture} alt="아이 이미지" />
+                  <Img
+                    src={data.child_profile ? `${CLOUDFRONT_URL}/${data.child_profile}` : ChildPicture}
+                    alt="아이 이미지"
+                  />
                 </ImgDiv>
               </Card>
             );
@@ -184,23 +212,22 @@ const InfoBox = styled.div`
 const ProfileImgBox = styled.div`
   width: 20%;
   min-width: 170px;
-  margin-right: 35px;
 `;
 
 const MyInfoBox = styled.div`
   width: 30%;
-  min-width: 300px;
+  min-width: 400px;
 `;
 
 const CenterInfoBox = styled.div`
-  width: 50%;
-  min-width: 500px;
+  width: 30%;
+  min-width: 400px;
 `;
 
 const MenuBox = styled.div`
   padding: 20px;
   width: 100%;
-  height: 100%;
+  height: 70%;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;

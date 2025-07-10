@@ -1,5 +1,6 @@
 package com.bridge.kinder.controller;
 
+import com.bridge.kinder.auth.JwtTokenProvider;
 import com.bridge.kinder.dto.BoardDto;
 import com.bridge.kinder.dto.RecentBoardDto;
 import com.bridge.kinder.enums.CommonEnums;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,17 +26,14 @@ import static com.bridge.kinder.enums.CommonEnums.BoardType.*;
 public class BoardController {
 
     private final BoardService boardService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     /**
      * 게시글 생성
      */
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Integer> createBoard(
-            @RequestPart("data") BoardDto.Create dto,
-            @RequestPart(value = "file", required = false) MultipartFile file,
-            @RequestPart(required = false) List<MultipartFile> contentFiles  // contentFiles
-    ) throws IOException {
-        int boardNo = boardService.createBoard(dto, file, contentFiles);
+    @PostMapping("/create")
+    public ResponseEntity<Integer> createBoard(@RequestBody BoardDto.Create dto) throws IOException {
+        int boardNo = boardService.createBoard(dto);
         return ResponseEntity.ok(boardNo);
     }
 
@@ -134,8 +133,18 @@ public class BoardController {
 
     //개인 서류 업로드
     @PostMapping("/documents")
-    public ResponseEntity<Integer> createDocument(@ModelAttribute BoardDto.DocumentRequest request) {
+    public ResponseEntity<Integer> createDocument(@RequestBody  BoardDto.DocumentRequest request) {
         return ResponseEntity.ok(boardService.createDocument(request));
     }
+
+    //개인 서류 목록 불러오기
+    @GetMapping("/documents/list")
+    public ResponseEntity<List<BoardDto.DocumentResponse>> getDocuments() {
+        String memberId = jwtTokenProvider.getMemberIdFromToken();
+        return ResponseEntity.ok(boardService.getDocuments(memberId));
+    }
+
+    //개인 서류 최근 열람 목록
+    
 
 }
