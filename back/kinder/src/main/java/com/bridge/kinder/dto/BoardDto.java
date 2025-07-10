@@ -147,6 +147,7 @@ public class BoardDto {
         private LocalDateTime createDate; // 작성일
         private String memberName;      // 작성자 이름
         private String attachment;      // 첨부파일 경로 또는 이름
+        private List<BoardContentDto.Detail> boardContents;
 
         public static NoticeBoardDto fromEntity(Board board) {
             return NoticeBoardDto.builder()
@@ -157,6 +158,11 @@ public class BoardDto {
                     .createDate(board.getCreateDate())
                     .memberName(board.getMember() != null ? board.getMember().getMemberName() : null)
                     .attachment(board.getAttachment())
+                    .boardContents(
+                            board.getBoardContents().stream()
+                                    .map(BoardContentDto.Detail::fromEntity)
+                                    .collect(Collectors.toList())
+                    )
                     .build();
         }
     }
@@ -174,6 +180,8 @@ public class BoardDto {
         private LocalDateTime createDate;    // 작성일
         private int views;                   // 조회수
         private CommonEnums.BoardType type;  // 게시물 타입
+        private List<BoardContentDto.Detail> boardContents;
+
 
         public static NoteBoardDto fromEntity(Board board) {
             return NoteBoardDto.builder()
@@ -183,6 +191,11 @@ public class BoardDto {
                     .createDate(board.getCreateDate())
                     .views(board.getViews())
                     .type(board.getType())
+                    .boardContents(
+                            board.getBoardContents().stream()
+                                    .map(BoardContentDto.Detail::fromEntity)
+                                    .collect(Collectors.toList())
+                    )
                     .build();
         }
     }
@@ -203,6 +216,8 @@ public class BoardDto {
         private LocalDateTime createDate;     // 작성일
         private int views;                    // 조회수
         private CommonEnums.BoardType type;   // 게시물 타입
+        private List<BoardContentDto.Detail> boardContents;
+
 
         public static FamilyNoticeDto fromEntity(Board board) {
             return FamilyNoticeDto.builder()
@@ -215,6 +230,11 @@ public class BoardDto {
                     .createDate(board.getCreateDate())
                     .views(board.getViews())
                     .type(board.getType())
+                    .boardContents(
+                            board.getBoardContents().stream()
+                                    .map(BoardContentDto.Detail::fromEntity)
+                                    .collect(Collectors.toList())
+                    )
                     .build();
         }
     }
@@ -232,6 +252,7 @@ public class BoardDto {
         private String attachment;           // 첨부 파일
         private int views;                   // 조회수
         private CommonEnums.BoardType type;  // 게시물 타입
+        private List<BoardContentDto.Detail> boardContents;
 
         public static PhotoBoardDto fromEntity(Board board) {
             return PhotoBoardDto.builder()
@@ -240,6 +261,11 @@ public class BoardDto {
                     .createDate(board.getCreateDate())
                     .views(board.getViews())
                     .type(board.getType())
+                    .boardContents(
+                            board.getBoardContents().stream()
+                                    .map(BoardContentDto.Detail::fromEntity)
+                                    .collect(Collectors.toList())
+                    )
                     .build();
         }
     }
@@ -256,6 +282,7 @@ public class BoardDto {
         private String attachment;           // 첨부 파일
         private int views;                   // 조회수
         private CommonEnums.BoardType type;  // 게시물 타입
+        private List<BoardContentDto.Detail> boardContents;
 
         public static MealPlanBoardDto fromEntity(Board board) {
             return MealPlanBoardDto.builder()
@@ -265,6 +292,11 @@ public class BoardDto {
                     .attachment(board.getAttachment())
                     .views(board.getViews())
                     .type(board.getType())
+                    .boardContents(
+                            board.getBoardContents().stream()
+                                    .map(BoardContentDto.Detail::fromEntity)
+                                    .collect(Collectors.toList())
+                    )
                     .build();
         }
     }
