@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ClassRoomCard from '../../components/ClassRoomCard';
+import ClassRoomList from '../../components/ClassRoomList';
 import ContentHeader from '../../components/Common/ContentHeader';
 import styled from 'styled-components';
 import useLoginStore from '../../store/loginStore';
@@ -7,6 +7,7 @@ import { classService } from '../../api/class';
 import { ImInfo } from 'react-icons/im';
 import { BounceLoader } from 'react-spinners';
 import { ErrorDiv, Hint, NoneDiv } from '../../styles/Common/Container';
+import { useNavigate } from 'react-router-dom';
 
 //출석 체크 시 반별 페이지(모든 반이 나옴)
 const AttendanceClassList = () => {
@@ -15,6 +16,7 @@ const AttendanceClassList = () => {
   const [classrooms, setClassrooms] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const selectClassRoom = async () => {
     try {
@@ -67,7 +69,7 @@ const AttendanceClassList = () => {
             <ImInfo />
             해당 반을 선택하시면 아동 출결 목록이 나옵니다.
           </Hint>
-          <ClassRoomCard classrooms={classrooms} address={'/childattendance'} />
+          <ClassRoomList classrooms={classrooms} clickEventFunc={(no) => navigate(`/childattendance/${no}`)} />
         </Div>
       )}
     </Content>
