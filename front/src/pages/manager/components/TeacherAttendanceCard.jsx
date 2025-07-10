@@ -24,8 +24,6 @@ const TeacherAttendanceCard = ({
   //teacher의 memberNo, centerNo
   const memberNo = teacher?.member_no;
   const centerNo = teacher?.center_no;
-  console.log('뭐들어있지:', teacher);
-
   //출퇴근 시간
   const inTime = attendance?.inTime
     ? new Date(attendance.inTime).toLocaleTimeString('ko-KR', {
