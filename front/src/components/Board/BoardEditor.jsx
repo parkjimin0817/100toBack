@@ -4,6 +4,8 @@ import ImageInputBlock from './ImageInputBlock';
 import SimpleEditor from './TextInputBlock copy';
 import styled from 'styled-components';
 import { FaMinus, FaPlus } from 'react-icons/fa';
+import { IoDocumentText } from "react-icons/io5";
+import { FaImage } from "react-icons/fa6";
 import { classService } from '../../api/class';
 
 const BoardEditor = ({ category, formState, updateFormField, addBlock, updateBlock, selectBlock, deleteBlock }) => {
@@ -86,10 +88,10 @@ const BoardEditor = ({ category, formState, updateFormField, addBlock, updateBlo
               {block.type === 'default' ? (
                 <ButtonBox>
                   <AddBlockButton type="button" onClick={() => selectBlock('TEXT', block.boardContentNo)}>
-                    텍스트 추가
+                    <IoDocumentText />
                   </AddBlockButton>
                   <AddBlockButton type="button" onClick={() => selectBlock('IMG', block.boardContentNo)}>
-                    이미지 추가
+                    <FaImage />
                   </AddBlockButton>
                   <AddBlockButton type="button" onClick={() => deleteBlock(block.boardContentNo)}>
                     <FaMinus></FaMinus>
@@ -116,9 +118,11 @@ const BoardEditor = ({ category, formState, updateFormField, addBlock, updateBlo
           {hasDefaultBlock(formState?.contents) ? (
             <></>
           ) : (
-            <AddBlockButton type="button" onClick={() => addBlock('default')}>
-              <FaPlus></FaPlus>
-            </AddBlockButton>
+            <BlockButtonBox>
+              <AddBlockButton type="button" onClick={() => addBlock('default')}>
+                <FaPlus></FaPlus>
+              </AddBlockButton>
+            </BlockButtonBox>
           )}
         </div>
 
@@ -158,13 +162,32 @@ const ButtonBox = styled.div`
   justify-content: center;
   gap: 10px;
 `;
+
+const BlockButtonBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const AddBlockButton = styled.button`
-  width: 80px;
-  height: 80px;
+  width: 50px;
+  height: 50px;
   border-radius: 5px;
-  border: 1px solid #bebebe;
+  padding: 15px;
+  /* border: 1px solid #bebebe; */
   margin-top: 1rem;
   margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: ${({ theme }) => theme.colors.green};
+  color: white;
+
+  & > svg {
+    width: 100%;
+    height: 100%;
+  }
 `;
 const Select = styled.select`
   flex: 1;

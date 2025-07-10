@@ -2,18 +2,20 @@ import React, { useEffect, useState } from 'react';
 
 import sun from '../../assets/img/sun.png';
 import ContentHeader from '../../components/Common/ContentHeader';
-import ClassRoomCard from '../../components/ClassRoomCard';
+import ClassRoomList from '../../components/ClassRoomList';
 import styled from 'styled-components';
 import useLoginStore from '../../store/loginStore';
 import { classService } from '../../api/class';
 import { ImInfo } from 'react-icons/im';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 //일과표 반별 리스트 페이지(모든 반이 나옴)
 const CouncelClassList = () => {
   const { member } = useLoginStore();
   const centerNo = member?.centerNo;
   const [classrooms, setClassrooms] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!member) {
@@ -34,7 +36,7 @@ const CouncelClassList = () => {
           <ImInfo />
           반을 선택하시면 해당 반의 상담일정을 관리하실 수 있습니다.
         </Hint>
-        <ClassRoomCard classrooms={classrooms} address={'/councel/detail'} />
+        <ClassRoomList classrooms={classrooms} clickEventFunc={(no) => navigate(`/councel/detail/${no}`)} />
       </Div>
     </Content>
   );
