@@ -65,30 +65,28 @@ export const boardService = {
     }
   },
 
-  uploadDoc: async (formData) => {
+  uploadDoc: async (memberNo, title, selectedFile) => {
     try {
       let fileUrl = null;
-      const rawFile = formData.get('file'); //폼데이터라 이렇게 해야됨
 
-      if (rawFile) {
-        const file = rawFile instanceof FileList || Array.isArray(rawFile) ? rawFile[0] : rawFile;
+      if (selectedFile instanceof File) {
+        const path = 'board/private_doc/';
 
-        if (file instanceof File) {
-          let path = '';
-          path = 'board/private_doc/';
+        const presignedData = await getPresignedUrl(selectedFile.name, selectedFile.type, path);
 
-          const presignedData = await getPresignedUrl(file.name, file.type, path);
+        await uploadFileToS3(presignedData.presigned_url, selectedFile);
 
-          await uploadFileToS3(presignedData.presigned_url, file);
-
-          fileUrl = presignedData.change_name;
-
-          formData.append('fileUrl', fileUrl);
-          formData.delete('file');
-        }
+        fileUrl = presignedData.change_name;
+      } else {
+        throw new Error('파일이 존재하지 않거나 형식이 잘못되었습니다.');
       }
+      const request = {
+        memberNo,
+        title,
+        fileUrl,
+      };
 
-      const { data } = await api.post(API_ENDPOINTS.BOARDS.UPLOADDOC, formData);
+      const { data } = await api.post(API_ENDPOINTS.BOARDS.UPLOADDOC, request);
 
       return data;
     } catch (error) {
@@ -97,6 +95,29 @@ export const boardService = {
         throw new Error(errorMessage);
       }
       throw new Error('서버 통신 실패');
+    }
+  },
+  getDocumentList: async () => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.BOARDS.GETDOCLIST);
+      return data;
+    } catch (error) {
+      throw new Error('서버 통신 불량' + error.message);
+    }
+  },
+  updateViewedDate: async (boardNo) => {
+    try {
+      await api.patch(API_ENDPOINTS.BOARDS.UPDATEVIEWED(boardNo));
+    } catch (error) {
+      throw new Error('서버 통신 불량' + error.message);
+    }
+  },
+  getRecentViewdDocs: async () => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.BOARDS.GETRECENTVIEWED);
+      return data;
+    } catch (error) {
+      throw new Error('서버 통신 불량' + error.message);
     }
   },
 };

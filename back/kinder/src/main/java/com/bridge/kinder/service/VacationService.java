@@ -12,7 +12,6 @@ public interface VacationService {
     VacationDto.Response requestVacation (int memberNo, VacationDto.Request request) throws IOException;
     List<Response> getVacationsByMember (int memberNo);
     void deleteVacation (long VacationNo);
-    //List<Response> getVacationsByCenter(int centerNo);
     Page<Response> getVacationListPaged(int centerNo, String type, Pageable pageable);
     Response approveVacation (long VacationNo);
     Response rejectVacation (long VacationNo);

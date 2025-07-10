@@ -2,12 +2,14 @@
 
 import styled from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
-import ChildImg from '../../assets/Child.png';
+import defaultimg from '../../assets/defaultimg.png';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AttendanceChildSchedule from '../../components/AttendanceChildSchedule';
 import { toast } from 'react-toastify';
 import api from '../../api/axios';
+
+const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
 const ChildDetail = () => {
   const navigate = useNavigate();
@@ -138,7 +140,10 @@ const ChildDetail = () => {
         />
         <BasicInfo>
           <PictureLine>
-            <Picture src={ChildImg} alt="아이사진" />
+            <Picture
+              src={child.child_profile ? `${CLOUDFRONT_URL}/${child.child_profile}` : defaultimg}
+              alt="아동 프로필"
+            />
           </PictureLine>
           <FirstInfo>
             <thead>
@@ -678,7 +683,12 @@ const PictureLine = styled.div`
   margin-bottom: 45px;
 `;
 
-const Picture = styled.img``;
+const Picture = styled.img`
+  width: 90%;
+  height: 90%;
+  object-fit: cover;
+  border-radius: 10px;
+`;
 
 const FirstInfo = styled.table`
   text-align: left;

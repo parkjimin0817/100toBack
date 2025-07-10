@@ -144,7 +144,20 @@ public class BoardController {
         return ResponseEntity.ok(boardService.getDocuments(memberId));
     }
 
-    //개인 서류 최근 열람 목록
-    
+    //개인 서류 최근 열람 날짜 업데이트
+    @PatchMapping("/documents/viewed/{boardNo}")
+    public ResponseEntity<Void> updateViewedDate(@PathVariable int boardNo) {
+        boardService.updateViewedDate(boardNo);
+        return ResponseEntity.noContent().build();
+    }
+
+    //개인 최근 열람한 5개 목록 불러오기
+    @GetMapping("/documents/recent")
+    public ResponseEntity<List<BoardDto.DocumentResponse>> getRecentViewedDocuments() {
+        String memberId = jwtTokenProvider.getMemberIdFromToken();
+        return ResponseEntity.ok(boardService.getRecentViewedDocument(memberId));
+    }
+
+
 
 }
