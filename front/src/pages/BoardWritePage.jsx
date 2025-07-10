@@ -214,6 +214,31 @@ const BoardWritePage = () => {
     }));
   };
 
+  // 게시판 종류에 따라 초기 블록 추가.
+  useEffect(() => {
+    if(category === "photo" || category === "meal_plan") {
+      const newBlock = {
+        boardContentNo: Date.now(),
+        type: 'IMG',
+        contentFile: '',
+      };
+      setFormState((prev) => ({
+        ...prev,
+        contents: [...prev.contents, newBlock],
+      }));
+    } else {
+      const newBlock = {
+        boardContentNo: Date.now(),
+        type: 'TEXT',
+        contentText: '',
+      };
+      setFormState((prev) => ({
+        ...prev,
+        contents: [...prev.contents, newBlock],
+      }));
+    }
+  }, [])
+
   return (
     <PageContainer onSubmit={handleSubmit} onChange={() => setIsDirty(true)}>
       <ContentHeader

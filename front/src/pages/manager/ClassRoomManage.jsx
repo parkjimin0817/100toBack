@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ClassRoomCard from '../../components/ClassRoomCard';
+import ClassRoomList from '../../components/ClassRoomList';
 import ContentHeader from '../../components/Common/ContentHeader';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -57,6 +57,8 @@ const ClassRoomManage = () => {
     selectClassRoom();
   }, []);
 
+  // 반 수정 모달 뜨는 함수 필요
+
   return (
     <Content>
       <ContentHeader
@@ -86,7 +88,7 @@ const ClassRoomManage = () => {
             <ImInfo />
             해당 반을 선택하시면 수정하실 수 있습니다.
           </Hint>
-          <ClassRoomCard classrooms={classrooms} isDisabled={true} />
+          <ClassRoomList classrooms={classrooms} />
         </Div>
       )}
 

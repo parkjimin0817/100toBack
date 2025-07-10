@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ClassRoomCard from '../components/ClassRoomCard';
+import ClassRoomList from '../components/ClassRoomList';
 import ContentHeader from '../components/Common/ContentHeader';
 import sun from '../assets/img/sun.png';
 import { useNavigate } from 'react-router-dom';
@@ -37,7 +37,7 @@ const ClassListPage = () => {
           <ImInfo />
           반을 선택하시면 해당 반 아동 목록을 볼 수 있습니다.
         </Hint>
-        <ClassRoomCard classrooms={classrooms} address={'/childlist'} />
+        <ClassRoomList classrooms={classrooms} clickEventFunc={(no) => navigator(`/childlist/${no}`)} />
       </Div>
     </Content>
   );
