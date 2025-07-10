@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { boardService } from '../../../api/boards';
 import { PulseLoader } from 'react-spinners';
 
-const FileUploadModal = ({ onClose, memberNo }) => {
+const FileUploadModal = ({ onClose, memberNo, onSuccess }) => {
   const [title, setTitle] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -32,6 +32,7 @@ const FileUploadModal = ({ onClose, memberNo }) => {
       setLoading(true);
       await boardService.uploadDoc(memberNo, title, selectedFile);
       toast.success('파일 업로드 완료');
+      onSuccess();
       onClose();
     } catch (error) {
       toast.error('파일 업로드를 다시 시도해주세요.');
