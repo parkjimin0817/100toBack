@@ -102,8 +102,10 @@ const BoardWritePage = () => {
     // 1. Presigned URL 요청 [첨부파일]
     const presigned = await getPresignedUrl(otherFile.name, otherFile.type, path);
 
+    console.log(presigned);
+
     // 2. S3에 업로드 [첨부파일]
-    await uploadFileToS3(presigned.presigned_url, otherFile);
+    await uploadFileToS3(presigned.presignedUrl, otherFile);
 
     // 1. Presigned URL 요청 [컨텐츠 부분에 있는 파일]
     const presignedResults = await Promise.all(
@@ -112,14 +114,14 @@ const BoardWritePage = () => {
 
     // 2. S3에 업로드 [컨텐츠 부분에 있는 파일]
     await Promise.all(
-      presignedResults.map((presigned, index) => uploadFileToS3(presigned.presigned_url, filterData[index].contentFile))
+      presignedResults.map((presigned, index) => uploadFileToS3(presigned.presignedUrl, filterData[index].contentFile))
     );
 
     let imgFileIndex = 0;
 
     const contents = formState.contents.map((item, index) => {
       if (item.type === 'IMG') {
-        const changeName = presignedResults[imgFileIndex]?.change_name;
+        const changeName = presignedResults[imgFileIndex]?.changeName;
         imgFileIndex += 1;
 
         return {
@@ -141,7 +143,7 @@ const BoardWritePage = () => {
     const payload = {
       title: formState.title,
       type: formState.type,
-      fileName: presigned?.change_name || null,
+      fileName: presigned?.changeName || null,
       centerId: formState.centerId,
       classRoomId: formState.classRoomNo,
       memberId: formState.memberId,
@@ -241,7 +243,7 @@ const BoardWritePage = () => {
     <PageContainer onSubmit={handleSubmit} onChange={() => setIsDirty(true)}>
       <ContentHeader
         Title={categoryName[category]}
-        Color={'green'}
+        Color={member.memberType === 'PARENT' ? 'purple' : 'green'}
         ButtonProps={[{ Title: '작성하기', type: 'submit' }, { Title: '뒤로가기', func: () => handleGoBack() }, ,]}
       ></ContentHeader>
 

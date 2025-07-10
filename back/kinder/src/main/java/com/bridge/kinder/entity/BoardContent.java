@@ -37,7 +37,7 @@ public class BoardContent {// 게시판 내용
     private int sortOrder;
     //순서
 
-    @Column(name = "CREATE_DATE")
+    @Column(name = "CREATE_DATE", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createDate;
     //생성일
 

@@ -1,4 +1,4 @@
-import React, { use, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import ContentHeader from '../../components/Common/ContentHeader';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -70,6 +70,7 @@ const CardGrid = styled.div`
   gap: 45px;
   justify-content: center;
   margin-top: 70px;
+  padding: 0 20px;
 `;
 
 const Card = styled.div`
@@ -77,41 +78,76 @@ const Card = styled.div`
   flex-direction: row;
   width: 400px;
   height: 240px;
-  border: 1px solid black;
-  border-radius: 10px;
-  padding-left: 20px;
-  padding-top: 40px;
+  border: 1px solid ${({ theme }) => theme.colors.gray[200]};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
   background-color: #fff;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 
   &:hover {
     cursor: pointer;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    border-color: ${({ theme }) => theme.colors.blue};
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, ${({ theme }) => theme.colors.blue}, ${({ theme }) => theme.colors.blue}80);
   }
 `;
 
 const TeacherImage = styled.img`
-  width: 100px;
-  height: 100px;
-  border-radius: 8px;
-  object-fit: cover; // 이미지가 비율을 유지한 채로 꽉 차게 보여지도록
-  margin-right: 20px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 24px;
+  border: 3px solid ${({ theme }) => theme.colors.gray[100]};
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+
+  ${Card}:hover & {
+    border-color: ${({ theme }) => theme.colors.blue};
+    transform: scale(1.05);
+  }
 `;
 
 const TextBox = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: flex-start;
+  flex: 1;
+  gap: 12px;
 `;
 
 const Name = styled.div`
-  font-weight: bold;
-  font-size: 20px;
-  margin-bottom: 15px;
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  font-size: ${({ theme }) => theme.fontSizes.xl};
+  color: ${({ theme }) => theme.colors.gray[800]};
+  margin-bottom: 4px;
 `;
 
 const Info = styled.div`
-  font-size: 16px;
-  color: #999999;
-  margin-bottom: 10px;
+  font-size: ${({ theme }) => theme.fontSizes.base};
+  color: ${({ theme }) => theme.colors.gray[600]};
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &::before {
+    content: '•';
+    color: ${({ theme }) => theme.colors.blue};
+    font-weight: bold;
+  }
 `;

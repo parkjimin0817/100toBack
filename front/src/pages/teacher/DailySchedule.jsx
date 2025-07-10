@@ -48,10 +48,10 @@ const DailySchedule = () => {
   }, []);
   return (
     <Content>
-      <ContentHeader Title={'일과표'} Color={'purple'} />
+      <ContentHeader Title={'일과표'} Color={member.memberType === 'PARENT' ? 'green' : 'purple'} />
       {loading ? (
         <ErrorDiv>
-          <BounceLoader color="#8772D3" />
+          <BounceLoader color={member.memberType === 'PARENT' ? '#4FD377' : '#8772D3'} />
         </ErrorDiv>
       ) : error ? (
         <ErrorDiv>

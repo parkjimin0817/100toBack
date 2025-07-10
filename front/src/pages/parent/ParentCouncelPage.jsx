@@ -82,5 +82,6 @@ const Wrapper = styled.div`
 const Content = styled.div`
   width: 100%;
   display: flex;
+  min-height: 600px;
   flex-direction: column;
 `;

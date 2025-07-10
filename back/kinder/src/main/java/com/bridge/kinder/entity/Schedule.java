@@ -48,7 +48,7 @@ public class Schedule {// 일정
     private CommonEnums.RollType type;
     //분류(시설, 반, 멤버)
 
-    @Column(name = "CREATE_DATE")
+    @Column(name = "CREATE_DATE", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createDate;
     //생성일
 

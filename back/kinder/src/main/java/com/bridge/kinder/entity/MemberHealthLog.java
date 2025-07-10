@@ -21,7 +21,7 @@ public class MemberHealthLog {// 멤버 건강 기록
     private int memberHealthLogNo;
     //멤버 건강 기록 번호
 
-    @Column(name = "CREATE_DATE")
+    @Column(name = "CREATE_DATE", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createDate;
     //생성일(기록일)
 

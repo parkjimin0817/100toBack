@@ -158,7 +158,11 @@ const StyledCalendar = styled(Calendar)`
   }
 
   .react-calendar__tile--active {
-    color: white !important; /* ✅ 선택된 날짜 글자색 */
+    color: black !important; /* ✅ 선택된 날짜 글자색 */
+    font-weight: normal !important; /* 글자 두꺼워지는 것 방지 */
+    transform: none !important; /* 움직임 제거 */
+    border: none !important; /* 혹시 생긴 테두리 제거 */
+    padding: 0 !important;
   }
 
   /* 오늘 날짜 (배경색 제거 + 테두리만) */
