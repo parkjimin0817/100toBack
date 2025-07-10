@@ -152,6 +152,7 @@ export const memberService = {
         memberNo: data.member_no,
         memberName: data.member_name,
         memberId: data.member_id,
+        memberProfile: data.member_profile,
         memberBirth: data.member_birth,
         memberPhone: data.member_phone,
         memberType: data.member_type,

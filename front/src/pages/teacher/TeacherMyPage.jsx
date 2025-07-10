@@ -105,7 +105,7 @@ const TeacherMyPage = () => {
       />
 
       <Wrapper>
-        <InfoBox>
+        <InfoBox isEditing={isEditing}>
           <ProfileImgBox>
             <MyPageProfileImage
               memberProfile={editableInfo.memberProfile}
@@ -165,13 +165,15 @@ const Wrapper = styled.div`
 
 const InfoBox = styled.div`
   width: 100%;
-  height: 30%;
+  height: ${({ isEditing }) => (isEditing ? 'auto' : '30%')};
+  min-height: ${({ isEditing }) => (isEditing ? '300px' : 'auto')};
   display: flex;
   justify-content: space-between;
   margin: 10px 0;
   box-sizing: border-box;
   gap: 20px;
 `;
+
 const ProfileImgBox = styled.div`
   width: 20%;
   min-width: 170px;

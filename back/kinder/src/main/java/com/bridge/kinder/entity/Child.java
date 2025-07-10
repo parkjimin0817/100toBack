@@ -51,7 +51,7 @@ public class Child {// 아동
     private String childProfile;
     //아동 프로필 이미지
 
-    @Column(name = "CREATE_DATE")
+    @Column(name = "CREATE_DATE", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createDate;
     //생성일
 

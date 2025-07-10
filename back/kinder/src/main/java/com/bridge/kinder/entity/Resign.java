@@ -20,11 +20,11 @@ public class Resign {// 퇴직
     private int resignNo;
     //퇴직 번호
 
-    @Column(name = "ENROLL_DATE")
+    @Column(name = "ENROLL_DATE", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime enrollDate;
     //입사일
 
-    @Column(name = "RESIGN_DATE")
+    @Column(name = "RESIGN_DATE", columnDefinition = "TIMESTAMP")
     private LocalDateTime resignDate;
     //퇴사일
 

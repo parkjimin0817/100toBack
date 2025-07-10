@@ -90,6 +90,7 @@ const InfoRow = styled.div`
 `;
 const InfoType = styled.div`
   width: 100px;
+  min-width: 100px;
   font-size: ${({ theme }) => theme.fontSizes.xl};
   font-weight: ${({ theme }) => theme.fontWeights.bold};
   position: relative;
