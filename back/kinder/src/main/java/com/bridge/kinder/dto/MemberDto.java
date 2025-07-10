@@ -313,6 +313,7 @@ public class MemberDto {
         private int member_no;
         private String member_name;
         private String class_name;
+        private String member_profile;
 
         public static teacherListResponse toDto(Member member) {
             return teacherListResponse.builder()
@@ -323,6 +324,7 @@ public class MemberDto {
                                     ? member.getClassRoom().getClassName()
                                     : "미배정"
                     )
+                    .member_profile(member.getMemberProfile())
                     .build();
         }
     }
