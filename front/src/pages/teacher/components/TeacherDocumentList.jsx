@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { IoMdDownload } from 'react-icons/io';
 import { TiDocumentText } from 'react-icons/ti';
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import { toast } from 'react-toastify';
+
+const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
 const TeacherDocumentList = ({ documents }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,6 +17,23 @@ const TeacherDocumentList = ({ documents }) => {
 
   const paginatedData = documents.slice(startIndex, endIndex);
   const totalPages = Math.ceil(documents.length / itemsPerPage);
+
+  const handlePreview = (d) => {
+    if (!d.fileUrl) return;
+    const previewUrl = `${CLOUDFRONT_URL}/${d.fileUrl}`;
+    const extension = d.fileUrl.split('.').pop().toLowerCase();
+
+    const previewable = ['pdf', 'png', 'jpg', 'jpeg', 'gif'];
+    if (previewable.includes(extension)) {
+      window.open(previewUrl, '_blank');
+    } else {
+      toast.info('해당 파일은 브라우저에서 미리보기를 지원하지 않습니다. 다운로드를 이용해주세요.');
+    }
+  };
+
+  const handleDownload = (d) => {
+    if (!d.fileUrl) return;
+  };
 
   return (
     <>
@@ -38,6 +58,7 @@ const TeacherDocumentList = ({ documents }) => {
                 <TiDocumentText size={20} onClick={() => handlePreview(d)} style={{ cursor: 'pointer' }} />
               </td>
               <td>
+                <FileName onClick={() => handleDownload(d)}>{d.fileUrl}</FileName>
                 <IoMdDownload size={20} onClick={() => handleDownload(d)} style={{ cursor: 'pointer' }} />
               </td>
               <td>
@@ -143,5 +164,14 @@ const PageButton = styled.button`
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.gray[100]};
+  }
+`;
+
+const FileName = styled.span`
+  cursor: pointer;
+  margin-right: ${({ theme }) => theme.spacing[1]};
+
+  &:hover {
+    text-decoration: underline;
   }
 `;

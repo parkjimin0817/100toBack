@@ -135,5 +135,6 @@ export const API_ENDPOINTS = {
   FILE: {
     BASE: '/api/file',
     PRESIGNED_URL: '/api/file/presigned-url',
+    //DOWNLOAD_URL: '/api/file/download-url',
   },
 };

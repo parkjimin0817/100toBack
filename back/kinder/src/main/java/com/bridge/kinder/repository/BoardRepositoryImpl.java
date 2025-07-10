@@ -79,7 +79,8 @@ public class BoardRepositoryImpl implements BoardRepository {
     public List<Board> findByMemberNoAndType(int memberNo, BoardType type) {
         String jpql =  "SELECT b FROM Board b " +
                 "WHERE b.member.memberNo = :memberNo " +
-                "AND b.type = :type ";
+                "AND b.type = :type " +
+                "ORDER BY b.createDate DESC ";
 
         return em.createQuery(jpql, Board.class)
                 .setParameter("memberNo", memberNo)
