@@ -42,7 +42,7 @@ const ClassRoomCard = ({ classRoom, clickEventFunc }) => {
           </Cardinnerinner>
         </CardInner>
       </CardInfo>
-      <CardTeacherName>{classRoom.member_name} 선생님</CardTeacherName>
+      <CardTeacherName>{classRoom.member_name ? `${classRoom.member_name} 선생님`: `미지정` }</CardTeacherName>
     </Card>
   );
 };

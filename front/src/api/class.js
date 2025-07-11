@@ -40,6 +40,27 @@ export const classService = {
       throw error;
     }
   },
+  updateClass: async (classNo, classRoomData) => {
+    try {
+      const { data } = await api.put(API_ENDPOINTS.CLASSROOM.UPDATE(classNo), classRoomData);
+
+      return data;
+    } catch (error) {
+      console.error('반 수정 실패: ', error);
+      throw error;
+    }
+  },
+  
+  deleteClass : async (classNo) => {
+    try {
+      const { data } = await api.delete(API_ENDPOINTS.CLASSROOM.DELETE(classNo));
+
+      return data;
+    } catch (error) {
+      console.error('반 수정 실패: ', error);
+      throw error;
+    }
+  },
 
   //시설별 반 목록
   classroomlist: async (centerNo) => {
