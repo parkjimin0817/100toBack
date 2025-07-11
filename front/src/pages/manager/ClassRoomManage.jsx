@@ -4,6 +4,7 @@ import ContentHeader from '../../components/Common/ContentHeader';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import CreateClassModal from './components/CreateClassModal';
+import UpdateClassModal from './components/UpdateClassModal';
 import useLoginStore from '../../store/loginStore';
 import { classService } from '../../api/class';
 import { ImInfo } from 'react-icons/im';
@@ -15,11 +16,14 @@ const ClassRoomManage = () => {
   const { member } = useLoginStore();
   const centerNo = member?.centerNo;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // 어떤 모달을 열었는지. create, update
+  const [modalType, setModalType] = useState("");
   const navigate = useNavigate();
 
   const [classrooms, setClassrooms] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [selectClass, setSelectClass] = useState(null);
 
   const selectClassRoom = async () => {
     try {
@@ -27,6 +31,7 @@ const ClassRoomManage = () => {
       setError('');
 
       const classList = await classService.classroomlist(centerNo);
+      console.log(classList);
 
       if (classList.length === 0) {
         setClassrooms([]);
@@ -57,7 +62,13 @@ const ClassRoomManage = () => {
     selectClassRoom();
   }, []);
 
-  // 반 수정 모달 뜨는 함수 필요
+  const openUpdate = (no) => {
+    // 매개 변수 받는게 큰 의미는 없으나, 컴포넌트 설계상.. 일단 넣음...
+    if(!no) return;
+    setIsModalOpen(true);
+    setModalType('update');
+    setClassrooms(classrooms.find(classroom => classroom.class_no === no));
+  }
 
   return (
     <Content>
@@ -65,7 +76,10 @@ const ClassRoomManage = () => {
         Title={'반 목록'}
         Color={'blue'}
         ButtonProps={[
-          { Title: '반 생성하기', func: () => setIsModalOpen(true) },
+          { Title: '반 생성하기', func: () => {
+            setIsModalOpen(true);
+            setModalType('create');
+          } },
           { Title: '뒤로가기', func: () => navigate(-1) },
         ]}
       />
@@ -88,14 +102,22 @@ const ClassRoomManage = () => {
             <ImInfo />
             해당 반을 선택하시면 수정하실 수 있습니다.
           </Hint>
-          <ClassRoomList classrooms={classrooms} />
+          <ClassRoomList classrooms={classrooms} clickEventFunc={(no) => openUpdate(no)} />
         </Div>
       )}
 
-      {isModalOpen && (
+      {(isModalOpen && modalType == "create") && (
         <CreateClassModal
           onClose={() => setIsModalOpen(false)}
           centerNo={centerNo}
+          onSuccess={(newClassroom) => setClassrooms((prev) => [...prev, newClassroom])}
+        />
+      )}
+      {(isModalOpen && modalType == "update") && (
+        <UpdateClassModal
+          onClose={() => setIsModalOpen(false)}
+          centerNo={centerNo}
+          classRoom={selectClass}
           onSuccess={(newClassroom) => setClassrooms((prev) => [...prev, newClassroom])}
         />
       )}
