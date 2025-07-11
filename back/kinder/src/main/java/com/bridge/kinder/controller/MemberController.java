@@ -108,22 +108,10 @@ public class MemberController {
         return ResponseEntity.ok(memberService.updateParentInfo(dto));
     }
 
-    //멤버 PWD 찾기(아이디)
+    //멤버 PWD 찾기(아이디 비교)
     @PostMapping("/pwdSearchId")
     public ResponseEntity<MemberDto.SearchPwd> pwdSearchId(@RequestBody MemberDto.SearchPwd dto){
         return ResponseEntity.ok(memberService.pwdSearchId(dto));
-    }
-
-    //전화번호 인증번호
-    @PostMapping("/sendOne")
-    public ResponseEntity<MemberDto.PhoneAccess> PhoneAccess(@RequestBody MemberDto.PhoneAccess dto){
-        try{
-            MemberDto.PhoneAccess resultMsg = memberService.sendingNumberToFindId(dto);
-            return ResponseEntity.ok(resultMsg);
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(MemberDto.PhoneAccess.toDto(null, "인증번호 전송에 실패하였습니다."));
-        }
     }
 
     //비밀번호 변경

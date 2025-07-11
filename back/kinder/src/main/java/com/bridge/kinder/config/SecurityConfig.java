@@ -44,6 +44,9 @@ public class SecurityConfig {
                                 "/api/members/parent",
                                 "/api/members/checkId",
                                 "/api/center",
+                                "/api/sms/sendOne",
+                                "/api/sms/authNumber",
+                                "/api/sms/sendMessage",
                                 //시설장 승인
                                 "/api/approval/lists",
                                 "/api/approval/decision/center"

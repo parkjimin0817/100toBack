@@ -26,10 +26,9 @@ public interface MemberService {
     //MemberDto.LoginResponse getLoginMember(String memberId, String memberPwd);
     //멤버 ID 조회(이름, 생년월일)
     MemberDto.SearchId searchId(MemberDto.SearchId dto);
-    //멤버 PWD 조회(아이디)
+    //멤버 PWD 조회(아이디 비교)
     MemberDto.SearchPwd pwdSearchId(MemberDto.SearchPwd dto);
-    //전화번호 인증번호
-    MemberDto.PhoneAccess sendingNumberToFindId(MemberDto.PhoneAccess dto);
+
     //비밀번호 변경
     MemberDto.PwdUpdate updatePwd(MemberDto.PwdUpdate dto);
 

@@ -232,25 +232,7 @@ public class MemberDto {
         }
     }
 
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @Builder
-    public static class PhoneAccess {
-        //전화번호
-        private String phone_number;
-        //인증번호
-        private String number;
-        //성공 여부
-        private String status;
 
-        public static PhoneAccess toDto(String number,String info){
-            return PhoneAccess.builder()
-                    .status(info)
-                    .number(number)
-                    .build();
-        }
-    }
 
     @Getter
     @Setter

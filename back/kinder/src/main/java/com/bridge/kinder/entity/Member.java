@@ -34,7 +34,7 @@ public class Member {// 멤버
     private LocalDate memberBirth;
     //생년월일
 
-    @Column(name = "MEMBER_ID", length = 30, nullable = false)
+    @Column(name = "MEMBER_ID", length = 30, nullable = false, unique = true)
     private String memberId;
     //아이디
 
@@ -127,6 +127,10 @@ public class Member {// 멤버
     @Builder.Default
     List<Counsel> counsels = new ArrayList<>();
     //상담
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    List<AuthNumber> authNumbers = new ArrayList<>();
 
 
     //---------------------------------------------------------------------------------------------

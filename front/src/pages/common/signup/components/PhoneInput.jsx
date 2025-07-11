@@ -8,13 +8,14 @@ const formatPhoneNumber = (value = '') => {
   return onlyNums.replace(/(\d{3})(\d{4})(\d{1,4})/, '$1-$2-$3');
 };
 
-const PhoneInputWithButton = ({ label, value, onClick, onChange, error }) => {
+const PhoneInputWithButton = ({ label, value, onSubmitAuthNum, submitAuth, onClick, onChange, error }) => {
   const handleChange = (e) => {
     const formatted = formatPhoneNumber(e.target.value);
     if (onChange) {
       onChange(formatted);
     }
   };
+
   return (
     <InputWrapper>
       <Label>{label}</Label>
@@ -27,8 +28,8 @@ const PhoneInputWithButton = ({ label, value, onClick, onChange, error }) => {
           placeholder="'-'제외 11자리를 입력해주세요"
         />
 
-        <Button type="button" onClick={onClick}>
-          인증 요청
+        <Button type="button" onClick={onSubmitAuthNum}>
+          인증번호요청
         </Button>
       </InputRow>
       {error && <ErrorMessage>{error}</ErrorMessage>}
