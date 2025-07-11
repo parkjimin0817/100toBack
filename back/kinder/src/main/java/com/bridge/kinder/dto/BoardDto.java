@@ -24,7 +24,7 @@ public class BoardDto {
     public static class Create {
         private String title;
         private CommonEnums.BoardType type;
-        private String fileName;
+        private String attachment;
         private int centerId;
         private Integer classRoomId;
         private int memberId;
@@ -34,7 +34,7 @@ public class BoardDto {
             return Board.builder()
                     .title(this.title)
                     .type(this.type)
-                    .attachment(this.fileName)
+                    .attachment(this.attachment)
                     .center(center)
                     .classRoom(classRoom)
                     .member(member)
