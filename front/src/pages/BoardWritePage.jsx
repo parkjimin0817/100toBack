@@ -97,16 +97,18 @@ const BoardWritePage = () => {
     const filterData = formState.contents.filter((item) => item.type === 'IMG');
 
     //첨부파일
-    const otherFile = formState.file;
+    const otherFile = formState?.file;
 
-    // 1. Presigned URL 요청 [첨부파일]
-    const presigned = await getPresignedUrl(otherFile.name, otherFile.type, path);
-
-    console.log(presigned);
-    console.log(otherFile.type);
-
-    // 2. S3에 업로드 [첨부파일]
-    await uploadFileToS3(presigned.presigned_url, otherFile);
+    if(otherFile) {
+      // 1. Presigned URL 요청 [첨부파일]
+      const presigned = await getPresignedUrl(otherFile.name, otherFile.type, path);
+  
+      console.log(presigned);
+      console.log(otherFile.type);
+  
+      // 2. S3에 업로드 [첨부파일]
+      await uploadFileToS3(presigned.presigned_url, otherFile);
+    }
 
     // 1. Presigned URL 요청 [컨텐츠 부분에 있는 파일]
     const presignedResults = await Promise.all(
