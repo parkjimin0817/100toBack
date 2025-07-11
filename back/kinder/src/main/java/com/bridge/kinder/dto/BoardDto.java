@@ -25,6 +25,7 @@ public class BoardDto {
         private String title;
         private CommonEnums.BoardType type;
         private String attachment;
+        private String attachmentOriginal;
         private int centerId;
         private Integer classRoomId;
         private int memberId;
@@ -35,6 +36,7 @@ public class BoardDto {
                     .title(this.title)
                     .type(this.type)
                     .attachment(this.attachment)
+                    .attachmentOrigin(this.attachmentOriginal)
                     .center(center)
                     .classRoom(classRoom)
                     .member(member)
@@ -52,6 +54,7 @@ public class BoardDto {
         private String title;
         private CommonEnums.BoardType type;
         private String attachment;
+        private String attachmentOriginal;
         private int centerId;
         private Integer classRoomId;
         private int memberId;
@@ -81,6 +84,7 @@ public class BoardDto {
         private int views;
         private LocalDateTime createDate;
         private String attachment;
+        private String attachmentOriginal;
         private Integer centerId;
         private Integer classNo;
         private String className;
@@ -96,6 +100,7 @@ public class BoardDto {
                     .views(board.getViews())
                     .createDate(board.getCreateDate())
                     .attachment(board.getAttachment())
+                    .attachmentOriginal(board.getAttachmentOrigin())
                     .centerId(board.getCenter() != null ? board.getCenter().getCenterNo() : null)
                     .classNo(board.getClassRoom() != null ? board.getClassRoom().getClassNo() : null)
                     .className(board.getClassRoom() != null ? board.getClassRoom().getClassName() : null)
