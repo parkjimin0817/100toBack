@@ -87,6 +87,14 @@ const TeacherMyPage = () => {
           address: editableInfo.address,
           memberProfile: editableInfo.memberProfile,
         });
+        // centerInfo도 즉시 업데이트
+        setCenterInfo((prev) => ({
+          ...prev,
+          centerName: centerInfo.centerName,
+          centerTel: centerInfo.centerTel,
+          centerAddress: centerInfo.centerAddress,
+          centerType: centerInfo.centerType,
+        }));
         toast.success('수정이 성공적으로 완료되었습니다.');
         setIsEditing(false);
       } catch (e) {

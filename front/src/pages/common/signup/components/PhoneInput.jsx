@@ -11,9 +11,7 @@ const formatPhoneNumber = (value = '') => {
 const PhoneInputWithButton = ({ label, value, onSubmitAuthNum, submitAuth, onClick, onChange, error }) => {
   const handleChange = (e) => {
     const formatted = formatPhoneNumber(e.target.value);
-    if (onChange) {
-      onChange(formatted);
-    }
+    onChange?.(formatted);
   };
 
   return (
@@ -25,7 +23,8 @@ const PhoneInputWithButton = ({ label, value, onSubmitAuthNum, submitAuth, onCli
           value={value}
           onChange={handleChange}
           maxLength={13}
-          placeholder="'-'제외 11자리를 입력해주세요"
+          placeholder="예: 010-1234-5678"
+          inputMode="numeric"
         />
 
         <Button type="button" onClick={onSubmitAuthNum}>

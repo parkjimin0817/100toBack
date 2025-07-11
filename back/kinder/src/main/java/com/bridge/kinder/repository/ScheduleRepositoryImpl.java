@@ -1,6 +1,7 @@
 package com.bridge.kinder.repository;
 
 import com.bridge.kinder.dto.ScheduleDto.CreateScheduleDto;
+import com.bridge.kinder.entity.Board;
 import com.bridge.kinder.entity.Schedule;
 import com.bridge.kinder.enums.CommonEnums;
 import com.bridge.kinder.enums.CommonEnums.RollType;
@@ -116,6 +117,16 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
                 .setParameter("classNo",classNo)
                 .setParameter("scheduleDate", scheduleDate)
                 .setParameter("scheduleNo", scheduleNo)
+                .getResultList();
+    }
+
+    //반 번호로 스케줄 조회
+    @Override
+    public List<Schedule> findByClassNo(int classNo) {
+        return em.createQuery(
+                        "SELECT s FROM Schedule s WHERE s.classRoom.classNo = :classNo",
+                        Schedule.class)
+                .setParameter("classNo", classNo)
                 .getResultList();
     }
 }

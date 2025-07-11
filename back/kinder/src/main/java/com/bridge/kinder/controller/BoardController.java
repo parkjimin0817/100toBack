@@ -50,14 +50,12 @@ public class BoardController {
      * 게시글 수정
      */
     @PutMapping("/{boardNo}")
-    public ResponseEntity<?> updateBoard(
+    public ResponseEntity<Integer> updateBoard(
             @PathVariable Integer boardNo,
-            @RequestPart("data") BoardDto.Update dto,
-            @RequestPart(value = "file", required = false) MultipartFile file,
-            @RequestPart(required = false) List<MultipartFile> contentFiles  // contentFiles
-    ) throws IOException {
-        boardService.updateBoard(boardNo, dto, file, contentFiles);
-        return ResponseEntity.ok().build();
+            @RequestBody BoardDto.Update dto
+    ) {
+        int updatedBoardNo = boardService.updateBoard(boardNo, dto);
+        return ResponseEntity.ok(updatedBoardNo);
     }
 
     /**
@@ -144,7 +142,20 @@ public class BoardController {
         return ResponseEntity.ok(boardService.getDocuments(memberId));
     }
 
-    //개인 서류 최근 열람 목록
-    
+    //개인 서류 최근 열람 날짜 업데이트
+    @PatchMapping("/documents/viewed/{boardNo}")
+    public ResponseEntity<Void> updateViewedDate(@PathVariable int boardNo) {
+        boardService.updateViewedDate(boardNo);
+        return ResponseEntity.noContent().build();
+    }
+
+    //개인 최근 열람한 5개 목록 불러오기
+    @GetMapping("/documents/recent")
+    public ResponseEntity<List<BoardDto.DocumentResponse>> getRecentViewedDocuments() {
+        String memberId = jwtTokenProvider.getMemberIdFromToken();
+        return ResponseEntity.ok(boardService.getRecentViewedDocument(memberId));
+    }
+
+
 
 }

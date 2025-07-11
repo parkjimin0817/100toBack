@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import ChildImg from '../assets/Child.png';
+import defaultImg from '../assets/defaultimg.png';
 import { toast } from 'react-toastify';
 import api from '../api/axios';
+
+const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
 const ChildrenList = ({
   showAll,
@@ -96,7 +98,10 @@ const ChildrenList = ({
               }}
             >
               <PictureBox color={Color}>
-                <ChildPic src={ChildImg} alt="아이사진" />
+                <ChildPic
+                  src={item.member_profile ? `${CLOUDFRONT_URL}/${item.member_profile}` : defaultImg}
+                  alt="사용자 프로필"
+                />
               </PictureBox>
               <NameBox color={Color}>
                 <NameLine>{name}</NameLine>
@@ -156,6 +161,9 @@ const PictureBox = styled.div`
 `;
 
 const ChildPic = styled.img`
+  width: 90%;
+  height: 90%;
+  object-fit: cover;
   border-radius: 10px;
 `;
 

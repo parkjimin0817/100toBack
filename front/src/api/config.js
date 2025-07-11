@@ -63,6 +63,8 @@ export const API_ENDPOINTS = {
   CLASSROOM: {
     BASE: '/api/classroom',
     CREATE: '/api/classroom/create',
+    UPDATE: (no) => `/api/classroom/update/${no}`,
+    DELETE: (no) => `/api/classroom/delete/${no}`,
     CLASSROOMLIST: (centerNo) => `/api/classroom/list/${centerNo}`,
     GETRATE: (centerNo) => `/api/classroom/main/attendance-rate/${centerNo}`,
     GETHEALTHPROGRESS: (centerNo) => `/api/classroom/main/healthlog-progress/${centerNo}`,
@@ -107,16 +109,19 @@ export const API_ENDPOINTS = {
   BOARDS: {
     BASE: '/api/boards',
     ADD: '/api/boards/create',
+    UPDATE: (id) => `/api/boards/${id}`,
     DETAIL: (id) => `/api/boards/${id}`,
     DELETE: (id) => `/api/boards/${id}`,
     TYPE: (type, centerNo, page) => `/api/boards/type/${type}?centerNo=${centerNo}&page=${page}`,
     GETRECENT3: (centerNo) => `api/boards/recent3/${centerNo}`,
     UPLOADDOC: '/api/boards/documents',
     GETDOCLIST: '/api/boards/documents/list',
+    UPDATEVIEWED: (boardNo) => `/api/boards/documents/viewed/${boardNo}`,
+    GETRECENTVIEWED: '/api/boards/documents/recent',
   },
   VACATION: {
     BASE: '/api/vacation',
-    REQUEST: (memberNo) => `/api/vacation/request/${memberNo}`,
+    REQUEST: `/api/vacation/request`,
     GETLIST: (memberNo) => `/api/vacation/${memberNo}`,
     DELETE: (vacationNo) => `/api/vacation/delete/${vacationNo}`,
     GETLISTALL: (centerNo, type, page = 0, size = 6) =>
@@ -139,5 +144,6 @@ export const API_ENDPOINTS = {
   FILE: {
     BASE: '/api/file',
     PRESIGNED_URL: '/api/file/presigned-url',
+    //DOWNLOAD_URL: '/api/file/download-url',
   },
 };

@@ -1,6 +1,7 @@
 package com.bridge.kinder.repository;
 
 import com.bridge.kinder.entity.Board;
+import com.bridge.kinder.entity.ChildAttendance;
 import com.bridge.kinder.enums.CommonEnums;
 import com.bridge.kinder.enums.CommonEnums.BoardType;
 import jakarta.persistence.EntityManager;
@@ -79,11 +80,37 @@ public class BoardRepositoryImpl implements BoardRepository {
     public List<Board> findByMemberNoAndType(int memberNo, BoardType type) {
         String jpql =  "SELECT b FROM Board b " +
                 "WHERE b.member.memberNo = :memberNo " +
-                "AND b.type = :type ";
+                "AND b.type = :type " +
+                "ORDER BY b.createDate DESC ";
 
         return em.createQuery(jpql, Board.class)
                 .setParameter("memberNo", memberNo)
                 .setParameter("type", type)
+                .getResultList();
+    }
+
+    @Override
+    public List<Board> findByClassNo(int classNo) {
+        return em.createQuery(
+                        "SELECT b FROM Board b WHERE b.classRoom.classNo = :classNo",
+                        Board.class)
+                .setParameter("classNo", classNo)
+                .getResultList();
+    }
+
+
+
+    @Override
+    public List<Board> findByMemberNoAndTypeOrderByViewedDate(int memberNo, BoardType type) {
+        String jpql =  "SELECT b FROM Board b " +
+                "WHERE b.member.memberNo = :memberNo " +
+                "AND b.type = :type " +
+                "ORDER BY b.viewedDate DESC ";
+
+        return em.createQuery(jpql, Board.class)
+                .setParameter("memberNo", memberNo)
+                .setParameter("type", type)
+                .setMaxResults(5)
                 .getResultList();
     }
 }

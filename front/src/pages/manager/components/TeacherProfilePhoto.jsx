@@ -2,12 +2,17 @@ import React from 'react';
 import styled from 'styled-components';
 import defaultImg from '../../../assets/defaultImg.png';
 
+const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
+
 const TeacherProfilePhoto = ({ teacher }) => {
   return (
     <CardLine>
       <Card>
         <PictureBox>
-          <Pic src={teacher.member_profile || defaultImg} alt="교사사진" />
+          <Pic
+            src={teacher.member_profile ? `${CLOUDFRONT_URL}/${teacher.member_profile}` : defaultImg}
+            alt="사용자 프로필"
+          />
         </PictureBox>
         <NameBox>
           <NameLine>{teacher.member_name}</NameLine>
@@ -47,6 +52,9 @@ const PictureBox = styled.div`
 `;
 
 const Pic = styled.img`
+  width: 90%;
+  height: 90%;
+  object-fit: cover;
   border-radius: 10px;
 `;
 

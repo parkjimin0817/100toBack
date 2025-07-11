@@ -1,15 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 import ContentHeader from '../../../components/Common/ContentHeader';
-import { useRef, useState } from 'react';
 import { useVacationForm } from '../../../hook/vacation/useVacationForm';
 
 const VacationForm = ({ onSuccess }) => {
   const {
-    type,
+    selectedType,
     typeDetail,
     customDetail,
-    fileNames,
+    fileName,
     fileInputRef,
     startDate,
     endDate,
@@ -27,6 +26,8 @@ const VacationForm = ({ onSuccess }) => {
     resetForm,
   } = useVacationForm();
 
+  const today = new Date().toISOString().split('T')[0];
+
   return (
     <Wrapper>
       <ContentHeader Title="휴가 / 워케이션 신청하기" Color="blue" FontSize="lg" />
@@ -40,12 +41,12 @@ const VacationForm = ({ onSuccess }) => {
       >
         <InputRow>
           <Label>종류 : </Label>
-          <Select value={type} onChange={handleTypeChange}>
+          <Select value={selectedType} onChange={handleTypeChange}>
             <option value="">선택하세요</option>
             <option value="휴가">휴가</option>
             <option value="워케이션">워케이션</option>
           </Select>
-          <Select value={typeDetail} onChange={handleDetailChange} disabled={!type}>
+          <Select value={typeDetail} onChange={handleDetailChange} disabled={!selectedType}>
             <option value="">선택하세요</option>
             {(getDetailOptions() || []).map((option) => (
               <option key={option.value} value={option.value}>
@@ -64,7 +65,7 @@ const VacationForm = ({ onSuccess }) => {
         </InputRow>
         <InputRow>
           <Label>날짜 : </Label>
-          <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+          <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} min={today} />
           <Text>-</Text>
           <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} min={startDate} />
         </InputRow>
@@ -73,9 +74,12 @@ const VacationForm = ({ onSuccess }) => {
           <InputTextArea value={reason} onChange={(e) => setReason(e.target.value)} />
         </InputRow>
         <InputRow>
-          <Label>첨부파일 : </Label>
-          <HiddenInput type="file" multiple ref={fileInputRef} onChange={handleFileChange} />
-          <FileName>{fileNames.join(', ')}</FileName>
+          <InfoDiv>
+            <Label>첨부파일 : </Label>
+            <Info>*선택사항</Info>
+          </InfoDiv>
+          <HiddenInput type="file" ref={fileInputRef} onChange={handleFileChange} />
+          <FileName>{fileName}</FileName>
           <Button type="button" onClick={handleButtonClick}>
             파일 업로드
           </Button>
@@ -197,7 +201,17 @@ const FileName = styled.span`
   border-radius: 8px;
   padding: 5px;
   margin: 0 10px 0 0;
-  overflow: auto;
-  text-overflow: ellipsis;
+  overflow-y: hidden;
   color: #666;
+`;
+
+const InfoDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Info = styled.div`
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.gray[500]};
+  text-align: left;
 `;

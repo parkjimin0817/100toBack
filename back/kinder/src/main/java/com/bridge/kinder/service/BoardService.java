@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface BoardService {
-    int createBoard(BoardDto.Create dto) throws IOException;
+    int createBoard(BoardDto.Create dto);
     BoardDto.Detail getBoard(int boardNo);
     List<BoardDto.Simple> getAllBoards();
     void deleteBoard(int boardNo);
@@ -20,7 +20,7 @@ public interface BoardService {
     Page<BoardDto.PhotoBoardDto> getPhotoBoards(CommonEnums.BoardType type, int centerNo, int page, int size);
     Page<BoardDto.MealPlanBoardDto> getMealPlanBoards(CommonEnums.BoardType type, int centerNo, int page, int size);
 
-    int updateBoard(Integer boardNo, BoardDto.Update dto, MultipartFile file, List<MultipartFile> contentFiles) throws IOException;
+    int updateBoard(Integer boardNo, BoardDto.Update dto);
 
     //메인페이지 시설별 최근 3개 게시물
     List<RecentBoardDto.Response> getRecentBoards(int centerNo);
@@ -28,5 +28,9 @@ public interface BoardService {
     int createDocument(BoardDto.DocumentRequest request);
     //개인 서류 목록 불러오기
     List<BoardDto.DocumentResponse> getDocuments(String memberId);
+    //개인 서류 최근 열람 날짜 업데이트
+    void updateViewedDate(int boardNo);
+    //개인 서류 최근 열람한 5개
+    List<BoardDto.DocumentResponse> getRecentViewedDocument(String memberId);
 
 }

@@ -31,7 +31,11 @@ public class BoardContent {// 게시판 내용
 
     @Column(name = "CONTENT_FILE", length = 100)
     private String contentFile;
-    //파일
+    //파일 경로
+
+    @Column(name = "CONTENT_FILE_ORIGIN", length = 100)
+    private String contentFileOrigin;
+    //파일 원본
 
     @Column(name = "SORT_ORDER", nullable = false)
     private int sortOrder;
@@ -56,8 +60,10 @@ public class BoardContent {// 게시판 내용
 
     //---------------------------------------------------------------------------------------------
 
-    public void updateBoardContent(String contentText, int sortOrder) {
+    public void updateBoardContent(String contentText, String contentFile, String contentFileOrigin, int sortOrder) {
         this.contentText = contentText;
+        this.contentFile = contentFile;
+        this.contentFileOrigin = contentFileOrigin;
         this.sortOrder= sortOrder;
     }
 
