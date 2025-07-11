@@ -14,16 +14,12 @@ import { toast } from 'react-toastify';
  * clickEventFunc : 반 카드 클릭 이벤트 함수가 들어옵니다.
  */
 
-const ClassRoomList = ({ classrooms, clickEventFunc }) => {
+const ClassRoomList = ({ classrooms, clickEventFunc = () => {} }) => {
   return (
     <>
       <FlexContainer>
         {classrooms.map((classroom) => (
-          <ClassRoomCard
-            key={classroom.class_no}
-            classRoom={classroom}
-            clickEventFunc={clickEventFunc}
-          />
+          <ClassRoomCard key={classroom.class_no} classRoom={classroom} clickEventFunc={clickEventFunc} />
         ))}
       </FlexContainer>
     </>

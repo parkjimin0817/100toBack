@@ -684,8 +684,8 @@ const PictureLine = styled.div`
 `;
 
 const Picture = styled.img`
-  width: 90%;
-  height: 90%;
+  width: 150px;
+  height: 150px;
   object-fit: cover;
   border-radius: 10px;
 `;

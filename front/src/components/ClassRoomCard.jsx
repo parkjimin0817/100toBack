@@ -21,14 +21,6 @@ const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
  */
 
 const ClassRoomCard = ({ classRoom, clickEventFunc }) => {
-  // const navigate = useNavigate();
-
-  // const handleCheck = () => {
-  //   if (isDisabled) return;
-
-  //   navigate(address);
-  // };
-
   return (
     <Card $Color={classRoom.color} onClick={() => clickEventFunc(classRoom.class_no)}>
       <CardInfo>

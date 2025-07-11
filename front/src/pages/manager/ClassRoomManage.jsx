@@ -90,7 +90,7 @@ const ClassRoomManage = () => {
             <ImInfo />
             해당 반을 선택하시면 수정하실 수 있습니다.
           </Hint>
-          <ClassRoomList classrooms={classrooms} />
+          <ClassRoomList classrooms={classrooms} clickEventFunc={() => {}} />
         </Div>
       )}
 
