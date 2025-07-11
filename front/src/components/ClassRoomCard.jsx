@@ -6,6 +6,8 @@ import { GiRialtoBridge } from 'react-icons/gi';
 import useLoginStore from '../store/loginStore';
 import { toast } from 'react-toastify';
 
+const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
+
 /**
  * classRoom : 반 데이터 객체입니다.
  * - class_no : 반 번호
@@ -24,7 +26,13 @@ const ClassRoomCard = ({ classRoom, clickEventFunc }) => {
     <Card $Color={classRoom.color} onClick={() => clickEventFunc(classRoom.class_no)}>
       <CardInfo>
         <div>
-          <CardImg>{classRoom.class_image === null ? <Icon /> : <Img src={`${classRoom.class_image}`} alt="반 사진" />}</CardImg>
+          <CardImg>
+            {classRoom.class_image ? (
+              <Img src={`${CLOUDFRONT_URL}/${classRoom.class_image}`} alt="반 사진" />
+            ) : (
+              <Icon />
+            )}
+          </CardImg>
         </div>
         <CardInner>
           <h3>{classRoom.class_name}반</h3>

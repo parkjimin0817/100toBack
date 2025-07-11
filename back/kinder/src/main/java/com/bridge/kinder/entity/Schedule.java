@@ -106,4 +106,5 @@ public class Schedule {// 일정
         this.endTime = endTime;
     }
 
+
 }
