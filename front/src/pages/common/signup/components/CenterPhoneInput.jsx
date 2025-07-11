@@ -4,17 +4,20 @@ import styled from 'styled-components';
 const formatPhoneNumber = (value = '') => {
   const onlyNums = value.replace(/\D/g, '');
 
-  // 서울지역 번호 (02)일 때
   if (onlyNums.startsWith('02')) {
     if (onlyNums.length <= 2) return onlyNums;
     if (onlyNums.length <= 5) return onlyNums.replace(/(\d{2})(\d{1,3})/, '$1-$2');
-    return onlyNums.replace(/(\d{2})(\d{3,4})(\d{0,4})/, '$1-$2-$3');
+    if (onlyNums.length <= 9) return onlyNums.replace(/(\d{2})(\d{1,4})(\d{1,4})/, '$1-$2-$3');
+    return onlyNums.replace(/(\d{2})(\d{4})(\d{4})/, '$1-$2-$3');
   }
 
-  // 나머지 지역번호 (031, 051, 042 등 3자리 지역번호 또는 휴대폰 번호)
   if (onlyNums.length <= 3) return onlyNums;
   if (onlyNums.length <= 7) return onlyNums.replace(/(\d{3})(\d{1,4})/, '$1-$2');
-  return onlyNums.replace(/(\d{3})(\d{3,4})(\d{0,4})/, '$1-$2-$3');
+  if (onlyNums.length <= 11) {
+    return onlyNums.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+  }
+
+  return onlyNums;
 };
 
 const CenterPhoneInput = ({ label, value, onChange, error }) => {
