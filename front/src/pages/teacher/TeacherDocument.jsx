@@ -9,9 +9,12 @@ import filehover from '../../assets/img/filehover.png';
 import useLoginStore from '../../store/loginStore';
 import { boardService } from '../../api/boards';
 import TeacherDocumentList from './components/TeacherDocumentList';
+import RecentDocuments from './components/RecentDocuments';
 
-const file = [
+const recentFiles = [
   { title: '길dfdfdfdfdfdfdfdf면', modifyDate: '2025-03-01', file: 'xxx.png' },
+  { title: '문서 2dfdfdfd', modifyDate: '2025-03-01', file: 'xxx.png' },
+  { title: '문서 3', modifyDate: '2025-03-01', file: 'xxx.png' },
   { title: '문서 2dfdfdfd', modifyDate: '2025-03-01', file: 'xxx.png' },
   { title: '문서 3', modifyDate: '2025-03-01', file: 'xxx.png' },
 ];
@@ -19,22 +22,37 @@ const file = [
 const TeacherDocument = () => {
   const { member } = useLoginStore();
   const memberNo = member?.memberNo;
+
   const [documents, setDocuments] = useState([]);
   const [openModal, setOpenModal] = useState(false);
 
+  //서류 목록
   const fetchDocuments = async () => {
-    if (!memberNo) return;
-
     try {
-      const data = await boardService.getDocumentList(memberNo);
+      const data = await boardService.getDocumentList();
       setDocuments(data);
     } catch (err) {
       console.error('서류 목록 조회 실패 : ', err);
     }
   };
 
+  //최근 열람한 목록
+  const [recentDocs, setRecentDocs] = useState([]);
+
+  const fetchRecentDocuments = async () => {
+    try {
+      const data = await boardService.getRecentViewdDocs();
+      setRecentDocs(data);
+    } catch (error) {
+      console.error('최근 열람한 파일 목록 불러오기 실패 : ', error);
+    }
+  };
+
   useEffect(() => {
+    if (!memberNo) return;
+
     fetchDocuments();
+    fetchRecentDocuments();
   }, [memberNo]);
 
   return (
@@ -52,19 +70,21 @@ const TeacherDocument = () => {
       />
       <TopContent>
         <Title>최근 열람한 문서</Title>
-        <Documents>
-          {file.map((f, index) => (
-            <Card key={index}>
-              <FileName>{f.title}</FileName>
-              <FileInfo>{f.file}</FileInfo>
-            </Card>
-          ))}
-        </Documents>
+        <RecentDocuments recentDocs={recentDocs} />
       </TopContent>
       <BottomContent>
-        <TeacherDocumentList documents={documents} />
+        <TeacherDocumentList documents={documents} onDelete={fetchDocuments} onViewed={fetchRecentDocuments} />
       </BottomContent>
-      {openModal && <FileUploadModal onClose={() => setOpenModal(false)} memberNo={memberNo} />}
+      {openModal && (
+        <FileUploadModal
+          onClose={() => setOpenModal(false)}
+          memberNo={memberNo}
+          onSuccess={() => {
+            fetchDocuments();
+            fetchRecentDocuments();
+          }}
+        />
+      )}
     </Wrapper>
   );
 };
@@ -151,91 +171,4 @@ const FileInfo = styled.div`
   display: flex;
   padding: 0 0 0 20px;
   font-size: ${({ theme }) => theme.fontSizes.xs};
-`;
-
-const Table = styled.table`
-  width: 100%;
-  table-layout: fixed;
-  border-collapse: collapse;
-  padding: 10px;
-
-  th,
-  td {
-    padding: 10px;
-    text-align: center;
-    border-bottom: 1px solid black;
-    word-wrap: break-word;
-  }
-
-  tbody tr {
-    &:hover {
-      cursor: pointer;
-      background-color: ${({ theme }) => theme.colors.gray[300]};
-    }
-  }
-
-  th:nth-child(1),
-  td:nth-child(1) {
-    width: 10%;
-  }
-  th:nth-child(2),
-  td:nth-child(2) {
-    width: 20%;
-  }
-  th:nth-child(3),
-  td:nth-child(3) {
-    width: 30%;
-  }
-  th:nth-child(4),
-  td:nth-child(4) {
-    width: 8%;
-  }
-  th:nth-child(5),
-  td:nth-child(5) {
-    width: 8%;
-  }
-  th:nth-child(6),
-  td:nth-child(6) {
-    width: 8%;
-  }
-`;
-
-const Thead = styled.thead`
-  color: ${({ theme }) => theme.colors.white};
-  background-color: ${({ theme }) => theme.colors.blue};
-  font-size: ${({ $fontSize }) => ($fontSize ? $fontSize : '')};
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-
-  & th:first-child {
-    border-top-left-radius: 10px;
-  }
-
-  & th:last-child {
-    border-top-right-radius: 10px;
-  }
-`;
-
-const Pagination = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 15px 0;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-`;
-
-const PageButton = styled.button`
-  padding: 5px 10px;
-  margin: 0 5px;
-  border-radius: ${({ theme }) => theme.borderRadius.base};
-  border: 1px solid ${({ theme }) => theme.colors.gray[300]};
-  background-color: ${({ $active, theme }) => ($active ? theme.colors.blue : theme.colors.white)};
-  color: ${({ $active, theme }) => ($active ? theme.colors.white : theme.colors.text)};
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.gray[100]};
-  }
 `;

@@ -4,17 +4,16 @@ package com.bridge.kinder.service;
 import com.bridge.kinder.dto.VacationDto;
 import com.bridge.kinder.dto.VacationDto.Request;
 import com.bridge.kinder.dto.VacationDto.Response;
-import com.bridge.kinder.entity.Leave;
-import com.bridge.kinder.entity.Member;
-import com.bridge.kinder.entity.Vacation;
+import com.bridge.kinder.entity.*;
 import com.bridge.kinder.enums.CommonEnums;
 import com.bridge.kinder.enums.CommonEnums.AdmissionStatus;
 import com.bridge.kinder.enums.CommonEnums.VacationType;
-import com.bridge.kinder.repository.LeaveRepository;
-import com.bridge.kinder.repository.MemberRepository;
-import com.bridge.kinder.repository.VacationRepository;
+import com.bridge.kinder.repository.*;
+
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
@@ -33,6 +32,7 @@ public class VacationServiceImpl implements VacationService {
     private final VacationRepository vacationRepository;
     private final MemberRepository memberRepository;
     private final LeaveRepository leaveRepository;
+    private final AttendanceRepository attendanceRepository;
     private final String UPLOAD_PATH = "C://test_upload/";
 
     //휴가 신청
@@ -131,15 +131,6 @@ public class VacationServiceImpl implements VacationService {
 
     }
 
-    //시설 별 휴가 조회
-//    @Override
-//    public List<Response> getVacationsByCenter(int centerNo) {
-//        List<Vacation> vacations = vacationRepository.findByMember_Center_CenterNo(centerNo);
-//
-//        return vacations.stream()
-//                .map( v -> VacationDto.Response.toDto(v, v.getMember()))
-//                .collect(Collectors.toList());
-//    }
 
     //휴가 승인
     @Override
@@ -153,6 +144,37 @@ public class VacationServiceImpl implements VacationService {
 
         vacation.approve();
         Vacation updated = vacationRepository.save(vacation);
+
+        //휴가 승인된 날짜 근태 상태 휴가로 바꾸기
+        LocalDate startDate = vacation.getStartDate();
+        LocalDate endDate = vacation.getEndDate();
+        Member member = vacation.getMember();
+        Center center = vacation.getMember().getCenter();
+        CommonEnums.VacationType type = updated.getType();
+
+        //for (int i = 0; i < 10; i++)
+        for(LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
+
+            CommonEnums.TeacherAttendanceStatus attendanceStatus;
+
+            if ( type.equals(CommonEnums.VacationType.WORKATION) ) {
+                attendanceStatus = CommonEnums.TeacherAttendanceStatus.WORKCATION;
+            } else if ( type.equals(VacationType.VACATED)) {
+                attendanceStatus = CommonEnums.TeacherAttendanceStatus.VACATION;
+            } else {
+                throw new IllegalArgumentException("올바른 휴가 유형이 아닙니다.");
+            }
+
+            Attendance attendance = Attendance.builder()
+                    .member(member)
+                    .center(center)
+                    .attendanceDate(date)
+                    .status(attendanceStatus)
+                    .build();
+
+            attendanceRepository.save(attendance);
+        }
+
         return VacationDto.Response.toDto(updated, updated.getMember());
     }
 

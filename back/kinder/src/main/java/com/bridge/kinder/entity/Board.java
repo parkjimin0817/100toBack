@@ -41,7 +41,11 @@ public class Board {// 게시판
 
     @Column(name = "ATTACHMENT", length = 100)
     private String attachment;
-    //첨부파일
+    //첨부파일 경로
+
+    @Column(name = "ATTACHMENT_ORIGIN", length = 100)
+    private String attachmentOrigin;
+    //첨부파일 원본(originName)
 
     @Column(name = "VIEWED_DATE")
     private LocalDateTime viewedDate;

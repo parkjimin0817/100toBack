@@ -109,6 +109,8 @@ export const API_ENDPOINTS = {
     GETRECENT3: (centerNo) => `api/boards/recent3/${centerNo}`,
     UPLOADDOC: '/api/boards/documents',
     GETDOCLIST: '/api/boards/documents/list',
+    UPDATEVIEWED: (boardNo) => `/api/boards/documents/viewed/${boardNo}`,
+    GETRECENTVIEWED: '/api/boards/documents/recent',
   },
   VACATION: {
     BASE: '/api/vacation',
@@ -135,5 +137,6 @@ export const API_ENDPOINTS = {
   FILE: {
     BASE: '/api/file',
     PRESIGNED_URL: '/api/file/presigned-url',
+    //DOWNLOAD_URL: '/api/file/download-url',
   },
 };

@@ -27,6 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -287,6 +289,7 @@ public class BoardServiceImpl implements BoardService {
                 .type(BoardType.PRIVATE_DOC)
                 .attachment(request.getFileUrl())
                 .member(member)
+                .viewedDate(LocalDateTime.now())
                 .build();
 
         boardRepository.save(board);
@@ -306,5 +309,26 @@ public class BoardServiceImpl implements BoardService {
                 .map(DocumentResponse::toDto)
                 .toList();
 
+    }
+
+    @Override
+    public void updateViewedDate(int boardNo) {
+        Board board = boardRepository.findById(boardNo)
+                .orElseThrow(() -> new EntityNotFoundException("해당 게시물을 찾을 수 없습니다."));
+
+        board.setViewedDate();
+    }
+
+    @Override
+    public List<DocumentResponse> getRecentViewedDocument(String memberId) {
+        Member member = memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
+
+        List<Board> recentDocuments = boardRepository
+                .findByMemberNoAndTypeOrderByViewedDate(member.getMemberNo(), BoardType.PRIVATE_DOC);
+
+        return recentDocuments.stream()
+                .map(DocumentResponse::toDto)
+                .toList();
     }
 }

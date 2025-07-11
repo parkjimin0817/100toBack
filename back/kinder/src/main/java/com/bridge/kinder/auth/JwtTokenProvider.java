@@ -48,4 +48,13 @@ public class JwtTokenProvider {
         //JwtTokenFilter에서 토큰 검증 후에 호출
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
+
+    //채팅관련 함수
+    public Claims parseClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(SECRET_KEY)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
 }
