@@ -28,5 +28,9 @@ public interface BoardService {
     int createDocument(BoardDto.DocumentRequest request);
     //개인 서류 목록 불러오기
     List<BoardDto.DocumentResponse> getDocuments(String memberId);
+    //개인 서류 최근 열람 날짜 업데이트
+    void updateViewedDate(int boardNo);
+    //개인 서류 최근 열람한 5개
+    List<BoardDto.DocumentResponse> getRecentViewedDocument(String memberId);
 
 }

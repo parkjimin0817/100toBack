@@ -59,6 +59,12 @@ export const useVacationForm = () => {
 
   const handleSubmit = async (e, onSuccess) => {
     e.preventDefault();
+
+    if (!type || !typeDetail || !startDate || !endDate || !reason || (typeDetail === '기타' && !customDetail.trim())) {
+      toast.warning('모든 항목을 입력해주세요.');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('type', type === '휴가' ? 'VACATED' : type === '워케이션' ? 'WORKATION' : '');
     formData.append('type_detail', typeDetail === '기타' ? customDetail : typeDetail);
@@ -74,7 +80,7 @@ export const useVacationForm = () => {
       if (onSuccess) onSuccess();
       return data;
     } catch (err) {
-      console.error('반 생성 실패 : ', err);
+      console.error('휴가 신청 실패 : ', err);
       toast.error('휴가 신청 중 오류가 발생했습니다. 다시 시도해주세요.');
     }
   };

@@ -1,7 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 const MyPageMyInfo = ({ info, onChange, isEditable }) => {
+  const [zonecode, setZonecode] = useState('');
+  const [address, setAddress] = useState('');
+  const [detail, setDetail] = useState('');
+
+  // 기존 주소 데이터가 있으면 분리해서 설정
+  useEffect(() => {
+    if (info?.address) {
+      const addressParts = info.address.split(', ');
+      if (addressParts.length >= 2) {
+        setAddress(addressParts[0]);
+        setDetail(addressParts[1]);
+      } else {
+        setAddress(info.address);
+        setDetail('');
+      }
+    }
+    if (info?.zonecode) {
+      setZonecode(info.zonecode);
+    }
+  }, [info]);
+
   const handleChange = (field, value) => {
     if (!isEditable) return;
     onChange((prev) => ({
@@ -9,18 +30,41 @@ const MyPageMyInfo = ({ info, onChange, isEditable }) => {
       [field]: value,
     }));
   };
+
+  // 주소 변경 시 전체 주소 업데이트
+  useEffect(() => {
+    if (isEditable) {
+      const fullAddress = detail ? `${address}, ${detail}`.trim() : address;
+      handleChange('address', fullAddress);
+      if (zonecode) {
+        handleChange('zonecode', zonecode);
+      }
+    }
+  }, [address, detail, zonecode, isEditable]);
+
   if (!info) return null;
 
   const openAddressSearch = () => {
+    if (!window.daum || !window.daum.Postcode) {
+      alert('주소 검색 기능이 로딩되지 않았어요.');
+      return;
+    }
+
     new window.daum.Postcode({
-      oncomplete: (dataFromApi) => {
-        handleChange('address', dataFromApi.address);
+      oncomplete: (data) => {
+        setZonecode(data.zonecode);
+        setAddress(data.address);
+        setDetail('');
       },
     }).open();
   };
 
+  const handleDetailChange = (e) => {
+    setDetail(e.target.value);
+  };
+
   return (
-    <Wrapper>
+    <Wrapper isEditable={isEditable}>
       <InfoRow>
         <InfoType>이름 </InfoType>
         <Info>
@@ -49,10 +93,16 @@ const MyPageMyInfo = ({ info, onChange, isEditable }) => {
         <InfoType>주소</InfoType>
         <Info>
           {isEditable ? (
-            <>
-              <AddressInput value={info.address} placeholder="주소를 검색해주세요" readOnly />
-              <SearchButton onClick={openAddressSearch}>주소 검색</SearchButton>
-            </>
+            <AddressContainer>
+              <AddressRow>
+                <ShortInput type="text" placeholder="우편번호" value={zonecode} readOnly />
+                <SearchButton type="button" onClick={openAddressSearch}>
+                  주소 검색
+                </SearchButton>
+              </AddressRow>
+              <LongInput type="text" placeholder="기본주소" value={address} readOnly />
+              <LongInput type="text" placeholder="상세주소" value={detail} onChange={handleDetailChange} />
+            </AddressContainer>
           ) : (
             info.address || '-'
           )}
@@ -76,7 +126,8 @@ export default MyPageMyInfo;
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 200px;
+  height: ${({ isEditable }) => (isEditable ? 'auto' : '200px')};
+  min-height: ${({ isEditable }) => (isEditable ? '300px' : '200px')};
   padding: 10px 0;
   display: flex;
   flex-direction: column;
@@ -86,7 +137,8 @@ const Wrapper = styled.div`
 const InfoRow = styled.div`
   width: 100%;
   display: flex;
-  align-items: center;
+  align-items: start;
+  margin-bottom: 10px;
 `;
 const InfoType = styled.div`
   width: 100px;
@@ -116,23 +168,58 @@ const InfoInput = styled.input`
   border: 1px solid ${({ theme }) => theme.colors.gray[400]};
 `;
 
-const AddressInput = styled.input`
-  width: 300px;
-  height: 30px;
-  border-radius: 8px;
-  padding: 5px;
-  border: 1px solid ${({ theme }) => theme.colors.gray[400]};
+const AddressContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing[1]};
+  width: 100%;
+`;
+
+const AddressRow = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing[3]};
+`;
+
+const ShortInput = styled.input`
+  flex: 1;
+  height: 40px;
+  padding: ${({ theme }) => theme.spacing[2]};
+  outline: none;
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+  border: 1px solid ${({ theme }) => theme.colors.gray[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.gray[300]};
+  }
+`;
+
+const LongInput = styled.input`
+  width: 100%;
+  height: 40px;
+  padding: ${({ theme }) => theme.spacing[2]};
+  outline: none;
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+  border: 1px solid ${({ theme }) => theme.colors.gray[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.gray[300]};
+  }
 `;
 
 const SearchButton = styled.button`
-  margin-left: 10px;
-  height: 30px;
-  padding: 4px 12px;
-  background-color: ${({ theme }) => theme.colors.blue};
-  color: white;
-  border-radius: 6px;
-  font-size: 14px;
+  padding: ${({ theme }) => theme.spacing[0]} ${({ theme }) => theme.spacing[2]};
+  height: 40px;
+  outline: none;
+  background-color: ${({ theme }) => theme.colors.lightblue};
+  color: ${({ theme }) => theme.colors.gray[900]};
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+  border: none;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.lightblue};
+  }
 `;
 
 const Select = styled.select`

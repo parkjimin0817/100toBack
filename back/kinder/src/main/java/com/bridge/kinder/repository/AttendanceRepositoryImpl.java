@@ -19,21 +19,6 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
     @PersistenceContext
     private EntityManager em;
 
-
-//    //당일 출근 기록
-//    @Override
-//    public Optional<Attendance> findByMemberNoAndDate(int memberNo, LocalDateTime startOfDay, LocalDateTime endOfDay) {
-//        String jpql = "SELECT a FROM Attendance a WHERE a.member.memberNo = :memberNo AND (a.inTime BETWEEN :start AND :end)";
-//
-//        List<Attendance> result = em.createQuery(jpql, Attendance.class)
-//                .setParameter("memberNo", memberNo)
-//                .setParameter("start", startOfDay)
-//                .setParameter("end", endOfDay)
-//                .getResultList();
-//
-//        return result.stream().findFirst();
-//    }
-
     //기록 저장
     @Override
     public Attendance save(Attendance attendance) {

@@ -189,6 +189,7 @@ const managerSidebar = [
       { label: '교사 소개', link: '/manager/introteacher' },
       { label: '반 배정', link: '/manager/classplacement' },
       { label: '반 목록', link: '/manager/classmanage' },
+      { label: '서류 관리', link: '/teacher/mydocument' },
     ],
   },
   {

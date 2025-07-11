@@ -27,6 +27,8 @@ const VacationForm = ({ onSuccess }) => {
     resetForm,
   } = useVacationForm();
 
+  const today = new Date().toISOString().split('T')[0];
+
   return (
     <Wrapper>
       <ContentHeader Title="휴가 / 워케이션 신청하기" Color="blue" FontSize="lg" />
@@ -64,7 +66,7 @@ const VacationForm = ({ onSuccess }) => {
         </InputRow>
         <InputRow>
           <Label>날짜 : </Label>
-          <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+          <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} min={today} />
           <Text>-</Text>
           <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} min={startDate} />
         </InputRow>
@@ -73,8 +75,11 @@ const VacationForm = ({ onSuccess }) => {
           <InputTextArea value={reason} onChange={(e) => setReason(e.target.value)} />
         </InputRow>
         <InputRow>
-          <Label>첨부파일 : </Label>
-          <HiddenInput type="file" multiple ref={fileInputRef} onChange={handleFileChange} />
+          <InfoDiv>
+            <Label>첨부파일 : </Label>
+            <Info>*선택사항</Info>
+          </InfoDiv>
+          <HiddenInput type="file" ref={fileInputRef} onChange={handleFileChange} />
           <FileName>{fileNames.join(', ')}</FileName>
           <Button type="button" onClick={handleButtonClick}>
             파일 업로드
@@ -197,7 +202,17 @@ const FileName = styled.span`
   border-radius: 8px;
   padding: 5px;
   margin: 0 10px 0 0;
-  overflow: auto;
-  text-overflow: ellipsis;
+  overflow-y: hidden;
   color: #666;
+`;
+
+const InfoDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Info = styled.div`
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.gray[500]};
+  text-align: left;
 `;

@@ -75,6 +75,7 @@ public class ChildDto {
 
         private int class_no;
         private String class_name;
+        private String member_profile;
 
         public static Response toDto(Child child){
             return Response.builder()
@@ -82,6 +83,7 @@ public class ChildDto {
                     .child_name(child.getChildName())
                     .class_no(child.getClassRoom().getClassNo())
                     .class_name(child.getClassRoom().getClassName())
+                    .member_profile(child.getChildProfile())
                     .build();
         }
     }
@@ -95,6 +97,7 @@ public class ChildDto {
         private int child_no;
         private String child_name;
         private String class_name;
+        private String member_profile;
 
         public static childListResponse toDto(Child child){
             return childListResponse.builder()
@@ -105,6 +108,7 @@ public class ChildDto {
                                     ? child.getClassRoom().getClassName()
                                     : "미배정"
                     )
+                    .member_profile(child.getChildProfile())
                     .build();
         }
     }
@@ -341,6 +345,7 @@ public class ChildDto {
         private BigDecimal child_height;
         private BigDecimal child_weight;
         private String child_address;
+        private String child_profile;
 
         public static detail toDto(
                 List<ChildHealthLog> healthLogs,
@@ -380,6 +385,7 @@ public class ChildDto {
                     .child_height(physicalInfo != null ? physicalInfo.getHeight() : null)
                     .child_weight(physicalInfo != null ? physicalInfo.getWeight() : null)
                     .child_address(member.getAddress())
+                    .child_profile(child.getChildProfile())
                     .build();
         }
     }

@@ -5,10 +5,12 @@ import { IoMdDownload } from 'react-icons/io';
 import { TiDocumentText } from 'react-icons/ti';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { toast } from 'react-toastify';
+import { boardService } from '../../../api/boards';
 
 const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
-const TeacherDocumentList = ({ documents }) => {
+const TeacherDocumentList = ({ documents, onDelete, onViewed }) => {
+  console.log(documents);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
@@ -18,12 +20,19 @@ const TeacherDocumentList = ({ documents }) => {
   const paginatedData = documents.slice(startIndex, endIndex);
   const totalPages = Math.ceil(documents.length / itemsPerPage);
 
-  const handlePreview = (d) => {
+  const handlePreview = async (d) => {
     if (!d.fileUrl) return;
     const previewUrl = `${CLOUDFRONT_URL}/${d.fileUrl}`;
     const extension = d.fileUrl.split('.').pop().toLowerCase();
-
     const previewable = ['pdf', 'png', 'jpg', 'jpeg', 'gif'];
+
+    try {
+      await boardService.updateViewedDate(d.board_no);
+      onViewed();
+    } catch (error) {
+      console.error('최근 열람 날짜 업데이트 실패:', error);
+    }
+
     if (previewable.includes(extension)) {
       window.open(previewUrl, '_blank');
     } else {
@@ -31,8 +40,30 @@ const TeacherDocumentList = ({ documents }) => {
     }
   };
 
-  const handleDownload = (d) => {
+  const handleDownload = async (d) => {
     if (!d.fileUrl) return;
+
+    try {
+      await boardService.updateViewedDate(d.board_no);
+      onViewed();
+    } catch (error) {
+      console.error('최근 열람 날짜 업데이트 실패:', error);
+    }
+  };
+
+  const handleDelete = async (d) => {
+    if (!d.board_no) return;
+
+    if (!window.confirm(`${d.title}을 정말 삭제하시겠습니까?`)) return;
+
+    try {
+      await boardService.boardDelete(d.board_no);
+      toast.success('삭제 완료되었습니다.');
+      onDelete();
+    } catch (error) {
+      toast.error('삭제에 실패했습니다. 다시 시도해주세요.');
+      console.error('삭제 실패 :', error);
+    }
   };
 
   return (
@@ -58,7 +89,7 @@ const TeacherDocumentList = ({ documents }) => {
                 <TiDocumentText size={20} onClick={() => handlePreview(d)} style={{ cursor: 'pointer' }} />
               </td>
               <td>
-                <FileName onClick={() => handleDownload(d)}>{d.fileUrl}</FileName>
+                <FileName onClick={() => handleDownload(d)}></FileName>
                 <IoMdDownload size={20} onClick={() => handleDownload(d)} style={{ cursor: 'pointer' }} />
               </td>
               <td>
@@ -69,7 +100,7 @@ const TeacherDocumentList = ({ documents }) => {
         </tbody>
       </Table>
 
-      {totalPages > 1 && (
+      {totalPages > 0 && (
         <Pagination>
           {Array.from({ length: totalPages }, (_, i) => (
             <PageButton key={i} $active={currentPage === i + 1} onClick={() => setCurrentPage(i + 1)}>
@@ -83,7 +114,6 @@ const TeacherDocumentList = ({ documents }) => {
 };
 
 export default TeacherDocumentList;
-
 const Table = styled.table`
   width: 100%;
   table-layout: fixed;
@@ -99,6 +129,10 @@ const Table = styled.table`
   }
 
   tbody tr {
+    &:hover {
+      cursor: pointer;
+      background-color: ${({ theme }) => theme.colors.gray[300]};
+    }
   }
 
   th:nth-child(1),

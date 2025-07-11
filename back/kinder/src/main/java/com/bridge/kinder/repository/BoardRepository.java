@@ -17,4 +17,5 @@ public interface BoardRepository {
     List<Board> getRecent3Boards(int centerNo, List<BoardType> types);
     List<Board> findByMemberNoAndType(int memberNo, BoardType type);
     List<Board> findByClassNo(int classNo);
+    List<Board> findByMemberNoAndTypeOrderByViewedDate(int memberNo, BoardType type);
 }
