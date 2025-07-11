@@ -44,7 +44,7 @@ public class ClassRoomDto {
         private int capacity;
         private String color;
         private String class_image;
-
+        private Integer member_no;
         private String member_name;
         private int child_count;
 
@@ -55,7 +55,8 @@ public class ClassRoomDto {
                     .capacity(classRoom.getCapacity())
                     .color(classRoom.getColor())
                     .class_image(classRoom.getClassImage())
-                    .member_name(teacher != null ? teacher.getMemberName() : "미지정")
+                    .member_no(teacher != null ? teacher.getMemberNo() : null)
+                    .member_name(teacher != null ? teacher.getMemberName() : null)
                     .child_count(childCount)
                     .build();
         }
@@ -112,13 +113,17 @@ public class ClassRoomDto {
     @Builder
     //반 목록
     public static class Update {
+        private Integer class_no;
         private String class_name;
         private int capacity;
         private String color;
         private String class_image;
 
-        public static Update toDto(ClassRoom classRoom) {
+        private int member_no;
+
+        public static Update toDto(ClassRoom classRoom, Member member) {
             return Update.builder()
+                    .class_no(classRoom.getClassNo())
                     .class_name(classRoom.getClassName())
                     .capacity(classRoom.getCapacity())
                     .color(classRoom.getColor())

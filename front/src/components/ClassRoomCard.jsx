@@ -21,13 +21,6 @@ const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
  */
 
 const ClassRoomCard = ({ classRoom, clickEventFunc }) => {
-  // const navigate = useNavigate();
-
-  // const handleCheck = () => {
-  //   if (isDisabled) return;
-
-  //   navigate(address);
-  // };
 
   return (
     <Card $Color={classRoom.color} onClick={() => clickEventFunc(classRoom.class_no)}>
@@ -49,7 +42,7 @@ const ClassRoomCard = ({ classRoom, clickEventFunc }) => {
           </Cardinnerinner>
         </CardInner>
       </CardInfo>
-      <CardTeacherName>{classRoom.member_name} 선생님</CardTeacherName>
+      <CardTeacherName>{classRoom.member_name ? `${classRoom.member_name} 선생님`: `미지정` }</CardTeacherName>
     </Card>
   );
 };

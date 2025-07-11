@@ -18,13 +18,14 @@ public class BoardContentDto {
         private CommonEnums.BoardContentType type;
         private String contentText;
         private String contentFile;
-        private String contentFileKey;
+        private String contentFileOriginal;
 
         public BoardContent toEntity(Board board, int sortOrder) {
             return BoardContent.builder()
                     .type(this.type)
                     .contentText(this.contentText)
                     .contentFile(this.contentFile)
+                    .contentFileOrigin(this.contentFileOriginal)
                     .sortOrder(sortOrder)
                     .board(board)
                     .build();
@@ -66,6 +67,7 @@ public class BoardContentDto {
         private CommonEnums.BoardContentType type;
         private String contentText;
         private String contentFile; // 수정된 경우 경로 저장
+        private String contentFileOriginal;
         private int sortOrder;
 
         public BoardContent toEntity(Board board) {
@@ -75,6 +77,7 @@ public class BoardContentDto {
                     .type(this.type)
                     .contentText(this.contentText)
                     .contentFile(this.contentFile)
+                    .contentFileOrigin(this.contentFileOriginal)
                     .sortOrder(this.sortOrder)
                     .build();
         }

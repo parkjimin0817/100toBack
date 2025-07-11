@@ -45,15 +45,15 @@ public class ClassRoomController {
     }
 
     //반 수정하기
-    @PatchMapping("/update")
-    public ResponseEntity<ClassRoomDto.Update> updateClass(@RequestBody ClassRoomDto.Update dto, @RequestParam int classNo) {
+    @PutMapping("/update/{classNo}")
+    public ResponseEntity<ClassRoomDto.Response> updateClass(@RequestBody ClassRoomDto.Update dto, @PathVariable int classNo) {
         return ResponseEntity.ok(classRoomService.updateClass(dto,classNo));
     }
 
 
     //반 삭제하기
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteClass(@RequestParam int classNo) {
+    @DeleteMapping("/delete/{classNo}")
+    public ResponseEntity<?> deleteClass(@PathVariable int classNo) {
         return ResponseEntity.ok(classRoomService.deleteClass(classNo));
     }
 }

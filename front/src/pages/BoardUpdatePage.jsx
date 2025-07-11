@@ -42,8 +42,8 @@ const BoardUpdatePage = () => {
     contents: postData.boardContents,
   });
 
-  console.log(postData);
-  console.log(formState);
+  // console.log(postData);
+  // console.log(formState);
 
   /**
    * 수정중 페이지 이동 감지시 경고창 띄움.
@@ -66,7 +66,7 @@ const BoardUpdatePage = () => {
   };
   const removePrefix = (path) => {
     if (isPrefixed(path)) {
-      return path.slice(CLOUDFRONT_URL.length); // 길이만큼 잘라냄
+      return path.slice(CLOUDFRONT_URL.length + 1); // 길이만큼 잘라냄 + / 한글자가 남음. 같이 자르기.
     }
     return path || '';
   };
@@ -110,83 +110,101 @@ const BoardUpdatePage = () => {
     //S3 게시판 컨텐츠 파일 저장 위치
     const detailPath = 'board/content/';
 
-    //컨텐츠 부분에 있는 파일들
-    const filterData = formState.contents.filter((item) => item.type === 'IMG');
+    // ✅ 1. 새로 등록된 File 객체만 골라냄 (수정된 이미지)
+    const newImageItems = formState.contents.filter(
+      (item) => item.type === 'IMG' && item.contentFile instanceof File
+    );
 
-    console.log(filterData);
+    // console.log(filterData);
     //첨부파일
-    const otherFile = formState.attachment;
+    const otherFile = formState?.attachment;
+    let attachmentChangeName = null;
 
     //파일 타입
-    const fileType = formState.attachment.substring(formState.attachment.lastIndexOf('.') + 1);
-    console.log(fileType);
-
-    // 1. Presigned URL 요청 [첨부파일]
-    const presigned = await getPresignedUrl(otherFile, fileType, path);
-
-    console.log(presigned);
-
-    // 2. S3에 업로드 [첨부파일]
-    await uploadFileToS3(presigned.presigned_url, otherFile);
-
-    // 1. Presigned URL 요청 [컨텐츠 부분에 있는 파일]
+    if (otherFile instanceof File) {
+      // 1. Presigned URL 요청 [첨부파일]
+      const presigned = await getPresignedUrl(otherFile.name, otherFile.type, path);
+        
+      console.log(presigned);
+      console.log(otherFile.type);
+  
+      // 2. S3에 업로드 [첨부파일]
+      await uploadFileToS3(presigned.presigned_url, otherFile);
+      attachmentChangeName = presigned.change_name;
+    }
+    
+    // ✅ 2. Presigned URL 요청 (새로운 이미지만)
     const presignedResults = await Promise.all(
-      filterData.map((item) => getPresignedUrl(item.contentFile.name, item.contentFile.type, detailPath))
+      newImageItems.map((item) =>
+        getPresignedUrl(item.contentFile.name, item.contentFile.type, detailPath)
+      )
     );
 
-    // 2. S3에 업로드 [컨텐츠 부분에 있는 파일]
+    // ✅ 3. S3 업로드 (새로운 이미지만)
     await Promise.all(
-      presignedResults.map((presigned, index) => uploadFileToS3(presigned.presigned_url, filterData[index].contentFile))
+      presignedResults.map((presigned, index) =>
+        uploadFileToS3(presigned.presigned_url, newImageItems[index].contentFile)
+      )
     );
 
-    let imgFileIndex = 0;
+    // ✅ 4. 컨텐츠 전체를 다시 구성
+    let imgUploadIndex = 0;
 
     const contents = formState.contents.map((item, index) => {
       if (item.type === 'IMG') {
-        const changeName = presignedResults[imgFileIndex]?.change_name;
-        imgFileIndex += 1;
+        if (item.contentFile instanceof File) {
+          // 새로 등록된 이미지 → change_name으로 대체
+          const changeName = presignedResults[imgUploadIndex]?.change_name;
+          imgUploadIndex += 1;
 
-        return {
-          type: item.type, // "IMG"
-          contentText: null,
-          contentFile: removePrefix(changeName), // "board/content/xxx.jpg"
-          contentFileKey: `contentFile_${index}`,
-        };
+          return {
+            type: item.type,
+            contentText: null,
+            contentFile: removePrefix(changeName), // 예: "board/content/xxx.jpg"
+            contentFileOriginal: item.contentFile.name,
+          };
+        } else {
+          // 기존 이미지 URL 그대로 유지
+          return {
+            type: item.type,
+            contentText: null,
+            contentFile: removePrefix(item.contentFile), // 이미 있는 경로
+            contentFileOriginal: item.contentFileOriginal ?? null,
+          };
+        }
       } else {
         return {
-          type: item.type, // "TEXT"
+          type: item.type,
           contentText: item.contentText,
           contentFile: null,
-          contentFileKey: null,
+          contentFileOriginal: null,
         };
       }
     });
 
+    
     const payload = {
       title: formState.title,
       type: formState.type,
-      classRoomId: formState.classRoomNo,
+      attachment: attachmentChangeName ? attachmentChangeName : formState.attachment,
+      attachmentOriginal: otherFile instanceof File ? otherFile.name : postData.attachmentOriginal,
       centerId: formState.centerId,
+      classRoomId: formState.classRoomNo,
       memberId: formState.memberId,
       contents: contents,
     };
-
-    console.log(payload);
-
-    // const payload = {
-    //   title: formState.title,
-    //   type: formState.type,
-    //   fileName: presigned?.changeName || null,
-    //   centerId: formState.centerId,
-    //   classRoomId: formState.classRoomNo,
-    //   memberId: formState.memberId,
-    //   contents: contents,
-    // };
-
+    
+    console.log("payload: ", payload);
+    
     // api 전송 예시
+    const responseData = await boardService.updateBoard(postData.boardNo, payload);
     // await api.put(`http://localhost:8888/api/boards/${postData.boardNo}`, formData, {
     //   headers: { 'Content-Type': 'multipart/form-data' },
     // });
+    console.log(responseData);
+    if (!responseData) {
+      throw new Error('게시판 수정 실패했습니다.');
+    }
     allowNavigation();
     navigate(`/${category}/${postData.boardNo}`);
   };

@@ -38,8 +38,6 @@ public class ClassRoomServiceImpl implements ClassRoomService {
     private final MemberRepository memberRepository;
     private final ChildRepository childRepository;
     private final AttendanceRepository attendanceRepository;
-    private final String UPLOAD_PATH = "C://test_upload/";
-
 
     @Override
     public ClassRoomDto.Response createClass(ClassRoomDto.Create classRoomCreate) {
@@ -129,12 +127,20 @@ public class ClassRoomServiceImpl implements ClassRoomService {
     }
 
     @Override
-    public ClassRoomDto.Update updateClass(ClassRoomDto.Update dto, int classNo) {
+    public ClassRoomDto.Response updateClass(ClassRoomDto.Update dto, int classNo) {
+        //교사 조회
+        Member teacher = memberRepository.findByMemberNo(dto.getMember_no())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 교사입니다."));
+
         ClassRoom classRoom = classRoomRepository.updateClass(dto,classNo)
                 .orElseThrow(() -> new EntityNotFoundException("수정에 실패하였습니다."));
 
+        // 교사에 반 연결
+        teacher.setClassRoom(classRoom);
+        memberRepository.save(teacher);
+        int childCount = childRepository.countChildByClassroom(dto.getClass_no());
 
-        return ClassRoomDto.Update.toDto(classRoom);
+        return ClassRoomDto.Response.toDto(classRoom, teacher, childCount);
     }
 
     @Override

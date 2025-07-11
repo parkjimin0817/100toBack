@@ -44,8 +44,36 @@ public class BoardServiceImpl implements BoardService {
     private final String UPLOAD_PATH = "C://test_upload/";
     private final AlarmRepository alarmRepository;
 
+//    @Override
+//    public int createBoard(BoardDto.Create dto) throws IOException {
+//        Member member = memberRepository.findByParentNo(dto.getMemberId())
+//                .orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
+//        Center center = centerRepository.findById(dto.getCenterId())
+//                .orElseThrow(() -> new RuntimeException("존재하지 않는 센터입니다."));
+//        ClassRoom classRoom = null;
+//        if (dto.getClassRoomId() != null) {
+//            classRoom = classRoomRepository.findById(dto.getClassRoomId())
+//                    .orElseThrow(() -> new RuntimeException("존재하지 않는 반입니다."));
+//        }
+//
+//        Board board = dto.toEntity(center, member, classRoom);
+//
+//        AtomicInteger order = new AtomicInteger(0);
+//
+//        List<BoardContent> contents = new ArrayList<>();
+//
+//        for (BoardContentDto.Create contentDto : dto.getContents()) {
+//            BoardContent content = contentDto.toEntity(board, order.getAndIncrement());
+//            contents.add(content);
+//        }
+//
+//        board.getBoardContents().addAll(contents);
+//
+//        boardRepository.save(board);
+//        return board.getBoardNo();
+//    }
     @Override
-    public int createBoard(BoardDto.Create dto) throws IOException {
+    public int createBoard(BoardDto.Create dto) {
         Member member = memberRepository.findByParentNo(dto.getMemberId())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
         Center center = centerRepository.findById(dto.getCenterId())
@@ -56,10 +84,26 @@ public class BoardServiceImpl implements BoardService {
                     .orElseThrow(() -> new RuntimeException("존재하지 않는 반입니다."));
         }
 
+        // 1. 게시글 타입이 PHOTO, MEAL_PLAN일 경우에만
+        if (dto.getType() == CommonEnums.BoardType.PHOTO || dto.getType() == CommonEnums.BoardType.MEAL_PLAN) {
+            // 2. IMG 타입인 첫 번째 콘텐츠 찾기
+            BoardContentDto.Create firstImageContent = dto.getContents().stream()
+                    .filter(c -> c.getType() == CommonEnums.BoardContentType.IMG)
+                    .findFirst()
+                    .orElse(null);
+
+            // 3. 찾은 경우 attachment 정보 세팅
+            if (firstImageContent != null) {
+                dto.setAttachment(firstImageContent.getContentFile());
+                dto.setAttachmentOriginal(firstImageContent.getContentFileOriginal());
+            }
+        }
+
+        // 4. Board 생성
         Board board = dto.toEntity(center, member, classRoom);
 
+        // 5. BoardContent 생성
         AtomicInteger order = new AtomicInteger(0);
-
         List<BoardContent> contents = new ArrayList<>();
 
         for (BoardContentDto.Create contentDto : dto.getContents()) {
@@ -68,7 +112,6 @@ public class BoardServiceImpl implements BoardService {
         }
 
         board.getBoardContents().addAll(contents);
-
 
         boardRepository.save(board);
 
@@ -88,7 +131,6 @@ public class BoardServiceImpl implements BoardService {
         System.out.println("final attachment: " + board.getAttachment());
         return board.getBoardNo();
     }
-
 
     @Override
     public BoardDto.Detail getBoard(int boardNo) {
@@ -174,94 +216,69 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public int updateBoard(Integer boardNo, BoardDto.Update dto, MultipartFile file, List<MultipartFile> contentFiles) throws IOException {
+    public int updateBoard(Integer boardNo, BoardDto.Update dto) {
+        // 1. 기존 게시글 조회
         Board board = boardRepository.findById(boardNo)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
 
-        String attachmentPath = null;
-        // 첨부파일 업데이트
-        if (file != null && !file.isEmpty()) {
-            attachmentPath = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            file.transferTo(new File(UPLOAD_PATH + attachmentPath));
-        }
-
-        // 기존 컨텐츠 매핑
+        // 2. 기존 컨텐츠 매핑
         Map<Long, BoardContent> existingContentMap = board.getBoardContents().stream()
                 .collect(Collectors.toMap(BoardContent::getBoardContentNo, Function.identity()));
 
-        List<BoardContent> updatedContents = new ArrayList<>(); // 수정 후 컨텐츠 리스트
+        List<BoardContent> updatedContents = new ArrayList<>();
         AtomicInteger order = new AtomicInteger(0);
-        AtomicInteger imageIndex = new AtomicInteger(0);
 
         for (BoardContentDto.Update contentDto : dto.getContents()) {
-            BoardContent contentEntity = existingContentMap.get(contentDto.getContentId()); // 수정전 컨텐츠 가져옴
-            if (contentEntity != null) { // 기존 컨텐츠인지 판단
-                String oldFileName = contentEntity.getContentFile();
+            BoardContent contentEntity = existingContentMap.get(contentDto.getContentId());
 
-                // 이미지인지 판단
-                if (contentDto.getType() == CommonEnums.BoardContentType.IMG && contentFiles != null && imageIndex.get() < contentFiles.size()) {
-                    // 수정전 파일과 현재 파일 같은지 판단
-                    if(!contentDto.getContentFile().equals(contentEntity.getContentFile())) {
-                        MultipartFile newFile = contentFiles.get(imageIndex.get());
-                        String newFileName = newFile.getOriginalFilename();
-                        if (newFile != null && !newFile.isEmpty() &&
-                                (oldFileName == null || !oldFileName.endsWith(newFileName))) {
-                            // 파일 변경 시
-                            String savedPath = UUID.randomUUID() + "_content_" + newFileName;
-                            newFile.transferTo(new File(UPLOAD_PATH + savedPath));
-                            contentEntity.updateBoardContentImg(savedPath);
-                            imageIndex.incrementAndGet();
-                        }
-                    }
-                }
-
-                contentEntity.updateBoardContent(contentDto.getContentText(), order.getAndIncrement());
-
+            if (contentEntity != null) {
+                // 기존 콘텐츠 업데이트
+                contentEntity.updateBoardContent(
+                        contentDto.getContentText(),
+                        contentDto.getContentFile(),
+                        contentDto.getContentFileOriginal(),
+                        order.getAndIncrement()
+                );
                 updatedContents.add(contentEntity);
             } else {
-                // 신규 컨텐츠
-                String newFilePath = null;
-                if (contentDto.getType() == CommonEnums.BoardContentType.IMG && contentFiles != null && imageIndex.get() < contentFiles.size()) {
-                    MultipartFile newFile = contentFiles.get(imageIndex.getAndIncrement());
-                    if (newFile != null && !newFile.isEmpty()) {
-                        newFilePath = UUID.randomUUID() + "_content_" + newFile.getOriginalFilename();
-                        newFile.transferTo(new File(UPLOAD_PATH + newFilePath));
-                    }
-                }
-
+                // 새 콘텐츠 추가
                 BoardContent newContent = BoardContent.builder()
                         .board(board)
                         .type(contentDto.getType())
                         .contentText(contentDto.getContentText())
-                        .contentFile(newFilePath)
+                        .contentFile(contentDto.getContentFile())
+                        .contentFileOrigin(contentDto.getContentFileOriginal())
                         .sortOrder(order.getAndIncrement())
                         .build();
+
                 updatedContents.add(newContent);
             }
         }
 
-        if(dto.getType() == CommonEnums.BoardType.PHOTO) {
-            Optional<BoardContent> firstImageContent = updatedContents.stream()
-                    .filter(content -> content.getType() == CommonEnums.BoardContentType.IMG)
+        // 3. PHOTO 타입 게시글인 경우, 대표 이미지 설정
+        String attachmentPath = dto.getAttachment();
+        String attachmentOriginal = dto.getAttachmentOriginal();
+
+        if (dto.getType() == CommonEnums.BoardType.PHOTO || dto.getType() == CommonEnums.BoardType.MEAL_PLAN) {
+            Optional<BoardContentDto.Update> firstImageContent = dto.getContents().stream()
+                    .filter(c -> c.getType() == CommonEnums.BoardContentType.IMG)
                     .findFirst();
-            attachmentPath = firstImageContent
-                    .map(BoardContent::getContentFile)
-                    .orElse(null);
-            System.out.println(firstImageContent);
-            System.out.println("사진 경로" + attachmentPath);
+
+            attachmentPath = firstImageContent.map(BoardContentDto.Update::getContentFile).orElse(null);
+            attachmentOriginal = firstImageContent.map(BoardContentDto.Update::getContentFileOriginal).orElse(null);
         }
 
-        board.update(dto.getTitle(), dto.getType(), attachmentPath);
+        // 4. 게시글 업데이트
+        board.update(dto.getTitle(), dto.getType(), attachmentPath, attachmentOriginal);
 
+        // 5. 콘텐츠 교체
         board.getBoardContents().clear();
         board.getBoardContents().addAll(updatedContents);
-
-        System.out.println("final Content Count : " + updatedContents.size());
-        board.getBoardContents().forEach(c -> System.out.println("content: " + c.getContentText()));
 
         boardRepository.save(board);
         return board.getBoardNo();
     }
+
 
     //시설 별 최근 3개 게시물
     @Override

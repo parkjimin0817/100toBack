@@ -79,11 +79,13 @@ public class ClassRoomRepositoryImpl implements ClassRoomRepository {
             em.remove(schedule); // 또는 schedule.setClassRoom(null); 후 저장
         }
 
-        Member member = memberRepository.findTeacherByClassNo(classNo)
-                .orElseThrow(() -> new EntityNotFoundException("해당 반의 교사를 찾을 수 없습니다."));
+        Optional<Member> isMember = memberRepository.findTeacherByClassNo(classNo);
 
-        member.changeClassRoom(null);
-
+        if(isMember.isPresent()){
+            Member member = memberRepository.findTeacherByClassNo(classNo)
+                    .orElseThrow(() -> new RuntimeException("존재하지 않는 교사입니다."));;
+            member.changeClassRoom(null);
+        }
 
         List<Child> childs = childRepository.findByClassNo(classNo);
 
