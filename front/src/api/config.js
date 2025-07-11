@@ -59,6 +59,8 @@ export const API_ENDPOINTS = {
   CLASSROOM: {
     BASE: '/api/classroom',
     CREATE: '/api/classroom/create',
+    UPDATE: (no) => `/api/classroom/update/${no}`,
+    DELETE: (no) => `/api/classroom/delete/${no}`,
     CLASSROOMLIST: (centerNo) => `/api/classroom/list/${centerNo}`,
     GETRATE: (centerNo) => `/api/classroom/main/attendance-rate/${centerNo}`,
     GETHEALTHPROGRESS: (centerNo) => `/api/classroom/main/healthlog-progress/${centerNo}`,
