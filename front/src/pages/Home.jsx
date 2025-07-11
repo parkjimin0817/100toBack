@@ -8,6 +8,7 @@ import PostEditor from '../components/Board/BoardEditor';
 // import SimpleEditor from "../components/Board/EditorComponent/tiptap-templates/InputEditor";
 import SimpleEditor from '../components/Board/TextInputBlock copy';
 import ImageInputBlock from '../components/Board/ImageInputBlock';
+import ChatButton from '../components/Common/ChatButton';
 
 const columns = [
   {
@@ -69,6 +70,7 @@ const Home = () => {
         <FolderCard selected={true} title="내 문서" date="2025.07.08" />
         <FolderCard selected={false} title="내 문서" date="2025.07.08" />
       </div>
+      <ChatButton />
     </Content>
   );
 };

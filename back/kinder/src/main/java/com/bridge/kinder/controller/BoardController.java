@@ -50,14 +50,12 @@ public class BoardController {
      * 게시글 수정
      */
     @PutMapping("/{boardNo}")
-    public ResponseEntity<?> updateBoard(
+    public ResponseEntity<Integer> updateBoard(
             @PathVariable Integer boardNo,
-            @RequestPart("data") BoardDto.Update dto,
-            @RequestPart(value = "file", required = false) MultipartFile file,
-            @RequestPart(required = false) List<MultipartFile> contentFiles  // contentFiles
-    ) throws IOException {
-        boardService.updateBoard(boardNo, dto, file, contentFiles);
-        return ResponseEntity.ok().build();
+            @RequestBody BoardDto.Update dto
+    ) {
+        int updatedBoardNo = boardService.updateBoard(boardNo, dto);
+        return ResponseEntity.ok(updatedBoardNo);
     }
 
     /**

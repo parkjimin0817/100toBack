@@ -75,7 +75,7 @@ const ImageInputBlock = ({ id, value, onChange, blockDelete }) => {
       {preview ? (
         <div style={{ position: 'relative' }}>
           <img
-            src={value}
+            src={preview}
             alt="미리보기"
             style={{
               maxWidth: '100%',

@@ -60,8 +60,10 @@ public class BoardContent {// 게시판 내용
 
     //---------------------------------------------------------------------------------------------
 
-    public void updateBoardContent(String contentText, int sortOrder) {
+    public void updateBoardContent(String contentText, String contentFile, String contentFileOrigin, int sortOrder) {
         this.contentText = contentText;
+        this.contentFile = contentFile;
+        this.contentFileOrigin = contentFileOrigin;
         this.sortOrder= sortOrder;
     }
 

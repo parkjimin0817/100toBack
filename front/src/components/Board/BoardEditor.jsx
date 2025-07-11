@@ -75,7 +75,7 @@ const BoardEditor = ({ category, formState, updateFormField, addBlock, updateBlo
             readOnly
           />
         </HeadBlock>
-        {category !== 'photo' && (
+        {(category !== 'photo' && category !== 'meal_plan') && (
           <HeadBlock>
             <HeadLabel>첨부 파일</HeadLabel>
             {formState.attachment ? (
