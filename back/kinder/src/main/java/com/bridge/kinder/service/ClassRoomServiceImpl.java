@@ -3,6 +3,7 @@ package com.bridge.kinder.service;
 import com.bridge.kinder.dto.ClassRoomDto;
 import com.bridge.kinder.dto.ClassRoomDto.AttendanceRateResponse;
 import com.bridge.kinder.dto.ClassRoomDto.HealthLogProgressResponse;
+import com.bridge.kinder.dto.ClassRoomDto.Response;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.entity.Member;
@@ -13,6 +14,7 @@ import com.bridge.kinder.repository.CenterRepository;
 import com.bridge.kinder.repository.ChildRepository;
 import com.bridge.kinder.repository.ClassRoomRepository;
 import com.bridge.kinder.repository.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -47,32 +49,19 @@ public class ClassRoomServiceImpl implements ClassRoomService {
         //교사 조회
         Member teacher = memberRepository.findByMemberNo(classRoomCreate.getMember_no())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 교사입니다."));
-        //이미지 처리
-        String originName = null;
-        String profilePath = null;
+        // S3 이미지 경로 그대로 사용 (profilePath)
+        String profilePath = classRoomCreate.getClass_image(); // S3 URL or S3 경로
 
-        if (classRoomCreate.getClass_image() != null && !classRoomCreate.getClass_image().isEmpty()) {
-            originName = classRoomCreate.getClass_image()
-                    .getOriginalFilename();
-            profilePath = UUID.randomUUID().toString() + "_classroom_" + originName;
+        // 반 생성 및 저장
+        ClassRoom classRoom = classRoomCreate.toEntity(center, teacher); // ← profilePath 제거됨
+        classRoom.changeClassImage(profilePath); // setter 따로 있어도 OK
+        classRoomRepository.save(classRoom);
 
-            File uploadDir = new File(UPLOAD_PATH);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdirs();
-            }
+        // 교사에 반 연결
+        teacher.setClassRoom(classRoom);
+        memberRepository.save(teacher);
 
-            classRoomCreate.getClass_image().transferTo(new File(UPLOAD_PATH + profilePath));
-        }
-            //반 생성 및 저장
-            ClassRoom classRoom = classRoomCreate.toEntity(center, teacher, profilePath);
-            classRoomRepository.save(classRoom);
-
-            //멤버(교사)에 연결
-            teacher.setClassRoom(classRoom);
-            memberRepository.save(teacher); //업데이트
-
-            //dto 반환 (새로 생성된 반이니 childCount = 0)
-            return ClassRoomDto.Response.toDto(classRoom, teacher, 0);
+        return ClassRoomDto.Response.toDto(classRoom, teacher, 0);
         }
 
     @Override
@@ -137,6 +126,22 @@ public class ClassRoomServiceImpl implements ClassRoomService {
                     return HealthLogProgressResponse.toDto(classRoom, completed, childCount);
                         })
                 .toList();
+    }
+
+    @Override
+    public ClassRoomDto.Update updateClass(ClassRoomDto.Update dto, int classNo) {
+        ClassRoom classRoom = classRoomRepository.updateClass(dto,classNo)
+                .orElseThrow(() -> new EntityNotFoundException("수정에 실패하였습니다."));
+
+
+        return ClassRoomDto.Update.toDto(classRoom);
+    }
+
+    @Override
+    public int deleteClass(int classNo) {
+        int no = classRoomRepository.deleteClass(classNo);
+
+        return no;
     }
 }
 

@@ -15,4 +15,8 @@ public interface ClassRoomService {
     List<ClassRoomDto.AttendanceRateResponse> getAttendanceRate(int centerNo);
     //메인 - 건강 로그 현황
     List<ClassRoomDto.HealthLogProgressResponse> getHealthLogProgress(int centerNo);
+    //반 수정
+    ClassRoomDto.Update updateClass(ClassRoomDto.Update dto, int classNo);
+    //반 삭제
+    int deleteClass(int classNo);
 }
