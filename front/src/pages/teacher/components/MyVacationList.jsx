@@ -44,6 +44,21 @@ const MyVacationList = ({ vacations, onDeleteSuccess }) => {
     }
   };
 
+  //첨부파일 이름
+  const getTruncatedFileName = (fileName, maxLength = 5) => {
+    if (!fileName) return '';
+
+    const dotIndex = fileName.lastIndexOf('.');
+    const hasExtension = dotIndex !== -1;
+
+    const name = hasExtension ? fileName.slice(0, dotIndex) : fileName;
+    const ext = hasExtension ? fileName.slice(dotIndex) : '';
+
+    const truncated = name.length > maxLength ? name.slice(0, maxLength) + '...' : name;
+
+    return truncated + ext;
+  };
+
   return (
     <Wrapper>
       <VacationTable>
@@ -68,7 +83,7 @@ const MyVacationList = ({ vacations, onDeleteSuccess }) => {
                 {vacation.startDate} ~ {vacation.endDate}
               </td>
               <td>{vacation.reason}</td>
-              <td>{vacation.file || ''}</td>
+              <td>{getTruncatedFileName(vacation.attachmentOrigin) || ''}</td>
               <td>
                 {vacation.status === 'PENDING' ? (
                   <DeleteButton onClick={() => handleDelete(vacation.vacationNo)}>삭제</DeleteButton>
@@ -80,7 +95,7 @@ const MyVacationList = ({ vacations, onDeleteSuccess }) => {
           ))}
         </tbody>
       </VacationTable>
-      {totalPages > 1 && (
+      {totalPages > 0 && (
         <MyVacationPagination>
           {Array.from({ length: totalPages }, (_, i) => (
             <PageButton key={i} $active={currentPage === i + 1} onClick={() => setCurrentPage(i + 1)}>
@@ -145,6 +160,7 @@ const VacationTable = styled.table`
   th:nth-child(6),
   td:nth-child(6) {
     width: 10%;
+    font-size: ${({ theme }) => theme.fontSizes.xs};
   }
 `;
 

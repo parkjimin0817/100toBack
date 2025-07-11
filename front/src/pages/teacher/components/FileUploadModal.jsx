@@ -57,7 +57,6 @@ const FileUploadModal = ({ onClose, memberNo, onSuccess }) => {
           </StyledLabel>
           <InfoText>※ 하나의 파일만 업로드할 수 있습니다.</InfoText>
           <input id="file" type="file" onChange={handleFileChange} />
-
           <FileList>{selectedFile && <FileItem>{selectedFile.name}</FileItem>}</FileList>
         </UploadArea>
 

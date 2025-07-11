@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface VacationService {
-    VacationDto.Response requestVacation (int memberNo, VacationDto.Request request) throws IOException;
+    VacationDto.Response requestVacation (String memberId, VacationDto.Request request);
     List<Response> getVacationsByMember (int memberNo);
     void deleteVacation (long VacationNo);
     Page<Response> getVacationListPaged(int centerNo, String type, Pageable pageable);

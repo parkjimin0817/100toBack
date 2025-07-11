@@ -70,8 +70,6 @@ const ChildrenList = ({
     );
   }
 
-  console.log('뭐들어있지:', filtered);
-
   return (
     <Container>
       <CardLine>

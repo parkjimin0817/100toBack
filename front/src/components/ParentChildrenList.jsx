@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
-import ChildImg from '../assets/Child.png';
+import defaultImg from '../assets/defaultImg.png';
 import api from '../api/axios';
 import { toast } from 'react-toastify';
 import { useSearchParams } from 'react-router-dom';
+
+const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
 const ParentChildrenList = ({ childFilter, onChildClick }) => {
   // url 파라미터로 아동의 아이디를 받아옴.
@@ -25,11 +27,9 @@ const ParentChildrenList = ({ childFilter, onChildClick }) => {
       const response = await api.get(`http://localhost:8888/api/childs/parentChild?memberNo=${childFilter}`);
       console.log(response.data);
       setChildList(response.data);
-      if(childNo) {
-        const matchedChild = response.data.find(
-          (child) => child.child_no === Number(childNo)
-        );
-  
+      if (childNo) {
+        const matchedChild = response.data.find((child) => child.child_no === Number(childNo));
+
         onChildClick(matchedChild ?? null);
       } else {
         const firstChild = response.data.length > 0 ? response.data[0] : null;
@@ -60,7 +60,10 @@ const ParentChildrenList = ({ childFilter, onChildClick }) => {
         {childList.map((child) => (
           <Card key={child.child_no} onClick={() => changeChild(child)}>
             <PictureBox>
-              <ChildPic src={ChildImg} alt="아이사진" />
+              <ChildPic
+                src={child.child_profile ? `${CLOUDFRONT_URL}/${child.child_profile}` : defaultImg}
+                alt="아이 프로필"
+              />
             </PictureBox>
             <NameBox>
               <NameLine>{child.child_name}</NameLine>
@@ -110,6 +113,9 @@ const PictureBox = styled.div`
 `;
 
 const ChildPic = styled.img`
+  width: 90%;
+  height: 90%;
+  object-fit: cover;
   border-radius: 10px;
 `;
 

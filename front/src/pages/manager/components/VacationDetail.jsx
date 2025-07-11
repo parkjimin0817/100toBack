@@ -53,7 +53,7 @@ const VacationDetail = ({ isOpen, onClose, data }) => {
               </ModalContentReason>
               <ModalContentAttachment>
                 <Span>첨부파일 :</Span>
-                <P>{data.attachment === 'O' ? '있음' : '없음'}</P>
+                <P>{data.attachmentOrigin}</P>
               </ModalContentAttachment>
             </ModalContentMain>
             <ModalStatus>
