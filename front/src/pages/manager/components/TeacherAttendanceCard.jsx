@@ -65,6 +65,16 @@ const TeacherAttendanceCard = ({
     }
   };
 
+  const STATUS = {
+    ABSENT: '결근',
+    PRESENT: '출근',
+    WORKING: '근무중',
+    HOLIDAY: '공휴일',
+    WEEKEND: '주말',
+    VACATION: '휴가',
+    WORKCATION: '워케이션',
+  };
+
   return (
     <>
       <ContentHeader Title={title} Color={'blue'} FontSize={'sm'} />
@@ -101,15 +111,23 @@ const TeacherAttendanceCard = ({
               <tbody>
                 <tr>
                   <th>상태:</th>
-                  <td>{attendanceStatusToKorean[attendance?.status] || '알 수 없음'}</td>
+                  <td>
+                    {attendance?.status ? (
+                      <Status $status={STATUS[attendance.status] || attendance.status}>
+                        {STATUS[attendance.status] || attendance.status}
+                      </Status>
+                    ) : (
+                      <Status $status="UNKNOWN">기록 없음</Status>
+                    )}
+                  </td>
                 </tr>
                 <tr>
-                  <th>출근시간: </th>
-                  <td>{inTime}</td>
+                  <th>출근시간:</th>
+                  <td>{inTime || '-'}</td>
                 </tr>
                 <tr>
-                  <th>퇴근시간: </th>
-                  <td>{outTime}</td>
+                  <th>퇴근시간:</th>
+                  <td>{outTime || '-'}</td>
                 </tr>
               </tbody>
             </Table>
@@ -231,19 +249,47 @@ const DetailContent = styled.div`
 const Table = styled.table`
   /* width: 50%; */
   table-layout: fixed;
-  margin: 0 auto;
+  margin: 25px auto;
   border-collapse: collapse;
   border-spacing: 0;
 
   th,
   td {
-    padding: 8px;
+    padding: 5px;
     text-align: center;
     border: none;
     word-break: keep-all;
   }
+`;
 
-  tbody > tr:first-child {
-    height: 60px;
-  }
+const Status = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 30px;
+  background-color: ${({ $status }) => {
+    switch ($status) {
+      case '출근':
+        return '#4caf50'; // 초록
+      case '결근':
+        return '#f44336'; // 빨강
+      case '근무중':
+        return '#2196f3'; // 파랑
+      case '공휴일':
+        return '#9e9e9e'; // 주황
+      case '주말':
+        return '#9e9e9e'; // 회색
+      case '휴가':
+        return '#9c27b0'; // 보라
+      case '워케이션':
+        return '#00bcd4'; // 청록
+      default:
+        return '#e0e0e0'; // 기본 회색
+    }
+  }};
+  border-radius: 5px;
+  color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+  cursor: default;
 `;

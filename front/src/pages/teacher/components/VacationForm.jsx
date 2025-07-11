@@ -1,15 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 import ContentHeader from '../../../components/Common/ContentHeader';
-import { useRef, useState } from 'react';
 import { useVacationForm } from '../../../hook/vacation/useVacationForm';
 
 const VacationForm = ({ onSuccess }) => {
   const {
-    type,
+    selectedType,
     typeDetail,
     customDetail,
-    fileNames,
+    fileName,
     fileInputRef,
     startDate,
     endDate,
@@ -42,12 +41,12 @@ const VacationForm = ({ onSuccess }) => {
       >
         <InputRow>
           <Label>종류 : </Label>
-          <Select value={type} onChange={handleTypeChange}>
+          <Select value={selectedType} onChange={handleTypeChange}>
             <option value="">선택하세요</option>
             <option value="휴가">휴가</option>
             <option value="워케이션">워케이션</option>
           </Select>
-          <Select value={typeDetail} onChange={handleDetailChange} disabled={!type}>
+          <Select value={typeDetail} onChange={handleDetailChange} disabled={!selectedType}>
             <option value="">선택하세요</option>
             {(getDetailOptions() || []).map((option) => (
               <option key={option.value} value={option.value}>
@@ -80,7 +79,7 @@ const VacationForm = ({ onSuccess }) => {
             <Info>*선택사항</Info>
           </InfoDiv>
           <HiddenInput type="file" ref={fileInputRef} onChange={handleFileChange} />
-          <FileName>{fileNames.join(', ')}</FileName>
+          <FileName>{fileName}</FileName>
           <Button type="button" onClick={handleButtonClick}>
             파일 업로드
           </Button>

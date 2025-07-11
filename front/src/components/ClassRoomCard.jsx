@@ -31,7 +31,9 @@ const ClassRoomCard = ({ classRoom, clickEventFunc }) => {
     <Card $Color={classRoom.color} onClick={() => clickEventFunc(classRoom.class_no)}>
       <CardInfo>
         <div>
-          <CardImg>{classRoom.class_image === null ? <Icon /> : <Img src={`${classRoom.class_image}`} alt="반 사진" />}</CardImg>
+          <CardImg>
+            {classRoom.class_image === null ? <Icon /> : <Img src={`${classRoom.class_image}`} alt="반 사진" />}
+          </CardImg>
         </div>
         <CardInner>
           <h3>{classRoom.class_name}반</h3>

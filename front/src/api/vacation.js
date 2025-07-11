@@ -1,28 +1,32 @@
 import api from './axios';
 import { API_ENDPOINTS } from './config';
+import { getPresignedUrl, uploadFileToS3 } from './fileApi';
 
 export const vacationService = {
   //휴가 폼 제출
-  requestVacation: async (memberNo, formData) => {
+  requestVacation: async (request, attachment) => {
     try {
-      const { data } = await api.post(API_ENDPOINTS.VACATION.REQUEST(memberNo), formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      let fileUrl = null;
 
-      const camelData = {
-        vacationNo: data.vacation_no,
-        type: data.type,
-        typeDetail: data.type_detail,
-        startDate: data.start_date,
-        endDate: data.end_date,
-        reason: data.reason,
-        attachment: data.attachment,
-        status: data.status,
-        memberNo: data.member_no,
-      };
-      return camelData;
+      if (attachment instanceof File) {
+        const path = 'vacation/';
+
+        const presignedData = await getPresignedUrl(attachment.name, attachment.type, path);
+
+        await uploadFileToS3(presignedData.presigned_url, attachment);
+
+        fileUrl = presignedData.change_name;
+      }
+
+      if (fileUrl) {
+        request.attachment_origin = attachment.name;
+      }
+
+      request.attachment = fileUrl;
+
+      console.log('휴가뭐', request);
+      const { data } = await api.post(API_ENDPOINTS.VACATION.REQUEST, request);
+      return data;
     } catch (error) {
       throw new Error('서버 통신 불량' + error.message);
     }
@@ -32,7 +36,6 @@ export const vacationService = {
   getVacationList: async (memberNo) => {
     try {
       const { data } = await api.get(API_ENDPOINTS.VACATION.GETLIST(memberNo));
-
       const camelDataList = data.map((item) => ({
         vacationNo: item.vacation_no,
         type: item.type,
@@ -43,8 +46,8 @@ export const vacationService = {
         attachment: item.attachment,
         status: item.status,
         memberNo: item.member_no,
+        attachmentOrigin: item.attachment_origin,
       }));
-
       return camelDataList;
     } catch (error) {
       throw new Error('서버 통신 불량' + error.message);
@@ -64,6 +67,7 @@ export const vacationService = {
         endDate: item.end_date,
         reason: item.reason,
         attachment: item.attachment,
+        attachmentOrigin: item.attachment_origin,
         status: item.status,
         memberNo: item.member_no,
         memberName: item.member_name,
