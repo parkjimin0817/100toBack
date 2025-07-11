@@ -4,8 +4,11 @@ import { classService } from '../../../api/class';
 import { toast } from 'react-toastify';
 import { memberService } from '../../../api/member';
 import theme from '../../../styles/theme';
+import { getPresignedUrl, uploadFileToS3 } from '../../../api/fileApi';
 
-const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess }) => {
+const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
+
+const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuccess }) => {
   const [teachers, setTeachers] = useState([]);
 
   useEffect(() => {
@@ -18,17 +21,18 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess }) => {
     console.log(classRoom);
   }, [centerNo]);
 
-  const [classImage, setClassImage] = useState(null); //반 이미지
-  const [previewUrl, setPreviewUrl] = useState(null);
+  const [classImage, setClassImage] = useState(classRoom.class_image); //반 이미지
+  const [previewUrl, setPreviewUrl] = useState(`${CLOUDFRONT_URL}/${classRoom.class_image}`);
 
-  const [className, setClassName] = useState(''); //반 이름
-  const [capacity, setCapacity] = useState(''); //반 정원
-  const [teacherNo, setTeacherNo] = useState(''); //선택된 멤버 no
-  const [classColor, setClassColor] = useState('#FFD700'); //반 색상
+  const [className, setClassName] = useState(classRoom.class_name); //반 이름
+  const [capacity, setCapacity] = useState(classRoom.capacity); //반 정원
+  const [teacherNo, setTeacherNo] = useState(classRoom.member_no); //선택된 멤버 no
+  const [classColor, setClassColor] = useState(classRoom.color); //반 색상
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setClassImage(file);
+    console.log(file);
 
     if (file) {
       const reader = new FileReader();
@@ -41,6 +45,23 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess }) => {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      const isConfirmed = window.confirm('확인 버튼을 누르면 반이 삭제됩니다. 삭제하시겠습니까?');
+      if (!isConfirmed) return;
+
+      const responseData = await classService.deleteClass(classRoom.class_no);
+      console.log(responseData);
+      toast.info('반 삭제 성공');
+
+      onDeleteSuccess(classRoom);
+      onClose();
+    } catch (error) {
+      console.error('반 삭제 실패 : ', error);
+      toast.error('반 삭제 실패');
+    }
+  }
+
   const handleSubmit = async () => {
     if (!className || !capacity || !teacherNo) {
       toast.info('필수 항목을 모두 입력해주세요.');
@@ -48,24 +69,36 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess }) => {
     }
 
     try {
-      const newClassroom = await classService.createClass({
-        className,
-        capacity,
-        teacherNo,
-        classColor,
-        centerNo,
-        classImage,
-      });
+      let uploadedImageUrl = null;
 
-      toast.info(`${className}반 생성이 완료되었습니다.`);
+      // 반 이미지가 있으면 S3에 업로드
+      if (classImage instanceof File) {
+        const presignedData = await getPresignedUrl(classImage.name, classImage.type, 'profile/class/');
+        await uploadFileToS3(presignedData.presigned_url, classImage);
+        uploadedImageUrl = presignedData.change_name; // S3 경로 문자열
+      }
+
+      const payload = {
+        class_no : classRoom.class_no,
+        class_name : className,
+        capacity : capacity,
+        member_no : teacherNo,
+        color : classColor,
+        class_image : uploadedImageUrl ? uploadedImageUrl : classRoom.class_image
+      }
+      console.log(payload);
+
+      const newClassroom = await classService.updateClass(classRoom.class_no, payload);
+
+      toast.info(`${className}반 수정이 완료되었습니다.`);
       if (onSuccess) {
-        onSuccess(newClassroom);
+        onSuccess(payload);
       }
 
       onClose();
     } catch (error) {
-      console.error('반 생성 실패 : ', error);
-      toast.error('반 생성 중 오류가 발생했습니다. 다시 시도해주세요.');
+      console.error('반 수정 실패 : ', error);
+      toast.error('반 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
     }
   };
 
@@ -73,7 +106,7 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess }) => {
     <Overlay>
       <ModalCard>
         <TitleDiv>
-          <Title>반 생성 하기</Title>
+          <Title>반 수정 하기</Title>
         </TitleDiv>
         <Content>
           <InputRow>
@@ -105,6 +138,7 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess }) => {
             <Label>반 이미지 :</Label>
             <FileDiv>
               {previewUrl && <PreviewImage src={previewUrl} alt="미리보기" />}
+              {}
               <FileInput type="file" accept="image/*" onChange={handleImageChange} />
             </FileDiv>
           </InputRow>
@@ -146,11 +180,14 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess }) => {
           </InputRow>
         </Content>
         <ButtonGroup>
-          <Button type="close" onClick={onClose}>
-            닫기
-          </Button>
           <Button type="submit" onClick={handleSubmit}>
             완료
+          </Button>
+          <Button type="button" onClick={handleDelete}>
+            삭제
+          </Button>
+          <Button type="close" onClick={onClose}>
+            닫기
           </Button>
         </ButtonGroup>
       </ModalCard>
