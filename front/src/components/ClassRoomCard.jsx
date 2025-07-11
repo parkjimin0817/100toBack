@@ -19,13 +19,6 @@ import { toast } from 'react-toastify';
  */
 
 const ClassRoomCard = ({ classRoom, clickEventFunc }) => {
-  // const navigate = useNavigate();
-
-  // const handleCheck = () => {
-  //   if (isDisabled) return;
-
-  //   navigate(address);
-  // };
 
   return (
     <Card $Color={classRoom.color} onClick={() => clickEventFunc(classRoom.class_no)}>
