@@ -29,7 +29,7 @@ const BoardWritePage = () => {
     title: '',
     type: String(category).toUpperCase(),
     classRoomNo: null,
-    file: null,
+    attachment: null,
     memberName: member.memberName,
     memberId: member.memberNo,
     centerId: member.centerNo,
@@ -87,6 +87,8 @@ const BoardWritePage = () => {
       return;
     }
 
+    // console.log(formState.attachment);
+
     //S3 게시판 첨부파일 저장 위치
     const path = `board/${category}/`;
 
@@ -97,9 +99,10 @@ const BoardWritePage = () => {
     const filterData = formState.contents.filter((item) => item.type === 'IMG');
 
     //첨부파일
-    const otherFile = formState?.file;
+    const otherFile = formState?.attachment;
+    let attachmentChangeName = null;
 
-    if(otherFile) {
+    if (otherFile instanceof File) {
       // 1. Presigned URL 요청 [첨부파일]
       const presigned = await getPresignedUrl(otherFile.name, otherFile.type, path);
   
@@ -108,6 +111,7 @@ const BoardWritePage = () => {
   
       // 2. S3에 업로드 [첨부파일]
       await uploadFileToS3(presigned.presigned_url, otherFile);
+      attachmentChangeName = presigned.change_name;
     }
 
     // 1. Presigned URL 요청 [컨텐츠 부분에 있는 파일]
@@ -131,14 +135,14 @@ const BoardWritePage = () => {
           type: item.type, // "IMG"
           contentText: null,
           contentFile: changeName, // "board/content/xxx.jpg"
-          contentFileKey: `contentFile_${index}`,
+          contentFileOriginal: item.contentFile.name,
         };
       } else {
         return {
           type: item.type, // "TEXT"
           contentText: item.contentText,
           contentFile: null,
-          contentFileKey: null,
+          contentFileOriginal: null,
         };
       }
     });
@@ -146,7 +150,8 @@ const BoardWritePage = () => {
     const payload = {
       title: formState.title,
       type: formState.type,
-      fileName: presigned?.change_name || null,
+      attachment: attachmentChangeName ? attachmentChangeName : null,
+      attachmentOriginal: otherFile instanceof File ? otherFile.name : null,
       centerId: formState.centerId,
       classRoomId: formState.classRoomNo,
       memberId: formState.memberId,
