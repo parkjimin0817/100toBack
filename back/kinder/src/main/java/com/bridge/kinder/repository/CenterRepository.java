@@ -15,4 +15,5 @@ public interface CenterRepository {
     List<Center> findAll();
     //마이페이지 시설정보 수정
     Optional<Center> myPageUpdate(int id, MypageDto.Update dto);
+
 }

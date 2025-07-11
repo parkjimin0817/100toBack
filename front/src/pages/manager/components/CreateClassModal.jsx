@@ -104,7 +104,7 @@ const CreateClassModal = ({ onClose, centerNo, onSuccess }) => {
             <Label>반 이미지 :</Label>
             <FileDiv>
               {previewUrl && <PreviewImage src={previewUrl} alt="미리보기" />}
-              <FileInput type="file" accept="image/*" onChange={handleImageChange} />
+              <FileInput type="file" accept="image/jpeg, image/png, image/jpg" onChange={handleImageChange} />
             </FileDiv>
           </InputRow>
           <InputRow>
