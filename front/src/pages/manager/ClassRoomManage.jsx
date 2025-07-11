@@ -10,6 +10,8 @@ import { ImInfo } from 'react-icons/im';
 import { BounceLoader } from 'react-spinners';
 import { ErrorDiv, Hint, NoneDiv } from '../../styles/Common/Container';
 
+const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
+
 //출석 체크 시 반별 페이지(모든 반이 나옴)
 const ClassRoomManage = () => {
   const { member } = useLoginStore();

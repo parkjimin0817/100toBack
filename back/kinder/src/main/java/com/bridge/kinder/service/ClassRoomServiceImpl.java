@@ -49,32 +49,19 @@ public class ClassRoomServiceImpl implements ClassRoomService {
         //교사 조회
         Member teacher = memberRepository.findByMemberNo(classRoomCreate.getMember_no())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 교사입니다."));
-        //이미지 처리
-        String originName = null;
-        String profilePath = null;
+        // S3 이미지 경로 그대로 사용 (profilePath)
+        String profilePath = classRoomCreate.getClass_image(); // S3 URL or S3 경로
 
-        if (classRoomCreate.getClass_image() != null && !classRoomCreate.getClass_image().isEmpty()) {
-            originName = classRoomCreate.getClass_image()
-                    .getOriginalFilename();
-            profilePath = UUID.randomUUID().toString() + "_classroom_" + originName;
+        // 반 생성 및 저장
+        ClassRoom classRoom = classRoomCreate.toEntity(center, teacher); // ← profilePath 제거됨
+        classRoom.changeClassImage(profilePath); // setter 따로 있어도 OK
+        classRoomRepository.save(classRoom);
 
-            File uploadDir = new File(UPLOAD_PATH);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdirs();
-            }
+        // 교사에 반 연결
+        teacher.setClassRoom(classRoom);
+        memberRepository.save(teacher);
 
-            classRoomCreate.getClass_image().transferTo(new File(UPLOAD_PATH + profilePath));
-        }
-            //반 생성 및 저장
-            ClassRoom classRoom = classRoomCreate.toEntity(center, teacher, profilePath);
-            classRoomRepository.save(classRoom);
-
-            //멤버(교사)에 연결
-            teacher.setClassRoom(classRoom);
-            memberRepository.save(teacher); //업데이트
-
-            //dto 반환 (새로 생성된 반이니 childCount = 0)
-            return ClassRoomDto.Response.toDto(classRoom, teacher, 0);
+        return ClassRoomDto.Response.toDto(classRoom, teacher, 0);
         }
 
     @Override

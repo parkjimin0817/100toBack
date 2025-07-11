@@ -15,17 +15,17 @@ public class ClassRoomDto {
     public static class Create {
         private String class_name;
         private int capacity;
-        private MultipartFile class_image;
+        private String class_image;
         private String color;
 
         private int center_no;
         private int member_no;
 
-        public ClassRoom toEntity(Center center, Member member, String profilePath) {
+        public ClassRoom toEntity(Center center, Member member) {
             return ClassRoom.builder()
                     .className(class_name)
                     .capacity(capacity)
-                    .classImage(profilePath)
+                    .classImage(class_image)
                     .color(color)
                     .center(center)
                     .build();
