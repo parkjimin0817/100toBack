@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ClassRoomService {
     //반 생성
-    ClassRoomDto.Response createClass(ClassRoomDto.Create classRoomCreate) throws IOException;
+    ClassRoomDto.Response createClass(ClassRoomDto.Create classRoomCreate);
     //시설별 반 목록
     List<ClassRoomDto.Response> findClassesByCenterNo(int centerNo);
     //메인 - 반 별 출석률

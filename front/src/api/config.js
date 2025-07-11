@@ -139,4 +139,8 @@ export const API_ENDPOINTS = {
     PRESIGNED_URL: '/api/file/presigned-url',
     //DOWNLOAD_URL: '/api/file/download-url',
   },
+  ALARM: {
+    BASE: '/api/alarm',
+    GET: '/api/alarm',
+  },
 };

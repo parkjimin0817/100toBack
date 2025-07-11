@@ -10,11 +10,7 @@ import com.bridge.kinder.entity.*;
 import com.bridge.kinder.enums.CommonEnums;
 import com.bridge.kinder.enums.CommonEnums.BoardContentType;
 import com.bridge.kinder.enums.CommonEnums.BoardType;
-import com.bridge.kinder.repository.BoardContentRepository;
-import com.bridge.kinder.repository.BoardRepository;
-import com.bridge.kinder.repository.CenterRepository;
-import com.bridge.kinder.repository.ClassRoomRepository;
-import com.bridge.kinder.repository.MemberRepository;
+import com.bridge.kinder.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
@@ -46,6 +42,7 @@ public class BoardServiceImpl implements BoardService {
     private final BoardContentRepository boardContentRepository;
 
     private final String UPLOAD_PATH = "C://test_upload/";
+    private final AlarmRepository alarmRepository;
 
     @Override
     public int createBoard(BoardDto.Create dto) throws IOException {
@@ -74,6 +71,20 @@ public class BoardServiceImpl implements BoardService {
 
 
         boardRepository.save(board);
+
+        //학부모에게 가정통신문, 알림장 알림 생성
+        if(board.getType() == BoardType.FAMILY_NOTICE || board.getType() == BoardType.NOTE) {
+            List<Member> parents = memberRepository.findParentsByCenter(center.getCenterNo());
+
+            List<Alarm> alarms = parents.stream().map(parent -> Alarm.builder()
+                    .member(parent)
+                    .content("새로운" + (board.getType() == BoardType.FAMILY_NOTICE ? "가정통신문이" : "알림장이") + "올라왔습니다.")
+                    .url(board.getType() == BoardType.FAMILY_NOTICE ? "/family_notice/list" : "/note/list")
+                    .build()).toList();
+
+            alarmRepository.saveAll(alarms);
+        }
+
         System.out.println("final attachment: " + board.getAttachment());
         return board.getBoardNo();
     }

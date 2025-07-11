@@ -42,7 +42,7 @@ public class ClassRoomServiceImpl implements ClassRoomService {
 
 
     @Override
-    public ClassRoomDto.Response createClass(ClassRoomDto.Create classRoomCreate) throws IOException {
+    public ClassRoomDto.Response createClass(ClassRoomDto.Create classRoomCreate) {
         //센터 조회
         Center center = centerRepository.findById(classRoomCreate.getCenter_no())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
