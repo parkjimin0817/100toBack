@@ -192,11 +192,11 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     //시설과 멤버타입으로 멤버 불러오기
     @Override
-    public List<Member> findParentsByCenter(int centerNo) {
+    public List<Member> findMemberByCenter(int centerNo, CommonEnums.MemberType memberType) {
         return em.createQuery(
                         "SELECT m FROM Member m WHERE m.center.centerNo = :centerNo AND m.memberType = :type", Member.class)
                 .setParameter("centerNo", centerNo)
-                .setParameter("type", CommonEnums.MemberType.PARENT)
+                .setParameter("type", memberType)
                 .getResultList();
     }
 

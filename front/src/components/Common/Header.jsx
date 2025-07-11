@@ -74,11 +74,13 @@ const Header = ({ member }) => {
   const logout = useLoginStore((state) => state.logout);
   const resetAttendance = useAttendanceStore((state) => state.resetAttendance);
   const handleLogout = () => {
-    navigate('/');
+    localStorage.removeItem('login-storage');
+    sessionStorage.removeItem('accessToken');
     setTimeout(() => {
       logout();
       resetAttendance();
     }, 500);
+    navigate('/');
   };
 
   //알람 불러오기
@@ -95,11 +97,17 @@ const Header = ({ member }) => {
   const alarmCount = alarms.length;
 
   //알람 눌렀을 때 이동
-  const handleAlarmClick = (alarm) => {
-    console.log('눌린 알람:', alarm);
-    if (!alarm.url) return;
-    navigate(alarm.url);
-    setDropdownType(null);
+  const handleAlarmClick = async (alarm) => {
+    try {
+      await alarmService.readAlarm(alarm.alarm_no);
+      setAlarms((prev) => prev.filter((a) => a.alarm_no !== alarm.alarm_no));
+      if (alarm.url) {
+        navigate(alarm.url);
+      }
+      setDropdownType(null);
+    } catch (err) {
+      console.error('알람 클릭 실패', err);
+    }
   };
 
   return (
@@ -264,7 +272,6 @@ const AlarmDropDown = styled.div`
 
 const AlarmItem = styled.div`
   display: flex;
-  justify-content: space-around;
   align-items: center;
   padding: 15px;
   border-bottom: 1px solid #eee;
@@ -285,6 +292,7 @@ const AlarmText = styled.div`
 
 const AlarmTime = styled.div`
   font-size: 12px;
+  padding-left: 20px;
   color: ${({ theme }) => theme.colors.gray[400]};
   line-height: 1.2; // 줄 간격 좀 더 보기 좋게
 `;

@@ -117,11 +117,11 @@ public class BoardServiceImpl implements BoardService {
 
         //학부모에게 가정통신문, 알림장 알림 생성
         if(board.getType() == BoardType.FAMILY_NOTICE || board.getType() == BoardType.NOTE) {
-            List<Member> parents = memberRepository.findParentsByCenter(center.getCenterNo());
+            List<Member> parents = memberRepository.findMemberByCenter(center.getCenterNo(), CommonEnums.MemberType.PARENT);
 
             List<Alarm> alarms = parents.stream().map(parent -> Alarm.builder()
                     .member(parent)
-                    .content("새로운" + (board.getType() == BoardType.FAMILY_NOTICE ? "가정통신문이" : "알림장이") + "올라왔습니다.")
+                    .content("새로운 " + (board.getType() == BoardType.FAMILY_NOTICE ? "가정통신문이 " : "알림장이 ") + "올라왔습니다.")
                     .url(board.getType() == BoardType.FAMILY_NOTICE ? "/family_notice/list" : "/note/list")
                     .build()).toList();
 

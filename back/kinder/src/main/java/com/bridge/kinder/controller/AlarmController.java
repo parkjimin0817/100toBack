@@ -6,10 +6,7 @@ import com.bridge.kinder.repository.AlarmRepository;
 import com.bridge.kinder.service.AlarmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,5 +23,11 @@ public class AlarmController {
     public ResponseEntity<List<AlarmDto.Response>> getAlarms() {
         String memberId = jwtTokenProvider.getMemberIdFromToken();
         return ResponseEntity.ok(alarmService.getAlarms(memberId));
+    }
+
+    @PatchMapping("/{alarmNo}")
+    public ResponseEntity<Void> readAlarm(@PathVariable Long alarmNo) {
+        alarmService.readAlarm(alarmNo);
+        return ResponseEntity.ok().build();
     }
 }

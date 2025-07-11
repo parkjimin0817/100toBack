@@ -30,4 +30,6 @@ public interface AttendanceRepository {
     //반 별 출석 아동 수
     Optional<Long> countPresentChild(int classNo, LocalDate today, ChildAttendanceStatus status);
 
+    boolean existsByMemberAndDateBetween(int memberNo, LocalDate startDate, LocalDate endDate);
+
 }

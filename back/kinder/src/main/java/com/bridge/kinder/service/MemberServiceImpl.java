@@ -56,6 +56,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberChildRepository memberChildRepository;
     private final String UPLOAD_PATH = "C://test_upload/"; //aws S3 연결시 관련 코드 수정할 것.
     private final LeaveRepository leaveRepository;
+    private final AlarmRepository alarmRepository;
 
     @Value("${aws.s3.bucket}") private String bucket;
     private final S3Presigner s3Presigner;
@@ -123,6 +124,17 @@ public class MemberServiceImpl implements MemberService {
 
         approvalRepository.save(approval);
 
+        //시설장에게 교사 회원가입 알림 보내기
+        List<Member> managers = memberRepository.findMemberByCenter(center.getCenterNo(), CommonEnums.MemberType.MANAGER);
+        for (Member manager : managers) {
+            Alarm alarm = Alarm.builder()
+                    .member(manager)
+                    .content("신규 교사가 가입 신청을 했습니다.")
+                    .url("/approvalList")
+                    .build();
+            alarmRepository.save(alarm);
+        }
+
         return String.valueOf(teacher.getMemberNo());
     }
 
@@ -148,6 +160,17 @@ public class MemberServiceImpl implements MemberService {
         approvalRepository.save(approvalParent);
         // 여기까지 학부모 회원가입
 
+        //시설장에게 학부모 회원가입 알림 보내기
+        List<Member> parentManagers = memberRepository.findMemberByCenter(centerMember.getCenterNo(), CommonEnums.MemberType.MANAGER);
+        for (Member manager : parentManagers) {
+            Alarm alarm = Alarm.builder()
+                    .member(manager)
+                    .content("새로운 학부모가 가입 신청을 했습니다.")
+                    .url("/approvalList")
+                    .build();
+            alarmRepository.save(alarm);
+        }
+
         //여기부터 아동 등록, 조회
         Child child = childRepository.findByResidentNo(dto.getChild().getChild_resident_no()).orElse(null);
 
@@ -172,6 +195,17 @@ public class MemberServiceImpl implements MemberService {
                 .child(child)
                 .build();
         memberChildRepository.save(link);
+
+        //새로운 아동등록
+        List<Member> childManagers = memberRepository.findMemberByCenter(centerMember.getCenterNo(), CommonEnums.MemberType.MANAGER);
+        for (Member manager : childManagers) {
+            Alarm alarm = Alarm.builder()
+                    .member(manager)
+                    .content("새로운 아동이 등록 되었습니다.")
+                    .url("/approvalList")
+                    .build();
+            alarmRepository.save(alarm);
+        }
 
         return String.valueOf(parent.getMemberNo());
     }

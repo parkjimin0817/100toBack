@@ -1,6 +1,7 @@
 package com.bridge.kinder.service.file;
 
 import com.bridge.kinder.dto.AlarmDto;
+import com.bridge.kinder.entity.Alarm;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.repository.AlarmRepository;
 import com.bridge.kinder.repository.MemberRepository;
@@ -33,4 +34,13 @@ public class AlarmServiceImpl implements AlarmService {
                 .map(AlarmDto.Response::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void readAlarm(Long alarmNo) {
+        Alarm alarm = alarmRepository.findById(alarmNo)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 알람 입니다."));
+        alarm.setRead(true);
+    }
+
+
 }

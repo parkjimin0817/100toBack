@@ -50,4 +50,8 @@ public class Alarm {
         this.createdAt = LocalDateTime.now();
         this.isRead = false;
     }
+
+    public void setRead(boolean isRead) {
+        this.isRead = isRead;
+    }
 }

@@ -52,6 +52,6 @@ public interface MemberRepository  {
     Optional<Member> updateClass(int member_no, int class_no);
 
     //시설번호와 멤버타입으로 멤버 가져오기
-    List<Member> findParentsByCenter(int centerNo);
+    List<Member> findMemberByCenter(int centerNo, CommonEnums.MemberType memberType);
 
 }

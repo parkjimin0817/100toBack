@@ -7,8 +7,14 @@ export const alarmService = {
       const { data } = await api.get(API_ENDPOINTS.ALARM.GET);
       return data;
     } catch (error) {
-      console.error('📛 알람 API 에러:', error.response || error.message || error);
-      throw error; // 디버깅용으로 그냥 원본 던짐
+      throw new Error('서버 통신 불량', error);
+    }
+  },
+  readAlarm: async (alarmNo) => {
+    try {
+      await api.patch(API_ENDPOINTS.ALARM.READ(alarmNo));
+    } catch (error) {
+      throw new Error('서버 통신 불량', error);
     }
   },
 };

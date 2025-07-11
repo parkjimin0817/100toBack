@@ -44,6 +44,7 @@ public class SecurityConfig {
                                 "/api/members/parent",
                                 "/api/members/checkId",
                                 "/api/center",
+                                "/api/file/presigned-url",
                                 //시설장 승인
                                 "/api/approval/lists",
                                 "/api/approval/decision/center"

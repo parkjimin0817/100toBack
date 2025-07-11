@@ -145,5 +145,6 @@ export const API_ENDPOINTS = {
   ALARM: {
     BASE: '/api/alarm',
     GET: '/api/alarm',
+    READ: (alarmNo) => `/api/alarm/${alarmNo}`,
   },
 };
