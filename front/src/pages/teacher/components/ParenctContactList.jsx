@@ -5,6 +5,8 @@ import { CiSquarePlus } from 'react-icons/ci';
 import { useNavigate } from 'react-router-dom';
 import { BounceLoader } from 'react-spinners';
 
+const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
+
 const ParenctContactList = ({ selectedClass, searchKeyword, value, status }) => {
   const navigate = useNavigate();
 
@@ -37,7 +39,10 @@ const ParenctContactList = ({ selectedClass, searchKeyword, value, status }) => 
             filtered.map((data) => (
               <Tr key={data.child_no}>
                 <Td>
-                  <Img src={defaultImg} />
+                  <Img
+                    src={data.child_profile ? `${CLOUDFRONT_URL}/${data.child_profile}` : defaultImg}
+                    alt="사용자 프로필"
+                  />
                 </Td>
                 <Td>{data.child_name}</Td>
                 <Td>{data.class_name === null ? '선택된 반이 없습니다.' : data.class_name}</Td>
@@ -46,8 +51,12 @@ const ParenctContactList = ({ selectedClass, searchKeyword, value, status }) => 
                   {/*여기 누르면 아동 상세보기 페이지로 이동하게 하기 */}
                 </Td>
                 <Dvitd>
-                  <div>{data.f_parent_name}(부): {data.f_parent_phone}</div>
-                  <div>{data.m_parent_name}(모): {data.m_parent_phone}</div>
+                  <div>
+                    {data.f_parent_name}(부): {data.f_parent_phone}
+                  </div>
+                  <div>
+                    {data.m_parent_name}(모): {data.m_parent_phone}
+                  </div>
                 </Dvitd>
               </Tr>
             ))

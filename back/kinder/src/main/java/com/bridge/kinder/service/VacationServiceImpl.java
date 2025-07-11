@@ -37,40 +37,24 @@ public class VacationServiceImpl implements VacationService {
 
     //휴가 신청
     @Override
-    public Response requestVacation(int memberNo, VacationDto.Request request) throws IOException {
+    public Response requestVacation(String memberId, VacationDto.Request request){
         //멤버 조회
-        Member member = memberRepository.findByMemberNo(memberNo)
+        Member member = memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 교사입니다."));
 
-        //첨부파일 처리
-        String originName = null;
-        String attachmentPath = null;
+        //휴가 신청
+        Vacation vacation = request.toEntity(member);
+        vacationRepository.save(vacation);
 
-        if(request.getAttachment() != null && !request.getAttachment().isEmpty()) {
-            originName = request.getAttachment().getOriginalFilename();
-            attachmentPath = UUID.randomUUID().toString() + "_vacation_" + originName;
 
-            File uplodadDir = new File(UPLOAD_PATH);
-            if (!uplodadDir.exists()) {
-                uplodadDir.mkdirs();
-            }
+        //휴가인 경우 연차 일수 삭감
+        if(!vacation.getType().equals(VacationType.WORKATION)) {
+            Leave leave = leaveRepository.findByMember_MemberNo(member.getMemberNo())
+                    .orElseThrow(() -> new RuntimeException("해당 교사의 연차 정보가 없습니다."));
 
-            request.getAttachment().transferTo(new File(UPLOAD_PATH + attachmentPath));
+            long days = ChronoUnit.DAYS.between(vacation.getStartDate(), vacation.getEndDate()) + 1;
+            leave.useLeave((int) days);
         }
-
-            //휴가 신청
-            Vacation vacation = request.toEntity(member, attachmentPath);
-            vacationRepository.save(vacation);
-
-
-            //휴가인 경우 연차 일수 삭감
-            if(!vacation.getType().equals(VacationType.WORKATION)) {
-                Leave leave = leaveRepository.findByMember_MemberNo(memberNo)
-                        .orElseThrow(() -> new RuntimeException("해당 교사의 연차 정보가 없습니다."));
-
-                long days = ChronoUnit.DAYS.between(vacation.getStartDate(), vacation.getEndDate()) + 1;
-                leave.useLeave((int) days);
-            }
 
 
         return VacationDto.Response.toDto(vacation, member);

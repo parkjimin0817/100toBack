@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import ChildImg from '../../assets/Child.png';
+import defaultImg from '../../assets/defaultImg.png';
 import AttendanceChildSchedule from '../AttendanceChildSchedule';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../api/axios';
+
+const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
 const ChildDetailInfoArea = ({ childNo }) => {
   const [childData, setChildData] = useState(null);
@@ -65,7 +67,10 @@ const ChildDetailInfoArea = ({ childNo }) => {
       {/* 기본 정보 */}
       <BasicInfo>
         <PictureLine>
-          <Picture src={ChildImg} alt="아이사진" />
+          <Picture
+            src={childData.child_profile ? `${CLOUDFRONT_URL}/${childData.child_profile}` : defaultImg}
+            alt="아이 프로필"
+          />
         </PictureLine>
         <FirstInfo>
           <thead>
@@ -95,7 +100,7 @@ const ChildDetailInfoArea = ({ childNo }) => {
         <FirstInfo>
           <thead>
             <Class>
-              <td>{childData.class_name}</td>
+              <td>{childData.class_name}반</td>
             </Class>
           </thead>
           <tbody>
@@ -458,7 +463,12 @@ const PictureLine = styled.div`
   margin-right: 45px;
 `;
 
-const Picture = styled.img``;
+const Picture = styled.img`
+  width: 90%;
+  height: 90%;
+  object-fit: cover;
+  border-radius: 10px;
+`;
 
 const FirstInfo = styled.table`
   text-align: left;

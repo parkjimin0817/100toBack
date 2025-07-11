@@ -11,14 +11,6 @@ import { boardService } from '../../api/boards';
 import TeacherDocumentList from './components/TeacherDocumentList';
 import RecentDocuments from './components/RecentDocuments';
 
-const recentFiles = [
-  { title: '길dfdfdfdfdfdfdfdf면', modifyDate: '2025-03-01', file: 'xxx.png' },
-  { title: '문서 2dfdfdfd', modifyDate: '2025-03-01', file: 'xxx.png' },
-  { title: '문서 3', modifyDate: '2025-03-01', file: 'xxx.png' },
-  { title: '문서 2dfdfdfd', modifyDate: '2025-03-01', file: 'xxx.png' },
-  { title: '문서 3', modifyDate: '2025-03-01', file: 'xxx.png' },
-];
-
 const TeacherDocument = () => {
   const { member } = useLoginStore();
   const memberNo = member?.memberNo;

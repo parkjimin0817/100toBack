@@ -19,15 +19,15 @@ public class VacationDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Request {
-        private int member_no;
         private CommonEnums.VacationType type;
         private String type_detail;
         private LocalDate start_date;
         private LocalDate end_date;
         private String reason;
-        private MultipartFile attachment;
+        private String attachment;
+        private String attachment_origin;
 
-        public Vacation toEntity(Member member, String attachmentPath) {
+        public Vacation toEntity(Member member) {
             return Vacation.builder()
                     .member(member)
                     .type(type)
@@ -35,7 +35,8 @@ public class VacationDto {
                     .startDate(start_date)
                     .endDate(end_date)
                     .reason(reason)
-                    .attachment(attachmentPath)
+                    .attachment(attachment)
+                    .attachmentOrigin(attachment_origin)
                     .build();
         }
     }
@@ -52,6 +53,7 @@ public class VacationDto {
         private LocalDate end_date;
         private String reason;
         private String attachment;
+        private String attachment_origin;
         private CommonEnums.AdmissionStatus status;
         private LocalDate create_date;
         private LocalDate decision_date;
@@ -67,6 +69,7 @@ public class VacationDto {
                     .end_date(vacation.getEndDate())
                     .reason(vacation.getReason())
                     .attachment(vacation.getAttachment())
+                    .attachment_origin(vacation.getAttachmentOrigin())
                     .status(vacation.getStatus())
                     .create_date(vacation.getCreateDate().toLocalDate())
                     .decision_date(

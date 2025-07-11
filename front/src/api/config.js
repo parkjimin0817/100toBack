@@ -103,6 +103,7 @@ export const API_ENDPOINTS = {
   BOARDS: {
     BASE: '/api/boards',
     ADD: '/api/boards/create',
+    UPDATE: (id) => `/api/boards/${id}`,
     DETAIL: (id) => `/api/boards/${id}`,
     DELETE: (id) => `/api/boards/${id}`,
     TYPE: (type, centerNo, page) => `/api/boards/type/${type}?centerNo=${centerNo}&page=${page}`,
@@ -114,7 +115,7 @@ export const API_ENDPOINTS = {
   },
   VACATION: {
     BASE: '/api/vacation',
-    REQUEST: (memberNo) => `/api/vacation/request/${memberNo}`,
+    REQUEST: `/api/vacation/request`,
     GETLIST: (memberNo) => `/api/vacation/${memberNo}`,
     DELETE: (vacationNo) => `/api/vacation/delete/${vacationNo}`,
     GETLISTALL: (centerNo, type, page = 0, size = 6) =>

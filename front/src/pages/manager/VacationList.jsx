@@ -65,6 +65,21 @@ const ApprovalList = () => {
     }
   };
 
+  //첨부파일 이름
+  const getTruncatedFileName = (fileName, maxLength = 5) => {
+    if (!fileName) return '';
+
+    const dotIndex = fileName.lastIndexOf('.');
+    const hasExtension = dotIndex !== -1;
+
+    const name = hasExtension ? fileName.slice(0, dotIndex) : fileName;
+    const ext = hasExtension ? fileName.slice(dotIndex) : '';
+
+    const truncated = name.length > maxLength ? name.slice(0, maxLength) + '...' : name;
+
+    return truncated + ext;
+  };
+
   return (
     <>
       <Content>
@@ -108,8 +123,7 @@ const ApprovalList = () => {
                       {TYPE[v.type] || v.type} - {v.typeDetail}
                     </td>
                     <td>{v.reason}</td>
-                    {/* <td>{v.attachment}</td> */}
-                    <td>파일자리</td>
+                    <td>{getTruncatedFileName(v.attachmentOrigin) || ''}</td>
                     <td>
                       {v.status === 'PENDING' ? (
                         <>
@@ -238,13 +252,13 @@ const Table = styled.table`
       width: 10%;
     }
     th:nth-child(3) {
-      width: 18%;
+      width: 17%;
     }
     th:nth-child(4) {
-      width: 28%;
+      width: 19%;
     }
     th:nth-child(5) {
-      width: 10%;
+      width: 20%;
     }
     th:nth-child(6) {
       width: 20%;

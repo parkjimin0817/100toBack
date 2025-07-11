@@ -81,11 +81,12 @@ public class Board {// 게시판
 
     //---------------------------------------------------------------------------------------------
 
-    public void update(String title, CommonEnums.BoardType type, String attachment) {
+    public void update(String title, CommonEnums.BoardType type, String attachment, String attachmentOriginal) {
         this.title = title;
         this.type = type;
-        if (attachment != null) {
+        if (attachment != null && attachmentOriginal != null) {
             this.attachment = attachment;
+            this.attachmentOrigin = attachmentOriginal;
         }
     }
 

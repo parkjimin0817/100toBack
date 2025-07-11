@@ -17,6 +17,19 @@ export const boardService = {
     }
   },
 
+  updateBoard : async (boardNo, boardData) => {
+    try {
+      const { data } = await api.put(API_ENDPOINTS.BOARDS.UPDATE(boardNo), boardData);
+      return data;
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.message || '게시글 생성에 실패했습니다.';
+        throw new Error(errorMessage);
+      }
+      throw new Error('서버와의 통신에 실패했습니다.');
+    }
+  },
+
   typeBoardList: async (type, centerNo, page) => {
     try {
       const { data } = await api.get(API_ENDPOINTS.BOARDS.TYPE(type, centerNo, page));

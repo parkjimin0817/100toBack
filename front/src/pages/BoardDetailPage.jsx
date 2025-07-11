@@ -36,7 +36,7 @@ const BoardDetailPage = () => {
     const getPost = async () => {
       try {
         const responseData = await boardService.boardDetail(boardNo);
-        console.log(responseData);
+        // console.log(responseData);
 
         if (responseData?.boardContents) {
           responseData.boardContents = responseData.boardContents.map((content) => {

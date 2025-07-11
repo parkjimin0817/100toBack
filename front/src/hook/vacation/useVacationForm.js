@@ -4,17 +4,14 @@ import useLoginStore from '../../store/loginStore';
 import { toast } from 'react-toastify';
 
 export const useVacationForm = () => {
-  const [type, setType] = useState('');
+  const [selectedType, setSelectedType] = useState('');
   const [typeDetail, setTypeDetail] = useState('');
   const [customDetail, setCustomDetail] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [reason, setReason] = useState('');
-  const [fileNames, setFileNames] = useState([]); //파일 이름만 보여주려고 파일 이름 저장 값
-  const [attachments, setAttachments] = useState([]); //실제로 폼데이터로 전송할 용도
-  const { member } = useLoginStore();
-
-  const memberNo = member?.memberNo;
+  const [fileName, setFileName] = useState(''); //파일 이름만 보여주려고 파일 이름 저장 값
+  const [attachment, setAttachment] = useState(null);
 
   const fileInputRef = useRef(null);
 
@@ -32,14 +29,15 @@ export const useVacationForm = () => {
     { value: '기타', label: '기타 (직접 입력)' },
   ];
 
+  //휴가, 워케이션 고르기
   const getDetailOptions = () => {
-    if (type === '휴가') return vacationOptions;
-    if (type === '워케이션') return workcationOptions;
+    if (selectedType === '휴가') return vacationOptions;
+    if (selectedType === '워케이션') return workcationOptions;
     return [];
   };
 
   const handleTypeChange = (e) => {
-    setType(e.target.value);
+    setSelectedType(e.target.value);
     setTypeDetail('');
     setCustomDetail('');
   };
@@ -50,9 +48,9 @@ export const useVacationForm = () => {
   };
 
   const handleFileChange = (e) => {
-    const selectedFiles = Array.from(e.target.files);
-    setAttachments(selectedFiles);
-    setFileNames(selectedFiles.map((file) => file.name));
+    const file = e.target.files[0];
+    setAttachment(file);
+    setFileName(file.name); //원본 파일 이름
   };
 
   const handleButtonClick = () => fileInputRef.current.click();
@@ -60,22 +58,31 @@ export const useVacationForm = () => {
   const handleSubmit = async (e, onSuccess) => {
     e.preventDefault();
 
-    if (!type || !typeDetail || !startDate || !endDate || !reason || (typeDetail === '기타' && !customDetail.trim())) {
+    if (
+      !selectedType ||
+      !typeDetail ||
+      !startDate ||
+      !endDate ||
+      !reason ||
+      (typeDetail === '기타' && !customDetail.trim())
+    ) {
       toast.warning('모든 항목을 입력해주세요.');
       return;
     }
 
-    const formData = new FormData();
-    formData.append('type', type === '휴가' ? 'VACATED' : type === '워케이션' ? 'WORKATION' : '');
-    formData.append('type_detail', typeDetail === '기타' ? customDetail : typeDetail);
-    formData.append('start_date', startDate);
-    formData.append('end_date', endDate);
-    formData.append('reason', reason);
-    attachments.forEach((attachment) => formData.append('attachment', attachment));
+    const type = selectedType === '휴가' ? 'VACATED' : selectedType === '워케이션' ? 'WORKATION' : '';
+    const type_detail = typeDetail === '기타' ? customDetail : typeDetail;
+
+    const request = {
+      type,
+      type_detail,
+      start_date: startDate,
+      end_date: endDate,
+      reason: reason,
+    };
 
     try {
-      const data = await vacationService.requestVacation(memberNo, formData);
-
+      const data = await vacationService.requestVacation(request, attachment);
       toast.success('휴가 신청이 완료되었습니다.');
       if (onSuccess) onSuccess();
       return data;
@@ -86,24 +93,24 @@ export const useVacationForm = () => {
   };
 
   const resetForm = () => {
-    setType('');
+    setSelectedType('');
     setTypeDetail('');
     setCustomDetail('');
     setStartDate('');
     setEndDate('');
     setReason('');
-    setFileNames([]);
-    setAttachments([]);
+    setFileName('');
+    setAttachment(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = null; // 파일 인풋 초기화
     }
   };
 
   return {
-    type,
+    selectedType,
     typeDetail,
     customDetail,
-    fileNames,
+    fileName,
     fileInputRef,
     startDate,
     endDate,
