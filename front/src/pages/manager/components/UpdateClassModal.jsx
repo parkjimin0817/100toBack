@@ -88,11 +88,12 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuc
       }
       console.log(payload);
 
-      const newClassroom = await classService.updateClass(classRoom.class_no, payload);
+      await classService.updateClass(classRoom.class_no, payload);
 
       toast.info(`${className}반 수정이 완료되었습니다.`);
+
       if (onSuccess) {
-        onSuccess(payload);
+        onSuccess();
       }
 
       onClose();
