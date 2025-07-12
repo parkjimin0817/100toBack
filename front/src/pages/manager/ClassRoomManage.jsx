@@ -69,7 +69,8 @@ const ClassRoomManage = () => {
     if (!no) return;
     setIsModalOpen(true);
     setModalType('update');
-    setClassrooms(classrooms.find((classroom) => classroom.class_no === no));
+
+    setSelectClass(classrooms.find((classroom) => classroom.class_no === no));
   };
 
   return (
@@ -123,7 +124,14 @@ const ClassRoomManage = () => {
           onClose={() => setIsModalOpen(false)}
           centerNo={centerNo}
           classRoom={selectClass}
-          onSuccess={(newClassroom) => setClassrooms((prev) => [...prev, newClassroom])}
+          onSuccess={(updateClassroom) =>
+            setClassrooms((prev) =>
+              prev.map((item) => (item.class_no === updateClassroom.class_no ? updateClassroom : item))
+            )
+          }
+          onDeleteSuccess={(deletedClassroom) =>
+            setClassrooms((prev) => prev.filter((item) => item.class_no !== deletedClassroom.class_no))
+          }
         />
       )}
     </Content>
