@@ -25,8 +25,9 @@ public interface MemberRepository  {
 
     //학부모 검색
     Optional<Member> findByParentNo(int memberNo);
-    //전화번호 멤버찾기
-    Optional<Member> findByPhone(String memberPhone);
+
+    //아이디, 이름, 전화번호 멤버찾기
+    Member findByIdAndNameAndPhone(String memberId, String memberName, String memberPhone);
 
     //시설별 교사 목록(for셀렉트바 / 간단)
     List<Member> findTeacherByCenterNo(int centerNo);

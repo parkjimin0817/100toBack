@@ -2,23 +2,29 @@ package com.bridge.kinder.util;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
+
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-
 public class SmsUtil {
+    @Value("${sms.domain}")
+    private String domain;
+    @Value("${sms.key.apiKey}")
+    private String apiKey;
+    @Value("${sms.key.apiSecretKey}")
+    private String apiSecretKey;
 
     private DefaultMessageService messageService;
 
     @PostConstruct
     public void init() {
-        this.messageService = NurigoApp.INSTANCE.initialize("NCS359M3RU7GDWQ5", "OGLZJ5BCAEZQUCSTSTO4TZXFMYYPDFRI", "https://api.solapi.com");
+        this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecretKey, domain);
     }
 
     public SingleMessageSentResponse sendOne(String to, String certificationNumber) {

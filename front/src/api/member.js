@@ -183,7 +183,8 @@ export const memberService = {
       throw new Error('서버와의 통신에 실패했습니다.');
     }
   },
-  //비밀번호 찾기
+
+  //비밀번호 찾기(아이디 비교)
   searchPwd: async (member_id) => {
     try {
       const { data } = await api.post(API_ENDPOINTS.MEMBERS.PWDSEARCHID, { member_id });
@@ -191,20 +192,6 @@ export const memberService = {
     } catch (error) {
       if (error.response) {
         const errorMessage = error.response.data.message || '비밀번호 찾기에 실패했습니다.';
-        throw new Error(errorMessage);
-      }
-      throw new Error('서버와의 통신에 실패했습니다.');
-    }
-  },
-
-  //전화번호 인증 요청
-  phoneAccess: async (phone_number) => {
-    try {
-      const { data } = await api.post(API_ENDPOINTS.MEMBERS.PHONEACCESS, { phone_number });
-      return data;
-    } catch (error) {
-      if (error.response) {
-        const errorMessage = error.response.data.message || '인증 번호 전송 실패했습니다.';
         throw new Error(errorMessage);
       }
       throw new Error('서버와의 통신에 실패했습니다.');

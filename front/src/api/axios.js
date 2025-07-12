@@ -28,6 +28,7 @@ api.interceptors.response.use(
         case 401:
           //인증에러
           console.error(status);
+          console.error('접근권한이 없습니다.');
           break;
         case 403:
           console.error('접근권한이 없습니다.');

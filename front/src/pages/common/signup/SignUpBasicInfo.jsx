@@ -12,6 +12,8 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { memberService } from '../../../api/member';
 import AddressInput from './components/AddressInput';
+import { smsService } from '../../../api/sms';
+import { useTimer } from '../../../components/useTimer';
 
 const getStepsByType = (type) => {
   switch (type) {
@@ -40,6 +42,27 @@ const SignUpBasicInfo = () => {
   const [phone, setPhone] = useState('');
 
   const [isChecked, setIsChecked] = useState(false);
+
+  const [auth, setAuth] = useState({
+    auth_number: '',
+  });
+
+  const [authAccess, setAuchAccess] = useState(false);
+  const [access, setAccess] = useState(false);
+
+  //타이머
+  const onTimeout = () => {
+    toast.error('인증 시간이 만료되었습니다.');
+  };
+
+  const { formatTime, isRunning, start } = useTimer(180, onTimeout);
+
+  const handleSendAuthNumber = () => {
+    // 인증번호 전송 API 호출 로직 추가
+    console.log('인증번호 전송됨');
+    start(); // 타이머 시작
+  };
+  //
 
   const checkId = async () => {
     const id = getValues('memberId');
@@ -85,6 +108,11 @@ const SignUpBasicInfo = () => {
   };
 
   const onSubmit = (data) => {
+    if (!access) {
+      toast.warning('인증을 하셔야합니다.');
+      return;
+    }
+
     if (!isChecked) {
       setError('memberId', {
         type: 'manual',
@@ -96,6 +124,48 @@ const SignUpBasicInfo = () => {
     setBasicInfo(rest);
     console.log(data);
     navigate(`/signup/${type}`);
+  };
+
+  //본인 인증 용 인증번호
+  const onSubmitAuthNum = async () => {
+    if (!phone || phone.length !== 13) {
+      setError('전화번호를 입력하지 않았거나 11자리가 아닙니다.');
+      toast.warning('전화번호를 입력하지 않았거나 11자리가 아닙니다.');
+      return;
+    }
+
+    try {
+      setError('');
+      const phoneAccess = await smsService.signUpAuth(phone);
+
+      if (!phoneAccess) {
+        throw new Error('인증번호를 전송에 실패하였습니다.');
+      }
+
+      handleSendAuthNumber();
+      setAuchAccess(true);
+      setAuth(phoneAccess);
+
+      toast.success('인증번호를 전송하였습니다.');
+    } catch (error) {
+      setError('인증번호를 전송에 실패하였습니다.');
+      toast.error('인증번호를 전송에 실패하였습니다.');
+    }
+  };
+
+  //인증확인
+  const submitAuth = async () => {
+    try {
+      const promiss = await smsService.phoneAccess(auth);
+      if (!promiss) {
+        throw new Error('인증 실패하였습니다.');
+      }
+
+      setAccess(promiss);
+      toast.success('인증 성공하였습니다.');
+    } catch (error) {
+      toast.error('인증 실패하였습니다.');
+    }
   };
 
   return (
@@ -190,6 +260,7 @@ const SignUpBasicInfo = () => {
         <PhoneInput
           label="전화번호"
           value={phone}
+          onSubmitAuthNum={onSubmitAuthNum}
           onChange={(val) => {
             setPhone(val);
             setValue('phone', val);
@@ -197,7 +268,29 @@ const SignUpBasicInfo = () => {
           onClick={() => console.log('인증 요청')}
           error={errors.phone?.message}
         />
-        <SignUpInput type="text" description="인증번호를 입력해주세요" />
+
+        {authAccess && (
+          <SignUpInput
+            type="text"
+            value={auth.auth_number || ''} // undefined 방지
+            onChange={(e) => {
+              // e가 이벤트인지, 문자열인지 구분
+              const value = e?.target ? e.target.value : e;
+              setAuth((prev) => ({
+                ...prev,
+                auth_number: value,
+              }));
+            }}
+            description="인증번호를 입력해주세요"
+            showAuthCheckButton
+            submitAuth={submitAuth}
+            error={errors.authNumber?.message}
+          />
+        )}
+
+        {isRunning && (
+          <div style={{ marginTop: '10px', fontSize: '18px', color: '#F36B4D' }}>남은 시간: {formatTime()}</div>
+        )}
         <NextButton type="submit">다음 단계</NextButton>
       </Form>
     </CommonFind>
