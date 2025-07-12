@@ -10,28 +10,31 @@ import RecentBoard from '../common/ParentMain/components/RecentBoard';
 import MainSchedule from '../common/ParentMain/components/MainSchedule';
 import useLoginStore from '../../store/loginStore';
 import { useNavigate } from 'react-router-dom';
-
-const data = [
-  { name: '박지민', age: '5', time: '10:00~12:00', type: '채팅' },
-  { name: '정형일', age: '5', time: '10:00~12:00', type: '채팅' },
-  { name: '정의철', age: '5', time: '10:00~12:00', type: '대면' },
-  { name: '양동민', age: '5', time: '10:00~12:00', type: '채팅' },
-  { name: '김승기', age: '5', time: '10:00~12:00', type: '대면' },
-  { name: '박지민', age: '5', time: '10:00~12:00', type: '채팅' },
-  { name: '정형일', age: '5', time: '10:00~12:00', type: '대면' },
-  { name: '정의철', age: '5', time: '10:00~12:00', type: '채팅' },
-  { name: '양동민', age: '5', time: '10:00~12:00', type: '대면' },
-  { name: '김승기', age: '5', time: '10:00~12:00', type: '채팅' },
-];
+import { toast } from 'react-toastify';
+import api from '../../api/axios';
 
 const TeacherMainPage = () => {
   const [activeTab, setActiveTab] = useState('상담');
   const [activeCounselTab, setActiveCounselTab] = useState('상담 대기');
+  const [counselList, setCounselList] = useState([]);
   const { member } = useLoginStore();
   const centerNo = member?.centerNo;
   const navigate = useNavigate();
 
-  useEffect(() => {}, [member]);
+  useEffect(() => {
+    if (centerNo) {
+      fetchCounselData();
+    }
+  }, [centerNo]);
+
+  const fetchCounselData = async () => {
+    try {
+      const res = await api.get(`http://localhost:8888/api/counsel/getall?centerNo=${centerNo}`);
+      setCounselList(res.data);
+    } catch (error) {
+      toast.error('상담 목록 불러오기 실패:', error);
+    }
+  };
 
   return (
     <Wrapper>
@@ -69,20 +72,30 @@ const TeacherMainPage = () => {
               </CounselBar>
               <ScrollWrapper>
                 <CardList>
-                  {data.map((item, index) => (
-                    <Card key={index}>
-                      <CardTop>
-                        <TypeBadge $type={item.type}>{item.type}</TypeBadge>
-                        <Status>상담 대기</Status>
-                      </CardTop>
-                      <CardContent>
-                        <Name>{item.name} 학부모</Name>
-                        <AgeGender>({item.age}세/남)</AgeGender>
-                        <Time>{item.time}</Time>
-                      </CardContent>
-                      <CardImage src={ChildImage} alt="아이" />
-                    </Card>
-                  ))}
+                  {counselList
+                    .filter(
+                      (item) =>
+                        (activeCounselTab === '상담 대기' && item.counsel_status === 'PENDING') ||
+                        (activeCounselTab === '상담 완료' && item.counsel_status === 'COMPLETED')
+                    )
+                    .map((item) => (
+                      <Card key={item.counsel_no}>
+                        <CardTop>
+                          <TypeBadge $type={item.counsel_type === 'CHAT' ? '채팅' : '대면'}>
+                            {item.counsel_type === 'CHAT' ? '채팅' : '대면'}
+                          </TypeBadge>
+                          <Status>{item.counsel_status === 'PENDING' ? '상담 대기' : '상담 완료'}</Status>
+                        </CardTop>
+                        <CardContent>
+                          <Name>{item.child_name} 학부모</Name>
+                          <CounselDate>{formatDate(item.counsel_date)}</CounselDate>
+                          <Time>
+                            {formatTime(item.counsel_start)} ~ {formatTime(item.counsel_end)}
+                          </Time>
+                        </CardContent>
+                        <CardImage src={ChildImage} alt="아이" />
+                      </Card>
+                    ))}
                 </CardList>
               </ScrollWrapper>
             </>
@@ -142,6 +155,14 @@ const TeacherMainPage = () => {
     </Wrapper>
   );
 };
+
+// 날짜/시간 포맷 도우미 함수들
+const formatDate = (dateStr) => {
+  const date = new Date(dateStr);
+  return `${String(date.getMonth() + 1).padStart(2, '0')}월${String(date.getDate()).padStart(2, '0')}일`;
+};
+
+const formatTime = (timeStr) => timeStr?.substring(0, 5);
 
 export default TeacherMainPage;
 
@@ -246,8 +267,7 @@ const Name = styled.div`
   font-weight: bold;
 `;
 
-const AgeGender = styled.div`
-  color: #666;
+const CounselDate = styled.div`
   font-size: 12px;
 `;
 

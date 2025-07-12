@@ -32,6 +32,7 @@ const Wrapper = styled.div`
   align-items: center;
   gap: ${({ theme }) => theme.spacing[3]};
   width: 100%;
+  min-height: 450px; /* 카드 영역의 예상 높이보다 큰 값 */
 `;
 
 const ScrollArea = styled.div`
@@ -47,6 +48,7 @@ const ScrollArea = styled.div`
 `;
 
 const Arrow = styled.button`
+  padding: 10px;
   background: none;
   border: none;
   color: ${({ theme }) => theme.colors.gray[500]};

@@ -95,4 +95,11 @@ public class CounselServiceImpl implements CounselService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<Response> getCounselByCenterNo(int centerNo) {
+        return counselRepositoryCustom.getCounselByCenterNo(centerNo).stream()
+                .map(CounselDto.Response::toEntity)
+                .collect(Collectors.toList());
+    }
+
 }
