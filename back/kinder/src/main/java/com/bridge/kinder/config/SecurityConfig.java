@@ -44,6 +44,7 @@ public class SecurityConfig {
                                 "/api/members/parent",
                                 "/api/members/checkId",
                                 "/api/center",
+                                "/api/file/presigned-url",
                                 "/api/sms/sendOne",
                                 "/api/sms/authNumber",
                                 "/api/sms/sendMessage",

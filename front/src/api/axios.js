@@ -9,7 +9,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = sessionStorage.getItem('accessToken');
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
@@ -26,6 +26,8 @@ api.interceptors.response.use(
       const { status, data } = error.response;
       switch (status) {
         case 401:
+          //인증에러
+          console.error(status);
           console.error('접근권한이 없습니다.');
           break;
         case 403:

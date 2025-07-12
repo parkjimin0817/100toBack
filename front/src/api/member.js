@@ -172,13 +172,13 @@ export const memberService = {
         return;
       }
 
-      localStorage.setItem('accessToken', camelData.accessToken);
+      sessionStorage.setItem('accessToken', camelData.accessToken);
 
       return camelData;
     } catch (error) {
       if (error.response) {
         const errorMessage = error.response.data.message || '로그인에 실패했습니다.';
-        toast.error(errorMessage);
+        //toast.error(errorMessage);
       }
       throw new Error('서버와의 통신에 실패했습니다.');
     }

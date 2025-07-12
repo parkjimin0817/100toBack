@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { vacationService } from '../../api/vacation';
 import useLoginStore from '../../store/loginStore';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 export const useVacationForm = () => {
   const [selectedType, setSelectedType] = useState('');
@@ -86,9 +87,18 @@ export const useVacationForm = () => {
       toast.success('휴가 신청이 완료되었습니다.');
       if (onSuccess) onSuccess();
       return data;
-    } catch (err) {
-      console.error('휴가 신청 실패 : ', err);
-      toast.error('휴가 신청 중 오류가 발생했습니다. 다시 시도해주세요.');
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const serverMessage = error.response?.data?.message;
+        if (serverMessage) {
+          toast.error(serverMessage); // 백에서 내려온 메시지
+        } else {
+          toast.error('서버 오류가 발생했습니다.');
+        }
+      } else {
+        console.error('🔥 알 수 없는 에러:', error);
+        toast.error('알 수 없는 오류가 발생했습니다.');
+      }
     }
   };
 

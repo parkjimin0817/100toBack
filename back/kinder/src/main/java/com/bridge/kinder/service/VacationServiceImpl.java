@@ -34,6 +34,7 @@ public class VacationServiceImpl implements VacationService {
     private final LeaveRepository leaveRepository;
     private final AttendanceRepository attendanceRepository;
     private final String UPLOAD_PATH = "C://test_upload/";
+    private final AlarmRepository alarmRepository;
 
     //휴가 신청
     @Override
@@ -41,6 +42,12 @@ public class VacationServiceImpl implements VacationService {
         //멤버 조회
         Member member = memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 교사입니다."));
+
+        //이미 휴가가 존재하는 날짜인지 확인
+        boolean exists = attendanceRepository.existsByMemberAndDateBetween(member.getMemberNo(), request.getStart_date(), request.getEnd_date());
+        if (exists){
+            throw new RuntimeException("이미 신청된 휴가 또는 근태 정보가 있는 날짜입니다.");
+        }
 
         //휴가 신청
         Vacation vacation = request.toEntity(member);
@@ -56,6 +63,16 @@ public class VacationServiceImpl implements VacationService {
             leave.useLeave((int) days);
         }
 
+        //해당 시설장에게 알람보내기
+        List<Member> managers = memberRepository.findMemberByCenter(member.getCenter().getCenterNo(), CommonEnums.MemberType.MANAGER);
+        for(Member manager : managers) {
+            Alarm alarm = Alarm.builder()
+                    .content(member.getMemberName() + "교사가 휴가를 신청했습니다.")
+                    .url("/vacationList")
+                    .member(manager)
+                    .build();
+            alarmRepository.save(alarm);
+        }
 
         return VacationDto.Response.toDto(vacation, member);
     }
@@ -159,6 +176,14 @@ public class VacationServiceImpl implements VacationService {
             attendanceRepository.save(attendance);
         }
 
+        //교사에게 알람 생성
+        Alarm alarm = Alarm.builder()
+                        .member(member)
+                        .content("휴가/워케이션 신청이 승인되었습니다.")
+                        .url("/teacher/workcation")
+                        .build();
+        alarmRepository.save(alarm);
+
         return VacationDto.Response.toDto(updated, updated.getMember());
     }
 
@@ -184,6 +209,15 @@ public class VacationServiceImpl implements VacationService {
 
         vacation.reject();
         Vacation updated = vacationRepository.save(vacation);
+
+        //교사에게 알람 생성
+        Alarm alarm = Alarm.builder()
+                .member(vacation.getMember())
+                .content("휴가/워케이션 신청이 거절되었습니다.")
+                .url("/teacher/workcation")
+                .build();
+        alarmRepository.save(alarm);
+
         return VacationDto.Response.toDto(updated, updated.getMember());
     }
 }

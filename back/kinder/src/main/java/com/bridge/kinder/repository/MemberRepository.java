@@ -3,6 +3,7 @@ package com.bridge.kinder.repository;
 import com.bridge.kinder.dto.MypageDto;
 import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.Member;
+import com.bridge.kinder.enums.CommonEnums;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -50,5 +51,8 @@ public interface MemberRepository  {
 
     //멤버 번호로 반 수정하기
     Optional<Member> updateClass(int member_no, int class_no);
+
+    //시설번호와 멤버타입으로 멤버 가져오기
+    List<Member> findMemberByCenter(int centerNo, CommonEnums.MemberType memberType);
 
 }

@@ -22,7 +22,7 @@ public class ClassRoomController {
 
     //반 생성하기
     @PostMapping("/create")
-    public ResponseEntity<ClassRoomDto.Response> createClass(@ModelAttribute ClassRoomDto.Create classRoomCreate) throws IOException {
+    public ResponseEntity<ClassRoomDto.Response> createClass(@ModelAttribute ClassRoomDto.Create classRoomCreate) {
         return ResponseEntity.ok(classRoomService.createClass(classRoomCreate));
     }
 
