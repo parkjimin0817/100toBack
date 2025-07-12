@@ -78,7 +78,10 @@ public class CommonEnums {
         COMPLETED,      //상담 완료
     }
 
-
+    public enum AuthStatus {
+        ACCESS,         //인증번호 승인
+        REFUSAL         //인증번호 거부
+    }
 
 
 }

@@ -85,7 +85,7 @@ public class JwtTokenFilter extends GenericFilterBean {
 
             }
             chain.doFilter(request, response);
-        } catch (Exception e) {
+        } catch (io.jsonwebtoken.JwtException | AuthenticationServiceException e) {
             e.printStackTrace();
             //인증 실패 시 -> 401 Unauthorized 응답 반환
             httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
