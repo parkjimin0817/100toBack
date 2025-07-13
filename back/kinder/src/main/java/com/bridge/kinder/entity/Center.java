@@ -1,5 +1,6 @@
 package com.bridge.kinder.entity;
 
+import com.bridge.kinder.entity.chat.ChatRoom;
 import com.bridge.kinder.enums.CommonEnums;
 import jakarta.persistence.*;
 import lombok.*;
@@ -89,6 +90,11 @@ public class Center {// 시설
     @Builder.Default
     List<Counsel> counsels = new ArrayList<>();
     //상담
+
+    @OneToMany(mappedBy = "center", cascade = CascadeType.ALL)
+    @Builder.Default
+    List<ChatRoom> chatRooms = new ArrayList<>();
+    //채팅방
 
 
     //---------------------------------------------------------------------------------------------

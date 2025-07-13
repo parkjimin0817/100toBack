@@ -103,22 +103,28 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
 
-    //멤버 PWD 찾기(아이디)
+    //멤버 PWD 찾기(아이디 비교)
     @Override
     public Optional<Member> pwdSearchId(String memberId) {
         String query = "select m from Member m where m.memberId = :memberId";
-        return Optional.ofNullable(em.createQuery(query, Member.class)
+
+        List<Member> result = em.createQuery(query, Member.class)
                 .setParameter("memberId", memberId)
-                .getSingleResult());
+                .getResultList();
+
+        return result.stream().findFirst(); // Optional<Member>
     }
 
-    //전화번호로 멤버찾기
+    //아이디, 이름, 전화번호 멤버찾기
     @Override
-    public Optional<Member> findByPhone(String memberPhone) {
-        String query = "select m from Member m where m.memberPhone = :memberPhone";
-        return Optional.ofNullable(em.createQuery(query, Member.class)
+    public Member findByIdAndNameAndPhone(String memberId, String memberName, String memberPhone) {
+        String query = "select m from Member m where m.memberPhone = :memberPhone and m.memberName = :memberName and m.memberId = :memberId";
+
+        return em.createQuery(query, Member.class)
                 .setParameter("memberPhone", memberPhone)
-                .getSingleResult());
+                .setParameter("memberName", memberName)
+                .setParameter("memberId", memberId)
+                .getSingleResult();
     }
 
     //마이페이지 수정
@@ -188,5 +194,24 @@ public class MemberRepositoryImpl implements MemberRepository {
         } else {
             return Optional.empty();
         }
+    }
+
+    //시설과 멤버타입으로 멤버 불러오기
+    @Override
+    public List<Member> findMemberByCenter(int centerNo, CommonEnums.MemberType memberType) {
+        return em.createQuery(
+                        "SELECT m FROM Member m WHERE m.center.centerNo = :centerNo AND m.memberType = :type", Member.class)
+                .setParameter("centerNo", centerNo)
+                .setParameter("type", memberType)
+                .getResultList();
+    }
+
+    //센터별 멤버 목록 조회
+    @Override
+    public List<Member> findAllByCenterNo(int centerNo) {
+        return em.createQuery(
+                "SELECT m FROM Member m WHERE m.center.centerNo =:centerNo", Member.class)
+                .setParameter("centerNo", centerNo)
+                .getResultList();
     }
 }

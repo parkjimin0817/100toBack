@@ -35,10 +35,10 @@ export const useSearchPwdForm1 = () => {
 
       searchPwd(member);
 
-      toast.success('비밀번호 찾기 성공했습니다.');
+      toast.success('계정 찾기 성공했습니다.');
       navigator('/authenticationuser');
     } catch (error) {
-      setError('비밀번호 찾기 실패했습니다.');
+      setError('해당 계정은 등록되어있지 않습니다.', error.message);
     } finally {
       setIsLoading(false);
     }

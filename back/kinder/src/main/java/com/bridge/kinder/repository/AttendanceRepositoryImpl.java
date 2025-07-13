@@ -88,4 +88,19 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
         return Optional.ofNullable(count);
 
     }
+
+    @Override
+    public boolean existsByMemberAndDateBetween(int memberNo, LocalDate startDate, LocalDate endDate) {
+        String jpql = "SELECT COUNT(a) FROM Attendance a " +
+                "WHERE a.member.memberNo = :memberNo " +
+                "AND a.attendanceDate BETWEEN :startDate AND :endDate";
+
+        Long count = em.createQuery(jpql, Long.class)
+                .setParameter("memberNo", memberNo)
+                .setParameter("startDate", startDate)
+                .setParameter("endDate", endDate)
+                .getSingleResult();
+
+        return count > 0;
+    }
 }

@@ -3,6 +3,7 @@ package com.bridge.kinder.repository;
 import com.bridge.kinder.dto.MypageDto;
 import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.Member;
+import com.bridge.kinder.enums.CommonEnums;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -24,8 +25,9 @@ public interface MemberRepository  {
 
     //학부모 검색
     Optional<Member> findByParentNo(int memberNo);
-    //전화번호 멤버찾기
-    Optional<Member> findByPhone(String memberPhone);
+
+    //아이디, 이름, 전화번호 멤버찾기
+    Member findByIdAndNameAndPhone(String memberId, String memberName, String memberPhone);
 
     //시설별 교사 목록(for셀렉트바 / 간단)
     List<Member> findTeacherByCenterNo(int centerNo);
@@ -49,5 +51,11 @@ public interface MemberRepository  {
 
     //멤버 번호로 반 수정하기
     Optional<Member> updateClass(int member_no, int class_no);
+
+    //시설번호와 멤버타입으로 멤버 가져오기
+    List<Member> findMemberByCenter(int centerNo, CommonEnums.MemberType memberType);
+
+    //센터별 멤버 목록 조회
+    List<Member> findAllByCenterNo(int centerNo);
 
 }

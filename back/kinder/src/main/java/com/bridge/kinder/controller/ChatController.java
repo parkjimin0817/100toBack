@@ -34,7 +34,7 @@ public class ChatController {
         return new ResponseEntity<>(chatService.getChatHistory(chatRoomNo), HttpStatus.OK);
     }
 
-    //그룹채팅목록 조회
+    //센터별 그룹채팅목록 조회
     @GetMapping("/room/group/list")
     public ResponseEntity<?> getGroupChatList() {
         return new ResponseEntity<>(chatService.getGroupChatRooms(), HttpStatus.OK);

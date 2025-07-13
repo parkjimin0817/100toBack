@@ -4,11 +4,13 @@ import com.bridge.kinder.auth.JwtTokenProvider;
 import com.bridge.kinder.dto.chat.ChatMessageDto;
 import com.bridge.kinder.dto.chat.ChatRoomResponse;
 import com.bridge.kinder.dto.chat.MyChatResponse;
+import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.entity.chat.ChatMessage;
 import com.bridge.kinder.entity.chat.ChatParticipant;
 import com.bridge.kinder.entity.chat.ChatRoom;
 import com.bridge.kinder.entity.chat.ReadStatus;
+import com.bridge.kinder.repository.CenterRepository;
 import com.bridge.kinder.repository.MemberRepository;
 import com.bridge.kinder.repository.chat.ChatMessageRepository;
 import com.bridge.kinder.repository.chat.ChatParicipantRepository;
@@ -35,6 +37,7 @@ public class ChatServiceImpl implements ChatService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final ReadStatusRepository readStatusRepository;
+    private final CenterRepository centerRepository;
 
     //1:1채팅방 생성 또는 조회
     @Override
@@ -136,9 +139,16 @@ public class ChatServiceImpl implements ChatService {
         readStatusRepository.saveAll(readStatuses);
     }
 
-    //그룹채팅방 조회
+    //센터별 그룹채팅방 조회
     public List<ChatRoomResponse> getGroupChatRooms() {
-        List<ChatRoom> chatRooms = chatRoomRepository.findByIsGroupChat("Y");
+        Member member = memberRepository.findByMemberId(jwtTokenProvider.getMemberIdFromToken())
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
+
+        Center center = centerRepository.findById(member.getCenter().getCenterNo())
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 시설입니다."));
+
+        List<ChatRoom> chatRooms = chatRoomRepository.findByIsGroupChatAndCenter("Y", center);
+
         return chatRooms.stream()
                 .map(c -> ChatRoomResponse.builder()
                         .chatRoomNo(c.getChatRoomNo())

@@ -5,14 +5,27 @@ import CommonFind from '../../components/Common/CommonFind';
 import { useNavigate } from 'react-router-dom';
 import SearchFormNav from '../../components/Common/SearchFormNav';
 import { Button } from '../../styles/Common/Button';
-import useSearchStore from '../../store/searchStore';
-import { toast } from 'react-toastify';
-import { memberService } from '../../api/member';
 import { useSearchPwdForm2 } from '../../hook/searchForm/useSearchPwdForm2';
 
 const AuthenticationUser = () => {
-  const { writeName, writePhone, writeNumber, isLoading, error, access, handleChange, handleNext, onSubmit } =
-    useSearchPwdForm2();
+  const navigator = useNavigate();
+  const {
+    writeName,
+    writePhone,
+    writeNumber,
+    isLoading,
+    isLoading2,
+    error,
+    auth,
+    handleChange,
+    handleNext,
+    onSubmit,
+    submitAuth,
+    handleSendAuthNumber,
+    formatTime,
+    isRunning,
+  } = useSearchPwdForm2();
+
   return (
     <>
       <CommonFind />
@@ -47,10 +60,14 @@ const AuthenticationUser = () => {
                   value={writePhone}
                   onChange={handleChange}
                 />
-                <VerifyButton type="submit">{isLoading ? '인증요청 중..' : '인증요청'}</VerifyButton>
+                <VerifyButton type="submit" onClick={handleSendAuthNumber}>
+                  {isLoading ? '인증번호요청 중..' : '인증번호요청'}
+                </VerifyButton>
               </ContentInner>
+            </form>
 
-              {access ? (
+            {auth.auth_no > 0 ? (
+              <form onSubmit={submitAuth}>
                 <ContentInner>
                   <Input
                     type="text"
@@ -59,20 +76,24 @@ const AuthenticationUser = () => {
                     value={writeNumber}
                     onChange={handleChange}
                   />
+                  <VerifyButton2 type="submit">{isLoading2 ? '인증요청 중..' : '인증완료'}</VerifyButton2>
                 </ContentInner>
-              ) : (
-                ''
-              )}
+                {isRunning && (
+                  <div style={{ marginTop: '10px', fontSize: '18px', color: '#F36B4D' }}>남은 시간: {formatTime()}</div>
+                )}
+              </form>
+            ) : (
+              ''
+            )}
 
-              <ButtonArea>
-                <Button1 type="button" onClick={handleNext}>
-                  다음
-                </Button1>
-                <Button1 type="button" onClick={() => navigator(-1)}>
-                  돌아가기
-                </Button1>
-              </ButtonArea>
-            </form>
+            <ButtonArea>
+              <Button1 type="button" onClick={handleNext}>
+                다음
+              </Button1>
+              <Button1 type="button" onClick={() => navigator('/findpwd')}>
+                돌아가기
+              </Button1>
+            </ButtonArea>
             <ContentFooter>
               <div>고객센터</div>
               <div>1 : 1 문의하기</div>
@@ -89,6 +110,19 @@ const AuthenticationUser = () => {
 
 export default AuthenticationUser;
 
+const VerifyButton2 = styled.button`
+  position: absolute;
+  right: 10px;
+  top: 17px;
+  background-color: ${({ theme }) => theme.colors.white};
+  border: 1px solid #bdbcbc;
+  border-radius: ${({ theme }) => theme.borderRadius['3xl']};
+  padding: 0 ${({ theme }) => theme.spacing[3]};
+  height: 30px;
+  font-size: ${({ theme }) => theme.spacing[3]};
+  font-weight: normal;
+`;
+
 const VerifyButton = styled.button`
   position: absolute;
   right: 10px;
@@ -100,7 +134,6 @@ const VerifyButton = styled.button`
   height: 30px;
   font-size: ${({ theme }) => theme.spacing[3]};
   font-weight: normal;
-  cursor: pointer;
 `;
 
 const Content = styled.div`
