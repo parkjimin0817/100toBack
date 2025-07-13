@@ -60,4 +60,7 @@ public interface MemberService {
     //센터 번호로 교사 소개 리스트 가져오기
     List<MemberDto.TeacherIntroList> teacherIntroList(int centerNo);
 
+    //센터별 멤버 목록 조회
+    List<MemberDto.SimpleDto> centerMemberList(int centerNo);
+
 }

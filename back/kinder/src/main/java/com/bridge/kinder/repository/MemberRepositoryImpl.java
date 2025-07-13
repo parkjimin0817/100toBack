@@ -206,5 +206,12 @@ public class MemberRepositoryImpl implements MemberRepository {
                 .getResultList();
     }
 
-
+    //센터별 멤버 목록 조회
+    @Override
+    public List<Member> findAllByCenterNo(int centerNo) {
+        return em.createQuery(
+                "SELECT m FROM Member m WHERE m.center.centerNo =:centerNo", Member.class)
+                .setParameter("centerNo", centerNo)
+                .getResultList();
+    }
 }

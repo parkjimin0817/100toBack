@@ -144,4 +144,10 @@ public class MemberController {
         return ResponseEntity.ok(memberService.teacherIntroList(centerNo));
     }
 
+    //센터별 멤버 목록 조회
+    @GetMapping("/memberList")
+    public ResponseEntity<List<MemberDto.SimpleDto>> centerMemberList(@RequestParam int centerNo){
+        return ResponseEntity.ok(memberService.centerMemberList(centerNo));
+    }
+
 }
