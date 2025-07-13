@@ -55,4 +55,7 @@ public interface MemberRepository  {
     //시설번호와 멤버타입으로 멤버 가져오기
     List<Member> findMemberByCenter(int centerNo, CommonEnums.MemberType memberType);
 
+    //센터별 멤버 목록 조회
+    List<Member> findAllByCenterNo(int centerNo);
+
 }

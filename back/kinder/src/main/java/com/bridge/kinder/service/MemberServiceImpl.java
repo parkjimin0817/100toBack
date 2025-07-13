@@ -1,5 +1,6 @@
 package com.bridge.kinder.service;
 
+import com.bridge.kinder.auth.JwtTokenProvider;
 import com.bridge.kinder.dto.ChildDto;
 import com.bridge.kinder.dto.CreateManagerDto;
 import com.bridge.kinder.dto.MemberChildDto;
@@ -7,6 +8,7 @@ import com.bridge.kinder.dto.MemberDto;
 import com.bridge.kinder.dto.MemberDto.LoginRequest;
 import com.bridge.kinder.dto.MemberDto.PwdUpdate;
 import com.bridge.kinder.dto.MemberDto.DetailMemberDto;
+import com.bridge.kinder.dto.MemberDto.SimpleDto;
 import com.bridge.kinder.dto.MemberDto.TeacherIntroList;
 import com.bridge.kinder.dto.MemberDto.modalResponse;
 import com.bridge.kinder.dto.MemberDto.teacherListResponse;
@@ -55,6 +57,7 @@ public class MemberServiceImpl implements MemberService {
     private final String UPLOAD_PATH = "C://test_upload/"; //aws S3 연결시 관련 코드 수정할 것.
     private final LeaveRepository leaveRepository;
     private final AlarmRepository alarmRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Value("${aws.s3.bucket}") private String bucket;
     private final S3Presigner s3Presigner;
@@ -364,6 +367,20 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.findTeacherByCenterNo(center.getCenterNo())
                 .stream()
                 .map(TeacherIntroList::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SimpleDto> centerMemberList(int centerNo) {
+        Member member = memberRepository.findByMemberId(jwtTokenProvider.getMemberIdFromToken())
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
+
+        Center center = centerRepository.findById(centerNo)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
+
+        return memberRepository.findAllByCenterNo(centerNo)
+                .stream()
+                .map(SimpleDto::from)
                 .collect(Collectors.toList());
     }
 }
