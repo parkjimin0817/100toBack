@@ -11,19 +11,19 @@ import { useNavigate } from 'react-router-dom';
 const TeacherMainHealth = ({ member }) => {
   const memberNo = member?.memberNo;
   const navigate = useNavigate();
-  const [avg, setAvg] = useState([]);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     if (!memberNo) return;
 
     memberHealthLogService
       .getAvg(memberNo)
-      .then((data) => setAvg(data))
+      .then((data) => setData(data))
       .catch((err) => console.error('건강 지수 불러오기 실패 :', err));
   }, [memberNo]);
 
   const noData =
-    avg.lastWeekStress === 0 && avg.thisWeekStress === 0 && avg.lastWeekSleep === 0 && avg.thisWeekSleep === 0;
+    data.lastWeekStress === 0 && data.thisWeekStress === 0 && data.lastWeekSleep === 0 && data.thisWeekSleep === 0;
 
   return (
     <>
@@ -48,19 +48,27 @@ const TeacherMainHealth = ({ member }) => {
           <StressDiv>
             <SecondLineTitle>스트레스 지수</SecondLineTitle>
             <Bar>
-              <BarFill $width={Math.min(avg.lastWeekStress, 100)} $color={'lightblue'} />
+              <FirstSpan>0</FirstSpan>
+              <BarFill $width={Math.min(data.lastWeekStress, 100)} $color={'lightblue'} />
+              <LastSpan>10</LastSpan>
             </Bar>
             <Bar>
-              <BarFill $width={Math.min(avg.thisWeekStress, 100)} $color={'blue'} />
+              <FirstSpan>0</FirstSpan>
+              <BarFill $width={Math.min(data.thisWeekStress, 100)} $color={'blue'} />
+              <LastSpan>10</LastSpan>
             </Bar>
           </StressDiv>
           <StressDiv>
             <SecondLineTitle>평균 수면 시간</SecondLineTitle>
             <Bar>
-              <BarFill $width={Math.min(avg.lastWeekSleep, 100)} $color={'lightblue'} />
+              <FirstSpan>0</FirstSpan>
+              <BarFill $width={Math.min(data.lastWeekSleep, 100)} $color={'lightblue'} />
+              <LastSpan>8</LastSpan>
             </Bar>
             <Bar>
-              <BarFill $width={Math.min(avg.thisWeekSleep, 100)} $color={'blue'} />
+              <FirstSpan>0</FirstSpan>
+              <BarFill $width={Math.min(data.thisWeekSleep, 100)} $color={'blue'} />
+              <LastSpan>8</LastSpan>
             </Bar>
           </StressDiv>
           <SecondLineFooter>
@@ -261,8 +269,28 @@ const Bar = styled.div`
   background-color: ${({ theme }) => theme.colors.gray[300]};
   margin-bottom: 10px;
   border-radius: ${({ theme }) => theme.borderRadius.lg};
+  position: relative;
 `;
 
+const FirstSpan = styled.span`
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding-left: 5px;
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.white};
+  text-align: center;
+`;
+
+const LastSpan = styled.span`
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding-right: 5px;
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.white};
+  text-align: center;
+`;
 const BarFill = styled.div`
   width: ${(props) => props.$width}%;
   height: 15px;

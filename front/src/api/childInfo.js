@@ -15,8 +15,8 @@ export function childInfo(residentNo) {
   const day = parseInt(front6.slice(4, 6), 10);
 
   let gender = '-';
-  if (genderCode === '3') gender = '남자';
-  else if (genderCode === '4') gender = '여자';
+  if (genderCode === '3') gender = '남';
+  else if (genderCode === '4') gender = '여';
 
   const today = new Date();
   let age = today.getFullYear() - year;
