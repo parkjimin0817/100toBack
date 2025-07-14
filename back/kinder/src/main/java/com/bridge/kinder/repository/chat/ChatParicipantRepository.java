@@ -30,4 +30,16 @@ public interface ChatParicipantRepository extends JpaRepository<ChatParticipant,
         )
     """)
     Optional<ChatRoom> findExistingPrivateRoom(int myNo, int otherNo);
+
+
+    @Query("""
+        SELECT cp FROM ChatParticipant cp
+        JOIN cp.chatRoom cr
+        WHERE cp.member = :member
+        ORDER BY (
+            SELECT MAX(cm.createdTime) FROM ChatMessage cm
+            WHERE cm.chatRoom = cr
+        ) DESC
+    """)
+    List<ChatParticipant> findChatParticipantsOrderByLatestMessage( Member member);
 }

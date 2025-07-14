@@ -144,7 +144,7 @@ export const API_ENDPOINTS = {
   FILE: {
     BASE: '/api/file',
     PRESIGNED_URL: '/api/file/presigned-url',
-    //DOWNLOAD_URL: '/api/file/download-url',
+    DOWNLOAD_URL: (boardNo) => `/api/file/${boardNo}/download-url`,
   },
   ALARM: {
     BASE: '/api/alarm',

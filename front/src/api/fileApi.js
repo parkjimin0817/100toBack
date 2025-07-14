@@ -36,15 +36,10 @@ export const uploadFileToS3 = async (presignedUrl, file) => {
   }
 };
 
-//다운로드 완성 x
-export const getDownloadUrl = async (filePath, fileName) => {
-  try {
-    const { data } = await api.post(API_ENDPOINTS.FILE.DOWNLOAD_URL, {
-      filePath,
-      fileName,
-    });
-    return data;
-  } catch (error) {
-    throw new Error('Presigned 다운로드 URL 요청 실패 :' + error.message);
-  }
+export const getDownloadUrl = async (boardNo) => {
+  const response = await api.get(API_ENDPOINTS.FILE.DOWNLOAD_URL(boardNo));
+  return {
+    presignedUrl: response.data.presigned_url,
+    originalFileName: response.data.original_name,
+  };
 };
