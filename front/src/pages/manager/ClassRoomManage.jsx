@@ -10,6 +10,7 @@ import { classService } from '../../api/class';
 import { ImInfo } from 'react-icons/im';
 import { BounceLoader } from 'react-spinners';
 import { ErrorDiv, Hint, NoneDiv } from '../../styles/Common/Container';
+import { toast } from 'react-toastify';
 
 const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
@@ -33,7 +34,6 @@ const ClassRoomManage = () => {
       setError('');
 
       const classList = await classService.classroomlist(centerNo);
-      console.log(classList);
 
       if (classList.length === 0) {
         setClassrooms([]);
@@ -41,7 +41,7 @@ const ClassRoomManage = () => {
         setClassrooms(classList);
       }
     } catch (error) {
-      console.error('반 목록 불러오기 실패: ', error.message);
+      toast.error('반 목록 불러오기 실패: ', error.message);
       setError('반 목록 불러오는데 실패하였습니다.');
     } finally {
       setLoading(false);
