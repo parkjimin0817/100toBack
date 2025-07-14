@@ -98,13 +98,25 @@ public class AttendanceServiceImpl implements AttendanceService {
         Center center = Optional.ofNullable(member.getCenter())
                 .orElseThrow(() -> new RuntimeException("멤버에 센터 정보가 없습니다"));
 
-        //오늘 출근 기록 여부 확인
+        //오늘 출근 기록 여부 확인 (리스트로 나오긴 해도 1개)
         List<Attendance> result = attendanceRepository.findByMemberNoAndDateRange(memberNo, member.getCenter().getCenterNo(), startOfDay, endOfDay);
-        if(!result.isEmpty()){
-            throw new RuntimeException("이미 출근 기록이 존재합니다.");
-        }
 
-        //출근 기록 생성
+         if(!result.isEmpty()){
+             Attendance todayAttendance = result.get(0);
+             TeacherAttendanceStatus status = todayAttendance.getStatus();
+
+             if(status == TeacherAttendanceStatus.WORKING) {
+                 throw new RuntimeException("이미 출근 기록이 존재합니다.");
+             } else if(status == TeacherAttendanceStatus.WORKCATION) {
+                 if(todayAttendance.getInTime()==null) {
+                     todayAttendance.updateInTime(LocalDateTime.now());
+                     attendanceRepository.save(todayAttendance);
+                 }
+                 return AttendanceDto.Response.toDto(todayAttendance);
+             }
+         }
+
+        // 새로운 출근 기록 생성
         Attendance newAttendance = Attendance.builder()
                 .member(member)
                 .inTime(LocalDateTime.now())
@@ -141,7 +153,15 @@ public class AttendanceServiceImpl implements AttendanceService {
         }
 
         attendance.updateOutTime(LocalDateTime.now());
-        attendance.updateStatus(TeacherAttendanceStatus.PRESENT);
+        
+        //status가 근무중이었을 경우 정상출근으로 변경
+        if(attendance.getStatus() == TeacherAttendanceStatus.WORKING){
+            attendance.updateStatus(TeacherAttendanceStatus.PRESENT);
+        }
+        
+        //이외의 경우 status 변경 없이 저장
+        attendanceRepository.save(attendance);
+        
         return AttendanceDto.Response.toDto(attendance);
     }
 

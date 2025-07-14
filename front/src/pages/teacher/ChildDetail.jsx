@@ -678,6 +678,8 @@ const BasicInfo = styled.div`
 `;
 
 const PictureLine = styled.div`
+  width: 225px;
+  height: 200px;
   margin-left: 25px;
   margin-top: 20px;
   margin-bottom: 45px;
@@ -703,14 +705,16 @@ const NameTr = styled.tr`
   font-weight: ${({ theme }) => theme.fontWeights.bold};
 `;
 
-const Info = styled.tr``;
+const Info = styled.tr`
+  text-align: left;
+`;
 
 const SpanWrapper = styled.div`
   display: flex;
   flex-direction: column; /* 또는 row로 가로배치 */
   justify-content: center; /* 세로 가운데 정렬 */
   height: 100%;
-  padding-top: 40px;
+  padding-top: 50px;
 `;
 
 const InfoColumn = styled.td`

@@ -45,9 +45,7 @@ const MyAttendaceCard = ({ selectedDate, currentMonth, attendance, minDate, maxD
 
   const workDayCount = filteredAttendances.filter((att) => att.status === 'PRESENT').length;
   const absentCount = filteredAttendances.filter((att) => att.status === 'ABSENT').length;
-  const vacationCount = filteredAttendances.filter(
-    (att) => att.status === 'VACATION' || att.status === 'WORKCATION'
-  ).length;
+  const vacationCount = filteredAttendances.filter((att) => att.status === 'VACATION').length;
 
   return (
     <>

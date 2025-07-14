@@ -1,11 +1,10 @@
-package com.bridge.kinder.service.file;
+package com.bridge.kinder.service;
 
 import com.bridge.kinder.dto.AlarmDto;
 import com.bridge.kinder.entity.Alarm;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.repository.AlarmRepository;
 import com.bridge.kinder.repository.MemberRepository;
-import com.bridge.kinder.service.AlarmService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
