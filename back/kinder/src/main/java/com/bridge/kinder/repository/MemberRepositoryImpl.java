@@ -4,6 +4,7 @@ import com.bridge.kinder.dto.MypageDto;
 import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.enums.CommonEnums;
+import com.bridge.kinder.enums.CommonEnums.AdmissionStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
@@ -210,8 +211,10 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public List<Member> findAllByCenterNo(int centerNo) {
         return em.createQuery(
-                "SELECT m FROM Member m WHERE m.center.centerNo =:centerNo", Member.class)
+                "SELECT m FROM Member m WHERE m.center.centerNo =:centerNo "
+                        + "AND m.status =:APPROVED", Member.class)
                 .setParameter("centerNo", centerNo)
+                .setParameter("APPROVED", AdmissionStatus.APPROVED)
                 .getResultList();
     }
 }

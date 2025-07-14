@@ -63,12 +63,12 @@ const ApprovalList = () => {
           </MemberType>
         </NavigationLeft>
 
-        <NavigationRight>
+        {/* <NavigationRight>
           <SearchInput type="text" placeholder="검색어를 입력해주세요" />
           <SearchButton>
             <SearchIcon />
           </SearchButton>
-        </NavigationRight>
+        </NavigationRight> */}
       </Navigation>
 
       <ApprovalLists>

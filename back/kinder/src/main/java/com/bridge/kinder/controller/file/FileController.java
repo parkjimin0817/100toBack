@@ -2,11 +2,15 @@ package com.bridge.kinder.controller.file;
 
 import com.bridge.kinder.dto.file.PresignedDto;
 import com.bridge.kinder.dto.file.UploadUrlResponseDto;
+import com.bridge.kinder.dto.file.DownloadUrlResponseDto;
+import com.bridge.kinder.entity.Board;
 import com.bridge.kinder.service.file.FileService;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,5 +40,15 @@ public class FileController {
         String presignedUrl = fileService.generatePresignedUploadUrl(changeName, dto.getFileType());
 
         return ResponseEntity.ok(new UploadUrlResponseDto(changeName, presignedUrl));
+    }
+
+    //파일 다운로드
+    @GetMapping("/{boardNo}/download-url")
+    public ResponseEntity<?> getDownloadUrl(@PathVariable int boardNo) {
+        Board board = fileService.getFile(boardNo);
+
+        String presigendUrl = fileService.generatePresignedDownloadUrl(board.getAttachment());
+
+        return ResponseEntity.ok(new DownloadUrlResponseDto(presigendUrl, board.getAttachmentOrigin()));
     }
 }

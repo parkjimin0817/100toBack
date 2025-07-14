@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ReadStatusRepository extends JpaRepository<ReadStatus, Long> {
     Long countByChatRoomAndMemberAndIsReadFalse(ChatRoom chatRoom, Member member);
     List<ReadStatus> findByChatRoomAndMemberAndIsReadFalse(ChatRoom chatRoom, Member member);
+
+
 }
