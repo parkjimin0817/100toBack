@@ -37,12 +37,16 @@ export const API_ENDPOINTS = {
     UPDATE: (memberNo) => `/api/members/mtpage?id=${memberNo}`,
     SEARCHID: `/api/members/searchId`,
     PWDSEARCHID: `/api/members/pwdSearchId`,
-    PHONEACCESS: `/api/members/sendOne`,
     PWDUPDATE: `/api/members/pwdUpdate`,
     TEACHERLIST: (centerNo) => `/api/members/teacher/select/${centerNo}`,
     TEACHER_DETAIL_LIST: (centerNo) => `/api/members/teacher/list/${centerNo}`,
     TEACHER_DETAIL: (memberNo) => `/api/members/teacher/${memberNo}`,
     TEACHER_INTRO_LIST: (centerNo) => `/api/members/introList?centerNo=${centerNo}`,
+  },
+  SMS: {
+    AUTHCALL: `/api/sms/sendOne`,
+    AUTHPERMISSION: `/api/sms/authNumber`,
+    SIGNUPAUTHNUMBER: `/api/sms/sendMessage`,
   },
   APPLOVALLIST: {
     BASE: 'api/approval',
@@ -140,6 +144,11 @@ export const API_ENDPOINTS = {
   FILE: {
     BASE: '/api/file',
     PRESIGNED_URL: '/api/file/presigned-url',
-    //DOWNLOAD_URL: '/api/file/download-url',
+    DOWNLOAD_URL: (boardNo) => `/api/file/${boardNo}/download-url`,
+  },
+  ALARM: {
+    BASE: '/api/alarm',
+    GET: '/api/alarm',
+    READ: (alarmNo) => `/api/alarm/${alarmNo}`,
   },
 };

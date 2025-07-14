@@ -1,13 +1,14 @@
 package com.bridge.kinder.service;
 
+import com.bridge.kinder.auth.JwtTokenProvider;
 import com.bridge.kinder.dto.ChildDto;
 import com.bridge.kinder.dto.CreateManagerDto;
 import com.bridge.kinder.dto.MemberChildDto;
 import com.bridge.kinder.dto.MemberDto;
 import com.bridge.kinder.dto.MemberDto.LoginRequest;
-import com.bridge.kinder.dto.MemberDto.PhoneAccess;
 import com.bridge.kinder.dto.MemberDto.PwdUpdate;
 import com.bridge.kinder.dto.MemberDto.DetailMemberDto;
+import com.bridge.kinder.dto.MemberDto.SimpleDto;
 import com.bridge.kinder.dto.MemberDto.TeacherIntroList;
 import com.bridge.kinder.dto.MemberDto.modalResponse;
 import com.bridge.kinder.dto.MemberDto.teacherListResponse;
@@ -48,7 +49,6 @@ import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequ
 public class MemberServiceImpl implements MemberService {
 
     private final PasswordEncoder passwordEncoder;
-    private final SmsUtil smsUtil;
     private final MemberRepository memberRepository;
     private final ChildRepository childRepository;
     private final CenterRepository centerRepository;
@@ -56,6 +56,8 @@ public class MemberServiceImpl implements MemberService {
     private final MemberChildRepository memberChildRepository;
     private final String UPLOAD_PATH = "C://test_upload/"; //aws S3 연결시 관련 코드 수정할 것.
     private final LeaveRepository leaveRepository;
+    private final AlarmRepository alarmRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Value("${aws.s3.bucket}") private String bucket;
     private final S3Presigner s3Presigner;
@@ -123,6 +125,17 @@ public class MemberServiceImpl implements MemberService {
 
         approvalRepository.save(approval);
 
+        //시설장에게 교사 회원가입 알림 보내기
+        List<Member> managers = memberRepository.findMemberByCenter(center.getCenterNo(), CommonEnums.MemberType.MANAGER);
+        for (Member manager : managers) {
+            Alarm alarm = Alarm.builder()
+                    .member(manager)
+                    .content("신규 교사가 가입 신청을 했습니다.")
+                    .url("/approvalList")
+                    .build();
+            alarmRepository.save(alarm);
+        }
+
         return String.valueOf(teacher.getMemberNo());
     }
 
@@ -148,6 +161,17 @@ public class MemberServiceImpl implements MemberService {
         approvalRepository.save(approvalParent);
         // 여기까지 학부모 회원가입
 
+        //시설장에게 학부모 회원가입 알림 보내기
+        List<Member> parentManagers = memberRepository.findMemberByCenter(centerMember.getCenterNo(), CommonEnums.MemberType.MANAGER);
+        for (Member manager : parentManagers) {
+            Alarm alarm = Alarm.builder()
+                    .member(manager)
+                    .content("새로운 학부모가 가입 신청을 했습니다.")
+                    .url("/approvalList")
+                    .build();
+            alarmRepository.save(alarm);
+        }
+
         //여기부터 아동 등록, 조회
         Child child = childRepository.findByResidentNo(dto.getChild().getChild_resident_no()).orElse(null);
 
@@ -172,6 +196,17 @@ public class MemberServiceImpl implements MemberService {
                 .child(child)
                 .build();
         memberChildRepository.save(link);
+
+        //새로운 아동등록
+        List<Member> childManagers = memberRepository.findMemberByCenter(centerMember.getCenterNo(), CommonEnums.MemberType.MANAGER);
+        for (Member manager : childManagers) {
+            Alarm alarm = Alarm.builder()
+                    .member(manager)
+                    .content("새로운 아동이 등록 되었습니다.")
+                    .url("/approvalList")
+                    .build();
+            alarmRepository.save(alarm);
+        }
 
         return String.valueOf(parent.getMemberNo());
     }
@@ -278,29 +313,13 @@ public class MemberServiceImpl implements MemberService {
         return updateParentInfo.toDto(member);
     }
 
+    //멤버 PWD 조회(아이디 비교)
     @Override
     public MemberDto.SearchPwd pwdSearchId(MemberDto.SearchPwd dto) {
         String memberId = dto.getMember_id();
         return memberRepository.pwdSearchId(memberId)
                 .map(MemberDto.SearchPwd::toDto)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
-    }
-
-    @Override
-    public MemberDto.PhoneAccess sendingNumberToFindId(MemberDto.PhoneAccess dto) {
-        Optional<Member> optionalMember = memberRepository.findByPhone(dto.getPhone_number());
-        if (optionalMember.isPresent()) {
-            String certificationNumber = String.format("%06d", (int) (Math.random() * 1000000));
-            SingleMessageSentResponse response = smsUtil.sendOne(optionalMember.get().getMemberPhone(), certificationNumber);
-
-            if (response != null && response.getStatusCode().equals("2000")) {
-                return MemberDto.PhoneAccess.toDto(certificationNumber, "인증번호 전송에 성공하였습니다.");
-            }else{
-                return MemberDto.PhoneAccess.toDto(null, "인증번호 전송에 실패하였습니다.");
-            }
-        }else{
-            return MemberDto.PhoneAccess.toDto(null, "가입되지 않은 번호입니다.");
-        }
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
     }
 
     //비밀번호 변경
@@ -309,16 +328,13 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findByMemberId(dto.getMember_id())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-        if(member == null){
-            return MemberDto.PwdUpdate.toDto("존재하지 않는 회원입니다.");
-        }else {
-            //멤버의 비밀번호를 변경
-            String originPwd = dto.getMember_pwd();
-            String encodedPwd = passwordEncoder.encode(originPwd);
-            dto.setMember_pwd(encodedPwd);
-            member.changeMemberPwd(dto.getMember_pwd());
-            return MemberDto.PwdUpdate.toDto("비밀번호를 성공적으로 변경하였습니다.");
-        }
+        //멤버의 비밀번호를 변경
+        String originPwd = dto.getMember_pwd();
+        String encodedPwd = passwordEncoder.encode(originPwd);
+        dto.setMember_pwd(encodedPwd);
+        member.changeMemberPwd(dto.getMember_pwd());
+        return MemberDto.PwdUpdate.toDto("비밀번호를 성공적으로 변경하였습니다.");
+
     }
 
     @Override
@@ -351,6 +367,21 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.findTeacherByCenterNo(center.getCenterNo())
                 .stream()
                 .map(TeacherIntroList::toDto)
+                .collect(Collectors.toList());
+    }
+
+    //센터 별 멤버 목록 조회
+    @Override
+    public List<SimpleDto> centerMemberList(int centerNo) {
+        Member member = memberRepository.findByMemberId(jwtTokenProvider.getMemberIdFromToken())
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
+
+        Center center = centerRepository.findById(centerNo)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
+
+        return memberRepository.findAllByCenterNo(centerNo)
+                .stream()
+                .map(SimpleDto::from)
                 .collect(Collectors.toList());
     }
 }

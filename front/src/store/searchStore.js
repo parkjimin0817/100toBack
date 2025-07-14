@@ -50,7 +50,7 @@ const useSearchStore = create((set, get) => ({
     });
   },
 
-  //비밀번호 찾기(아이디)
+  //비밀번호 찾기(아이디 비교)
   searchPwd: (memberData) => {
     set({
       member: memberData,

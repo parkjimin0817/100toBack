@@ -1,15 +1,52 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const SignUpInput = ({ type, label, description, showCheckButton, onClickCheck, error, disabled, ...rest }) => {
+const SignUpInput = ({
+  type,
+  label,
+  value,
+  description,
+  showCheckButton,
+  showAuthCheckButton,
+  submitAuth,
+  onChange,
+  onClickCheck,
+  error,
+  disabled,
+  ...rest
+}) => {
+  const handleChange = (e) => {
+    if (!onChange) return;
+
+    if (typeof e === 'object' && e.target) {
+      onChange(e); // react-hook-form용
+    } else {
+      onChange(e); // 그냥 값(value)을 넘기도록 변경
+    }
+  };
   return (
     <InputWrapper>
       <Label>{label}</Label>
       <InputBox>
-        <Input type={type} placeholder={description} $error={error} {...rest} disabled={disabled} />
+        <Input
+          name={rest.name}
+          type={type}
+          value={value}
+          onChange={handleChange}
+          placeholder={description}
+          $error={error}
+          {...rest}
+          disabled={disabled}
+        />
         {showCheckButton && (
           <CheckButton type="button" onClick={onClickCheck}>
             중복확인
+          </CheckButton>
+        )}
+
+        {showAuthCheckButton && (
+          <CheckButton type="button" onClick={submitAuth}>
+            인증확인
           </CheckButton>
         )}
       </InputBox>

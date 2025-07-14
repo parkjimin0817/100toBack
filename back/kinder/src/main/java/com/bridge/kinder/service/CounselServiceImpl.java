@@ -5,15 +5,8 @@ import com.bridge.kinder.dto.CounselDto;
 import com.bridge.kinder.dto.CounselDto.CreateDto;
 import com.bridge.kinder.dto.CounselDto.Response;
 import com.bridge.kinder.dto.CounselDto.Update;
-import com.bridge.kinder.entity.Center;
-import com.bridge.kinder.entity.Child;
-import com.bridge.kinder.entity.Counsel;
-import com.bridge.kinder.entity.Member;
-import com.bridge.kinder.repository.CenterRepository;
-import com.bridge.kinder.repository.ChildRepository;
-import com.bridge.kinder.repository.CounselRepository;
-import com.bridge.kinder.repository.CounselRepositoryCustom;
-import com.bridge.kinder.repository.MemberRepository;
+import com.bridge.kinder.entity.*;
+import com.bridge.kinder.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -33,6 +26,7 @@ public class CounselServiceImpl implements CounselService {
     private final MemberRepository memberRepository;
     private final ChildRepository childRepository;
     private final CounselRepositoryCustom counselRepositoryCustom;
+    private final AlarmRepository alarmRepository;
 
     @Override
     public CounselDto.CreateDto addCounsel(CounselDto.CreateDto dto) {
@@ -51,6 +45,19 @@ public class CounselServiceImpl implements CounselService {
 
         // 저장
         Counsel saved = counselRepository.save(counsel);
+
+        //알람 생성
+
+        for (MemberChild mc : child.getMemberChilds()){
+            Member parent = mc.getMember();
+
+            Alarm alarm = Alarm.builder()
+                    .member(parent)
+                    .content("새로운 상담일정이 등록되었습니다.")
+                    .url("/counsel/parent")
+                    .build();
+            alarmRepository.save(alarm);
+        }
 
         // 저장 결과 반환 (필요 시 추가 정보 포함 가능)
         return new CounselDto.CreateDto(

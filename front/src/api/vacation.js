@@ -1,3 +1,4 @@
+import axios from 'axios';
 import api from './axios';
 import { API_ENDPOINTS } from './config';
 import { getPresignedUrl, uploadFileToS3 } from './fileApi';
@@ -24,11 +25,14 @@ export const vacationService = {
 
       request.attachment = fileUrl;
 
-      console.log('휴가뭐', request);
       const { data } = await api.post(API_ENDPOINTS.VACATION.REQUEST, request);
       return data;
     } catch (error) {
-      throw new Error('서버 통신 불량' + error.message);
+      if (axios.isAxiosError(error)) {
+        throw error;
+      } else {
+        throw new Error('서버 오류가 발생했습니다.');
+      }
     }
   },
 
