@@ -18,6 +18,10 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
@@ -421,6 +425,25 @@ public class ChildRepositoryImpl implements ChildRepository {
                 .setParameter("today", today)
                 .getSingleResult();
         return Optional.ofNullable(count);
+    }
+
+    @Override
+    public Page<ChildHealthLog> getHealthLogByChildNo(int childNo, Pageable pageable) {
+        String jpql = "SELECT c FROM ChildHealthLog c WHERE c.child.childNo = :childNo ORDER BY c.createDate DESC";
+
+        List<ChildHealthLog> logs = em.createQuery(jpql, ChildHealthLog.class)
+                .setParameter("childNo", childNo)
+                .setFirstResult((int) pageable.getOffset())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList();
+
+        Long totalCount = em.createQuery(
+                        "SELECT COUNT(c) FROM ChildHealthLog c WHERE c.child.childNo = :childNo",
+                        Long.class)
+                .setParameter("childNo", childNo)
+                .getSingleResult();
+
+        return new PageImpl<>(logs, pageable, totalCount);
     }
 
 
