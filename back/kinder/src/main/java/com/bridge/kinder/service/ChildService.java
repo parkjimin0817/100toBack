@@ -21,7 +21,7 @@ public interface ChildService {
     ChildDto.modalResponse getChild(int child_no);
     //아동 번호로 반 배정
     ChildDto.updateClass updateClass(int child_no,int class_no);
-    //아동 번호로 건강 로그 조회
+    //아동 번호로 건강 로그 조회(리스트)
     List<ChildDto.healthLog> healthLog(int childNo);
     //아동 번호로 건강 데이터 조회
     ChildDto.health health(int childNo);

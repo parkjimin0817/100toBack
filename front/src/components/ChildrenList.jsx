@@ -153,7 +153,6 @@ const PictureBox = styled.div`
   height: 160px;
   box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.25);
   border-radius: 5px;
-  transition: border 0.2s ease;
   &:hover {
     cursor: pointer;
     border: solid 5px ${({ theme, color }) => theme.colors[color]};

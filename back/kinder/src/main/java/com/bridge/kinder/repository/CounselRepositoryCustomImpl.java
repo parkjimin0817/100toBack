@@ -59,4 +59,15 @@ public class CounselRepositoryCustomImpl implements CounselRepositoryCustom {
                 .setParameter("memberNo", memberNo)
                 .getResultList();
     }
+
+    @Override
+    public List<Counsel> getCounselByCenterNo(int centerNo) {
+        return em.createQuery("""
+        SELECT c
+        FROM Counsel c
+        WHERE c.center.centerNo = :centerNo
+        """, Counsel.class)
+                .setParameter("centerNo", centerNo)
+                .getResultList();
+    }
 }
