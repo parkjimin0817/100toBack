@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -24,10 +25,13 @@ public interface ChatParicipantRepository extends JpaRepository<ChatParticipant,
         AND cp1.chatRoom.chatRoomNo IN (
             SELECT cp2.chatRoom.chatRoomNo
             FROM ChatParticipant cp2
-            WHERE cp2.member.memberNo =: myNo OR cp2.member.memberNo =: otherNo
+            WHERE cp2.member.memberNo = :myNo OR cp2.member.memberNo = :otherNo
             GROUP BY cp2.chatRoom.chatRoomNo
             HAVING COUNT(DISTINCT cp2.member.memberNo) = 2
         )
     """)
-    Optional<ChatRoom> findExistingPrivateRoom(int myNo, int otherNo);
+    Optional<ChatRoom> findExistingPrivateRoom(
+            @Param("myNo") int myNo,
+            @Param("otherNo") int otherNo
+    );
 }
