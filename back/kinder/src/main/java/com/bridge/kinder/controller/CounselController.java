@@ -63,4 +63,10 @@ public class CounselController {
     public ResponseEntity<List<CounselDto.Response>> getCounselByMemberNo(@RequestParam int memberNo) {
         return ResponseEntity.ok(counselService.getCounselByMemberNo(memberNo));
     }
+
+    //시설 번호로 상담 일정 불러오기
+    @GetMapping("/getall")
+    public ResponseEntity<List<CounselDto.Response>> getCounselByCenterNo(@RequestParam int centerNo) {
+        return ResponseEntity.ok(counselService.getCounselByCenterNo(centerNo));
+    }
 }

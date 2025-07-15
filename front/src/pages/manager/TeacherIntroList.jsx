@@ -18,6 +18,7 @@ const TeacherIntroList = () => {
   const fetchData = async () => {
     try {
       const data = await memberService.teacherIntroList(member.centerNo);
+      console.log(data);
       setTeachers(data);
     } catch (e) {
       console.error(e);
@@ -42,7 +43,7 @@ const TeacherIntroList = () => {
             }}
           >
             <TeacherImage
-              src={teacher.member_profil ? `${CLOUDFRONT_URL}/${teacher.member_profile}` : defaultImg}
+              src={teacher.member_profile ? `${CLOUDFRONT_URL}/${teacher.member_profile}` : defaultImg}
               alt="교사 사진"
             />
             <TextBox>

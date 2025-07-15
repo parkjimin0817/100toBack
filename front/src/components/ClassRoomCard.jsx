@@ -21,7 +21,6 @@ const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
  */
 
 const ClassRoomCard = ({ classRoom, clickEventFunc }) => {
-
   return (
     <Card $Color={classRoom.color} onClick={() => clickEventFunc(classRoom.class_no)}>
       <CardInfo>

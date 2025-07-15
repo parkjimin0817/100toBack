@@ -69,11 +69,11 @@ public class ChildRepositoryImpl implements ChildRepository {
     //반별 아동 수 카운트
     @Override
     public int countChildByClassroom(int classNo) {
-       Long count =  em.createQuery("SELECT COUNT(c) FROM Child c WHERE c.classRoom.classNo =: classNo", Long.class)
+        Long count =  em.createQuery("SELECT COUNT(c) FROM Child c WHERE c.classRoom.classNo =: classNo", Long.class)
                 .setParameter("classNo", classNo)
                 .getSingleResult();
 
-       return count.intValue();
+        return count.intValue();
     }
 
     //반에 속한 아동 조회
@@ -413,9 +413,9 @@ public class ChildRepositoryImpl implements ChildRepository {
     @Override
     public Optional<Long> countTodayHealthLog(int classNo, LocalDateTime today) {
         String jpql = "SELECT COUNT (h) FROM ChildHealthLog h " +
-                        "JOIN h.child c " +
-                        "WHERE c.classRoom.classNo = :classNo " +
-                        "AND h.createDate = :today";
+                "JOIN h.child c " +
+                "WHERE c.classRoom.classNo = :classNo " +
+                "AND h.createDate = :today";
         Long count = em.createQuery(jpql, Long.class)
                 .setParameter("classNo", classNo)
                 .setParameter("today", today)
