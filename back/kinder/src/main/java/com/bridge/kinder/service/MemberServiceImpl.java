@@ -370,6 +370,7 @@ public class MemberServiceImpl implements MemberService {
                 .collect(Collectors.toList());
     }
 
+    //센터 별 멤버 목록 조회
     @Override
     public List<SimpleDto> centerMemberList(int centerNo) {
         Member member = memberRepository.findByMemberId(jwtTokenProvider.getMemberIdFromToken())

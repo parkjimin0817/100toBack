@@ -20,4 +20,7 @@ public interface CounselService {
 
     //멤버 번호로 상담 일정 불러오기(학부모)
     List<CounselDto.Response> getCounselByMemberNo(int memberNo);
+
+    //센터 번호로 상담 일정 불러오기(학부모)
+    List<CounselDto.Response> getCounselByCenterNo(int centerNo);
 }

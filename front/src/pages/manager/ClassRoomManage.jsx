@@ -10,6 +10,7 @@ import { classService } from '../../api/class';
 import { ImInfo } from 'react-icons/im';
 import { BounceLoader } from 'react-spinners';
 import { ErrorDiv, Hint, NoneDiv } from '../../styles/Common/Container';
+import { toast } from 'react-toastify';
 
 const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
@@ -19,7 +20,7 @@ const ClassRoomManage = () => {
   const centerNo = member?.centerNo;
   const [isModalOpen, setIsModalOpen] = useState(false);
   // 어떤 모달을 열었는지. create, update
-  const [modalType, setModalType] = useState("");
+  const [modalType, setModalType] = useState('');
   const navigate = useNavigate();
 
   const [classrooms, setClassrooms] = useState([]);
@@ -33,7 +34,6 @@ const ClassRoomManage = () => {
       setError('');
 
       const classList = await classService.classroomlist(centerNo);
-      console.log(classList);
 
       if (classList.length === 0) {
         setClassrooms([]);
@@ -41,7 +41,7 @@ const ClassRoomManage = () => {
         setClassrooms(classList);
       }
     } catch (error) {
-      console.error('반 목록 불러오기 실패: ', error.message);
+      toast.error('반 목록 불러오기 실패: ', error.message);
       setError('반 목록 불러오는데 실패하였습니다.');
     } finally {
       setLoading(false);
@@ -66,11 +66,12 @@ const ClassRoomManage = () => {
 
   const openUpdate = (no) => {
     // 매개 변수 받는게 큰 의미는 없으나, 컴포넌트 설계상.. 일단 넣음...
-    if(!no) return;
+    if (!no) return;
     setIsModalOpen(true);
     setModalType('update');
-    setSelectClass(classrooms.find(classroom => classroom.class_no === no));
-  }
+
+    setSelectClass(classrooms.find((classroom) => classroom.class_no === no));
+  };
 
   return (
     <Content>
@@ -78,10 +79,13 @@ const ClassRoomManage = () => {
         Title={'반 목록'}
         Color={'blue'}
         ButtonProps={[
-          { Title: '반 생성하기', func: () => {
-            setIsModalOpen(true);
-            setModalType('create');
-          } },
+          {
+            Title: '반 생성하기',
+            func: () => {
+              setIsModalOpen(true);
+              setModalType('create');
+            },
+          },
           { Title: '뒤로가기', func: () => navigate(-1) },
         ]}
       />
@@ -108,23 +112,21 @@ const ClassRoomManage = () => {
         </Div>
       )}
 
-      {(isModalOpen && modalType == "create") && (
+      {isModalOpen && modalType == 'create' && (
         <CreateClassModal
           onClose={() => setIsModalOpen(false)}
           centerNo={centerNo}
           onSuccess={(newClassroom) => setClassrooms((prev) => [...prev, newClassroom])}
         />
       )}
-      {(isModalOpen && modalType == "update") && (
+      {isModalOpen && modalType == 'update' && (
         <UpdateClassModal
           onClose={() => setIsModalOpen(false)}
           centerNo={centerNo}
           classRoom={selectClass}
           onSuccess={selectClassRoom}
           onDeleteSuccess={(deletedClassroom) =>
-            setClassrooms((prev) =>
-              prev.filter((item) => item.class_no !== deletedClassroom.class_no)
-            )
+            setClassrooms((prev) => prev.filter((item) => item.class_no !== deletedClassroom.class_no))
           }
         />
       )}

@@ -116,7 +116,7 @@ public class ChildController {
     //아동 건강 로그 체크리스트 날짜,반 별로 조회
     @GetMapping("/healthlog/class")
     public ResponseEntity<List<ChildDto.healthLog>> healthLogClass(@RequestParam int classNo,
-                                                                       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+                                                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
         return ResponseEntity.ok(childService.getHealthLog(classNo,date));
 
     }
@@ -124,7 +124,7 @@ public class ChildController {
     //아동 생활 로그 체크리스트 날짜,반 별로 조회
     @GetMapping("/activitylog/class")
     public ResponseEntity<List<ChildDto.activityLog>> activityLogClass(@RequestParam int classNo,
-                                                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+                                                                       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
         return ResponseEntity.ok(childService.getActivityLog(classNo,date));
 
     }
@@ -140,8 +140,8 @@ public class ChildController {
     //아동 건강 로그 체크리스트 데이터 삽입,수정
     @PatchMapping("/updatehealthlog")
     public ResponseEntity<ChildDto.healthLog> updateActivityLog(@RequestParam int childNo,
-                                                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-                                                                  @RequestBody ChildDto.healthLog data) {
+                                                                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+                                                                @RequestBody ChildDto.healthLog data) {
         return ResponseEntity.ok(childService.updateHealthLog(childNo, date, data));
 
     }
@@ -149,8 +149,8 @@ public class ChildController {
     //아동 생활 로그 체크리스트 데이터 삽입,수정하기
     @PatchMapping("/updateactivitylog")
     public ResponseEntity<ChildDto.activityLog> updateActivityLog(@RequestParam int childNo,
-                                                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-                                                @RequestBody ChildDto.activityLog data) {
+                                                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+                                                                  @RequestBody ChildDto.activityLog data) {
         return ResponseEntity.ok(childService.updateActivityLog(childNo, date, data));
 
     }

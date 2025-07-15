@@ -58,9 +58,8 @@ public class Attendance {// 근태
 
     //----------------------------------------------------------------------------------------------
 
-    public void updateOutTime(LocalDateTime outTime) {
-        this.outTime = outTime;
-    }
+    public void updateInTime(LocalDateTime inTime) {this.inTime = inTime;}
+    public void updateOutTime(LocalDateTime outTime) {this.outTime = outTime;}
 
     //-----------------------------------------------------------------------------------------------
 

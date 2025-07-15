@@ -16,4 +16,7 @@ public interface CounselRepositoryCustom {
 
     //멤버 번호로 상담 일정 불러오기
     List<Counsel> getCounselByMemberNo(int memberNo);
+
+    //멤버 번호로 상담 일정 불러오기
+    List<Counsel> getCounselByCenterNo(int centerNo);
 }

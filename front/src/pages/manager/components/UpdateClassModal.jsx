@@ -17,8 +17,7 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuc
     memberService
       .teacherlist(centerNo)
       .then((data) => setTeachers(data))
-      .catch((err) => console.error('교사 목록 불러오기 실패 : ', err));
-    console.log(classRoom);
+      .catch((err) => toast.error('교사 목록 불러오기 실패 : ', err));
   }, [centerNo]);
 
   const [classImage, setClassImage] = useState(classRoom.class_image); //반 이미지
@@ -57,10 +56,9 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuc
       onDeleteSuccess(classRoom);
       onClose();
     } catch (error) {
-      console.error('반 삭제 실패 : ', error);
-      toast.error('반 삭제 실패');
+      toast.error('반 삭제 실패: ', error);
     }
-  }
+  };
 
   const handleSubmit = async () => {
     if (!className || !capacity || !teacherNo) {
@@ -79,13 +77,13 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuc
       }
 
       const payload = {
-        class_no : classRoom.class_no,
-        class_name : className,
-        capacity : capacity,
-        member_no : teacherNo,
-        color : classColor,
-        class_image : uploadedImageUrl ? uploadedImageUrl : classRoom.class_image
-      }
+        class_no: classRoom.class_no,
+        class_name: className,
+        capacity: capacity,
+        member_no: teacherNo,
+        color: classColor,
+        class_image: uploadedImageUrl ? uploadedImageUrl : classRoom.class_image,
+      };
       console.log(payload);
 
       await classService.updateClass(classRoom.class_no, payload);
@@ -98,7 +96,6 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuc
 
       onClose();
     } catch (error) {
-      console.error('반 수정 실패 : ', error);
       toast.error('반 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
     }
   };
