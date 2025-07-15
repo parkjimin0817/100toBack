@@ -1,7 +1,9 @@
 package com.bridge.kinder.service.file;
 
 import com.bridge.kinder.entity.Board;
+import com.bridge.kinder.entity.Vacation;
 import com.bridge.kinder.repository.BoardRepository;
+import com.bridge.kinder.repository.VacationRepository;
 import java.time.Duration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,13 +19,16 @@ public class FileService {
     private final S3Presigner s3Presigner;
     private final String bucket;
     private final BoardRepository boardRepository;
+    private final VacationRepository vacationRepository;
 
     public FileService(S3Presigner s3Presigner,
                        @Value("${aws.s3.bucket}") String bucket,
-                       BoardRepository boardRepository) {
+                       BoardRepository boardRepository,
+                       VacationRepository vacationRepository) {
         this.s3Presigner = s3Presigner;
         this.bucket = bucket;
         this.boardRepository = boardRepository;
+        this.vacationRepository = vacationRepository;
     }
 
     // S3 presigned URL 발급
@@ -43,9 +48,14 @@ public class FileService {
     }
 
     // 파일 단건 조회
-    public Board getFile(int boardNo) {
+    public Board getBoardFile(int boardNo) {
         return boardRepository.findById(boardNo)
                 .orElseThrow(() -> new IllegalArgumentException("File not found with id: " + boardNo));
+    }
+
+    public Vacation getVacationFile(Long vacationNo) {
+        return vacationRepository.findById(vacationNo)
+                .orElseThrow(() -> new IllegalArgumentException("File not found with id: " + vacationNo));
     }
 
     // 파일 다운로드용 presigned URL 발급
