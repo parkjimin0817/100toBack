@@ -23,10 +23,10 @@ const BoardDetail = ({ category, post }) => {
   };
 
   //파일 다운로드
-  const handleDownload = async (vacationNo, originalName) => {
+  const handleDownload = async (boardNo, originalName) => {
     try {
       //다운로드 URL
-      const { presignedUrl } = await getBoardDownloadUrl(vacationNo);
+      const { presignedUrl } = await getBoardDownloadUrl(boardNo);
 
       // 파일 다운로드
       const response = await fetch(presignedUrl);
@@ -52,7 +52,7 @@ const BoardDetail = ({ category, post }) => {
       <PostDescriptionBox>
         <PostDescription>{formatKoreanDate(post.createDate)}</PostDescription>
         <PostDescriptionBox>
-          {(category === 'note' || category === 'family_notice') && (
+          {category === 'note' && (
             <>
               <PostLabel>반 이름</PostLabel>
               <PostDescription>{post.className} 반</PostDescription>
@@ -93,9 +93,9 @@ const BoardDetail = ({ category, post }) => {
           <AttachmentLabel>첨부파일</AttachmentLabel>
           <AttachmentBox>
             <IoDownloadOutline />
-            <Span onClick={() => handleDownload(post.boardNo, post.attachmentOriginal)}>
-              {post.attachmentOriginal || ''}
-            </Span>
+            <FileLink onClick={() => handleDownload(post.boardNo, post.attachmentOriginal)}>
+              {post && post.attachment ? post.attachmentOriginal : ''}
+            </FileLink>
           </AttachmentBox>
         </>
       )}
@@ -181,8 +181,9 @@ const AttachmentBox = styled.div`
   border-radius: 4px;
 `;
 
-const Span = styled.span`
-  padding-left: 3px;
+const FileLink = styled.a`
+  color: blue;
+  margin-left: 0.5rem;
   text-decoration: underline;
   cursor: pointer;
 `;

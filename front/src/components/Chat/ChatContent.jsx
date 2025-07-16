@@ -36,12 +36,16 @@ const ChatContent = ({ type, memberList, chatRoomList, messages, createPrivateCh
           {chatRoomList &&
             chatRoomList.length > 0 &&
             chatRoomList.map((chatRoom) => (
+<<<<<<< HEAD
               <ChatRoomItem
                 key={chatRoom.chatRoomNo}
                 onClick={() => enterChatRoom(chatRoom.chatRoomNo, chatRoom.chatRoomName)}
               >
+=======
+              <ChatRoomItem key={chatRoom.chatRoomNo} onClick={() => enterChatRoom(chatRoom.chatRoomNo, chatRoom.other)}>
+>>>>>>> e7548904fe182a8dac4e2f2fcf2dc2a074450a70
                 <ChatRoomImg src={chatRoom.memberProfile ? `${CLOUD_URL}/${chatRoom.memberProfile}` : defaultImg} />
-                <ChatRoomName>{chatRoom.chatRoomName}</ChatRoomName>
+                <ChatRoomName><strong>{chatRoom.other}</strong>님 과의 채팅방</ChatRoomName>
                 {chatRoom.unReadCount > 0 && <ChatRoomUnreadCount>{chatRoom.unReadCount}</ChatRoomUnreadCount>}
               </ChatRoomItem>
             ))}
@@ -49,27 +53,25 @@ const ChatContent = ({ type, memberList, chatRoomList, messages, createPrivateCh
       ) : (
         // 채팅방
         <>
-          <div style={{ marginTop: '10px' }}></div>
-          {messages &&
-            messages.length > 0 &&
-            messages.map((message, index) => {
-              const isMe = message?.senderId === member.memberNo;
-              const isSameSenderAsPrevious = index > 0 && messages[index - 1]?.senderId === message?.senderId;
+          <div style={{ marginTop: "10px"}}></div>
+          {messages && messages.length > 0 && messages.map((message, index) => {
+            const isMe = message?.senderNo === member.memberNo;
+            const isSameSenderAsPrevious = index > 0 && messages[index - 1]?.senderNo === message?.senderNo;
 
               return (
-                <>
+                <React.Fragment key={`chatBubble ${index}`}>
                   {!isMe && !isSameSenderAsPrevious && (
-                    <ChatProfileBox>
+                    <ChatProfileBox key={`profile${index}`}>
                       <ChatMemberProfileImg src={defaultImg} />
                       <p>{message.senderName}</p>
                     </ChatProfileBox>
                   )}
-                  <ChatBox key={index} $me={isMe}>
+                  <ChatBox key={`chat${index}`} $me={isMe}>
                     <ChatBubble $me={isMe}>
                       <p>{message?.message}</p>
                     </ChatBubble>
                   </ChatBox>
-                </>
+                </React.Fragment>
               );
             })}
           <div ref={chatContainerRef}></div>

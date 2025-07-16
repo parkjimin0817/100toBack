@@ -19,6 +19,7 @@ import com.bridge.kinder.repository.chat.ReadStatusRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -213,9 +214,10 @@ public class ChatServiceImpl implements ChatService {
 
                     // 채팅방 내 상대방 프로필 찾기
                     String otherProfile = null;
+                    Member other = null;
                     if (chatRoom.getIsGroupChat().equals("N")) {
                         List<ChatParticipant> participants = chatParticipantRepository.findAllByChatRoom(chatRoom);
-                        Member other = participants.stream()
+                        other = participants.stream()
                                 .map(ChatParticipant::getMember)
                                 .filter(m -> m.getMemberNo() != member.getMemberNo())
                                 .findFirst()
@@ -227,6 +229,7 @@ public class ChatServiceImpl implements ChatService {
                             .chatRoomNo(c.getChatRoom().getChatRoomNo())
                             .chatRoomName(c.getChatRoom().getChatRoomName())
                             .isGroupChat(c.getChatRoom().getIsGroupChat())
+                            .other(Objects.requireNonNull(other).getMemberName())
                             .memberProfile(otherProfile)
                             .unReadCount(count)
                             .build();
