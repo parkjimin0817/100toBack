@@ -106,6 +106,7 @@ export const API_ENDPOINTS = {
     GET: '/api/childs/get',
     PARENTCHILDLIST: (memberNo) => `/api/childs/parentChild?memberNo=${memberNo}`,
     PARENTPHONENUMBER: (centerNo) => `/api/childs/phoneNumber/${centerNo}`,
+    UPDATEINFO: '/api/childs/updateInfoDetail',
   },
   BOARDS: {
     BASE: '/api/boards',

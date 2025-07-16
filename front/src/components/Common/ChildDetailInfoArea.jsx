@@ -495,7 +495,6 @@ const InfoResult1 = styled.td`
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
 `;
 
 const Class = styled.tr`
@@ -506,8 +505,9 @@ const Class = styled.tr`
 `;
 const SpanWrapper = styled.div`
   display: flex;
-  flex-direction: column; /* 또는 row로 가로배치 */
-  justify-content: center; /* 세로 가운데 정렬 */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   height: 100%;
   padding-top: 40px;
 `;

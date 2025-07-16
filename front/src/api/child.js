@@ -77,4 +77,14 @@ export const childService = {
       throw new Error('서버 통신 불량: ' + error.message);
     }
   },
+
+  // 자녀 정보 수정
+  updateChildInfo: async (mergedData) => {
+    try {
+      const { data } = await api.patch(API_ENDPOINTS.CHILDS.UPDATEINFO, mergedData);
+      return data;
+    } catch (error) {
+      throw new Error('서버 통신 불량: ' + error.message);
+    }
+  },
 };

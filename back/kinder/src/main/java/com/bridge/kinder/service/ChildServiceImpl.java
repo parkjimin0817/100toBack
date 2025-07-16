@@ -226,6 +226,19 @@ public class ChildServiceImpl implements ChildService {
         );
     }
 
+    @Override
+    public ChildDto.infoDetail updateInfoDetail(ChildDto.infoDetail dto) {
+        Child child = childRepository.findByChildNo(dto.getChild_no())
+                .orElseThrow(() -> new EntityNotFoundException("정상적으로 수정되지 않았습니다."));
+
+
+        child.changeChildProfile(dto.getChild_profile());
+//        child.changeChildFParentsPhone(dto.getF_parent_phone());
+//        child.changeChildMParentsPhone(dto.getM_parent_phone());
+
+        return ChildDto.infoDetail.toDto(child);
+    }
+
     //아동 상세보기 건강 데이터 수정
     @Override
     public ChildDto.health updateHealthData(int childNo, ChildDto.health data) {
