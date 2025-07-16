@@ -5,6 +5,7 @@ import ChatFooter from './ChatFooter';
 import styled from 'styled-components';
 import { chatService } from '../../api/chat';
 import useLoginStore from '../../store/loginStore';
+import { IoIosArrowBack } from "react-icons/io";
 
 // 채팅 관련 전체 관리
 
@@ -41,7 +42,7 @@ const ChatContainer = () => {
   // 채팅방의 메세지들 
   const [messages, setMessages] = useState([]);
   // 새 채팅
-  const [newMessage, setNewMessage] = useState(null);
+  const [newMessage, setNewMessage] = useState('');
   // 웹 소켓 상태 관리
   const [ws, setWs] = useState(null);
 
@@ -56,7 +57,7 @@ const ChatContainer = () => {
     // 참여중인 채팅방만 불러온다. 
     const getChatRoomList = async () => {
       try {
-        const responseData = await chatService.getMyChatRoom();
+        const responseData = await chatService.getMyChatRoom(); 
         console.log(responseData);
         // 불러온 참여중인 채팅방 리스트 저장
         setChatRoomList(responseData);
@@ -75,8 +76,10 @@ const ChatContainer = () => {
       try {
         const responseData = await chatService.getMemberList(member.centerNo);
         console.log(responseData);
+
+        const filteredData = responseData.filter(chatMember => chatMember.member_no !== member.memberNo)
         // 시설 내 멤버 리스트 불러오기
-        setMemberList(responseData);
+        setMemberList(filteredData);
       } catch (error) {
         console.error('멤버 리스트 조회 실패 : ', error);
       }
@@ -90,6 +93,9 @@ const ChatContainer = () => {
     // 현재 선택한 채팅방이 없는 경우엔 안불러옴.
     if(!selectChatRoomNo) return;
 
+    // 채팅방 메세지 내역 삭제
+    setMessages([]);
+
     // 채팅방 이전 채팅 기록 불러오기
     const getChatRoomHistory = async () => {
       try {
@@ -102,10 +108,11 @@ const ChatContainer = () => {
       }
     }
     getChatRoomHistory();
+    console.log("방에 입장.");
     connectWebsocket();
     
     return () => {
-      disconnectWebSocket();
+      disconnectWebSocket(); 
     };
   }, [selectChatRoomNo])
 
@@ -119,7 +126,9 @@ const ChatContainer = () => {
 
     websocket.onmessage = (event) => {
       try {
+        console.log("메세지 수신 : ", event);
         const message = JSON.parse(event.data);
+        console.log("메세지 파싱 : ", message);
         setMessages(prev => [...prev, message]);
       } catch (error) {
         console.error('메시지 파싱 실패:', error);
@@ -135,7 +144,8 @@ const ChatContainer = () => {
   // 웹 소켓 연결 종료 함수
   const disconnectWebSocket = async () => {
     try {
-      await readChatRoom(selectChatRoomNo);
+      // await readChatRoom(selectChatRoomNo);
+      await chatService.readChatMessage(selectChatRoomNo);
     } catch (error) {
       console.error(error)
     }
@@ -149,10 +159,12 @@ const ChatContainer = () => {
     if (newMessage.trim() === "" || !ws) return;
     const message = {
       roomNo: Number(selectChatRoomNo),
-      senderId: member.member_name,
+      senderId: member.memberNo,
+      senderName : member.memberName,
       message: newMessage
     };
     ws.send(JSON.stringify(message));
+    console.log("메세지 목록 : ", messages);
     setNewMessage('');
   };
 
@@ -184,18 +196,23 @@ const ChatContainer = () => {
 
   // 채팅창에서 채팅방 리스트로 돌아가는 함수
   const backChatRoomList = () => {
-    onChangeStatus('chatRooms', "채팅방")
+    onChangeStatus('chatRooms', "채팅방");
+    setSelectChatRoomNo(null);
+    disconnectWebSocket();
   }
 
-  // 채팅방 리스트에서 채팅방 클릭시, 채팅방으로 들어가는 함수
-
-
+  // 채팅방 리스트에서 채팅방을 클릭하여 채팅방에 들어가는 함수.
+  const enterChatRoom = (chatRoomId, chatRoomName) => {
+    setSelectChatRoomNo(chatRoomId);
+    onChangeStatus('chatRoom', chatRoomName);
+  }
 
   return (
     <RoomContainer>
       <ChatHeader 
+        type={chatStatus.type} 
         title={chatStatus.ko}
-        buttonProps={[{name : "뒤로가기", func : backChatRoomList }]}
+        buttonProps={[{name : <IoIosArrowBack></IoIosArrowBack>, func : backChatRoomList }]}
       ></ChatHeader>
       <ChatContent 
         type={chatStatus.type}
@@ -203,6 +220,7 @@ const ChatContainer = () => {
         chatRoomList={chatRoomList}
         messages={messages}
         createPrivateChatRoom={createPrivateChatRoom}
+        enterChatRoom={enterChatRoom}
       ></ChatContent>
       <ChatFooter 
         type={chatStatus.type} 
