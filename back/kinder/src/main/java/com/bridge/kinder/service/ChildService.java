@@ -2,10 +2,13 @@ package com.bridge.kinder.service;
 
 import com.bridge.kinder.dto.ChildDto;
 
+import com.bridge.kinder.dto.ChildDto.healthLog;
 import java.time.LocalDate;
 import java.util.List;
 
 import java.io.IOException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ChildService {
 
@@ -22,11 +25,11 @@ public interface ChildService {
     //아동 번호로 반 배정
     ChildDto.updateClass updateClass(int child_no,int class_no);
     //아동 번호로 건강 로그 조회(리스트)
-    List<ChildDto.healthLog> healthLog(int childNo);
+    Page<healthLog> healthLog(int childNo, Pageable pageable);
     //아동 번호로 건강 데이터 조회
     ChildDto.health health(int childNo);
     //아동 번호로 생활 로그 조회
-    List<ChildDto.activityLog> activityLog(int childNo);
+    Page<ChildDto.activityLog> activityLog(int childNo, Pageable pageable);
     //아동 번호로 생활 데이터 조회
     ChildDto.activity activity(int childNo);
     //아동 번호로 아동 출석 조회
@@ -53,4 +56,5 @@ public interface ChildService {
     List<ChildDto.activityLog> activityLogByParent(int memberNo, LocalDate date);
     //학부모 전화번호 조회
     List<ChildDto.ParentPhoneNumberResponse> findByCenterNoPhoneNumber(int centerNo);
+
 }

@@ -36,8 +36,19 @@ export const uploadFileToS3 = async (presignedUrl, file) => {
   }
 };
 
-export const getDownloadUrl = async (boardNo) => {
-  const response = await api.get(API_ENDPOINTS.FILE.DOWNLOAD_URL(boardNo));
+// 게시글 첨부파일 다운로드 URL 요청
+export const getBoardDownloadUrl = async (boardNo) => {
+  const response = await api.get(API_ENDPOINTS.FILE.BOARD_DOWNLOAD_URL(boardNo));
+  return {
+    presignedUrl: response.data.presigned_url,
+    originalFileName: response.data.original_name,
+  };
+};
+
+// 휴가 첨부파일 다운로드 URL 요청
+export const getVacationDownloadUrl = async (vacationNo) => {
+  const response = await api.get(API_ENDPOINTS.FILE.VACATION_DOWNLOAD_URL(vacationNo));
+  console.log('서버 원본 응답:', response.data);
   return {
     presignedUrl: response.data.presigned_url,
     originalFileName: response.data.original_name,

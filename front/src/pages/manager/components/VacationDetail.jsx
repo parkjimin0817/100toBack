@@ -1,8 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
+import { vacationService } from '../../../api/vacation';
+import { getVacationDownloadUrl } from '../../../api/fileApi';
 
 const VacationDetail = ({ isOpen, onClose, data }) => {
   if (!isOpen || !data) return null;
+
   const TYPE = {
     VACATED: '휴가',
     WORKATION: '워케이션',
@@ -12,6 +15,29 @@ const VacationDetail = ({ isOpen, onClose, data }) => {
     APPROVED: '승인',
     REJECTED: '거절',
     PENDING: '대기',
+  };
+
+  //파일 다운로드
+  const handleDownload = async (vacationNo, originalName) => {
+    try {
+      //다운로드 URL
+      const { presignedUrl } = await getVacationDownloadUrl(vacationNo);
+
+      // 파일 다운로드
+      const response = await fetch(presignedUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = originalName;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('파일 다운로드 실패:', error);
+      alert('파일 다운로드에 실패했습니다.');
+    }
   };
 
   return (
@@ -53,7 +79,7 @@ const VacationDetail = ({ isOpen, onClose, data }) => {
               </ModalContentReason>
               <ModalContentAttachment>
                 <Span>첨부파일 :</Span>
-                <P>{data.attachmentOrigin}</P>
+                <P onClick={() => handleDownload(data.vacationNo, data.attachmentOrigin)}>{data.attachmentOrigin}</P>
               </ModalContentAttachment>
             </ModalContentMain>
             <ModalStatus>
@@ -237,6 +263,13 @@ const ModalContentAttachment = styled.div`
   justify-content: start;
   align-items: center;
   gap: ${({ theme }) => theme.spacing[1]};
+
+  p {
+    border-bottom: 1px solid black;
+    &:hover {
+      cursor: pointer;
+    }
+  }
 `;
 
 const ModalStatus = styled.div`
