@@ -1,6 +1,5 @@
-package com.bridge.kinder.controller;
+package com.bridge.kinder.controller.chat;
 
-import com.bridge.kinder.dto.chat.ChatRoomResponse;
 import com.bridge.kinder.dto.chat.MyChatResponse;
 import com.bridge.kinder.service.chat.ChatService;
 import java.util.List;
