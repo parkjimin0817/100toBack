@@ -23,7 +23,7 @@ const ChatContent = ({ type, memberList, chatRoomList, messages, createPrivateCh
           {memberList &&
             memberList.length > 0 &&
             memberList.map((member) => (
-              <MemberListItem onClick={() => createPrivateChatRoom(member)}>
+              <MemberListItem key={member.member_no} onClick={() => createPrivateChatRoom(member)}>
                 <MemberProfileImg
                   src={member.member_profile ? `${CLOUD_URL}/${member.member_profile}` : defaultImg}
                 ></MemberProfileImg>
@@ -36,7 +36,10 @@ const ChatContent = ({ type, memberList, chatRoomList, messages, createPrivateCh
           {chatRoomList &&
             chatRoomList.length > 0 &&
             chatRoomList.map((chatRoom) => (
-              <ChatRoomItem onClick={() => enterChatRoom(chatRoom.chatRoomNo, chatRoom.chatRoomName)}>
+              <ChatRoomItem
+                key={chatRoom.chatRoomNo}
+                onClick={() => enterChatRoom(chatRoom.chatRoomNo, chatRoom.chatRoomName)}
+              >
                 <ChatRoomImg src={chatRoom.memberProfile ? `${CLOUD_URL}/${chatRoom.memberProfile}` : defaultImg} />
                 <ChatRoomName>{chatRoom.chatRoomName}</ChatRoomName>
                 {chatRoom.unReadCount > 0 && <ChatRoomUnreadCount>{chatRoom.unReadCount}</ChatRoomUnreadCount>}

@@ -107,6 +107,9 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuc
       <ModalCard>
         <TitleDiv>
           <Title>반 수정 하기</Title>
+          <CloseButton type="close" onClick={onClose}>
+            닫기
+          </CloseButton>
         </TitleDiv>
         <Content>
           <InputRow>
@@ -180,14 +183,11 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuc
           </InputRow>
         </Content>
         <ButtonGroup>
+          <DeleteButton type="button" onClick={handleDelete}>
+            삭제
+          </DeleteButton>
           <Button type="submit" onClick={handleSubmit}>
             완료
-          </Button>
-          <Button type="button" onClick={handleDelete}>
-            삭제
-          </Button>
-          <Button type="close" onClick={onClose}>
-            닫기
           </Button>
         </ButtonGroup>
       </ModalCard>
@@ -220,10 +220,10 @@ const ModalCard = styled.div`
 const TitleDiv = styled.div`
   width: 100%;
   height: 45px;
-  background-color: ${({ theme }) => theme.colors.blue};
+  background-color: ${({ theme }) => theme.colors.lightblue};
   color: ${({ theme }) => theme.colors.white};
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
@@ -325,14 +325,39 @@ const ButtonGroup = styled.div`
 `;
 
 const Button = styled.button`
-  width: 40%;
+  width: 30%;
   padding: ${({ theme }) => theme.spacing[3]};
   font-size: ${({ theme }) => theme.fontSizes.base};
   font-weight: ${({ theme }) => theme.fontWeights.medium};
   border: none;
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   cursor: pointer;
-  background-color: ${({ theme }) => theme.colors.blue};
+  background-color: ${({ theme }) => theme.colors.lightblue};
+  color: ${({ theme }) => theme.colors.white};
+`;
+
+const CloseButton = styled.button`
+  width: 15%;
+  height: 20px;
+  margin-right: 10px;
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.fontWeights.medium};
+  border: none;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  cursor: pointer;
+  background-color: ${({ theme }) => theme.colors.white};
+  color: ${({ theme }) => theme.colors.black};
+`;
+
+const DeleteButton = styled.button`
+  width: 30%;
+  padding: ${({ theme }) => theme.spacing[3]};
+  font-size: ${({ theme }) => theme.fontSizes.base};
+  font-weight: ${({ theme }) => theme.fontWeights.medium};
+  border: none;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  cursor: pointer;
+  background-color: ${({ theme }) => theme.colors.orange};
   color: ${({ theme }) => theme.colors.white};
 `;
 
