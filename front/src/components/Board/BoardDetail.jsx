@@ -181,8 +181,9 @@ const AttachmentBox = styled.div`
   border-radius: 4px;
 `;
 
-const Span = styled.span`
-  padding-left: 3px;
+const FileLink = styled.a`
+  color: blue;
+  margin-left: 0.5rem;
   text-decoration: underline;
   cursor: pointer;
 `;
