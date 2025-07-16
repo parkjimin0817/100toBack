@@ -81,7 +81,7 @@ public class SimpleWebSocketHandler extends TextWebSocketHandler {
         System.out.println("received message : " + payload);
         ChatMessageDto chatMessageDto = objectMapper.readValue(payload, ChatMessageDto.class);
         //메시지 DB 저장
-//        chatService.saveMessage(chatMessageDto);
+        chatService.saveMessage(chatMessageDto);
 
         //해당 채팅방(chatRoomNo)에만 브로드캐스트
         Long chatRoomNo = chatMessageDto.getRoomNo();

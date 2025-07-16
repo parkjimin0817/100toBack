@@ -105,7 +105,8 @@ public class ChatServiceImpl implements ChatService {
         return chatMessageList.stream()
                 .map(c -> ChatMessageDto.builder()
                         .message(c.getContent())
-                        .senderId(c.getMember().getMemberId())
+                        .senderNo(c.getMember().getMemberNo())
+                        .senderName(c.getMember().getMemberName())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -115,12 +116,12 @@ public class ChatServiceImpl implements ChatService {
         ChatRoom chatRoom = chatRoomRepository.findById(chatMessageDto.getRoomNo())
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 채팅방입니다."));
 
-        Member sender = memberRepository.findByMemberId(jwtTokenProvider.getMemberIdFromToken())
+        Member member = memberRepository.findByMemberNo(chatMessageDto.getSenderNo())
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
 
         ChatMessage chatMessage = ChatMessage.builder()
                 .chatRoom(chatRoom)
-                .member(sender)
+                .member(member)
                 .content(chatMessageDto.getMessage())
                 .build();
 
@@ -132,7 +133,7 @@ public class ChatServiceImpl implements ChatService {
                         .chatRoom(chatRoom)
                         .member(c.getMember())
                         .chatMessage(chatMessage)
-                        .isRead(c.getMember().equals(sender))
+                        .isRead(c.getMember().equals(member))
                         .build())
                 .toList();
 

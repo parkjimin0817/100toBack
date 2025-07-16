@@ -65,9 +65,12 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         //요청 허용할 도메인들
         configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowedMethods(List.of("*"));
+
         configuration.setAllowCredentials(true);
+
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
