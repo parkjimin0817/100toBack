@@ -25,7 +25,7 @@ const TeacherDocument = () => {
       const data = await boardService.getDocumentList();
       setDocuments(data);
     } catch (err) {
-      toast.error('서류 목록 조회 실패 : ', err);
+      console.error('서류 목록 조회 실패 : ', err);
     }
   };
 
@@ -37,7 +37,7 @@ const TeacherDocument = () => {
       const data = await boardService.getRecentViewdDocs();
       setRecentDocs(data);
     } catch (error) {
-      toast.error('최근 열람한 파일 목록 불러오기 실패 : ', error);
+      console.error('최근 열람한 파일 목록 불러오기 실패 : ', error);
     }
   };
 
