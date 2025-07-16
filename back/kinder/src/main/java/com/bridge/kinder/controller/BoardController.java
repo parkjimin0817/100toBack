@@ -156,6 +156,26 @@ public class BoardController {
         return ResponseEntity.ok(boardService.getRecentViewedDocument(memberId));
     }
 
+    //멤버 번호(부모)의 본인 아동의 알림장만 불러오기
+    @GetMapping("/type/Note/parent/{memberNo}/{centerNo}")
+    public ResponseEntity<Page<BoardDto.NoteBoardDto>> getNoteBoardsByMemberNo(
+            @PathVariable int memberNo,
+            @PathVariable int centerNo,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<BoardDto.NoteBoardDto> boardPage = boardService.getNoteBoardsByMemberNo(NOTE, memberNo, centerNo, page, size);
+        return ResponseEntity.ok(boardPage);
+    }
 
+    //반 번호로 본인 반의 알림장만 불러오기
+    @GetMapping("/type/Note/teacher/{classNo}/{centerNo}")
+    public ResponseEntity<Page<BoardDto.NoteBoardDto>> getNoteBoardsByClassNo(
+            @PathVariable int classNo,
+            @PathVariable int centerNo,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<BoardDto.NoteBoardDto> boardPage = boardService.getNoteBoardsByClassNo(NOTE, classNo, centerNo, page, size);
+        return ResponseEntity.ok(boardPage);
+    }
 
 }

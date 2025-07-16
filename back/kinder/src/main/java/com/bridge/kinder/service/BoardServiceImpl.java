@@ -3,6 +3,7 @@ package com.bridge.kinder.service;
 import com.bridge.kinder.dto.BoardContentDto;
 import com.bridge.kinder.dto.BoardDto;
 import com.bridge.kinder.dto.BoardDto.DocumentResponse;
+import com.bridge.kinder.dto.BoardDto.NoteBoardDto;
 import com.bridge.kinder.dto.RecentBoardDto;
 import com.bridge.kinder.dto.RecentBoardDto.Response;
 import com.bridge.kinder.dto.ScheduleDto.ScheduleSimpleResponse;
@@ -358,5 +359,29 @@ public class BoardServiceImpl implements BoardService {
         return recentDocuments.stream()
                 .map(DocumentResponse::toDto)
                 .toList();
+    }
+
+    @Override
+    public Page<NoteBoardDto> getNoteBoardsByMemberNo(BoardType type, int memberNo, int centerNo, int page, int size) {
+        int offset = (page - 1) * size;
+        List<Board> boards = boardRepository.getNoteBoardsByMemberNo(type, memberNo, centerNo, offset, size);
+        List<BoardDto.NoteBoardDto> result = boards.stream()
+                .map(BoardDto.NoteBoardDto::fromEntity)
+                .collect(Collectors.toList());
+
+        long total = boardRepository.countByTypeWithMemberNo(type,centerNo, memberNo);
+        return new PageImpl<>(result, PageRequest.of(page - 1, size), total);
+    }
+
+    @Override
+    public Page<NoteBoardDto> getNoteBoardsByClassNo(BoardType type, int classNo, int centerNo, int page, int size) {
+        int offset = (page - 1) * size;
+        List<Board> boards = boardRepository.getNoteBoardsByClassNo(type, classNo, centerNo, offset, size);
+        List<BoardDto.NoteBoardDto> result = boards.stream()
+                .map(BoardDto.NoteBoardDto::fromEntity)
+                .collect(Collectors.toList());
+
+        long total = boardRepository.countByTypeWithClassNo(type,centerNo, classNo);
+        return new PageImpl<>(result, PageRequest.of(page - 1, size), total);
     }
 }

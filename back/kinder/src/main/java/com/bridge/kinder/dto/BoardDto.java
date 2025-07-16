@@ -1,5 +1,6 @@
 package com.bridge.kinder.dto;
 
+import com.bridge.kinder.dto.BoardContentDto.Detail;
 import com.bridge.kinder.dto.RecentBoardDto.Response;
 import com.bridge.kinder.entity.Board;
 import com.bridge.kinder.entity.BoardContent;
@@ -186,6 +187,7 @@ public class BoardDto {
         private int views;                   // 조회수
         private CommonEnums.BoardType type;  // 게시물 타입
         private List<BoardContentDto.Detail> boardContents;
+        private String className;
 
 
         public static NoteBoardDto fromEntity(Board board) {
@@ -201,6 +203,7 @@ public class BoardDto {
                                     .map(BoardContentDto.Detail::fromEntity)
                                     .collect(Collectors.toList())
                     )
+                    .className(board.getClassRoom().getClassName())
                     .build();
         }
     }
