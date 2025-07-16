@@ -74,7 +74,7 @@ const FamilyNoticePage = () => {
         setData(responseData);
         // alert("게시글 조회 성공");
       } catch (error) {
-        toast.error('게시글 조회 실패 : ', error);
+        console.error('게시글 조회 실패 : ', error);
         alert('게시글 조회 실패');
       }
     };
