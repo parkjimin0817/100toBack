@@ -316,6 +316,7 @@ public class BoardServiceImpl implements BoardService {
                 .title(request.getTitle())
                 .type(BoardType.PRIVATE_DOC)
                 .attachment(request.getFileUrl())
+                .attachmentOrigin(request.getAttachmentOrigin())
                 .member(member)
                 .viewedDate(LocalDateTime.now())
                 .build();
@@ -325,6 +326,7 @@ public class BoardServiceImpl implements BoardService {
         return board.getBoardNo();
     }
 
+    //개인서류 목록 불러오기
     @Override
     public List<DocumentResponse> getDocuments(String memberId) {
         Member member = memberRepository.findByMemberId(memberId)
@@ -339,6 +341,7 @@ public class BoardServiceImpl implements BoardService {
 
     }
 
+    //개인서류 최근 열람날짜
     @Override
     public void updateViewedDate(int boardNo) {
         Board board = boardRepository.findById(boardNo)
@@ -347,6 +350,7 @@ public class BoardServiceImpl implements BoardService {
         board.setViewedDate();
     }
 
+    //최근 열람된 목록 불러오기
     @Override
     public List<DocumentResponse> getRecentViewedDocument(String memberId) {
         Member member = memberRepository.findByMemberId(memberId)

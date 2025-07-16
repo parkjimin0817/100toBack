@@ -158,11 +158,11 @@ const ChildDetail = () => {
               </Info>
               <Info>
                 <InfoColumn>키</InfoColumn>
-                <InfoResult>{child.child_height}cm</InfoResult>
+                <InfoResult>{child.child_height} cm</InfoResult>
               </Info>
               <Info>
                 <InfoColumn>몸무게</InfoColumn>
-                <InfoResult>{child.child_weight}kg</InfoResult>
+                <InfoResult>{child.child_weight} kg</InfoResult>
               </Info>
               <Info>
                 <InfoColumn>주소</InfoColumn>
@@ -229,9 +229,9 @@ const ChildDetail = () => {
                     .map((record, index) => (
                       <HealthContentTr key={index}>
                         <td>{formatDate(record.create_date)}</td>
-                        <td>{record.temperature}</td>
-                        <td>{record.height}</td>
-                        <td>{record.weight}</td>
+                        <td>{record.temperature} ℃</td>
+                        <td>{record.height} cm</td>
+                        <td>{record.weight} kg</td>
                         <td>{record.symptoms}</td>
                         <td>{record.healthLogMemo}</td>
                       </HealthContentTr>
@@ -429,7 +429,7 @@ const ChildDetail = () => {
                         <td>{formatDate(record.create_date)}</td>
                         <td>{record.dailyMeal_amount}</td>
                         <td>
-                          {record.napStart_time}~{record.napEnd_time}
+                          {record.napStart_time?.substring(0, 5)}~{record.napEnd_time?.substring(0, 5)}
                         </td>
                         <td>{record.play_participation}</td>
                         <td>{record.daily_friendship}</td>
@@ -714,7 +714,7 @@ const SpanWrapper = styled.div`
   flex-direction: column; /* 또는 row로 가로배치 */
   justify-content: center; /* 세로 가운데 정렬 */
   height: 100%;
-  padding-top: 50px;
+  padding-top: 40px;
 `;
 
 const InfoColumn = styled.td`

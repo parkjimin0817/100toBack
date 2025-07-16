@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { boardService } from '../../api/boards';
 import Pagination from '../../components/Common/Pagenation';
 import useLoginStore from '../../store/loginStore';
+import { toast } from 'react-toastify';
 
 const columns = [
   {
@@ -67,11 +68,9 @@ const FamilyNoticePage = () => {
   };
 
   useEffect(() => {
-    console.log(member);
     const getPostList = async () => {
       try {
         const responseData = await boardService.typeBoardList('FAMILY_NOTICE', member.centerNo, page);
-        console.log(responseData);
         setData(responseData);
         // alert("게시글 조회 성공");
       } catch (error) {

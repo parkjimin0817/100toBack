@@ -9,6 +9,7 @@ import { FaImage } from 'react-icons/fa6';
 import { classService } from '../../api/class';
 import { th } from 'date-fns/locale';
 import useLoginStore from '../../store/loginStore';
+import { toast } from 'react-toastify';
 
 const BoardEditor = ({ category, formState, updateFormField, addBlock, updateBlock, selectBlock, deleteBlock }) => {
   const [classRoomList, setClassRoomList] = useState([]);
@@ -18,7 +19,6 @@ const BoardEditor = ({ category, formState, updateFormField, addBlock, updateBlo
     const getClassRoomList = async () => {
       try {
         const responseData = await classService.classroomlist(formState.centerId);
-        console.log(responseData);
         setClassRoomList(responseData);
       } catch (error) {
         console.error('반 조회 실패 : ', error);
