@@ -52,7 +52,7 @@ const BoardDetail = ({ category, post }) => {
       <PostDescriptionBox>
         <PostDescription>{formatKoreanDate(post.createDate)}</PostDescription>
         <PostDescriptionBox>
-          {(category === 'note' || category === 'family_notice') && (
+          {category === 'note' && (
             <>
               <PostLabel>반 이름</PostLabel>
               <PostDescription>{post.className} 반</PostDescription>
