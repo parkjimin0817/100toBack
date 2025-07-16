@@ -18,7 +18,7 @@ const ChildCard = ({ data }) => {
         const randomAdj = adjectives[Math.floor(Math.random() * adjectives.length)];
         const boyImg = [boy1, boy2];
         const girlImg = [girl1, girl2];
-        const imgList = gender === '남자' ? boyImg : girlImg;
+        const imgList = gender === '남' ? boyImg : girlImg;
         const randomImg = imgList[Math.floor(Math.random() * imgList.length)];
         return (
           <Card key={item.child_no} onClick={() => navigate(`/parent/mychild?childNo=${item.child_no}`)}>
@@ -27,7 +27,7 @@ const ChildCard = ({ data }) => {
                 {randomAdj} {item.child_name}{' '}
               </NameDiv>
               <AgeDiv>
-                ({age}세/ {gender})
+                ({age}세/{gender})
               </AgeDiv>
               <BirthDiv> {birthday} </BirthDiv>
             </ProfileDiv>

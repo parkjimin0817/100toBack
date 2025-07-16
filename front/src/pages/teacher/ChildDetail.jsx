@@ -8,8 +8,18 @@ import { useNavigate, useParams } from 'react-router-dom';
 import AttendanceChildSchedule from '../../components/AttendanceChildSchedule';
 import { toast } from 'react-toastify';
 import api from '../../api/axios';
+import { childService } from '../../api/child';
+import { getPresignedUrl, uploadFileToS3 } from '../../api/fileApi';
+import { createGlobalStyle } from 'styled-components';
 
 const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
+
+const GlobalStyle = createGlobalStyle`
+  label[for="child-profile-upload"]:hover .profile-plus-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+`;
 
 const ChildDetail = () => {
   const navigate = useNavigate();
@@ -24,6 +34,7 @@ const ChildDetail = () => {
   const [editHealth, setEditHealth] = useState({});
   const [isLifeEditing, setIsLifeEditing] = useState(false);
   const [editActivity, setEditActivity] = useState({});
+  const [isUploading, setIsUploading] = useState(false);
 
   const [child, setChild] = useState(null);
 
@@ -60,12 +71,55 @@ const ChildDetail = () => {
     return `${fullYear}.${String(mm).padStart(2, '0')}.${String(dd).padStart(2, '0')} (만 ${age}세)`;
   };
 
+  // 아동 프로필 이미지 업로드
+  const handleProfileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // 파일 크기 검증 (5MB 제한)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('파일 크기는 5MB 이하여야 합니다.');
+      return;
+    }
+    // 파일 타입 검증
+    if (!file.type.startsWith('image/')) {
+      toast.error('이미지 파일만 업로드 가능합니다.');
+      return;
+    }
+    setIsUploading(true);
+    try {
+      // S3 presigned url 요청 (아동 프로필 경로로 지정)
+      const result = await getPresignedUrl(file.name, file.type, 'profile/child/');
+      const presignedUrl = result.presigned_url;
+      const changeName = result.change_name;
+      await uploadFileToS3(presignedUrl, file);
+      // mergedData 생성
+      const mergedData = {
+        child_no: child.child_no,
+        // father_phone: child.father_phone,
+        // mother_phone: child.mother_phone,
+        child_profile: changeName,
+      };
+      console.log('수정 데이터 :', mergedData);
+      // childService를 통한 정보 업데이트
+      await childService.updateChildInfo(mergedData);
+      // 프론트 상태 갱신
+      setChild((prev) => ({ ...prev, child_profile: changeName }));
+      toast.success('프로필 이미지가 업로드되었습니다.');
+    } catch (error) {
+      toast.error('프로필 이미지 업로드에 실패했습니다.');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   //정보 불러오기
   useEffect(() => {
     const fetchChildDetail = async () => {
       try {
         const response = await api.get(`http://localhost:8888/api/childs/detail?childNo=${id}`);
         setChild(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error('아동 상세정보 불러오기 실패:', error);
       }
@@ -132,6 +186,7 @@ const ChildDetail = () => {
 
   return (
     <>
+      <GlobalStyle />
       <BasicInfoContainer>
         <ContentHeader
           Title={'아동 상세보기'}
@@ -140,9 +195,28 @@ const ChildDetail = () => {
         />
         <BasicInfo>
           <PictureLine>
-            <Picture
-              src={child.child_profile ? `${CLOUDFRONT_URL}/${child.child_profile}` : defaultimg}
-              alt="아동 프로필"
+            <label htmlFor="child-profile-upload" style={{ position: 'relative', display: 'inline-block' }}>
+              <Picture
+                src={child.child_profile ? `${CLOUDFRONT_URL}/${child.child_profile}` : defaultimg}
+                alt="아동 프로필"
+                style={{ cursor: isUploading ? 'not-allowed' : 'pointer', opacity: isUploading ? 0.6 : 1 }}
+              />
+              <OverlayPlus
+                style={{
+                  opacity: isUploading ? 0 : undefined,
+                }}
+                className="profile-plus-overlay"
+              >
+                +
+              </OverlayPlus>
+            </label>
+            <input
+              id="child-profile-upload"
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={handleProfileChange}
+              disabled={isUploading}
             />
           </PictureLine>
           <FirstInfo>
@@ -678,11 +752,10 @@ const BasicInfo = styled.div`
 `;
 
 const PictureLine = styled.div`
-  /* width: 225px;
-  height: 200px; */
   margin-left: 25px;
   margin-top: 20px;
   margin-bottom: 45px;
+  position: relative;
 `;
 
 const Picture = styled.img`
@@ -690,6 +763,27 @@ const Picture = styled.img`
   height: 150px;
   object-fit: cover;
   border-radius: 10px;
+  transition: opacity 0.3s;
+`;
+
+const OverlayPlus = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 48px;
+  font-weight: bold;
+  background: rgba(68, 68, 68, 0.2);
+  border-radius: 10px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  cursor: pointer;
 `;
 
 const FirstInfo = styled.table`

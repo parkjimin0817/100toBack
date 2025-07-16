@@ -110,6 +110,12 @@ public class ChildController {
         return ResponseEntity.ok(childService.detail(childNo));
     }
 
+    //아동 상세보기 수정
+    @PatchMapping("/updateInfoDetail")
+    public ResponseEntity<ChildDto.infoDetail> updateDetail(@RequestBody ChildDto.infoDetail dto){
+        return ResponseEntity.ok(childService.updateInfoDetail(dto));
+    }
+
     //아동 상세보기에서 건강 데이터 수정
     @PatchMapping("/updatehealthdata")
     public ResponseEntity<ChildDto.health> updateHealthData(@RequestParam int childNo, @RequestBody ChildDto.health data){

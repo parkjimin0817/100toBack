@@ -125,7 +125,19 @@ public class Child {// 아동
     public void changeChildStatus(CommonEnums.AdmissionStatus newStatus) {
         this.status = newStatus;
     }
+
+    public void changeChildProfile(String newProfile) {
+        this.childProfile = newProfile;
+    }
+    public void changeChildFParentsPhone(String newFParentsPhone) {
+        this.fParentsPhone = newFParentsPhone;
+    }
+    public void changeChildMParentsPhone(String newMParentsPhone) {
+        this.mParentsPhone = newMParentsPhone;
+    }
+
     public void setClassRoom(ClassRoom classRoom) {this.classRoom = classRoom;}
+
 
 
 }
