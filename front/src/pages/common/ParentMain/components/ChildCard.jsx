@@ -27,7 +27,7 @@ const ChildCard = ({ data }) => {
                 {randomAdj} {item.child_name}{' '}
               </NameDiv>
               <AgeDiv>
-                ({age}세/ {gender})
+                ({age}세/{gender})
               </AgeDiv>
               <BirthDiv> {birthday} </BirthDiv>
             </ProfileDiv>

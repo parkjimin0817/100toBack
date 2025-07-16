@@ -119,6 +119,7 @@ public class ChildDto {
     @AllArgsConstructor
     @Builder
     public static class modalResponse {
+        private int child_no;
         private String class_name;
         private String child_name;
         private LocalDateTime create_date;
@@ -135,6 +136,7 @@ public class ChildDto {
                                     ? child.getClassRoom().getClassName()
                                     : "미배정"
                     )
+                    .child_no(child.getChildNo())
                     .child_name(child.getChildName())
                     .create_date(child.getCreateDate())
                     .child_birth(child.getChildResidentNo().substring(0, 6))
@@ -330,6 +332,7 @@ public class ChildDto {
     @AllArgsConstructor
     @Builder
     public static class detail {
+        private int child_no;
         private List<ChildDto.healthLog> healthLogs;
         private ChildDto.health health;
         private List<ChildDto.activityLog> activityLogs;
@@ -375,6 +378,7 @@ public class ChildDto {
                                     .map(attendance::toDto)
                                     .collect(Collectors.toList())
                     )
+                    .child_no(modalResponse.toDto(child).getChild_no())
                     .child_name(modalResponse.toDto(child).getChild_name())
                     .child_birthday(modalResponse.toDto(child).getChild_birth())
                     .class_name(modalResponse.toDto(child).getClass_name())
@@ -388,6 +392,28 @@ public class ChildDto {
                     .child_profile(child.getChildProfile())
                     .build();
         }
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class infoDetail  {
+        private int child_no;
+        private String child_profile;
+//        private String f_parent_phone;
+//        private String m_parent_phone;
+
+        public static infoDetail toDto(Child child) {
+            return infoDetail.builder()
+                    .child_no(child.getChildNo())
+                    .child_profile(child.getChildProfile())
+//                    .f_parent_phone(child.getFParentsPhone())
+//                    .m_parent_phone(child.getMParentsPhone())
+                    .build();
+        }
+
     }
 
     @Getter
