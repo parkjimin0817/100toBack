@@ -29,7 +29,7 @@ public interface ChildService {
     //아동 번호로 건강 데이터 조회
     ChildDto.health health(int childNo);
     //아동 번호로 생활 로그 조회
-    List<ChildDto.activityLog> activityLog(int childNo);
+    Page<ChildDto.activityLog> activityLog(int childNo, Pageable pageable);
     //아동 번호로 생활 데이터 조회
     ChildDto.activity activity(int childNo);
     //아동 번호로 아동 출석 조회

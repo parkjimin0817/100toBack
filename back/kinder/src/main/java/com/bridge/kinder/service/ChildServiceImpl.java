@@ -165,13 +165,17 @@ public class ChildServiceImpl implements ChildService {
 
     //아동 번호로 해당 아동의 행동 로그 데이터 불러오기(매일 적는 거)
     @Override
-    public List<ChildDto.activityLog> activityLog(int childNo) {
+    public Page<ChildDto.activityLog> activityLog(int childNo, Pageable pageable) {
         Child child = childRepository.getByChildNo(childNo)
                 .orElseThrow(() -> new EntityNotFoundException("해당 아동이 존재하지 않습니다."));
-        return childRepository.activityLog(childNo).stream()
-                .map(ChildDto.activityLog::toDto)
-                .peek(dto -> dto.setChild_name(child.getChildName())) //아동 이름도 보내주기
-                .collect(Collectors.toList());
+
+        Page<ChildActivityLog> page = childRepository.getActivityLogByChildNo(childNo, pageable);
+
+        return page.map(entity -> {
+            ChildDto.activityLog dto = ChildDto.activityLog.toDto(entity);
+            dto.setChild_name(child.getChildName());
+            return dto;
+        });
     }
 
     //아동 번호로 해당 아동의 생활 데이터 불러오기

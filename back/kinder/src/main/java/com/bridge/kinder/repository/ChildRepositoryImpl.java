@@ -446,5 +446,24 @@ public class ChildRepositoryImpl implements ChildRepository {
         return new PageImpl<>(logs, pageable, totalCount);
     }
 
+    @Override
+    public Page<ChildActivityLog> getActivityLogByChildNo(int childNo, Pageable pageable) {
+        String jpql = "SELECT c FROM ChildActivityLog c WHERE c.child.childNo = :childNo ORDER BY c.createDate DESC";
+
+        List<ChildActivityLog> logs = em.createQuery(jpql, ChildActivityLog.class)
+                .setParameter("childNo", childNo)
+                .setFirstResult((int) pageable.getOffset())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList();
+
+        Long totalCount = em.createQuery(
+                        "SELECT COUNT(c) FROM ChildActivityLog c WHERE c.child.childNo = :childNo",
+                        Long.class)
+                .setParameter("childNo", childNo)
+                .getSingleResult();
+
+        return new PageImpl<>(logs, pageable, totalCount);
+    }
+
 
 }

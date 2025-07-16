@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import api from '../../api/axios';
+import { toast } from 'react-toastify';
 
 const PersonalHealth = () => {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const PersonalHealth = () => {
       const response2 = await api.get(`http://localhost:8888/api/childs/get?child_no=${id}`);
       setChild(response2.data);
     } catch (error) {
-      console.error('아동 건강로그 불러오기 실패:', error);
+      toast.error('아동 건강로그 불러오기 실패:', error);
     } finally {
       setLoading(false);
     }
@@ -76,9 +77,9 @@ const PersonalHealth = () => {
             logs.map((item, index) => (
               <tr key={index}>
                 <td>{dayjs(item.create_date).format('YYYY-MM-DD')}</td>
-                <td>{item.temperature}</td>
-                <td>{item.height}</td>
-                <td>{item.weight}</td>
+                <td>{item.temperature} ℃</td>
+                <td>{item.height}cm</td>
+                <td>{item.weight}kg</td>
                 <td>{item.symptoms}</td>
                 <td>{item.healthLogMemo}</td>
               </tr>
@@ -143,6 +144,27 @@ const Table = styled.table`
 const THead = styled.thead`
   background: ${({ theme }) => theme.colors.orange};
   color: ${({ theme }) => theme.colors.white};
+
+  th {
+    &:nth-child(1) {
+      width: 20.27%;
+    }
+    &:nth-child(2) {
+      width: 10.81%;
+    }
+    &:nth-child(3) {
+      width: 10.81%;
+    }
+    &:nth-child(4) {
+      width: 10.81%;
+    }
+    &:nth-child(5) {
+      width: 20.27%;
+    }
+    &:nth-child(6) {
+      width: 27.03%;
+    }
+  }
 
   th:first-child {
     border-top-left-radius: ${({ theme }) => theme.borderRadius.lg};

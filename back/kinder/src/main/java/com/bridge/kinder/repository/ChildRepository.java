@@ -73,5 +73,7 @@ public interface ChildRepository {
 
     //아동 번호로 건강 로그 데이터 가져오기(페이징)
     Page<ChildHealthLog> getHealthLogByChildNo(int childNo, Pageable pageable);
+    //아동 번호로 생활 로그 데이터 가져오기(페이징)
+    Page<ChildActivityLog> getActivityLogByChildNo(int childNo, Pageable pageable);
 
 }
