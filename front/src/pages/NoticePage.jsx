@@ -93,22 +93,32 @@ const NoticePage = () => {
               ]
         }
       ></ContentHeader>
-      {data && (
-        <BoardContainer>
-          <BoardTable tableInfo={tableInfo} columns={columns} boardData={data.content} />
-        </BoardContainer>
-      )}
-      {data && (
-        <Pagination 
-          currentPage={data.number + 1} 
-          totalPages={data.totalPages} 
-          onPageChange={handlePageChange} 
-          Color={member.memberType === 'PARENT' ? 'purple' : 'green'}
-        />
-      )}
+      <ContentDiv>
+        {data && (
+          <BoardContainer>
+            <BoardTable tableInfo={tableInfo} columns={columns} boardData={data.content} />
+          </BoardContainer>
+        )}
+        {data && (
+          <Pagination
+            currentPage={data.number + 1}
+            totalPages={data.totalPages}
+            onPageChange={handlePageChange}
+            Color={member.memberType === 'PARENT' ? 'purple' : 'green'}
+          />
+        )}
+      </ContentDiv>
     </PageContainer>
   );
 };
+
+const ContentDiv = styled.div`
+  min-height: 530px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+`;
 
 const PageContainer = styled.div`
   width: 100%;
@@ -123,6 +133,7 @@ const BoardContainer = styled.div`
   flex-direction: column;
   align-items: center;
   margin-top: 50px;
+  width: 100%;
 `;
 
 export default NoticePage;

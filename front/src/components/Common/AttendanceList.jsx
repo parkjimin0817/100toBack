@@ -34,7 +34,7 @@ const AttendanceList = ({ class_no, create_date, selectedDate, attendanceInfo, r
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    if (member.classNo.toString() !== class_no) {
+    if (member.memberType === 'PRESENT') {
       toast.warn('변경 권한이 없습니다.');
       return;
     }
