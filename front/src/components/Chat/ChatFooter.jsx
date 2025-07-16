@@ -1,5 +1,7 @@
 import React from 'react'
 import styled from 'styled-components';
+import { FaUserFriends } from "react-icons/fa";
+import { IoChatboxEllipses } from "react-icons/io5";
 
 const ChatFooter = ({ 
     type, 
@@ -23,10 +25,10 @@ const ChatFooter = ({
           <SendButton onClick={sendMessage}>전송</SendButton>
         </>
       ) : (
-        <div>
-          <button onClick={() => onChange('members', '사용자들')}>사용자</button>
-          <button onClick={() => onChange('chatRooms', '채팅방')}>채팅방</button>
-        </div>
+        <FooterButtonBox>
+          <FooterButton onClick={() => onChange('members', '사용자들')}><FaUserFriends /></FooterButton>
+          <FooterButton onClick={() => onChange('chatRooms', '채팅방')}><IoChatboxEllipses /></FooterButton>
+        </FooterButtonBox>
       )}
     </Footer>
   )
@@ -74,4 +76,21 @@ const SendButton = styled.button`
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+`;
+
+const FooterButtonBox = styled.div`
+  width: 100%;
+  display: flex;
+`;
+
+const FooterButton = styled.button`
+  padding: 10px;
+  display: flex;
+  flex: 1;
+  justify-content: center;  
+
+  & > svg {
+    width: 30px;
+    height: 30px;
+  }
 `;
