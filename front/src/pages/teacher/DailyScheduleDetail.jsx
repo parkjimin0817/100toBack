@@ -176,10 +176,6 @@ const DailyScheduleDetail = () => {
         Title={'일과표'}
         Color={member.memberType === 'PARENT' ? 'green' : 'purple'}
         ButtonProps={[
-          {
-            Title: '뒤로 가기',
-            func: () => navigate(-1),
-          },
           // PARENT가 아닐 때만 일정표 작성/등록 버튼 노출
           ...(member.memberType !== 'PARENT'
             ? writeAuthority === false
@@ -199,6 +195,10 @@ const DailyScheduleDetail = () => {
                   },
                 ]
             : []),
+          {
+            Title: '뒤로 가기',
+            func: () => navigate(-1),
+          },
         ]}
       />
       <Div>
