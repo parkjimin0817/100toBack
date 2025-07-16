@@ -62,7 +62,7 @@ const TeacherDocument = () => {
       />
       <TopContent>
         <Title>최근 열람한 문서</Title>
-        <RecentDocuments recentDocs={recentDocs} />
+        <RecentDocuments recentDocs={recentDocs} onViewed={fetchRecentDocuments} />
       </TopContent>
       <BottomContent>
         <TeacherDocumentList documents={documents} onDelete={fetchDocuments} onViewed={fetchRecentDocuments} />

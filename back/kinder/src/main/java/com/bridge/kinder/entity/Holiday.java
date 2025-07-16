@@ -35,4 +35,10 @@ public class Holiday {
     private String holidayName;
     //공휴일 이름
 
+
+
+    //
+    public void changeHolidayName(String dateName) {
+        this.holidayName = dateName;
+    }
 }

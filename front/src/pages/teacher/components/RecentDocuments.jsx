@@ -1,15 +1,46 @@
 import styled from 'styled-components';
 import fileimg from '../../../assets/img/fileimg.png';
 import filehover from '../../../assets/img/filehover.png';
+import { boardService } from '../../../api/boards';
+import { getBoardDownloadUrl } from '../../../api/fileApi';
+import { toast } from 'react-toastify';
 
-const RecentDocuments = ({ recentDocs }) => {
+const RecentDocuments = ({ recentDocs, onViewed }) => {
+  const handleDownload = async (d) => {
+    if (!d.fileUrl || !d.boardNo) return;
+
+    try {
+      //다운로드 URL
+      const { presignedUrl } = await getBoardDownloadUrl(d.boardNo);
+
+      // 파일 다운로드
+      const response = await fetch(presignedUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = d.originName;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      // 열람 날짜 업데이트
+      await boardService.updateViewedDate(d.boardNo);
+      onViewed?.();
+    } catch (error) {
+      console.error('다운로드 또는 열람 업데이트 실패:', error);
+      toast.error('파일 다운로드에 실패했습니다.');
+    }
+  };
+
   return (
     <>
       <Documents>
-        {recentDocs.map((f, index) => (
-          <Card key={index}>
-            <FileName>{f.title}</FileName>
-            <FileInfo>{f.file}</FileInfo>
+        {recentDocs.map((d, index) => (
+          <Card key={index} onClick={() => handleDownload(d)}>
+            <FileName>{d.title}</FileName>
+            <FileInfo>{d.originName}</FileInfo>
           </Card>
         ))}
       </Documents>
