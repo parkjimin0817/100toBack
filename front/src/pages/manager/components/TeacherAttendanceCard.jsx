@@ -52,16 +52,23 @@ const TeacherAttendanceCard = ({
   const absentCount = filteredAttendances.filter((att) => att.status === 'ABSENT').length;
 
   //근태 수정
-  const onEdit = async (data) => {
+  const onEdit = async (type, attendanceNo, data) => {
     try {
       console.log('전달 데이터: ', data);
-      await attendanceService.updateTeacherAttendance(data.attendanceNo, data);
-      toast.success('근태 정보가 수정되었습니다.');
-      await onUpdateAttendances(); // 함수 호출 , 목록 재조회 (업데이트 된거 보이게)
+
+      if (type === 'update') {
+        await attendanceService.updateTeacherAttendance(attendanceNo, data);
+        toast.success('근태 정보가 수정되었습니다.');
+      } else if (type === 'create') {
+        await attendanceService.createTeacherAttendance(data);
+        toast.success('근태 정보가 생성되었습니다.');
+      }
+
+      await onUpdateAttendances(); // 목록 재조회
       setOpenModal(false);
     } catch (err) {
-      console.error('근태 수정 실패 : ', err.message);
-      toast.error('근태 수정 중 오류가 발생했습니다.');
+      console.error('근태 처리 실패:', err.response?.data?.message || err.message);
+      toast.error('근태 처리 중 오류가 발생했습니다.');
     }
   };
 
@@ -136,6 +143,7 @@ const TeacherAttendanceCard = ({
       </BottomContent>
       {openModal && (
         <TeacherAttendanceEditModal
+          selectedDate={selectedDate}
           memberNo={memberNo}
           centerNo={centerNo}
           attendance={attendance}
@@ -266,26 +274,18 @@ const Status = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 60px;
+  width: 80px;
   height: 30px;
-  background-color: ${({ $status }) => {
+  background-color: ${({ $status, theme }) => {
     switch ($status) {
+      case '근무중':
+        return '#2196f3'; // 파랑
       case '출근':
         return '#4caf50'; // 초록
       case '결근':
         return '#f44336'; // 빨강
-      case '근무중':
-        return '#2196f3'; // 파랑
-      case '공휴일':
-        return '#9e9e9e'; // 주황
-      case '주말':
-        return '#9e9e9e'; // 회색
-      case '휴가':
-        return '#9c27b0'; // 보라
-      case '워케이션':
-        return '#00bcd4'; // 청록
       default:
-        return '#e0e0e0'; // 기본 회색
+        return theme.colors.lightblue; // 기본값
     }
   }};
   border-radius: 5px;

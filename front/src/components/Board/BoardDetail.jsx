@@ -5,6 +5,7 @@ import defaultImg from '../../assets/img/img.png';
 import './EditorComponent/tiptap-templates/editor.scss';
 import './EditorComponent/tiptap-node/list-node.scss';
 import './EditorComponent/tiptap-node/paragraph-node.scss';
+import { getBoardDownloadUrl } from '../../api/fileApi';
 
 const BoardDetail = ({ category, post }) => {
   const formatKoreanDate = (isoString) => {
@@ -19,6 +20,29 @@ const BoardDetail = ({ category, post }) => {
     const minutes = String(date.getMinutes()).padStart(2, '0');
 
     return `${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분`;
+  };
+
+  //파일 다운로드
+  const handleDownload = async (vacationNo, originalName) => {
+    try {
+      //다운로드 URL
+      const { presignedUrl } = await getBoardDownloadUrl(vacationNo);
+
+      // 파일 다운로드
+      const response = await fetch(presignedUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = originalName;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('파일 다운로드 실패:', error);
+      alert('파일 다운로드에 실패했습니다.');
+    }
   };
 
   return (
@@ -69,9 +93,9 @@ const BoardDetail = ({ category, post }) => {
           <AttachmentLabel>첨부파일</AttachmentLabel>
           <AttachmentBox>
             <IoDownloadOutline />
-            <FileLink href={post && post.attachment ? post.attachment : ''} download>
-              {post && post.attachment ? post.attachmentOriginal : ''}
-            </FileLink>
+            <Span onClick={() => handleDownload(post.boardNo, post.attachmentOriginal)}>
+              {post.attachmentOriginal || ''}
+            </Span>
           </AttachmentBox>
         </>
       )}
@@ -157,8 +181,8 @@ const AttachmentBox = styled.div`
   border-radius: 4px;
 `;
 
-const FileLink = styled.a`
-  color: blue;
-  margin-left: 0.5rem;
+const Span = styled.span`
+  padding-left: 3px;
   text-decoration: underline;
+  cursor: pointer;
 `;
