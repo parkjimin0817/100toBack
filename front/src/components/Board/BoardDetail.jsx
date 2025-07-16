@@ -21,8 +21,6 @@ const BoardDetail = ({ category, post }) => {
     return `${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분`;
   };
 
-  console.log(category);
-
   return (
     <DetailContainer>
       {/* 게시글 타이틀 */}
@@ -66,7 +64,7 @@ const BoardDetail = ({ category, post }) => {
           ))}
       </PostContentList>
       {/* 파일이 있는 경우에만 나오도록. */}
-      {(category !== 'photo' && category !== 'meal_plan') && post && post.attachment && (
+      {category !== 'photo' && category !== 'meal_plan' && post && post.attachment && (
         <>
           <AttachmentLabel>첨부파일</AttachmentLabel>
           <AttachmentBox>
