@@ -34,7 +34,6 @@ public interface ChatParicipantRepository extends JpaRepository<ChatParticipant,
             @Param("myNo") int myNo,
             @Param("otherNo") int otherNo
     );
-    Optional<ChatRoom> findExistingPrivateRoom(int myNo, int otherNo);
 
 
     @Query("""
