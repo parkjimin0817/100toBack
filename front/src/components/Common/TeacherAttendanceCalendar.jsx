@@ -5,8 +5,16 @@ import 'react-calendar/dist/Calendar.css';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { holidayService } from '../../api/holiday';
+import { attendanceStatusToKorean } from '../../constants/attendanceStatusMap';
 
-const TeacherAttendanceCalendar = ({ onDateClick, onMonthChange, disableFuture = false, minDate, maxDate }) => {
+const TeacherAttendanceCalendar = ({
+  monthlyAttendanceList,
+  onDateClick,
+  onMonthChange,
+  disableFuture = false,
+  minDate,
+  maxDate,
+}) => {
   const today = new Date();
   const [holidays, setHolidays] = useState([]);
   const [activeMonth, setActiveMonth] = useState(new Date());
@@ -20,6 +28,8 @@ const TeacherAttendanceCalendar = ({ onDateClick, onMonthChange, disableFuture =
       .then((data) => setHolidays(data))
       .catch((err) => console.error('공휴일 불러오기 실패:', err));
   }, [activeMonth]);
+
+  console.log(monthlyAttendanceList);
 
   return (
     <StyledCalendar
@@ -47,24 +57,22 @@ const TeacherAttendanceCalendar = ({ onDateClick, onMonthChange, disableFuture =
       tileContent={({ date, view }) => {
         if (view === 'month') {
           const holiday = holidays.find((h) => new Date(h.holiday_date).toDateString() === date.toDateString());
-          if (holiday) {
+          const isJoinDate = minDate && new Date(minDate).toDateString() === date.toDateString();
+          const afterJoinDate = minDate && date >= new Date(minDate.setHours(0, 0, 0, 0));
+          const attendance = monthlyAttendanceList?.find(
+            (a) => new Date(a.attendanceDate).toDateString() === date.toDateString()
+          );
+          if (holiday || attendance || isJoinDate) {
             return (
-              <div
-                style={{
-                  fontSize: '0.6rem',
-                  color: 'red',
-                  position: 'absolute',
-                  top: '75%',
-                  width: '100%',
-                  textAlign: 'center',
-                  whiteSpace: 'normal',
-                  overflow: 'hidden',
-                  lineHeight: '1.1',
-                  padding: '0 2px',
-                }}
-              >
-                {holiday.holiday_name}
-              </div>
+              <TileContent>
+                {holiday && <Holiday>{holiday.holiday_name}</Holiday>}
+                {isJoinDate && <JoinDate>입사일</JoinDate>}
+                {attendance && afterJoinDate && (
+                  <Status $status={attendanceStatusToKorean[attendance.status]}>
+                    {attendanceStatusToKorean[attendance.status]}
+                  </Status>
+                )}
+              </TileContent>
             );
           }
         }
@@ -75,6 +83,55 @@ const TeacherAttendanceCalendar = ({ onDateClick, onMonthChange, disableFuture =
     />
   );
 };
+
+const TileContent = styled.div`
+  font-size: 0.8rem;
+  position: absolute;
+  top: 45%;
+  width: 100%;
+  text-align: center;
+  white-space: normal;
+  overflow: hidden;
+  line-height: 1.1;
+  padding: 0 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+`;
+
+const Holiday = styled.div`
+  width: 80%;
+  padding: 2px;
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  background-color: ${({ theme }) => theme.colors.orange};
+  color: ${({ theme }) => theme.colors.white};
+`;
+const JoinDate = styled.div`
+  width: 80%;
+  padding: 2px;
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  background-color: ${({ theme }) => theme.colors.green};
+  color: ${({ theme }) => theme.colors.white};
+`;
+const Status = styled.div`
+  width: 80%;
+  padding: 2px;
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  background-color: ${({ $status, theme }) => {
+    switch ($status) {
+      case '근무중':
+        return '#2196f3'; // 파랑
+      case '출근':
+        return '#4caf50'; // 초록
+      case '결근':
+        return '#f44336'; // 빨강
+      default:
+        return theme.colors.lightblue; // 기본값
+    }
+  }};
+  color: ${({ theme }) => theme.colors.white};
+`;
 
 const StyledCalendar = styled(Calendar)`
   width: 90%;
@@ -144,8 +201,8 @@ const StyledCalendar = styled(Calendar)`
     aspect-ratio: 1 / 1;
     height: auto;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: space-around;
+    align-items: flex-start;
     box-sizing: border-box;
     position: relative;
 
@@ -179,6 +236,16 @@ const StyledCalendar = styled(Calendar)`
     background: transparent;
     border: 1px solid ${({ theme }) => theme.colors.black};
     color: inherit;
+  }
+
+  .react-calendar__tile:enabled:hover,
+  .react-calendar__tile:enabled:focus {
+    background: transparent !important;
+    transform: none !important;
+    padding: ${({ theme }) => theme.spacing[1]} !important;
+    font-size: ${({ theme }) => theme.fontSizes.base} !important;
+    border: none !important;
+    outline: none !important;
   }
 
   /* 오늘 날짜 호버 & 포커스 시 */
