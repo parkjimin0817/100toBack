@@ -16,7 +16,16 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuc
 
     memberService
       .teacherlist(centerNo)
-      .then((data) => setTeachers(data))
+      .then((data) => {
+        const exists = data.some((t) => t.member_no === classRoom.member_no);
+        if (!exists && classRoom.member_no) {
+          data.push({
+            member_no: classRoom.member_no,
+            member_name: classRoom.member_name,
+          });
+        }
+        setTeachers(data);
+      })
       .catch((err) => toast.error('교사 목록 불러오기 실패 : ', err));
   }, [centerNo]);
 
@@ -31,7 +40,6 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuc
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setClassImage(file);
-    console.log(file);
 
     if (file) {
       const reader = new FileReader();
@@ -49,8 +57,7 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuc
       const isConfirmed = window.confirm('확인 버튼을 누르면 반이 삭제됩니다. 삭제하시겠습니까?');
       if (!isConfirmed) return;
 
-      const responseData = await classService.deleteClass(classRoom.class_no);
-      console.log(responseData);
+      await classService.deleteClass(classRoom.class_no);
       toast.info('반 삭제 성공');
 
       onDeleteSuccess(classRoom);
@@ -61,7 +68,7 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuc
   };
 
   const handleSubmit = async () => {
-    if (!className || !capacity || !teacherNo) {
+    if (!className || !capacity) {
       toast.info('필수 항목을 모두 입력해주세요.');
       return;
     }
@@ -80,22 +87,22 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuc
         class_no: classRoom.class_no,
         class_name: className,
         capacity: capacity,
-        member_no: teacherNo,
+        member_no: teacherNo || null,
         color: classColor,
         class_image: uploadedImageUrl ? uploadedImageUrl : classRoom.class_image,
       };
-      console.log(payload);
 
       await classService.updateClass(classRoom.class_no, payload);
-
-      toast.info(`${className}반 수정이 완료되었습니다.`);
 
       if (onSuccess) {
         onSuccess();
       }
 
       onClose();
+
+      toast.info(`${className}반 수정이 완료되었습니다.`);
     } catch (error) {
+      console.error('반 수정 실패', error);
       toast.error('반 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
     }
 
@@ -129,7 +136,7 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuc
           <InputRow>
             <Label>담당 교사 : </Label>
             <Select value={teacherNo} onChange={(e) => setTeacherNo(e.target.value)}>
-              <option value="선택">선택</option>
+              <option value="">미지정</option>
               {teachers.map((teacher) => (
                 <option key={teacher.member_no} value={teacher.member_no}>
                   {teacher.member_name}

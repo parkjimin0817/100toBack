@@ -119,7 +119,7 @@ public class ClassRoomDto {
         private String color;
         private String class_image;
 
-        private int member_no;
+        private Integer member_no;
 
         public static Update toDto(ClassRoom classRoom, Member member) {
             return Update.builder()
@@ -128,6 +128,7 @@ public class ClassRoomDto {
                     .capacity(classRoom.getCapacity())
                     .color(classRoom.getColor())
                     .class_image(classRoom.getClassImage())
+                    .member_no(member != null ? member.getMemberNo() : null)
                     .build();
         }
 
