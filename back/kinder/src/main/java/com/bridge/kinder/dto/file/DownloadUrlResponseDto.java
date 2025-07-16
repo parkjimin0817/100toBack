@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DownloadUrlResponseDto {
-    private String presigend_url;
+    private String presigned_url;
     private String original_name;
 }

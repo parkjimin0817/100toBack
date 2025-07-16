@@ -4,6 +4,7 @@ import com.bridge.kinder.dto.file.PresignedDto;
 import com.bridge.kinder.dto.file.UploadUrlResponseDto;
 import com.bridge.kinder.dto.file.DownloadUrlResponseDto;
 import com.bridge.kinder.entity.Board;
+import com.bridge.kinder.entity.Vacation;
 import com.bridge.kinder.service.file.FileService;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -42,13 +43,22 @@ public class FileController {
         return ResponseEntity.ok(new UploadUrlResponseDto(changeName, presignedUrl));
     }
 
-    //파일 다운로드
-    @GetMapping("/{boardNo}/download-url")
-    public ResponseEntity<?> getDownloadUrl(@PathVariable int boardNo) {
-        Board board = fileService.getFile(boardNo);
+    //게시판 파일 다운로드
+    @GetMapping("/{boardNo}/board-download-url")
+    public ResponseEntity<?> getBoardDownloadUrl(@PathVariable int boardNo) {
+        Board board = fileService.getBoardFile(boardNo);
 
-        String presigendUrl = fileService.generatePresignedDownloadUrl(board.getAttachment());
+        String presignedUrl = fileService.generatePresignedDownloadUrl(board.getAttachment());
 
-        return ResponseEntity.ok(new DownloadUrlResponseDto(presigendUrl, board.getAttachmentOrigin()));
+        return ResponseEntity.ok(new DownloadUrlResponseDto(presignedUrl, board.getAttachmentOrigin()));
+    }
+
+    //휴가/워케이션 파일 다운로드
+    @GetMapping("/{vacationNo}/vacation-download-url")
+    public ResponseEntity<?> getVacationDownloadUrl(@PathVariable Long vacationNo) {
+        Vacation vacation = fileService.getVacationFile(vacationNo);
+
+        String presignedUrl = fileService.generatePresignedDownloadUrl(vacation.getAttachment());
+        return ResponseEntity.ok(new DownloadUrlResponseDto(presignedUrl, vacation.getAttachmentOrigin()));
     }
 }

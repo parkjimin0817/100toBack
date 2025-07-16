@@ -73,7 +73,7 @@ const VacationForm = ({ onSuccess }) => {
           <Label>사유 : </Label>
           <InputTextArea value={reason} onChange={(e) => setReason(e.target.value)} />
         </InputRow>
-        <InputRow>
+        <InputRow style={{ marginBottom: '5px' }}>
           <InfoDiv>
             <Label>첨부파일 : </Label>
             <Info>*선택사항</Info>
@@ -113,7 +113,7 @@ const Form = styled.form`
 
 const InputRow = styled.div`
   display: flex;
-  margin: 15px 20px 15px 20px;
+  margin: 15px 20px;
 `;
 
 const ButtonRow = styled.div`

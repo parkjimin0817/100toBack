@@ -15,4 +15,5 @@ public interface VacationRepository extends JpaRepository<Vacation, Long> {
     Page<Vacation> findByMember_Center_CenterNoAndType(@Param("centerNo") int centerNo, @Param("type") VacationType type, Pageable pageable);
     @Query("SELECT v FROM Vacation v WHERE v.member.center.centerNo = :centerNo ORDER BY v.createDate DESC")
     Page<Vacation> findByMember_Center_CenterNo(@Param("centerNo") int centerNo, Pageable pageable);
+
 }
