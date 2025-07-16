@@ -45,12 +45,12 @@ const LoginPage = () => {
                   $error={errors.memberPwd}
                 />
               </InputLine>
-              <CheckboxLine>
+              {/* <CheckboxLine>
                 <Lable>
                   <LoginMaintain type="checkbox" checked={checked} onChange={() => setChecked(!checked)} />
                   로그인 상태유지
                 </Lable>
-              </CheckboxLine>
+              </CheckboxLine> */}
 
               {errors.memberId &&
               errors.memberId.type === 'required' &&
