@@ -123,7 +123,10 @@ export const boardService = {
         memberNo,
         title,
         fileUrl,
+        attachmentOrigin: selectedFile.name,
       };
+
+      console.log(request);
 
       const { data } = await api.post(API_ENDPOINTS.BOARDS.UPLOADDOC, request);
 
@@ -139,6 +142,7 @@ export const boardService = {
   getDocumentList: async () => {
     try {
       const { data } = await api.get(API_ENDPOINTS.BOARDS.GETDOCLIST);
+      console.log('11111', data);
       return data;
     } catch (error) {
       throw new Error('서버 통신 불량' + error.message);

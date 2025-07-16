@@ -317,6 +317,7 @@ public class BoardDto {
     public static class DocumentRequest {
         private int memberNo;
         private String title;
+        private String attachmentOrigin;
         private String fileUrl;
     }
 
@@ -326,17 +327,19 @@ public class BoardDto {
     @AllArgsConstructor
     @Builder
     public static class DocumentResponse {
-        private int board_no;
-        private LocalDateTime create_date;
+        private int boardNo;
+        private LocalDateTime createDate;
         private String title;
         private String fileUrl;
+        private String originName;
 
         public static DocumentResponse toDto(Board board) {
             return DocumentResponse.builder()
-                    .board_no(board.getBoardNo())
-                    .create_date(board.getCreateDate())
+                    .boardNo(board.getBoardNo())
+                    .createDate(board.getCreateDate())
                     .title(board.getTitle())
                     .fileUrl(board.getAttachment())
+                    .originName(board.getAttachmentOrigin())
                     .build();
         }
     }

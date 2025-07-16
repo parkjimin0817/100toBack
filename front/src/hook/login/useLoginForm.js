@@ -33,11 +33,11 @@ export const useLoginForm = () => {
   const onSubmit = async (formData) => {
     const { memberId, memberPwd } = formData;
 
-    //어드민 승인 / 거절 페이지
-    if (memberId === 'admin' && memberPwd === '1234') {
-      navigator('approvalListAdmin');
-      return;
-    }
+    // //어드민 승인 / 거절 페이지
+    // if (memberId === 'admin' && memberPwd === '1234') {
+    //   navigator('approvalListAdmin');
+    //   return;
+    // }
 
     setIsLoading(true);
     setError('');

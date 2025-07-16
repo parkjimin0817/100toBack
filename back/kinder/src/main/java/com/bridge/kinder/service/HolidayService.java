@@ -17,6 +17,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -48,8 +49,7 @@ public class HolidayService {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
 
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document doc = dBuilder.parse(conn.getInputStream());
 
             doc.getDocumentElement().normalize();
@@ -57,6 +57,7 @@ public class HolidayService {
 
             for (int i = 0; i <nList.getLength(); i++) {
                 Node nNode = nList.item(i);
+
                 if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) nNode;
 
@@ -67,15 +68,22 @@ public class HolidayService {
                     if ("Y".equals(isHoliday) && locdate != null && dateName != null) {
                         LocalDate holidayDate = LocalDate.parse(locdate, DateTimeFormatter.ofPattern("yyyyMMdd"));
 
-                        boolean exists = holidayRepository.existsByHolidayDate(holidayDate);
-                        if(!exists) {
-                            Holiday holiday = Holiday.builder()
-                                    .holidayDate(holidayDate)
-                                    .holidayName(dateName)
-                                    .build();
-                            holidayRepository.save(holiday);
-
-                        }
+                        holidayRepository.findByHolidayDate(holidayDate)
+                                .ifPresentOrElse(
+                                        existing -> {
+                                            if (!existing.getHolidayName().equals(dateName)) {
+                                                existing.changeHolidayName(dateName);
+                                                holidayRepository.save(existing);
+                                            }
+                                        },
+                                        () -> {
+                                            Holiday holiday = Holiday.builder()
+                                                    .holidayDate(holidayDate)
+                                                    .holidayName(dateName)
+                                                    .build();
+                                            holidayRepository.save(holiday);
+                                        }
+                                );
                     }
                 }
             }
@@ -84,7 +92,6 @@ public class HolidayService {
         } catch (Exception e) {
             log.error("공휴일 API 호출 중 오류 발생", e);
         }
-
     }
 
     //년도별 공휴일
@@ -94,21 +101,41 @@ public class HolidayService {
         }
     }
 
-    //수동으로 불러오기
+    //2년치 공휴일
+    public void fetchAndSaveTwoYears() {
+        int currentYear = LocalDate.now().getYear();
+        for(int year = currentYear; year <= currentYear+1; year++){
+            for(int month = 1; month <= 12; month++){
+                fetchAndSaveHolidays(year, month);
+            }
+        }
+    }
+
+    //최초 서버 실행 시 수동으로 불러오기
     @PostConstruct
     public void init() {
         int currentYear = LocalDate.now().getYear();
-        boolean alreadyExists = holidayRepository.existsByHolidayDateBetween(
-                LocalDate.of(currentYear, 1,1),
-                LocalDate.of(currentYear, 12, 31)
-        );
-        if(!alreadyExists) {
-            fetchAndSaveHolidaysForYear(currentYear);
-        } else {
-            log.info("이미 공휴일 데이터가 존재합니다. API 호출 생략.");
-        }
 
+        long totalCount = holidayRepository.countByHolidayDateBetween(
+                LocalDate.of(currentYear, 1, 1),
+                LocalDate.of(currentYear + 1, 12, 31)
+        );
+
+        if (totalCount < 20) {
+            log.info("공휴일 데이터가 부족하여 2년치 새로 불러옵니다.");
+            fetchAndSaveTwoYears();
+        } else {
+            log.info("공휴일 데이터가 충분하여 API 호출 생략.");
+        }
     }
+
+    // 매년 1월 1일 새벽 3시 강제 업데이트
+    @Scheduled(cron = "0 0 3 1 1 *")
+    public void refreshHolidayData() {
+        log.info("매년 1월 1일: 공휴일 데이터 강제 갱신 시작");
+        fetchAndSaveTwoYears();
+    }
+
 
     private static String getTagValue(String tag, Element element) {
         NodeList nodeList = element.getElementsByTagName(tag);
@@ -132,5 +159,6 @@ public class HolidayService {
                 .map(h-> new Response(h.getHolidayDate(), h.getHolidayName()))
                 .collect(Collectors.toList());
     }
+
 }
 

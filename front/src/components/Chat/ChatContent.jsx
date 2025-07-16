@@ -23,7 +23,7 @@ const ChatContent = ({ type, memberList, chatRoomList, messages, createPrivateCh
           {memberList &&
             memberList.length > 0 &&
             memberList.map((member) => (
-              <MemberListItem onClick={() => createPrivateChatRoom(member)}>
+              <MemberListItem key={member.member_no} onClick={() => createPrivateChatRoom(member)}>
                 <MemberProfileImg
                   src={member.member_profile ? `${CLOUD_URL}/${member.member_profile}` : defaultImg}
                 ></MemberProfileImg>
@@ -36,9 +36,9 @@ const ChatContent = ({ type, memberList, chatRoomList, messages, createPrivateCh
           {chatRoomList &&
             chatRoomList.length > 0 &&
             chatRoomList.map((chatRoom) => (
-              <ChatRoomItem onClick={() => enterChatRoom(chatRoom.chatRoomNo, chatRoom.chatRoomName)}>
+              <ChatRoomItem key={chatRoom.chatRoomNo} onClick={() => enterChatRoom(chatRoom.chatRoomNo, chatRoom.other)}>
                 <ChatRoomImg src={chatRoom.memberProfile ? `${CLOUD_URL}/${chatRoom.memberProfile}` : defaultImg} />
-                <ChatRoomName>{chatRoom.chatRoomName}</ChatRoomName>
+                <ChatRoomName><strong>{chatRoom.other}</strong>님 과의 채팅방</ChatRoomName>
                 {chatRoom.unReadCount > 0 && <ChatRoomUnreadCount>{chatRoom.unReadCount}</ChatRoomUnreadCount>}
               </ChatRoomItem>
             ))}
@@ -46,27 +46,25 @@ const ChatContent = ({ type, memberList, chatRoomList, messages, createPrivateCh
       ) : (
         // 채팅방
         <>
-          <div style={{ marginTop: '10px' }}></div>
-          {messages &&
-            messages.length > 0 &&
-            messages.map((message, index) => {
-              const isMe = message?.senderId === member.memberNo;
-              const isSameSenderAsPrevious = index > 0 && messages[index - 1]?.senderId === message?.senderId;
+          <div style={{ marginTop: "10px"}}></div>
+          {messages && messages.length > 0 && messages.map((message, index) => {
+            const isMe = message?.senderNo === member.memberNo;
+            const isSameSenderAsPrevious = index > 0 && messages[index - 1]?.senderNo === message?.senderNo;
 
               return (
-                <>
+                <React.Fragment key={`chatBubble ${index}`}>
                   {!isMe && !isSameSenderAsPrevious && (
-                    <ChatProfileBox>
+                    <ChatProfileBox key={`profile${index}`}>
                       <ChatMemberProfileImg src={defaultImg} />
                       <p>{message.senderName}</p>
                     </ChatProfileBox>
                   )}
-                  <ChatBox key={index} $me={isMe}>
+                  <ChatBox key={`chat${index}`} $me={isMe}>
                     <ChatBubble $me={isMe}>
                       <p>{message?.message}</p>
                     </ChatBubble>
                   </ChatBox>
-                </>
+                </React.Fragment>
               );
             })}
           <div ref={chatContainerRef}></div>

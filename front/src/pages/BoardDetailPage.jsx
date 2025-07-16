@@ -53,7 +53,7 @@ const BoardDetailPage = () => {
 
         // alert("게시글 조회 성공");
       } catch (error) {
-        toast.error('게시글 조회 실패');
+        console.error('게시글 조회 실패');
       }
     };
     getPost();
@@ -68,7 +68,7 @@ const BoardDetailPage = () => {
       toast.error('게시글 삭제 성공');
       handleGoBack();
     } catch (error) {
-      toast.error('게시글 삭제 실패');
+      console.error('게시글 삭제 실패');
     }
   };
 
@@ -78,7 +78,7 @@ const BoardDetailPage = () => {
     <PageContainer>
       <ContentHeader
         Title={categoryName[category]}
-        Color={member.memberType === 'PARENT' ? 'purple' : 'green'}
+        Color={'green'}
         ButtonProps={
           boardContent?.memberNo === member.memberNo
             ? [

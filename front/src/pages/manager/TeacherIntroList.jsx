@@ -21,7 +21,7 @@ const TeacherIntroList = () => {
       const data = await memberService.teacherIntroList(member.centerNo);
       setTeachers(data);
     } catch (e) {
-      toast.error(e);
+      console.error(e);
     }
   };
 

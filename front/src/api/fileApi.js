@@ -54,3 +54,12 @@ export const getVacationDownloadUrl = async (vacationNo) => {
     originalFileName: response.data.original_name,
   };
 };
+
+export const getDocumentDownloadUrl = async (boardNo) => {
+  const response = await api.get(API_ENDPOINTS.FILE.VACATION_DOWNLOAD_URL(boardNo));
+  console.log('서버 원본 응답:', response.data);
+  return {
+    presignedUrl: response.data.presigned_url,
+    originalFileName: response.data.original_name,
+  };
+};

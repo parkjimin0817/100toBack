@@ -73,7 +73,8 @@ const NotePage = () => {
         }
         setData(responseData);
       } catch (error) {
-        toast.error('게시글 조회 실패: ' + error.message);
+        console.error('게시글 조회 실패 : ', error);
+        //alert('게시글 조회 실패');
       }
     };
     getPostList();

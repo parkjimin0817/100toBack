@@ -36,6 +36,8 @@ public interface ChildService {
     List<ChildDto.attendance> attendance(int childNo);
     //아동 상세보기
     ChildDto.detail detail(int childNo);
+    //아동 상세보기 수정
+    ChildDto.infoDetail updateInfoDetail(ChildDto.infoDetail dto);
     //아동 상세보기 건강 데이터 수정
     ChildDto.health updateHealthData(int childNo,ChildDto.health data);
     //아동 상세보기 생활 데이터 수정

@@ -8,10 +8,12 @@ import { IoDocumentText } from 'react-icons/io5';
 import { FaImage } from 'react-icons/fa6';
 import { classService } from '../../api/class';
 import { th } from 'date-fns/locale';
+import useLoginStore from '../../store/loginStore';
 import { toast } from 'react-toastify';
 
 const BoardEditor = ({ category, formState, updateFormField, addBlock, updateBlock, selectBlock, deleteBlock }) => {
   const [classRoomList, setClassRoomList] = useState([]);
+  const { member } = useLoginStore();
 
   useEffect(() => {
     const getClassRoomList = async () => {
@@ -19,7 +21,7 @@ const BoardEditor = ({ category, formState, updateFormField, addBlock, updateBlo
         const responseData = await classService.classroomlist(formState.centerId);
         setClassRoomList(responseData);
       } catch (error) {
-        toast.error('반 조회 실패 : ', error);
+        console.error('반 조회 실패 : ', error);
         alert('반 조회 실패');
       }
     };
@@ -45,25 +47,23 @@ const BoardEditor = ({ category, formState, updateFormField, addBlock, updateBlo
           />
         </HeadBlock>
         <HeadBlock>
-          {(category === 'family_notice' || category === 'note') && (
+          {category === 'note' && member.memberType === 'MANAGER' && (
             <>
               {/* 로딩시, api 호출해서 옵션을 채울 예정  */}
               <HeadLabel htmlFor="classRoom">반 선택</HeadLabel>
-              {classRoomList.length > 0 && (
-                <Select
-                  id="classRoom"
-                  type="text"
-                  value={formState?.classRoomNo}
-                  onChange={(e) => updateFormField('classRoomNo', e.target.value)}
-                >
-                  <option value="선택">반 선택</option>
-                  {classRoomList.map((classRoom) => (
-                    <option key={classRoom.class_no} value={classRoom.class_no}>
-                      {classRoom.class_name}
-                    </option>
-                  ))}
-                </Select>
-              )}
+              <Select
+                id="classRoom"
+                type="text"
+                value={formState?.classRoomNo}
+                onChange={(e) => updateFormField('classRoomNo', e.target.value)}
+              >
+                <option value="선택">반 선택</option>
+                {classRoomList.map((classRoom) => (
+                  <option key={classRoom.class_no} value={classRoom.class_no}>
+                    {classRoom.class_name}
+                  </option>
+                ))}
+              </Select>
             </>
           )}
           <HeadLabel htmlFor="writer">작성자</HeadLabel>
