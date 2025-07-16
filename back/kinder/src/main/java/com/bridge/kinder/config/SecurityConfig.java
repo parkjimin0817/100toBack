@@ -50,7 +50,9 @@ public class SecurityConfig {
                                 "/api/sms/sendMessage",
                                 //시설장 승인
                                 "/api/approval/lists",
-                                "/api/approval/decision/center"
+                                "/api/approval/decision/center",
+                                // 웹 소켓
+                                "/connect/**"
                         ).permitAll() //인증 없이 허용
                         .anyRequest().authenticated() //그 외는 인증 필요
                 )

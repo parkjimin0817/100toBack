@@ -43,7 +43,7 @@ public class SimpleWebSocketHandler extends TextWebSocketHandler {
             String[] params = query.split("&");
             for (String param : params) {
                 if (param.startsWith("chatRoomNo=")) {
-                    chatRoomNo = Long.parseLong(param.substring(7));
+                    chatRoomNo = Long.parseLong(param.substring(11));
                 } else if (param.startsWith("token=")) {
                     token = param.substring(6);
                 }
@@ -81,7 +81,7 @@ public class SimpleWebSocketHandler extends TextWebSocketHandler {
         System.out.println("received message : " + payload);
         ChatMessageDto chatMessageDto = objectMapper.readValue(payload, ChatMessageDto.class);
         //메시지 DB 저장
-        chatService.saveMessage(chatMessageDto);
+//        chatService.saveMessage(chatMessageDto);
 
         //해당 채팅방(chatRoomNo)에만 브로드캐스트
         Long chatRoomNo = chatMessageDto.getRoomNo();
