@@ -93,7 +93,7 @@ const BoardDetail = ({ category, post }) => {
           <AttachmentLabel>첨부파일</AttachmentLabel>
           <AttachmentBox>
             <IoDownloadOutline />
-            <FileLink href={post && post.attachment ? post.attachment : ''} download>
+            <FileLink onClick={() => handleDownload(post.boardNo, post.attachmentOriginal)}>
               {post && post.attachment ? post.attachmentOriginal : ''}
             </FileLink>
           </AttachmentBox>
