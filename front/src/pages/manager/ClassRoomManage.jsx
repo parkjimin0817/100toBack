@@ -124,11 +124,7 @@ const ClassRoomManage = () => {
           onClose={() => setIsModalOpen(false)}
           centerNo={centerNo}
           classRoom={selectClass}
-          onSuccess={(updateClassroom) =>
-            setClassrooms((prev) =>
-              prev.map((item) => (item.class_no === updateClassroom.class_no ? updateClassroom : item))
-            )
-          }
+          onSuccess={selectClassRoom}
           onDeleteSuccess={(deletedClassroom) =>
             setClassrooms((prev) => prev.filter((item) => item.class_no !== deletedClassroom.class_no))
           }

@@ -152,4 +152,15 @@ export const API_ENDPOINTS = {
     GET: '/api/alarm',
     READ: (alarmNo) => `/api/alarm/${alarmNo}`,
   },
+  CHAT: {
+    BASE : '/api/chat',
+    PRIVATE : `/api/chat/room/private/create`,
+    CREATE : '/api/chat/room/group/create',
+    CHATROOMS : '/api/chat/my/chatRooms',
+    HISTORY : (chatRoomNo) => `/api/chat/history/${chatRoomNo}`,
+    JOIN : (chatRoomNo) => `/api/chat/room/group/${chatRoomNo}/join`,
+    LEAVE : (chatRoomNo) => `/api/chat/room/group/${chatRoomNo}/leave`,
+    READMESSAGE : (chatRoomNo) => `/api/chat/room/${chatRoomNo}/read`,
+    MEMBERLIST : '/api/members/memberList',
+  }
 };
