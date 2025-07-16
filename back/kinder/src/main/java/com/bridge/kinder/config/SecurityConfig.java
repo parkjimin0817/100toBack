@@ -36,7 +36,6 @@ public class SecurityConfig {
                                 //아이디 비밀번호 찾기
                                 "/api/members/searchId",
                                 "/api/members/pwdSearchId",
-                                "/api/members/sendOne",
                                 "/api/members/pwdUpdate",
                                 //회원가입
                                 "/api/members/manager",

@@ -132,6 +132,7 @@ const ClassRoomManage = () => {
           onDeleteSuccess={(deletedClassroom) =>
             setClassrooms((prev) => prev.filter((item) => item.class_no !== deletedClassroom.class_no))
           }
+          selectClassRoom={selectClassRoom}
         />
       )}
     </Content>
