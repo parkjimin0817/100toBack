@@ -11,23 +11,9 @@ import com.bridge.kinder.dto.ChildDto.healthLog;
 import com.bridge.kinder.dto.ChildDto.modalResponse;
 import com.bridge.kinder.dto.ChildDto.myPageChilds;
 import com.bridge.kinder.dto.ChildDto.updateClass;
-import com.bridge.kinder.entity.Approval;
-import com.bridge.kinder.entity.Center;
-import com.bridge.kinder.entity.Child;
-import com.bridge.kinder.entity.ChildActivityData;
-import com.bridge.kinder.entity.ChildActivityLog;
-import com.bridge.kinder.entity.ChildAttendance;
-import com.bridge.kinder.entity.ChildHealthData;
-import com.bridge.kinder.entity.ChildHealthLog;
-import com.bridge.kinder.entity.ClassRoom;
-import com.bridge.kinder.entity.Member;
-import com.bridge.kinder.entity.MemberChild;
-import com.bridge.kinder.repository.ApprovalRepository;
-import com.bridge.kinder.repository.CenterRepository;
-import com.bridge.kinder.repository.ChildRepository;
-import com.bridge.kinder.repository.ClassRoomRepository;
-import com.bridge.kinder.repository.MemberChildRepository;
-import com.bridge.kinder.repository.MemberRepository;
+import com.bridge.kinder.entity.*;
+import com.bridge.kinder.enums.CommonEnums;
+import com.bridge.kinder.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -56,6 +42,7 @@ public class ChildServiceImpl implements ChildService {
     private final ApprovalRepository approvalRepository;
     private final ClassRoomRepository classRoomRepository;
     private final String UPLOAD_PATH = "C://test_upload/"; //aws S3 연결시 관련 코드 수정할 것.
+    private final AlarmRepository alarmRepository;
 
     //아동 생성
     @Override
@@ -82,6 +69,17 @@ public class ChildServiceImpl implements ChildService {
                 .child(child)
                 .build();
         memberChildRepository.save(link);
+
+        //시설장에게 알람 저장
+        List<Member> managers = memberRepository.findMemberByCenter(center.getCenterNo(), CommonEnums.MemberType.MANAGER);
+        for(Member manager : managers) {
+            Alarm alarm = Alarm.builder()
+                    .member(manager)
+                    .content("새로운 아동이 등록되었습니다.")
+                    .url("/approvalList")
+                    .build();
+            alarmRepository.save(alarm);
+        }
 
         return String.valueOf(child.getChildNo());
     }

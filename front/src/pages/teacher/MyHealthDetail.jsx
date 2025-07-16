@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import ContentHeader from '../../components/Common/ContentHeader';
 import styled from 'styled-components';
 import MyHealthDetailCard from './components/MyHealthDetailCard';
 import HealthSummaryBox from './components/HealthSummaryBox';
 import { useNavigate, useParams } from 'react-router-dom';
-import useLoginStore from '../../store/loginStore';
 import { memberHealthLogService } from '../../api/memberHealthLog';
 import { toast } from 'react-toastify';
 
 const MyHealthDetail = () => {
   const { healthLogNo } = useParams();
   const navigate = useNavigate();
-  const { member } = useLoginStore();
   const [data, setData] = useState(null);
 
   const fetchData = async () => {
@@ -50,16 +48,16 @@ const MyHealthDetail = () => {
 
   return (
     <>
-      <ContentHeader
-        Title="나의 건강 데이터"
-        Color="yellow"
-        ButtonProps={[
-          { Title: '수정하기', func: handleEdit },
-          { Title: '삭제하기', func: handleDelete },
-          { Title: '뒤로가기', func: () => navigate(-1) },
-        ]}
-      />
       <Wrapper>
+        <ContentHeader
+          Title="나의 건강 데이터"
+          Color="yellow"
+          ButtonProps={[
+            { Title: '수정하기', func: handleEdit },
+            { Title: '삭제하기', func: handleDelete },
+            { Title: '뒤로가기', func: () => navigate(-1) },
+          ]}
+        />
         <DateRow>
           <Text>작성 날짜</Text>
           <Date>{data.create_date?.split('T')[0] || 'N/A'}</Date>
