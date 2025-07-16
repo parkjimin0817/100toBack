@@ -14,7 +14,6 @@ const Layout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(member);
     if (!member) {
       alert('로그인 후 이용 가능합니다.');
       navigate('/'); // 로그인 페이지 경로는 실제 프로젝트에 맞게 수정

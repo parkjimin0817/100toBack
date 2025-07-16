@@ -21,6 +21,34 @@ const ChildDetailInfoArea = ({ childNo }) => {
   const [editHealth, setEditHealth] = useState({});
   const navigate = useNavigate();
 
+  //만 몇 세인지 계산
+  const getBirthAndAge = (jumin) => {
+    if (!jumin || jumin.length !== 6) return '';
+
+    const yy = parseInt(jumin.slice(0, 2), 10);
+    const mm = parseInt(jumin.slice(2, 4), 10);
+    const dd = parseInt(jumin.slice(4, 6), 10);
+
+    const currentYear = new Date().getFullYear();
+    const currentTwoDigitYear = currentYear % 100;
+    const century = yy <= currentTwoDigitYear ? 2000 : 1900;
+    const fullYear = century + yy;
+
+    const birthDate = new Date(`${fullYear}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}`);
+    if (isNaN(birthDate.getTime())) return '';
+
+    let age = currentYear - fullYear;
+    const today = new Date();
+    if (
+      today.getMonth() < birthDate.getMonth() ||
+      (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+
+    return `${fullYear}.${String(mm).padStart(2, '0')}.${String(dd).padStart(2, '0')} (만 ${age}세)`;
+  };
+
   const handleInputChange = (field, value) => {
     setEditHealth((prev) => ({ ...prev, [field]: value }));
   };
@@ -81,15 +109,15 @@ const ChildDetailInfoArea = ({ childNo }) => {
           <tbody>
             <Info>
               <InfoColumn>생년월일</InfoColumn>
-              <InfoResult>{childData.child_birthday}</InfoResult>
+              <InfoResult>{getBirthAndAge(childData.child_birthday)}</InfoResult>
             </Info>
             <Info>
               <InfoColumn>키</InfoColumn>
-              <InfoResult>{childData.child_height}</InfoResult>
+              <InfoResult>{childData.child_height} cm</InfoResult>
             </Info>
             <Info>
               <InfoColumn>몸무게</InfoColumn>
-              <InfoResult>{childData.child_weight}</InfoResult>
+              <InfoResult>{childData.child_weight} kg</InfoResult>
             </Info>
             <Info>
               <InfoColumn>주소</InfoColumn>
@@ -155,9 +183,9 @@ const ChildDetailInfoArea = ({ childNo }) => {
                   {childData.healthLogs?.slice(0, 4).map((record, index) => (
                     <HealthContentTr key={index}>
                       <td>{formatDate(record.create_date)}</td>
-                      <td>{record.temperature}</td>
-                      <td>{record.height}</td>
-                      <td>{record.weight}</td>
+                      <td>{record.temperature} ℃</td>
+                      <td>{record.height} cm</td>
+                      <td>{record.weight} kg</td>
                       <td>{record.symptoms}</td>
                       <td>{record.healthLogMemo}</td>
                     </HealthContentTr>
@@ -350,7 +378,7 @@ const ChildDetailInfoArea = ({ childNo }) => {
                       <td>{formatDate(record.create_date)}</td>
                       <td>{record.dailyMeal_amount}</td>
                       <td>
-                        {record.napStart_time} ~ {record.napEnd_time}
+                        {record.napStart_time?.substring(0, 5)} ~ {record.napEnd_time?.substring(0, 5)}
                       </td>
                       <td>{record.play_participation}</td>
                       <td>{record.daily_friendship}</td>
