@@ -221,6 +221,23 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     }
 
+    @Override
+    public void createTeacherAttendance(UpdateTeacherAttendance updateDto) {
+        Member member = memberRepository.findByMemberNo(updateDto.getMemberNo())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 교사입니다."));
+
+        Attendance attendance = Attendance.builder()
+                .member(member)
+                .center(member.getCenter()) // 또는 updateDto.getCenterNo()로 센터 가져오기
+                .attendanceDate(updateDto.getAttendanceDate())
+                .status(updateDto.getStatus())
+                .inTime(updateDto.getInTime())
+                .outTime(updateDto.getOutTime())
+                .build();
+
+        attendanceRepository.save(attendance);
+    }
+
     //아동 출결 추가 및 정보 불러오기
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
@@ -288,8 +305,10 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     //오후 8시 지나면 결근 기록 생성
-    @Scheduled(cron = "0 00 20 * * *")
+    @Scheduled(cron = "0 00 22 * * *")
     public void markDailyAbsents(){
+
+        //결근 처리
         List<Member> teachers = memberRepository.findTeacher();
         LocalDate today = LocalDate.now();
 
@@ -307,6 +326,14 @@ public class AttendanceServiceImpl implements AttendanceService {
 
                 attendanceRepository.save(attendance);
             }
+        }
+
+        //미퇴근자 결근 처리
+        List<Attendance> noOutTime = attendanceRepository.findByAttendanceDateAndStatus(today, TeacherAttendanceStatus.WORKING);
+
+        for(Attendance attendance : noOutTime){
+            attendance.updateStatus(TeacherAttendanceStatus.ABSENT);
+            attendanceRepository.save(attendance);
         }
     }
 

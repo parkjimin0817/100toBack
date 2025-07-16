@@ -52,16 +52,23 @@ const TeacherAttendanceCard = ({
   const absentCount = filteredAttendances.filter((att) => att.status === 'ABSENT').length;
 
   //근태 수정
-  const onEdit = async (data) => {
+  const onEdit = async (type, attendanceNo, data) => {
     try {
       console.log('전달 데이터: ', data);
-      await attendanceService.updateTeacherAttendance(data.attendanceNo, data);
-      toast.success('근태 정보가 수정되었습니다.');
-      await onUpdateAttendances(); // 함수 호출 , 목록 재조회 (업데이트 된거 보이게)
+
+      if (type === 'update') {
+        await attendanceService.updateTeacherAttendance(attendanceNo, data);
+        toast.success('근태 정보가 수정되었습니다.');
+      } else if (type === 'create') {
+        await attendanceService.createTeacherAttendance(data);
+        toast.success('근태 정보가 생성되었습니다.');
+      }
+
+      await onUpdateAttendances(); // 목록 재조회
       setOpenModal(false);
     } catch (err) {
-      console.error('근태 수정 실패 : ', err.message);
-      toast.error('근태 수정 중 오류가 발생했습니다.');
+      console.error('근태 처리 실패:', err.response?.data?.message || err.message);
+      toast.error('근태 처리 중 오류가 발생했습니다.');
     }
   };
 
@@ -136,6 +143,7 @@ const TeacherAttendanceCard = ({
       </BottomContent>
       {openModal && (
         <TeacherAttendanceEditModal
+          selectedDate={selectedDate}
           memberNo={memberNo}
           centerNo={centerNo}
           attendance={attendance}
