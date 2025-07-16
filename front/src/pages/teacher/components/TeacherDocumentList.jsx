@@ -29,7 +29,7 @@ const TeacherDocumentList = ({ documents, onDelete, onViewed }) => {
       await boardService.updateViewedDate(d.board_no);
       onViewed();
     } catch (error) {
-      toast.error('최근 열람 날짜 업데이트 실패:', error);
+      console.error('최근 열람 날짜 업데이트 실패:', error);
     }
 
     if (previewable.includes(extension)) {
@@ -46,7 +46,7 @@ const TeacherDocumentList = ({ documents, onDelete, onViewed }) => {
       await boardService.updateViewedDate(d.board_no);
       onViewed();
     } catch (error) {
-      toast.error('최근 열람 날짜 업데이트 실패:', error);
+      console.error('최근 열람 날짜 업데이트 실패:', error);
     }
   };
 
