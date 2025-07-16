@@ -13,6 +13,7 @@ public class MyChatResponse {
     private Long chatRoomNo;
     private String chatRoomName;
     private String isGroupChat;
+    private String other;
     private Long unReadCount;
     private String memberProfile;
 }
