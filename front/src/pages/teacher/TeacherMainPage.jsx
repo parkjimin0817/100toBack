@@ -79,7 +79,12 @@ const TeacherMainPage = () => {
                         (activeCounselTab === '상담 완료' && item.counsel_status === 'COMPLETED')
                     )
                     .map((item) => (
-                      <Card key={item.counsel_no}>
+                      <Card
+                        key={item.counsel_no}
+                        onClick={() => {
+                          navigate(`/child/detail/${item.child_no}`);
+                        }}
+                      >
                         <CardTop>
                           <TypeBadge $type={item.counsel_type === 'CHAT' ? '채팅' : '대면'}>
                             {item.counsel_type === 'CHAT' ? '채팅' : '대면'}
@@ -236,6 +241,10 @@ const Card = styled.div`
   flex-direction: column;
   justify-content: space-between;
   padding: 12px;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const CardTop = styled.div`

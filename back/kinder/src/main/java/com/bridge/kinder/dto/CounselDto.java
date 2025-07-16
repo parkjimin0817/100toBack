@@ -56,6 +56,7 @@ public class CounselDto {
         private LocalTime counsel_end;
         private LocalDate counsel_date;
         private CounselStatus counsel_status;
+        private int child_no;
 
 
         public static Response toEntity(Counsel counsel) {
@@ -67,6 +68,7 @@ public class CounselDto {
                     .counsel_end(counsel.getCounselEnd())
                     .counsel_date(counsel.getCounselDate())
                     .counsel_status(counsel.getCounselStatus())
+                    .child_no(counsel.getChild().getChildNo())
                     .build();
         }
     }

@@ -8,7 +8,7 @@ import PostEditor from '../components/Board/BoardEditor';
 // import SimpleEditor from "../components/Board/EditorComponent/tiptap-templates/InputEditor";
 import SimpleEditor from '../components/Board/TextInputBlock copy';
 import ImageInputBlock from '../components/Board/ImageInputBlock';
-import ChatButton from '../components/Common/ChatButton';
+import ChatButton from '../components/Chat/ChatButton';
 
 const columns = [
   {

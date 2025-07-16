@@ -57,6 +57,7 @@ public class ChatServiceImpl implements ChatService {
         ChatRoom newRoom = new ChatRoom().builder()
                 .isGroupChat("N")
                 .chatRoomName(otherMember.getMemberName() + "님과의 채팅방")
+                .center(member.getCenter())
                 .build();
 
         chatRoomRepository.save(newRoom);
@@ -94,7 +95,7 @@ public class ChatServiceImpl implements ChatService {
         boolean isParticipant = chatParticipantRepository.findByChatRoom(chatRoom)
                 .stream().anyMatch(cp -> cp.getMember().getMemberNo() == member.getMemberNo());
 
-        if(isParticipant) {
+        if(!isParticipant) {
             throw new IllegalArgumentException("본인이 속한 채팅방이 아닙니다.");
         }
 

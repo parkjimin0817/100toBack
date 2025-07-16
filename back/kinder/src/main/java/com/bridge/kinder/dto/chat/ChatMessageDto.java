@@ -13,4 +13,5 @@ public class ChatMessageDto {
     private Long roomNo;
     private String message;
     private String senderId;
+    private String senderName;
 }
