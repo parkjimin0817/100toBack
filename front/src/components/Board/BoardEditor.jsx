@@ -19,7 +19,7 @@ const BoardEditor = ({ category, formState, updateFormField, addBlock, updateBlo
         const responseData = await classService.classroomlist(formState.centerId);
         setClassRoomList(responseData);
       } catch (error) {
-        toast.error('반 조회 실패 : ', error);
+        console.error('반 조회 실패 : ', error);
         alert('반 조회 실패');
       }
     };
