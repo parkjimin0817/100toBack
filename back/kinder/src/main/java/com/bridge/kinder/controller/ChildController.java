@@ -1,6 +1,9 @@
 package com.bridge.kinder.controller;
 
 import com.bridge.kinder.dto.ChildDto;
+import com.bridge.kinder.dto.ChildDto.activityLog;
+import com.bridge.kinder.dto.ChildDto.healthLog;
+import com.bridge.kinder.dto.PageResponseDto;
 import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.ChildHealthData;
 import com.bridge.kinder.service.ChildService;
@@ -8,6 +11,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -66,8 +72,9 @@ public class ChildController {
 
     //아동 번호로 해당 아동의 건강 로그 데이터 리스트 불러오기(매일 기록하는거)
     @GetMapping("/healthlog")
-    public ResponseEntity<List<ChildDto.healthLog>> healthLog(@RequestParam int childNo){
-        return ResponseEntity.ok(childService.healthLog(childNo));
+    public ResponseEntity<PageResponseDto<healthLog>> healthLog(@RequestParam int childNo,
+                                                                @PageableDefault(size=10, sort = "createDate", direction = Sort.Direction.DESC) Pageable pageable){
+        return ResponseEntity.ok(new PageResponseDto<>(childService.healthLog(childNo,pageable)));
     }
 
     //아동 번호로 해당 아동의 건강 데이터 불러오기(복약정보,예방접종,알레르기)
@@ -78,8 +85,10 @@ public class ChildController {
 
     //아동 번호로 해당 아동의 행동 로그 데이터 불러오기(매일 적는 거)
     @GetMapping("/activitylog")
-    public ResponseEntity<List<ChildDto.activityLog>> activityLog(@RequestParam int childNo){
-        return ResponseEntity.ok(childService.activityLog(childNo));
+    public ResponseEntity<PageResponseDto<activityLog>> activityLog(@RequestParam int childNo,
+        @PageableDefault(size=10, sort = "createDate", direction = Sort.Direction.DESC) Pageable pageable){
+
+        return ResponseEntity.ok(new PageResponseDto<>(childService.activityLog(childNo,pageable)));
     }
 
     //아동 번호로 해당 아동의 생활 데이터 불러오기

@@ -678,8 +678,8 @@ const BasicInfo = styled.div`
 `;
 
 const PictureLine = styled.div`
-  width: 225px;
-  height: 200px;
+  /* width: 225px;
+  height: 200px; */
   margin-left: 25px;
   margin-top: 20px;
   margin-bottom: 45px;
@@ -701,7 +701,7 @@ const FirstInfo = styled.table`
 const NameTr = styled.tr`
   display: flex;
   justify-content: flex-start;
-  font-size: 24px;
+  font-size: ${({ theme }) => theme.fontSizes['2xl']};
   font-weight: ${({ theme }) => theme.fontWeights.bold};
 `;
 
@@ -733,7 +733,7 @@ const InfoResult1 = styled.td`
 const Class = styled.tr`
   display: flex;
   justify-content: flex-start;
-  font-size: 24px;
+  font-size: ${({ theme }) => theme.fontSizes['2xl']};
   font-weight: ${({ theme }) => theme.fontWeights.bold};
 `;
 
@@ -747,7 +747,7 @@ const HealthInfoContainer = styled.div`
 const SelectHeader = styled.div`
   display: flex;
   flex-direction: row;
-  margin-left: 20px;
+  margin-left: ${({ theme }) => theme.spacing[5]};
 `;
 
 const HealthStyle = styled.div.withConfig({
@@ -778,7 +778,7 @@ const LifeStyle = styled.div.withConfig({
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
   width: 180px;
-  height: 48px;
+  height: ${({ theme }) => theme.spacing[12]};
   background-color: ${({ select, theme }) => (select.life ? theme.colors.yellow : 'rgba(255, 206, 101, 0.25)')};
   font-weight: ${({ theme }) => theme.fontWeights.bold};
   margin-right: 10px;
@@ -797,7 +797,7 @@ const Attendance = styled.div.withConfig({
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
   width: 180px;
-  height: 48px;
+  height: ${({ theme }) => theme.spacing[12]};
   background-color: ${({ select, theme }) => (select.attendance ? theme.colors.yellow : 'rgba(255, 206, 101, 0.25)')};
   font-weight: ${({ theme }) => theme.fontWeights.bold};
   margin-right: 10px;
@@ -821,8 +821,8 @@ const DetailInfoContainer = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 24px;
-  font-weight: bold;
+  font-size: ${({ theme }) => theme.fontSizes['2xl']};
+  font-weight: ${({ theme }) => theme.fontWeights['2xl']};
   padding-bottom: ${({ theme }) => theme.spacing[8]};
   width: 100%;
   text-align: left;
@@ -833,8 +833,8 @@ const LoadMoreButton = styled.button`
   align-items: center;
   justify-content: center;
   width: 95px;
-  height: 20px;
-  font-size: 16px;
+  height: ${({ theme }) => theme.spacing[5]};
+  font-size: ${({ theme }) => theme.fontSizes.base};
   background-color: ${({ theme }) => theme.colors.yellow};
   margin: ${({ theme }) => theme.spacing[6]} 0;
   border-radius: 10px;
@@ -849,7 +849,7 @@ const FooterInfoLine = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 20px;
+  gap: ${({ theme }) => theme.spacing[5]};
   width: 100%;
 `;
 

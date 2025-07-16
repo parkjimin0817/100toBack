@@ -58,7 +58,7 @@ public class ChatController {
     public ResponseEntity<?> getMyRooms() {
         List<MyChatResponse> myChatResponses = chatService.getMyChatRooms();
         return new ResponseEntity<>(myChatResponses,HttpStatus.OK);
-    }
+    }   
 
     //채팅메세지 읽음 처리
     @PostMapping("/room/{chatRoomNo}/read")

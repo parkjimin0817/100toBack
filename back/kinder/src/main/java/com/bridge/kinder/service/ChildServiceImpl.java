@@ -32,6 +32,8 @@ import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -138,13 +140,17 @@ public class ChildServiceImpl implements ChildService {
 
     //아동 번호로 해당 아동의 건강 로그 데이터 리스트 불러오기(매일 기록하는거)
     @Override
-    public List<ChildDto.healthLog> healthLog(int childNo) {
+    public Page<ChildDto.healthLog> healthLog(int childNo, Pageable pageable) {
         Child child = childRepository.getByChildNo(childNo)
                 .orElseThrow(() -> new EntityNotFoundException("해당 아동이 존재하지 않습니다."));
-        return childRepository.healthLog(childNo).stream()
-                .map(ChildDto.healthLog::toDto)
-                .peek(dto -> dto.setChild_name(child.getChildName())) //아동 이름도 보내주기
-                .collect(Collectors.toList());
+
+        Page<ChildHealthLog> page = childRepository.getHealthLogByChildNo(childNo, pageable);
+
+        return page.map(entity -> {
+            ChildDto.healthLog dto = ChildDto.healthLog.toDto(entity);
+            dto.setChild_name(child.getChildName());
+            return dto;
+        });
     }
 
     //아동 번호로 해당 아동의 건강 데이터 불러오기(복약정보,예방접종,알레르기)
@@ -159,13 +165,17 @@ public class ChildServiceImpl implements ChildService {
 
     //아동 번호로 해당 아동의 행동 로그 데이터 불러오기(매일 적는 거)
     @Override
-    public List<ChildDto.activityLog> activityLog(int childNo) {
+    public Page<ChildDto.activityLog> activityLog(int childNo, Pageable pageable) {
         Child child = childRepository.getByChildNo(childNo)
                 .orElseThrow(() -> new EntityNotFoundException("해당 아동이 존재하지 않습니다."));
-        return childRepository.activityLog(childNo).stream()
-                .map(ChildDto.activityLog::toDto)
-                .peek(dto -> dto.setChild_name(child.getChildName())) //아동 이름도 보내주기
-                .collect(Collectors.toList());
+
+        Page<ChildActivityLog> page = childRepository.getActivityLogByChildNo(childNo, pageable);
+
+        return page.map(entity -> {
+            ChildDto.activityLog dto = ChildDto.activityLog.toDto(entity);
+            dto.setChild_name(child.getChildName());
+            return dto;
+        });
     }
 
     //아동 번호로 해당 아동의 생활 데이터 불러오기
