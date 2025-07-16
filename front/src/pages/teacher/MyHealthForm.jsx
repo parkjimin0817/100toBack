@@ -45,6 +45,21 @@ const MyHealthForm = () => {
   };
 
   const handleSave = async () => {
+    if (form.temperature === null || form.temperature === '') {
+      toast.warning('현재 체온을 입력해주세요.');
+      return;
+    }
+
+    if (form.stress === null || form.stress === '') {
+      toast.warning('스트레스 지수를 선택해주세요.');
+      return;
+    }
+
+    if (form.sleep === null || form.sleep === '') {
+      toast.warning('수면 시간을 입력해주세요.');
+      return;
+    }
+
     try {
       if (isEdit) {
         const mergedData = {

@@ -30,7 +30,7 @@ const CouncelClassList = () => {
   }, []);
   return (
     <Content>
-      <ContentHeader Title={'상담일정 반 선택'} Color={'purple'} FontSize={'xl'} />
+      <ContentHeader Title={'상담일정 반 선택'} Color={'purple'} />
       <Div>
         <Hint>
           <ImInfo />
