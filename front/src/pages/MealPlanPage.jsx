@@ -6,6 +6,7 @@ import ImagePost from '../components/Board/ImagePost';
 import { boardService } from '../api/boards';
 import Pagination from '../components/Common/Pagenation';
 import useLoginStore from '../store/loginStore';
+import { toast } from 'react-toastify';
 
 const MealPlanPage = () => {
   const [data, setData] = useState(null);
@@ -17,12 +18,11 @@ const MealPlanPage = () => {
     const getPostList = async () => {
       try {
         const responseData = await boardService.typeBoardList('MEAL_PLAN', member.centerNo, page);
-        console.log(responseData);
         setData(responseData);
         // alert("게시글 조회 성공");
       } catch (error) {
         console.error('게시글 조회 실패 : ', error);
-        alert('게시글 조회 실패');
+        //alert('게시글 조회 실패');
       }
     };
     getPostList();

@@ -17,8 +17,6 @@ const ImagePost = ({ postData, onClick }) => {
     return `${year}-${month}-${day}`;
   };
 
-  console.log(postData);
-
   return (
     <ImagePostContainer onClick={onClick}>
       <OutlineImage>
@@ -55,8 +53,8 @@ const ImagePostContainer = styled.div`
   cursor: pointer;
 `;
 const ImageContent = styled.img`
-  width: 150px;
-  height: 150px;
+  width: 100%;
+  height: 100%;
 `;
 const Title = styled.h2``;
 const DescriptionBox = styled.div`

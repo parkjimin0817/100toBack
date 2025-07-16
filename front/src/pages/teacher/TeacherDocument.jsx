@@ -10,6 +10,7 @@ import useLoginStore from '../../store/loginStore';
 import { boardService } from '../../api/boards';
 import TeacherDocumentList from './components/TeacherDocumentList';
 import RecentDocuments from './components/RecentDocuments';
+import { toast } from 'react-toastify';
 
 const TeacherDocument = () => {
   const { member } = useLoginStore();

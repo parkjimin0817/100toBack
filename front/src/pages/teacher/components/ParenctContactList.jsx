@@ -20,8 +20,6 @@ const ParenctContactList = ({ selectedClass, searchKeyword, value, status }) => 
     return matchedClass && matchedName;
   });
 
-  console.log(filtered);
-
   return (
     <Wrapper>
       <Table>
