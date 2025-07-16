@@ -77,6 +77,7 @@ public class MemberDto {
 
         //만약 멤버정보 필요한거 있으시면 그냥 추가하시면 됩니다.
         private String center_tel;
+        private String center_name;
         private int center_no;
         private int class_no;
 
@@ -95,6 +96,7 @@ public class MemberDto {
                     .status(member.getStatus())
                     .center_no(member.getCenter().getCenterNo())
                     .center_tel(member.getCenter().getCenterTel())
+                    .center_name(member.getCenter().getCenterName())
                     .class_no(member.getClassRoom() != null ? member.getClassRoom().getClassNo() : 0) // (시설장 혹은 반 미배정 교사는 로그인 시 반 번호가 null이기 때문에 임의로 지정)
                     .build();
         }
