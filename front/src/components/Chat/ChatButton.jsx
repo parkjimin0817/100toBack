@@ -16,7 +16,7 @@ const ChatButton = () => {
   const itemRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState({ x: (window.innerWidth - 125), y: (window.innerHeight - 125) });
   const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
 
   const handleMouseDown = (e) => {
@@ -29,8 +29,22 @@ const ChatButton = () => {
 
   const handleMouseMove = useCallback((e) => {
     if (isDragging) {
-      const newX = e.clientX - startPosition.x;
-      const newY = e.clientY - startPosition.y;
+      // 화면 밖으로 나가지 않도록 경계 추가
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+
+      // 드래그 계산
+      let newX = e.clientX - startPosition.x;
+      let newY = e.clientY - startPosition.y;
+
+      // 채팅 버튼 크기 기준으로 화면 경계 제한
+      const buttonWidth = 75;
+      const buttonHeight = 75;
+
+      // 위치 제한: 화면 안쪽에만 위치하도록
+      newX = Math.max(35, Math.min(newX, windowWidth - buttonWidth));
+      newY = Math.max(0, Math.min(newY, windowHeight - buttonHeight));
+
       setPosition({ x: newX, y: newY });
     }
   }, [isDragging, startPosition]);
@@ -79,7 +93,7 @@ const ChatButton = () => {
     <>
       <ChatBox
         style={{
-          transform: `translate(${position.x}px, ${position.y-100}px)`,
+          transform: `translate(${position.x}px, ${position.y}px)`,
           display: `${isOpen ? "" : "none"}`
         }}>
           <ChatContainer></ChatContainer>
@@ -122,11 +136,11 @@ const ChatClickBox = styled.div`
   justify-content: center;
   width: 75px;
   height: 75px;
-  right: 50px;
-  bottom: 50px;
   background-color: rgb(163, 175, 237);
   cursor: pointer;
   position: fixed;
+  top: 0;
+  left: 0;
   z-index: 999;
   border-radius: 50px;
 
@@ -141,8 +155,8 @@ const MoveChatBox = styled.div`
   align-items: center;
   width: 110px;
   height: 75px;
-  right: -50px;
-  bottom: 50px;
+  left: 65px;
+  top: 0;
   background-color: white;
   cursor: move;
   position: fixed;
@@ -158,8 +172,8 @@ const MoveChatBox = styled.div`
 const ChatBox = styled.div`
   width: 300px;
   height: 500px;
-  right: 50px;
-  bottom: 50px;
+  top: -525px;
+  left: -225px;
   border-radius: 25px;
   background-color: white;
   position: fixed;
