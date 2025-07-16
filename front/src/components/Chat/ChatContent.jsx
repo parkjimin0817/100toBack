@@ -1,7 +1,9 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import defaultImg from '../../assets/defaultimg.png';
 import useLoginStore from '../../store/loginStore';
+
+const CLOUD_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
 const ChatContent = ({ type, memberList, chatRoomList, messages, createPrivateChatRoom, enterChatRoom }) => {
   // 로그인 한 현재 사용자 정보
@@ -11,63 +13,68 @@ const ChatContent = ({ type, memberList, chatRoomList, messages, createPrivateCh
   const chatContainerRef = useRef(null);
 
   useEffect(() => {
-    if (chatContainerRef.current)
-      chatContainerRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (chatContainerRef.current) chatContainerRef.current.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   return (
     <MessagesContainer>
       {type === 'members' ? ( // 멤버 리스트
         <>
-          {memberList && memberList.length > 0 && memberList.map((member) => (
-            <MemberListItem onClick={() => createPrivateChatRoom(member)}>
-              <MemberProfileImg src={defaultImg}></MemberProfileImg>
-              <MemberNameTag>{member.member_name}</MemberNameTag>
-            </MemberListItem>
-          ))}
+          {memberList &&
+            memberList.length > 0 &&
+            memberList.map((member) => (
+              <MemberListItem onClick={() => createPrivateChatRoom(member)}>
+                <MemberProfileImg
+                  src={member.member_profile ? `${CLOUD_URL}/${member.member_profile}` : defaultImg}
+                ></MemberProfileImg>
+                <MemberNameTag>{member.member_name}</MemberNameTag>
+              </MemberListItem>
+            ))}
         </>
       ) : type === 'chatRooms' ? ( // 참여중인 채팅방 리스트
         <>
-          {chatRoomList && chatRoomList.length > 0 && chatRoomList.map((chatRoom) => (
-            <ChatRoomItem onClick={() => enterChatRoom(chatRoom.chatRoomNo, chatRoom.chatRoomName)}>
-              <ChatRoomImg src={defaultImg} />
-              <ChatRoomName>{chatRoom.chatRoomName}</ChatRoomName>
-              {chatRoom.unReadCount > 0 && (
-                <ChatRoomUnreadCount>{chatRoom.unReadCount}</ChatRoomUnreadCount>
-              )}
-            </ChatRoomItem>
-          ))}
+          {chatRoomList &&
+            chatRoomList.length > 0 &&
+            chatRoomList.map((chatRoom) => (
+              <ChatRoomItem onClick={() => enterChatRoom(chatRoom.chatRoomNo, chatRoom.chatRoomName)}>
+                <ChatRoomImg src={chatRoom.memberProfile ? `${CLOUD_URL}/${chatRoom.memberProfile}` : defaultImg} />
+                <ChatRoomName>{chatRoom.chatRoomName}</ChatRoomName>
+                {chatRoom.unReadCount > 0 && <ChatRoomUnreadCount>{chatRoom.unReadCount}</ChatRoomUnreadCount>}
+              </ChatRoomItem>
+            ))}
         </>
-      ) : ( // 채팅방
+      ) : (
+        // 채팅방
         <>
-          <div style={{ marginTop: "10px"}}></div>
-          {messages && messages.length > 0 && messages.map((message, index) => {
-            const isMe = message?.senderId === member.memberNo;
-            const isSameSenderAsPrevious = index > 0 && messages[index - 1]?.senderId === message?.senderId;
+          <div style={{ marginTop: '10px' }}></div>
+          {messages &&
+            messages.length > 0 &&
+            messages.map((message, index) => {
+              const isMe = message?.senderId === member.memberNo;
+              const isSameSenderAsPrevious = index > 0 && messages[index - 1]?.senderId === message?.senderId;
 
-            return (
-              <>
-                
-                {!isMe && !isSameSenderAsPrevious && (
-                  <ChatProfileBox>
-                    <ChatMemberProfileImg src={defaultImg} />
-                    <p>{message.senderName}</p>
-                  </ChatProfileBox>
-                )}
-                <ChatBox key={index} $me={isMe}>
-                  <ChatBubble $me={isMe}>
-                    <p>{message?.message}</p>
-                  </ChatBubble>
-                </ChatBox>
-              </>
-            );
-          })}
+              return (
+                <>
+                  {!isMe && !isSameSenderAsPrevious && (
+                    <ChatProfileBox>
+                      <ChatMemberProfileImg src={defaultImg} />
+                      <p>{message.senderName}</p>
+                    </ChatProfileBox>
+                  )}
+                  <ChatBox key={index} $me={isMe}>
+                    <ChatBubble $me={isMe}>
+                      <p>{message?.message}</p>
+                    </ChatBubble>
+                  </ChatBox>
+                </>
+              );
+            })}
           <div ref={chatContainerRef}></div>
         </>
       )}
     </MessagesContainer>
-  )
-}
+  );
+};
 
 export default ChatContent;
 
@@ -134,7 +141,7 @@ const ChatRoomUnreadCount = styled.div`
 const ChatBox = styled.div`
   width: 100%;
   display: flex;
-  justify-content: ${({ $me }) => $me ? "flex-end" : "flex-start"};
+  justify-content: ${({ $me }) => ($me ? 'flex-end' : 'flex-start')};
   padding-left: 10px;
 `;
 
@@ -166,8 +173,8 @@ const ChatBubble = styled.div`
   color: ${({ $me }) => ($me ? 'white' : 'black')};
   background-color: ${({ $me }) => ($me ? '#4f7df9' : '#f1f0f0')};
   align-self: ${({ $me }) => ($me ? 'flex-end' : 'flex-start')};
-  margin-left: ${({ $me }) => $me ? "0" : "50px"};
-  margin-right: ${({ $me }) => $me ? "15px" : "0"};
+  margin-left: ${({ $me }) => ($me ? '0' : '50px')};
+  margin-right: ${({ $me }) => ($me ? '15px' : '0')};
 
   p {
     margin: 0;
@@ -181,7 +188,7 @@ const ChatBubble = styled.div`
     height: 20px;
     background-color: ${({ $me }) => ($me ? '#4f7df9' : '#f1f0f0')};
     clip-path: polygon(0 0, 100% 100%, 100% 0);
-    
+
     ${({ $me }) =>
       $me
         ? `
@@ -195,4 +202,3 @@ const ChatBubble = styled.div`
     `}
   }
 `;
-
