@@ -31,5 +31,5 @@ public interface AttendanceRepository {
     Optional<Long> countPresentChild(int classNo, LocalDate today, ChildAttendanceStatus status);
 
     boolean existsByMemberAndDateBetween(int memberNo, LocalDate startDate, LocalDate endDate);
-
+    List<Attendance> findByAttendanceDateAndStatus (LocalDate today, CommonEnums.TeacherAttendanceStatus status);
 }

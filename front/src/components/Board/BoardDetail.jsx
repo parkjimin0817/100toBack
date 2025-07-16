@@ -93,7 +93,7 @@ const BoardDetail = ({ category, post }) => {
           <AttachmentLabel>첨부파일</AttachmentLabel>
           <AttachmentBox>
             <IoDownloadOutline />
-            <FileLink onClick={() => handleDownload(post.boardNo, post.attachmentOriginal)}>
+            <FileLink href={post && post.attachment ? post.attachment : ''} download>
               {post && post.attachment ? post.attachmentOriginal : ''}
             </FileLink>
           </AttachmentBox>
@@ -181,8 +181,8 @@ const AttachmentBox = styled.div`
   border-radius: 4px;
 `;
 
-const FileLink = styled.a`
-  color: blue;
-  margin-left: 0.5rem;
+const Span = styled.span`
+  padding-left: 3px;
   text-decoration: underline;
+  cursor: pointer;
 `;

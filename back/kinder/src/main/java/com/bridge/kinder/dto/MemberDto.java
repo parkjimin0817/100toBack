@@ -114,12 +114,14 @@ public class MemberDto {
         private int member_no;
         private String member_name;
         private int center_no;
+        private String member_profile;
 
         public static SimpleDto from(Member member) {
             return SimpleDto.builder()
                     .member_no(member.getMemberNo())
                     .member_name(member.getMemberName())
                     .center_no(member.getCenter().getCenterNo())
+                    .member_profile(member.getMemberProfile())
                     .build();
         }
     }

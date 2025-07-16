@@ -209,10 +209,25 @@ public class ChatServiceImpl implements ChatService {
                     //각 채팅방의 읽지않은 메세지 수 조회
                     Long count = readStatusRepository.countByChatRoomAndMemberAndIsReadFalse(c.getChatRoom(), member);
 
+                    ChatRoom chatRoom = c.getChatRoom();
+
+                    // 채팅방 내 상대방 프로필 찾기
+                    String otherProfile = null;
+                    if (chatRoom.getIsGroupChat().equals("N")) {
+                        List<ChatParticipant> participants = chatParticipantRepository.findAllByChatRoom(chatRoom);
+                        Member other = participants.stream()
+                                .map(ChatParticipant::getMember)
+                                .filter(m -> m.getMemberNo() != member.getMemberNo())
+                                .findFirst()
+                                .orElse(null);
+                        otherProfile = (other != null) ? other.getMemberProfile() : null;
+                    }
+
                     return MyChatResponse.builder()
                             .chatRoomNo(c.getChatRoom().getChatRoomNo())
                             .chatRoomName(c.getChatRoom().getChatRoomName())
                             .isGroupChat(c.getChatRoom().getIsGroupChat())
+                            .memberProfile(otherProfile)
                             .unReadCount(count)
                             .build();
                 })
