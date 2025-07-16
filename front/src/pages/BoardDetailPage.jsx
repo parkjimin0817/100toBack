@@ -36,7 +36,6 @@ const BoardDetailPage = () => {
     const getPost = async () => {
       try {
         const responseData = await boardService.boardDetail(boardNo);
-        // console.log(responseData);
 
         if (responseData?.boardContents) {
           responseData.boardContents = responseData.boardContents.map((content) => {
@@ -50,14 +49,10 @@ const BoardDetailPage = () => {
           });
         }
 
-        console.log(responseData); // 수정된 데이터 확인용
-
         setBoardContent(responseData);
 
         // alert("게시글 조회 성공");
       } catch (error) {
-        console.error('게시글 조회 실패 : ', error);
-        // alert('게시글 조회 실패');
         toast.error('게시글 조회 실패');
       }
     };
@@ -70,12 +65,9 @@ const BoardDetailPage = () => {
       if (!isConfirmed) return;
 
       const responseData = await boardService.boardDelete(boardNo);
-      console.log(responseData);
       toast.error('게시글 삭제 성공');
       handleGoBack();
     } catch (error) {
-      console.error('게시글 삭제 실패 : ', error);
-      // alert('게시글 삭제 실패');
       toast.error('게시글 삭제 실패');
     }
   };

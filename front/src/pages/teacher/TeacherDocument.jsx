@@ -10,6 +10,7 @@ import useLoginStore from '../../store/loginStore';
 import { boardService } from '../../api/boards';
 import TeacherDocumentList from './components/TeacherDocumentList';
 import RecentDocuments from './components/RecentDocuments';
+import { toast } from 'react-toastify';
 
 const TeacherDocument = () => {
   const { member } = useLoginStore();
@@ -24,7 +25,7 @@ const TeacherDocument = () => {
       const data = await boardService.getDocumentList();
       setDocuments(data);
     } catch (err) {
-      console.error('서류 목록 조회 실패 : ', err);
+      toast.error('서류 목록 조회 실패 : ', err);
     }
   };
 
@@ -36,7 +37,7 @@ const TeacherDocument = () => {
       const data = await boardService.getRecentViewdDocs();
       setRecentDocs(data);
     } catch (error) {
-      console.error('최근 열람한 파일 목록 불러오기 실패 : ', error);
+      toast.error('최근 열람한 파일 목록 불러오기 실패 : ', error);
     }
   };
 

@@ -106,7 +106,7 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData, type, onSuc
   return (
     <Backdrop onClick={onClose}>
       <ModalContainer onClick={(e) => e.stopPropagation()}>
-        <ModalHeader>
+        <ModalHeader memberType={member.memberType}>
           <Span>{viewMode ? '일정 보기' : initialData ? '일정 수정' : '일정 추가'}</Span>
         </ModalHeader>
         <ModalContent>
@@ -221,7 +221,7 @@ const ModalHeader = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${({ theme }) => theme.colors.purple};
+  background-color: ${({ memberType, theme }) => (memberType === 'PARENT' ? theme.colors.green : theme.colors.purple)};
   color: ${({ theme }) => theme.colors.white};
   span {
     margin: ${({ theme }) => theme.spacing[4]} 0;

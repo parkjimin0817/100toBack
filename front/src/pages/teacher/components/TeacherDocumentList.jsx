@@ -10,7 +10,6 @@ import { boardService } from '../../../api/boards';
 const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
 const TeacherDocumentList = ({ documents, onDelete, onViewed }) => {
-  console.log(documents);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
@@ -30,7 +29,7 @@ const TeacherDocumentList = ({ documents, onDelete, onViewed }) => {
       await boardService.updateViewedDate(d.board_no);
       onViewed();
     } catch (error) {
-      console.error('최근 열람 날짜 업데이트 실패:', error);
+      toast.error('최근 열람 날짜 업데이트 실패:', error);
     }
 
     if (previewable.includes(extension)) {
@@ -47,7 +46,7 @@ const TeacherDocumentList = ({ documents, onDelete, onViewed }) => {
       await boardService.updateViewedDate(d.board_no);
       onViewed();
     } catch (error) {
-      console.error('최근 열람 날짜 업데이트 실패:', error);
+      toast.error('최근 열람 날짜 업데이트 실패:', error);
     }
   };
 
@@ -62,7 +61,6 @@ const TeacherDocumentList = ({ documents, onDelete, onViewed }) => {
       onDelete();
     } catch (error) {
       toast.error('삭제에 실패했습니다. 다시 시도해주세요.');
-      console.error('삭제 실패 :', error);
     }
   };
 

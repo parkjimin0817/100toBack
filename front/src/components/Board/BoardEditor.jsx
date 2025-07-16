@@ -4,10 +4,11 @@ import ImageInputBlock from './ImageInputBlock';
 import SimpleEditor from './TextInputBlock copy';
 import styled from 'styled-components';
 import { FaMinus, FaPlus } from 'react-icons/fa';
-import { IoDocumentText } from "react-icons/io5";
-import { FaImage } from "react-icons/fa6";
+import { IoDocumentText } from 'react-icons/io5';
+import { FaImage } from 'react-icons/fa6';
 import { classService } from '../../api/class';
 import { th } from 'date-fns/locale';
+import { toast } from 'react-toastify';
 
 const BoardEditor = ({ category, formState, updateFormField, addBlock, updateBlock, selectBlock, deleteBlock }) => {
   const [classRoomList, setClassRoomList] = useState([]);
@@ -16,10 +17,9 @@ const BoardEditor = ({ category, formState, updateFormField, addBlock, updateBlo
     const getClassRoomList = async () => {
       try {
         const responseData = await classService.classroomlist(formState.centerId);
-        console.log(responseData);
         setClassRoomList(responseData);
       } catch (error) {
-        console.error('반 조회 실패 : ', error);
+        toast.error('반 조회 실패 : ', error);
         alert('반 조회 실패');
       }
     };
@@ -75,7 +75,7 @@ const BoardEditor = ({ category, formState, updateFormField, addBlock, updateBlo
             readOnly
           />
         </HeadBlock>
-        {(category !== 'photo' && category !== 'meal_plan') && (
+        {category !== 'photo' && category !== 'meal_plan' && (
           <HeadBlock>
             <HeadLabel>첨부 파일</HeadLabel>
             {formState.attachment ? (

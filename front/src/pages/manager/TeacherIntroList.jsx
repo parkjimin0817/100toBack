@@ -6,6 +6,7 @@ import TeacherPicture from '../../assets/Child.png';
 import { memberService } from '../../api/member';
 import useLoginStore from '../../store/loginStore';
 import defaultImg from '../../assets/defaultImg.png';
+import { toast } from 'react-toastify';
 
 const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
@@ -18,10 +19,9 @@ const TeacherIntroList = () => {
   const fetchData = async () => {
     try {
       const data = await memberService.teacherIntroList(member.centerNo);
-      console.log(data);
       setTeachers(data);
     } catch (e) {
-      console.error(e);
+      toast.error(e);
     }
   };
 
