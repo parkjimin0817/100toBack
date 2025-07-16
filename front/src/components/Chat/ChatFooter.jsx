@@ -26,7 +26,7 @@ const ChatFooter = ({
         </>
       ) : (
         <FooterButtonBox>
-          <FooterButton onClick={() => onChange('members', '사용자들')}><FaUserFriends /></FooterButton>
+          <FooterButton onClick={() => onChange('members', '유치원')}><FaUserFriends /></FooterButton>
           <FooterButton onClick={() => onChange('chatRooms', '채팅방')}><IoChatboxEllipses /></FooterButton>
         </FooterButtonBox>
       )}

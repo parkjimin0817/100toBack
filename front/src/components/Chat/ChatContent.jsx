@@ -42,8 +42,8 @@ const ChatContent = ({ type, memberList, chatRoomList, messages, createPrivateCh
         <>
           <div style={{ marginTop: "10px"}}></div>
           {messages && messages.length > 0 && messages.map((message, index) => {
-            const isMe = message?.senderId === member.memberNo;
-            const isSameSenderAsPrevious = index > 0 && messages[index - 1]?.senderId === message?.senderId;
+            const isMe = message?.senderNo === member.memberNo;
+            const isSameSenderAsPrevious = index > 0 && messages[index - 1]?.senderNo === message?.senderNo;
 
             return (
               <>
