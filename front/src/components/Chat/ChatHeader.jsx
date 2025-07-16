@@ -12,13 +12,12 @@ import styled from 'styled-components';
  * }
  */
 
-const ChatHeader = ({ title, buttonProps }) => {
+const ChatHeader = ({ title, buttonProps, type }) => {
   return (
     <Header>
-      <RoomTitle>{title}</RoomTitle>
       <div>
-        {buttonProps &&
-          buttonProps.length > 0 &&
+        {buttonProps && 
+          buttonProps.length > 0 && type === 'chatRoom' &&
           buttonProps.map((buttonProp, index) => (
             <BackButton 
               key={index} 
@@ -29,6 +28,7 @@ const ChatHeader = ({ title, buttonProps }) => {
             </BackButton>
           ))}
       </div>
+      <RoomTitle>{title}</RoomTitle>
     </Header>
   )
 }
@@ -46,12 +46,12 @@ const Header = styled.div`
 `;
 
 const BackButton = styled.div`
-  margin-top: 5px;
-  margin-right: 10px;
-  font-size: 25px;
+  display: flex;
+  font-size: 20px;
   cursor: pointer;
 `;
 
 const RoomTitle = styled.h2`
   font-size: 20px;
+  margin-left: 10px;
 `;
