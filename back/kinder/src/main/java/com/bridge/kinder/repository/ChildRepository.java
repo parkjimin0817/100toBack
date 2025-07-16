@@ -14,6 +14,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ChildRepository {
     //아동 생성
@@ -68,5 +70,10 @@ public interface ChildRepository {
 
     //오늘 건강 로그 현황 세기
     Optional<Long> countTodayHealthLog(int classNo, LocalDateTime today);
+
+    //아동 번호로 건강 로그 데이터 가져오기(페이징)
+    Page<ChildHealthLog> getHealthLogByChildNo(int childNo, Pageable pageable);
+    //아동 번호로 생활 로그 데이터 가져오기(페이징)
+    Page<ChildActivityLog> getActivityLogByChildNo(int childNo, Pageable pageable);
 
 }
