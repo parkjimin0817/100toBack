@@ -3,6 +3,7 @@ package com.bridge.kinder.repository;
 import com.bridge.kinder.entity.Attendance;
 import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.ChildAttendance;
+import com.bridge.kinder.enums.CommonEnums;
 import com.bridge.kinder.enums.CommonEnums.ChildAttendanceStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -102,5 +103,13 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
                 .getSingleResult();
 
         return count > 0;
+    }
+
+    @Override
+    public List<Attendance> findByAttendanceDateAndStatus(LocalDate today, CommonEnums.TeacherAttendanceStatus status) {
+        return em.createQuery("SELECT a FROM Attendance a WHERE a.attendanceDate = :today AND a.status = :status", Attendance.class)
+                .setParameter("today", today)
+                .setParameter("status", status)
+                .getResultList();
     }
 }

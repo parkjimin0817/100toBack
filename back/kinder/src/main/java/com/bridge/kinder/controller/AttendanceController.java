@@ -58,6 +58,12 @@ public class AttendanceController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/teacher/create")
+    public ResponseEntity<Void> createTeacherAttendance (@RequestBody AttendanceDto.UpdateTeacherAttendance updateDto){
+        attendanceService.createTeacherAttendance(updateDto);
+        return ResponseEntity.noContent().build();
+    }
+
     //반 번호로 출결 상태 생성
     @PostMapping("/createChildAttendance")
     public ResponseEntity<List<AttendanceDto.CreateAttendance>> createChildAttendance(@RequestBody AttendanceDto.CreateAttendance dto) {

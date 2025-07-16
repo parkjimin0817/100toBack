@@ -217,4 +217,12 @@ public class MemberRepositoryImpl implements MemberRepository {
                 .setParameter("APPROVED", AdmissionStatus.APPROVED)
                 .getResultList();
     }
+
+    //모든 교사
+    @Override
+    public List<Member> findTeacher(){
+        return em.createQuery("SELECT m FROM Member m WHERE m.memberType = :type", Member.class)
+                .setParameter("type", CommonEnums.MemberType.TEACHER)
+                .getResultList();
+    }
 }

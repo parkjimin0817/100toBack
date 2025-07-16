@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { vacationService } from '../../../api/vacation';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
+import { getVacationDownloadUrl } from '../../../api/fileApi';
 
 const MyVacationList = ({ vacations, onDeleteSuccess }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -59,6 +60,29 @@ const MyVacationList = ({ vacations, onDeleteSuccess }) => {
     return truncated + ext;
   };
 
+  //파일 다운로드
+  const handleDownload = async (vacationNo, originalName) => {
+    try {
+      //다운로드 URL
+      const { presignedUrl } = await getVacationDownloadUrl(vacationNo);
+
+      // 파일 다운로드
+      const response = await fetch(presignedUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = originalName;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('파일 다운로드 실패:', error);
+      alert('파일 다운로드에 실패했습니다.');
+    }
+  };
+
   return (
     <Wrapper>
       <VacationTable>
@@ -83,7 +107,9 @@ const MyVacationList = ({ vacations, onDeleteSuccess }) => {
                 {vacation.startDate} ~ {vacation.endDate}
               </td>
               <td>{vacation.reason}</td>
-              <td>{getTruncatedFileName(vacation.attachmentOrigin) || ''}</td>
+              <FileTd onClick={() => handleDownload(vacation.vacationNo, vacation.attachmentOrigin)}>
+                {getTruncatedFileName(vacation.attachmentOrigin) || ''}
+              </FileTd>
               <td>
                 {vacation.status === 'PENDING' ? (
                   <DeleteButton onClick={() => handleDelete(vacation.vacationNo)}>삭제</DeleteButton>
@@ -162,6 +188,11 @@ const VacationTable = styled.table`
     width: 10%;
     font-size: ${({ theme }) => theme.fontSizes.xs};
   }
+`;
+
+const FileTd = styled.td`
+  cursor: pointer;
+  text-decoration: underline;
 `;
 
 const Status = styled.div`

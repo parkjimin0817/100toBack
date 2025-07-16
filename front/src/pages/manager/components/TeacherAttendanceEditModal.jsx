@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { attendanceStatusToKorean } from '../../../constants/attendanceStatusMap';
 
-const TeacherAttendanceEditModal = ({ onClose, onEdit, attendance, memberNo, centerNo }) => {
+const TeacherAttendanceEditModal = ({ onClose, onEdit, attendance, memberNo, centerNo, selectedDate }) => {
   const [status, setStatus] = useState(attendance?.status || '');
   const [inTime, setInTime] = useState(() => {
-    if (!attendance.inTime) return '';
+    if (!attendance?.inTime) return '';
     return attendance.inTime.slice(11, 16);
   });
   const [outTime, setOutTime] = useState(() => {
-    if (!attendance.outTime) return '';
+    if (!attendance?.outTime) return '';
     return attendance.outTime.slice(11, 16);
   });
 
@@ -17,12 +17,20 @@ const TeacherAttendanceEditModal = ({ onClose, onEdit, attendance, memberNo, cen
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const fullInTime = inTime ? `${attendance.attendanceDate}T${inTime}` : null;
-    const fullOutTime = outTime ? `${attendance.attendanceDate}T${outTime}` : null;
+    if (!status) {
+      alert('상태를 선택해주세요.');
+      return;
+    }
+
+    const isUpdate = !!attendance; //근태 데이터 없으면 false, 있으면 true
+    const rawDate = isUpdate ? attendance.attendanceDate : selectedDate;
+    const date = typeof rawDate === 'string' ? rawDate.slice(0, 10) : new Date(rawDate).toISOString().slice(0, 10);
+    const fullInTime = inTime ? `${attendance?.attendanceDate || date}T${inTime}` : null;
+    const fullOutTime = outTime ? `${attendance?.attendanceDate || date}T${outTime}` : null;
 
     const confirmMessage =
       `다음과 같이 수정하시겠습니까?\n\n` +
-      `날짜 : ${attendance.attendanceDate}\n` +
+      `날짜 : ${date}\n` +
       `상태 : ${attendanceStatusToKorean[status] || status} \n` +
       `출근시간: ${inTime || '-'}\n` +
       `퇴근시간: ${outTime || '-'}\n`;
@@ -30,16 +38,22 @@ const TeacherAttendanceEditModal = ({ onClose, onEdit, attendance, memberNo, cen
     const isConfirmed = window.confirm(confirmMessage);
     if (!isConfirmed) return;
 
-    onEdit({
-      ...attendance,
-      attendanceNo: attendance.attendanceNo,
-      attendanceDate: attendance.attendanceDate,
+    const payload = {
+      attendanceDate: date,
       status,
       inTime: fullInTime,
       outTime: fullOutTime,
-      memberNo: memberNo,
-      centerNo: centerNo,
-    });
+      memberNo,
+      centerNo,
+    };
+
+    if (isUpdate) {
+      //수정
+      onEdit('update', attendance.attendanceNo, payload);
+    } else {
+      //생성
+      onEdit('create', null, payload);
+    }
     onClose();
   };
 
@@ -52,6 +66,7 @@ const TeacherAttendanceEditModal = ({ onClose, onEdit, attendance, memberNo, cen
             <Label>
               상태:
               <Select name="status" value={status} onChange={(e) => setStatus(e.target.value)}>
+                <option value="">선택</option>
                 <option value="PRESENT">출근</option>
                 <option value="ABSENT">결근</option>
                 <option value="WORKING">근무중</option>

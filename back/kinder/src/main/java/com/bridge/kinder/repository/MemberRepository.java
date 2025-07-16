@@ -58,4 +58,7 @@ public interface MemberRepository  {
     //센터별 멤버 목록 조회
     List<Member> findAllByCenterNo(int centerNo);
 
+    //모든 교사 조회
+    List<Member> findTeacher();
+
 }

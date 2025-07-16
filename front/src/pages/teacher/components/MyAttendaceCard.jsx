@@ -1,6 +1,7 @@
 import React from 'react';
 import ContentHeader from '../../../components/Common/ContentHeader';
 import styled from 'styled-components';
+import { attendanceStatusToKorean } from '../../../constants/attendanceStatusMap';
 
 const StatusData = { in_time: '09:00', out_time: '18:00' };
 
@@ -83,8 +84,8 @@ const MyAttendaceCard = ({ selectedDate, currentMonth, attendance, minDate, maxD
         </AttendanceDetailDate>
         <ButtonDiv>
           {attendance?.status ? (
-            <Status $status={STATUS[attendance.status] || attendance.status}>
-              {STATUS[attendance.status] || attendance.status}
+            <Status $status={attendanceStatusToKorean[attendance.status]}>
+              {attendanceStatusToKorean[attendance.status]}
             </Status>
           ) : (
             <Status $status="UNKNOWN">기록 없음</Status>
@@ -186,24 +187,16 @@ const Status = styled.div`
   align-items: center;
   width: 80px;
   height: 30px;
-  background-color: ${({ $status }) => {
+  background-color: ${({ $status, theme }) => {
     switch ($status) {
+      case '근무중':
+        return '#2196f3'; // 파랑
       case '출근':
         return '#4caf50'; // 초록
       case '결근':
         return '#f44336'; // 빨강
-      case '근무중':
-        return '#2196f3'; // 파랑
-      case '공휴일':
-        return '#9e9e9e'; // 주황
-      case '주말':
-        return '#9e9e9e'; // 회색
-      case '휴가':
-        return '#9c27b0'; // 보라
-      case '워케이션':
-        return '#00bcd4'; // 청록
       default:
-        return '#e0e0e0'; // 기본 회색
+        return theme.colors.lightblue; // 기본값
     }
   }};
   border-radius: 5px;
