@@ -10,6 +10,7 @@ import useLoginStore from '../../store/loginStore';
 import { boardService } from '../../api/boards';
 import TeacherDocumentList from './components/TeacherDocumentList';
 import RecentDocuments from './components/RecentDocuments';
+import { toast } from 'react-toastify';
 
 const TeacherDocument = () => {
   const { member } = useLoginStore();
@@ -62,7 +63,7 @@ const TeacherDocument = () => {
       />
       <TopContent>
         <Title>최근 열람한 문서</Title>
-        <RecentDocuments recentDocs={recentDocs} />
+        <RecentDocuments recentDocs={recentDocs} onViewed={fetchRecentDocuments} />
       </TopContent>
       <BottomContent>
         <TeacherDocumentList documents={documents} onDelete={fetchDocuments} onViewed={fetchRecentDocuments} />

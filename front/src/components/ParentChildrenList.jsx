@@ -25,7 +25,6 @@ const ParentChildrenList = ({ childFilter, onChildClick }) => {
   const fetchChildren = useCallback(async () => {
     try {
       const response = await api.get(`http://localhost:8888/api/childs/parentChild?memberNo=${childFilter}`);
-      console.log(response.data);
       setChildList(response.data);
       if (childNo) {
         const matchedChild = response.data.find((child) => child.child_no === Number(childNo));

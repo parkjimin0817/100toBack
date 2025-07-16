@@ -14,6 +14,7 @@ public class MyChatResponse {
     private String chatRoomName;
     private String other;
     private String isGroupChat;
+    private String other;
     private Long unReadCount;
     private String memberProfile;
 }

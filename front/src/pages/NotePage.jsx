@@ -7,6 +7,7 @@ import ContentHeader from '../components/Common/ContentHeader';
 import Pagination from '../components/Common/Pagenation';
 import { boardService } from '../api/boards';
 import useLoginStore from '../store/loginStore';
+import { toast } from 'react-toastify';
 
 const columns = [
   {
@@ -53,12 +54,11 @@ const NotePage = () => {
     const getPostList = async () => {
       try {
         const responseData = await boardService.typeBoardList('NOTE', member.centerNo, page);
-        console.log(responseData);
         setData(responseData);
         // alert("게시글 조회 성공");
       } catch (error) {
         console.error('게시글 조회 실패 : ', error);
-        alert('게시글 조회 실패');
+        //alert('게시글 조회 실패');
       }
     };
     getPostList();

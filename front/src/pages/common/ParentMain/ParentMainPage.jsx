@@ -8,6 +8,7 @@ import MainSchedule from './components/MainSchedule';
 import { useNavigate } from 'react-router-dom';
 import useLoginStore from '../../../store/loginStore';
 import { childService } from '../../../api/child';
+import { toast } from 'react-toastify';
 
 const ParentMainPage = () => {
   const navigate = useNavigate();
@@ -23,10 +24,8 @@ const ParentMainPage = () => {
     childService
       .getParentChildList(memberNo)
       .then((data) => setChildList(data))
-      .catch((err) => console.error('아동 정보 불러오기 실패 :', err));
+      .catch((err) => toast.error('아동 정보 불러오기 실패 :', err));
   }, [memberNo]);
-
-  console.log(childList);
 
   return (
     <Wrapper>

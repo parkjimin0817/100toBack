@@ -14,9 +14,9 @@ const ScheduleList = ({ schedules, emptyMessage = '일정이 없습니다.', onE
   return (
     <>
       {schedules.map((item) => (
-        <Box key={item.schedule_no} onClick={() => onShowClick?.(item)}>
+        <Box key={item.schedule_no} onClick={() => onShowClick?.(item)} memberType={member.memberType}>
           <BoxLeft>
-            <BoxTime>
+            <BoxTime memberType={member.memberType}>
               {item.start_time?.substring(0, 5)} ~ {item.end_time?.substring(0, 5)}
             </BoxTime>
             <BoxSchedule>{item.title}</BoxSchedule>
@@ -58,7 +58,7 @@ const Box = styled.div`
   justify-content: center;
   align-items: center;
 
-  border: 4px solid ${({ theme }) => theme.colors.purple};
+  border: 4px solid ${({ memberType, theme }) => (memberType === 'PARENT' ? theme.colors.green : theme.colors.purple)};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
 
   margin-bottom: ${({ theme }) => theme.spacing[2]};
@@ -76,10 +76,9 @@ const BoxLeft = styled.div`
 const BoxTime = styled.div`
   width: 50%;
   height: 40%;
-  background-color: ${({ theme }) => theme.colors.purple};
+  background-color: ${({ memberType, theme }) => (memberType === 'PARENT' ? theme.colors.green : theme.colors.purple)};
   color: ${({ theme }) => theme.colors.white};
   font-size: ${({ theme }) => theme.fontSizes.sm};
-
   padding: ${({ theme }) => theme.spacing[1]};
 
   border-bottom-right-radius: ${({ theme }) => theme.borderRadius.lg};

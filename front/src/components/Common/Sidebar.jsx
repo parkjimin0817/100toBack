@@ -132,10 +132,7 @@ const teacherSidebar = (classNo) => [
     label: '내 건강 관리',
     icon: <RiHealthBookLine />,
     color: 'yellow',
-    subItems: [
-      { label: '나의 건강 데이터', link: '/teacherhealth' },
-      { label: '건강 관리', link: '*' },
-    ],
+    subItems: [{ label: '나의 건강 데이터', link: '/teacherhealth' }],
   },
 ];
 
@@ -197,10 +194,7 @@ const managerSidebar = [
     label: '내 건강 관리',
     icon: <RiHealthBookLine />,
     color: 'yellow',
-    subItems: [
-      { label: '나의 건강 데이터', link: '/teacherhealth' },
-      { label: '건강 관리', link: '*' },
-    ],
+    subItems: [{ label: '나의 건강 데이터', link: '/teacherhealth' }],
   },
 ];
 
