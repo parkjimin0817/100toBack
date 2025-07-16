@@ -57,6 +57,7 @@ public class ChatServiceImpl implements ChatService {
         ChatRoom newRoom = new ChatRoom().builder()
                 .isGroupChat("N")
                 .chatRoomName(otherMember.getMemberName() + "님과의 채팅방")
+                .center(member.getCenter())
                 .build();
 
         chatRoomRepository.save(newRoom);
@@ -94,7 +95,7 @@ public class ChatServiceImpl implements ChatService {
         boolean isParticipant = chatParticipantRepository.findByChatRoom(chatRoom)
                 .stream().anyMatch(cp -> cp.getMember().getMemberNo() == member.getMemberNo());
 
-        if(isParticipant) {
+        if(!isParticipant) {
             throw new IllegalArgumentException("본인이 속한 채팅방이 아닙니다.");
         }
 
@@ -104,7 +105,8 @@ public class ChatServiceImpl implements ChatService {
         return chatMessageList.stream()
                 .map(c -> ChatMessageDto.builder()
                         .message(c.getContent())
-                        .senderId(c.getMember().getMemberId())
+                        .senderNo(c.getMember().getMemberNo())
+                        .senderName(c.getMember().getMemberName())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -114,12 +116,12 @@ public class ChatServiceImpl implements ChatService {
         ChatRoom chatRoom = chatRoomRepository.findById(chatMessageDto.getRoomNo())
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 채팅방입니다."));
 
-        Member sender = memberRepository.findByMemberId(jwtTokenProvider.getMemberIdFromToken())
+        Member member = memberRepository.findByMemberNo(chatMessageDto.getSenderNo())
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
 
         ChatMessage chatMessage = ChatMessage.builder()
                 .chatRoom(chatRoom)
-                .member(sender)
+                .member(member)
                 .content(chatMessageDto.getMessage())
                 .build();
 
@@ -131,7 +133,7 @@ public class ChatServiceImpl implements ChatService {
                         .chatRoom(chatRoom)
                         .member(c.getMember())
                         .chatMessage(chatMessage)
-                        .isRead(c.getMember().equals(sender))
+                        .isRead(c.getMember().equals(member))
                         .build())
                 .toList();
 
@@ -207,10 +209,25 @@ public class ChatServiceImpl implements ChatService {
                     //각 채팅방의 읽지않은 메세지 수 조회
                     Long count = readStatusRepository.countByChatRoomAndMemberAndIsReadFalse(c.getChatRoom(), member);
 
+                    ChatRoom chatRoom = c.getChatRoom();
+
+                    // 채팅방 내 상대방 프로필 찾기
+                    String otherProfile = null;
+                    if (chatRoom.getIsGroupChat().equals("N")) {
+                        List<ChatParticipant> participants = chatParticipantRepository.findAllByChatRoom(chatRoom);
+                        Member other = participants.stream()
+                                .map(ChatParticipant::getMember)
+                                .filter(m -> m.getMemberNo() != member.getMemberNo())
+                                .findFirst()
+                                .orElse(null);
+                        otherProfile = (other != null) ? other.getMemberProfile() : null;
+                    }
+
                     return MyChatResponse.builder()
                             .chatRoomNo(c.getChatRoom().getChatRoomNo())
                             .chatRoomName(c.getChatRoom().getChatRoomName())
                             .isGroupChat(c.getChatRoom().getIsGroupChat())
+                            .memberProfile(otherProfile)
                             .unReadCount(count)
                             .build();
                 })

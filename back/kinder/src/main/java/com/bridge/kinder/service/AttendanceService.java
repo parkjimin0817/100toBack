@@ -16,6 +16,7 @@ public interface AttendanceService {
     List<AttendanceStatusDto> getTeacherMonthlyAttendance(int memberNo, int centerNo, int year, int month);
     //교사 근태 수정
     void updateTeacherAttendance(int attendanceNo, UpdateTeacherAttendance updateDto);
+    void createTeacherAttendance(UpdateTeacherAttendance updateDto);
     //아동 출결 생성
     List<AttendanceDto.CreateAttendance> createChildAttendance(AttendanceDto.CreateAttendance dto);
     //아동 출결 상태 변경

@@ -83,6 +83,7 @@ export const API_ENDPOINTS = {
       `/api/attendance/teacher?memberNo=${memberNo}&centerNo=${centerNo}&year=${year}&month=${month}`,
     //교사 근태 수정
     UPDATETEACHERATTENDANCE: (attendanceNo) => `/api/attendance/teacher/update/${attendanceNo}`,
+    CREATETEACHERATTENDANCE: '/api/attendance/teacher/create',
     //아동 출결 관리
     CHILDATTENDANCE: `/api/attendance/createChildAttendance`,
     //아동 출결 수정
@@ -151,5 +152,16 @@ export const API_ENDPOINTS = {
     BASE: '/api/alarm',
     GET: '/api/alarm',
     READ: (alarmNo) => `/api/alarm/${alarmNo}`,
+  },
+  CHAT: {
+    BASE: '/api/chat',
+    PRIVATE: `/api/chat/room/private/create`,
+    CREATE: '/api/chat/room/group/create',
+    CHATROOMS: '/api/chat/my/chatRooms',
+    HISTORY: (chatRoomNo) => `/api/chat/history/${chatRoomNo}`,
+    JOIN: (chatRoomNo) => `/api/chat/room/group/${chatRoomNo}/join`,
+    LEAVE: (chatRoomNo) => `/api/chat/room/group/${chatRoomNo}/leave`,
+    READMESSAGE: (chatRoomNo) => `/api/chat/room/${chatRoomNo}/read`,
+    MEMBERLIST: '/api/members/memberList',
   },
 };

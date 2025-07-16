@@ -43,7 +43,7 @@ public class SimpleWebSocketHandler extends TextWebSocketHandler {
             String[] params = query.split("&");
             for (String param : params) {
                 if (param.startsWith("chatRoomNo=")) {
-                    chatRoomNo = Long.parseLong(param.substring(7));
+                    chatRoomNo = Long.parseLong(param.substring(11));
                 } else if (param.startsWith("token=")) {
                     token = param.substring(6);
                 }

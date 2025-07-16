@@ -6,6 +6,7 @@ import SideBar from './Sidebar';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import useLoginStore from '../../store/loginStore';
+import ChatButton from '../Chat/ChatButton';
 
 const Layout = () => {
   const { member } = useLoginStore();
@@ -43,6 +44,8 @@ const Layout = () => {
       <FooterWrapper>
         <Footer />
       </FooterWrapper>
+
+      <ChatButton></ChatButton>
     </>
   );
 };

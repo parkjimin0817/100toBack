@@ -8,7 +8,7 @@ import { getPresignedUrl, uploadFileToS3 } from '../../../api/fileApi';
 
 const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
-const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuccess }) => {
+const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuccess, selectClassRoom }) => {
   const [teachers, setTeachers] = useState([]);
 
   useEffect(() => {
@@ -86,17 +86,20 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuc
       };
       console.log(payload);
 
-      const newClassroom = await classService.updateClass(classRoom.class_no, payload);
+      await classService.updateClass(classRoom.class_no, payload);
 
       toast.info(`${className}반 수정이 완료되었습니다.`);
+
       if (onSuccess) {
-        onSuccess(payload);
+        onSuccess();
       }
 
       onClose();
     } catch (error) {
       toast.error('반 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
     }
+
+    selectClassRoom();
   };
 
   return (
