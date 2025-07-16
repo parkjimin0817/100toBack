@@ -8,7 +8,7 @@ import { getPresignedUrl, uploadFileToS3 } from '../../../api/fileApi';
 
 const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
-const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuccess }) => {
+const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuccess, selectClassRoom }) => {
   const [teachers, setTeachers] = useState([]);
 
   useEffect(() => {
@@ -98,6 +98,8 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuc
     } catch (error) {
       toast.error('반 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
     }
+
+    selectClassRoom();
   };
 
   return (

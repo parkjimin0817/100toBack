@@ -36,7 +36,6 @@ public class SecurityConfig {
                                 //아이디 비밀번호 찾기
                                 "/api/members/searchId",
                                 "/api/members/pwdSearchId",
-                                "/api/members/sendOne",
                                 "/api/members/pwdUpdate",
                                 //회원가입
                                 "/api/members/manager",
@@ -65,9 +64,12 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         //요청 허용할 도메인들
         configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowedMethods(List.of("*"));
+
         configuration.setAllowCredentials(true);
+
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
