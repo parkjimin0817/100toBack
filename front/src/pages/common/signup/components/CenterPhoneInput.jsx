@@ -5,19 +5,16 @@ const formatPhoneNumber = (value = '') => {
   const onlyNums = value.replace(/\D/g, '');
 
   if (onlyNums.startsWith('02')) {
-    if (onlyNums.length <= 2) return onlyNums;
-    if (onlyNums.length <= 5) return onlyNums.replace(/(\d{2})(\d{1,3})/, '$1-$2');
-    if (onlyNums.length <= 9) return onlyNums.replace(/(\d{2})(\d{1,4})(\d{1,4})/, '$1-$2-$3');
-    return onlyNums.replace(/(\d{2})(\d{4})(\d{4})/, '$1-$2-$3');
+    const trimmed = onlyNums.slice(0, 9); // 9자리까지만 허용
+    if (trimmed.length <= 2) return trimmed;
+    if (trimmed.length <= 5) return trimmed.replace(/(\d{2})(\d{1,3})/, '$1-$2');
+    return trimmed.replace(/(\d{2})(\d{3})(\d{1,4})/, '$1-$2-$3');
   }
 
-  if (onlyNums.length <= 3) return onlyNums;
-  if (onlyNums.length <= 7) return onlyNums.replace(/(\d{3})(\d{1,4})/, '$1-$2');
-  if (onlyNums.length <= 11) {
-    return onlyNums.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
-  }
-
-  return onlyNums;
+  const trimmed = onlyNums.slice(0, 11); // 11자리까지만 허용
+  if (trimmed.length <= 3) return trimmed;
+  if (trimmed.length <= 7) return trimmed.replace(/(\d{3})(\d{1,4})/, '$1-$2');
+  return trimmed.replace(/(\d{3})(\d{4})(\d{1,4})/, '$1-$2-$3');
 };
 
 const CenterPhoneInput = ({ label, value, onChange, error }) => {

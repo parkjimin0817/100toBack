@@ -174,7 +174,7 @@ const DailyScheduleDetail = () => {
     <Content onSubmit={handleSubmit}>
       <ContentHeader
         Title={'일과표'}
-        Color={'purple'}
+        Color={member.memberType === 'PARENT' ? 'green' : 'purple'}
         ButtonProps={[
           {
             Title: '뒤로 가기',
@@ -233,83 +233,84 @@ const DailyScheduleDetail = () => {
 
         <Border>
           <Form>
-            {member && (member.memberType !== "PARENT" ) && ( // 학부모 인경우에는 힌트 메세지가 필요 없음.
-              <HintArea>
-                <ImInfo />
-                일정을 확인하고 등록해보세요!
-              </HintArea>
-            )}
+            {member &&
+              member.memberType !== 'PARENT' && ( // 학부모 인경우에는 힌트 메세지가 필요 없음.
+                <HintArea>
+                  <ImInfo />
+                  일정을 확인하고 등록해보세요!
+                </HintArea>
+              )}
             <InnerBorder $writeAuthority={writeAuthority}>
-              {(inputs.length === 0 && !writeAuthority) ? (
+              {inputs.length === 0 && !writeAuthority ? (
                 <NotingAnyMore>
                   <h1>일정이 없습니다.</h1>
                 </NotingAnyMore>
               ) : (
                 <div>
-                {inputs.map((input, index) => (
-                  <Line key={index}>
-                    <OutIconDiv>
-                      <IconDiv>
-                        <GoDotFill />
-                      </IconDiv>
-                    </OutIconDiv>
-                    <TimeInputLine>
-                      {writeAuthority === true ? (
-                        <TableInput
-                          type="time"
-                          name="startTime"
-                          value={input?.start_time ?? ''}
-                          onChange={(e) => handleChange(index, 'start_time', e.target.value)}
-                          placeholder="시작 시간"
-                        />
-                      ) : (
-                        <ActivityTitle>
-                          {input.start_time === null ? <ActivityNone>시작 시간</ActivityNone> : input.start_time}
-                        </ActivityTitle>
-                      )}
-                      -
-                      {writeAuthority === true ? (
-                        <TableInput
-                          type="time"
-                          name="endTime"
-                          value={input?.end_time ?? ''}
-                          onChange={(e) => handleChange(index, 'end_time', e.target.value)}
-                          placeholder="종료 시간"
-                        />
-                      ) : (
-                        <ActivityTitle>
-                          {input.end_time === null ? <ActivityNone>종료 시간</ActivityNone> : input.end_time}
-                        </ActivityTitle>
-                      )}
-                    </TimeInputLine>
-                    <ActivityLine>
-                      {writeAuthority === true ? (
-                        <Input
-                          type="text"
-                          name="description"
-                          value={input?.description ?? ''}
-                          onChange={(e) => handleChange(index, 'description', e.target.value)}
-                          placeholder="활동 입력하기"
-                        />
-                      ) : (
-                        <ActivityTitle>
-                          {input.description === null ? (
-                            <ActivityNone>활동을 등록해주세요.</ActivityNone>
-                          ) : (
-                            input.description
-                          )}
-                        </ActivityTitle>
-                      )}
-                      {writeAuthority === true ? (
-                        <DailyDeleteButton type="button" onClick={() => handleDelete(input.schedule_no)}>
-                          <DeleteIcon />
-                        </DailyDeleteButton>
-                      ) : (
-                        ''
-                      )}
-                    </ActivityLine>
-                  </Line>
-                ))}
+                  {inputs.map((input, index) => (
+                    <Line key={index}>
+                      <OutIconDiv>
+                        <IconDiv>
+                          <GoDotFill />
+                        </IconDiv>
+                      </OutIconDiv>
+                      <TimeInputLine>
+                        {writeAuthority === true ? (
+                          <TableInput
+                            type="time"
+                            name="startTime"
+                            value={input?.start_time ?? ''}
+                            onChange={(e) => handleChange(index, 'start_time', e.target.value)}
+                            placeholder="시작 시간"
+                          />
+                        ) : (
+                          <ActivityTitle>
+                            {input.start_time === null ? <ActivityNone>시작 시간</ActivityNone> : input.start_time}
+                          </ActivityTitle>
+                        )}
+                        -
+                        {writeAuthority === true ? (
+                          <TableInput
+                            type="time"
+                            name="endTime"
+                            value={input?.end_time ?? ''}
+                            onChange={(e) => handleChange(index, 'end_time', e.target.value)}
+                            placeholder="종료 시간"
+                          />
+                        ) : (
+                          <ActivityTitle>
+                            {input.end_time === null ? <ActivityNone>종료 시간</ActivityNone> : input.end_time}
+                          </ActivityTitle>
+                        )}
+                      </TimeInputLine>
+                      <ActivityLine>
+                        {writeAuthority === true ? (
+                          <Input
+                            type="text"
+                            name="description"
+                            value={input?.description ?? ''}
+                            onChange={(e) => handleChange(index, 'description', e.target.value)}
+                            placeholder="활동 입력하기"
+                          />
+                        ) : (
+                          <ActivityTitle>
+                            {input.description === null ? (
+                              <ActivityNone>활동을 등록해주세요.</ActivityNone>
+                            ) : (
+                              input.description
+                            )}
+                          </ActivityTitle>
+                        )}
+                        {writeAuthority === true ? (
+                          <DailyDeleteButton type="button" onClick={() => handleDelete(input.schedule_no)}>
+                            <DeleteIcon />
+                          </DailyDeleteButton>
+                        ) : (
+                          ''
+                        )}
+                      </ActivityLine>
+                    </Line>
+                  ))}
                 </div>
               )}
               {writeAuthority === true ? (
