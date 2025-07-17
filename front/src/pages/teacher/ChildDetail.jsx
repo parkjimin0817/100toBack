@@ -100,7 +100,6 @@ const ChildDetail = () => {
         // mother_phone: child.mother_phone,
         child_profile: changeName,
       };
-      console.log('수정 데이터 :', mergedData);
       // childService를 통한 정보 업데이트
       await childService.updateChildInfo(mergedData);
       // 프론트 상태 갱신
@@ -191,7 +190,10 @@ const ChildDetail = () => {
         <ContentHeader
           Title={'아동 상세보기'}
           Color={'orange'}
-          ButtonProps={[{ Title: '아동정보 삭제' }, { Title: '뒤로가기', func: () => navigate(-1) }]}
+          ButtonProps={[
+            { Title: '뒤로가기', func: () => navigate(-1) },
+            // { Title: '아동정보 삭제' }
+          ]}
         />
         <BasicInfo>
           <PictureLine>
