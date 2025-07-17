@@ -47,8 +47,8 @@ export const useLoginForm = () => {
       login(memberData);
 
       if (memberData.memberType === 'MANAGER') {
-        navigator('/manager/main');
         toast.success('로그인 성공하였습니다.');
+        navigator('/manager/main');
       } else if (memberData.memberType === 'TEACHER' && memberData.memberStatus === 'REJECTED') {
         toast.success('가입하실 근무지를 선택해주세요.');
         navigator('/resignup');
