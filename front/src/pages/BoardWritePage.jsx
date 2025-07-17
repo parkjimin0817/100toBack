@@ -64,12 +64,13 @@ const BoardWritePage = () => {
     }
 
     // ✅ 2. 반 선택 유효성 검사 (category가 반이 필요한 경우만)
-    if ((category === 'note') && !formState.classRoomNo) {
+    if (category === 'note' && !formState.classRoomNo) {
       alert('반을 선택해주세요.');
       return;
     }
+  };
 
-    // ✅ 3. 콘텐츠가 최소 1개 이상 있어야 함
+// ✅ 3. 콘텐츠가 최소 1개 이상 있어야 함
     if (formState.contents.length === 0) {
       alert('내용을 최소 1개 이상 작성해주세요.');
       return;
@@ -167,7 +168,7 @@ const BoardWritePage = () => {
     allowNavigation();
     navigate(`/${category}/list`);
   };
-
+  
   const updateFormField = (key, value) => {
     setFormState((prev) => ({
       ...prev,

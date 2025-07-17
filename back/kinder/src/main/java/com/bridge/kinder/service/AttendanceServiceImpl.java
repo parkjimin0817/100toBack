@@ -107,13 +107,17 @@ public class AttendanceServiceImpl implements AttendanceService {
              TeacherAttendanceStatus status = todayAttendance.getStatus();
 
              if(status == TeacherAttendanceStatus.WORKING) {
-                 throw new RuntimeException("이미 출근 기록이 존재합니다.");
+                 throw new RuntimeException("이미 출근 기록이 있습니다.");
              } else if(status == TeacherAttendanceStatus.WORKCATION) {
                  if(todayAttendance.getInTime()==null) {
                      todayAttendance.updateInTime(LocalDateTime.now());
                      attendanceRepository.save(todayAttendance);
+                     return AttendanceDto.Response.toDto(todayAttendance);
+                 } else {
+                     throw new RuntimeException("이미 출근 기록이 있습니다.");
                  }
-                 return AttendanceDto.Response.toDto(todayAttendance);
+             } else if(status == TeacherAttendanceStatus.VACATION) {
+                 throw new RuntimeException("오늘은 휴가일 입니다.");
              }
          }
 
