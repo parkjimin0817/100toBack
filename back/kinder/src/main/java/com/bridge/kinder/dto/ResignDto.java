@@ -16,14 +16,11 @@ public class ResignDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class updateResign {
-        private CommonEnums.ResignStatus status;
-
         private int center_no;
         private int member_no;
 
         public Resign toDto(Center center, Member member) {
             return Resign.builder()
-                    .status(status)
                     .center(center)
                     .member(member)
                     .build();

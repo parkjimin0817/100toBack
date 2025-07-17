@@ -11,9 +11,11 @@ import org.springframework.data.repository.query.Param;
 
 public interface VacationRepository extends JpaRepository<Vacation, Long> {
     List<Vacation> findByMember_MemberNo(int memberNo);
-    @Query("SELECT v FROM Vacation v WHERE v.member.center.centerNo = :centerNo AND v.type = :type ORDER BY v.createDate DESC")
-    Page<Vacation> findByMember_Center_CenterNoAndType(@Param("centerNo") int centerNo, @Param("type") VacationType type, Pageable pageable);
-    @Query("SELECT v FROM Vacation v WHERE v.member.center.centerNo = :centerNo ORDER BY v.createDate DESC")
-    Page<Vacation> findByMember_Center_CenterNo(@Param("centerNo") int centerNo, Pageable pageable);
+
+    @Query("SELECT v FROM Vacation v WHERE v.center.centerNo = :centerNo AND v.type = :type ORDER BY v.createDate DESC")
+    Page<Vacation> findByCenterNoAndType(@Param("centerNo") int centerNo, @Param("type") VacationType type, Pageable pageable);
+
+    @Query("SELECT v FROM Vacation v WHERE v.center.centerNo = :centerNo ORDER BY v.createDate DESC")
+    Page<Vacation> findByCenterNo(@Param("centerNo") int centerNo, Pageable pageable);
 
 }

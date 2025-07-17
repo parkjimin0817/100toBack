@@ -6,6 +6,7 @@ import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.entity.Resign;
 import com.bridge.kinder.enums.CommonEnums;
 import com.bridge.kinder.enums.CommonEnums.AdmissionStatus;
+import com.bridge.kinder.enums.CommonEnums.ResignStatus;
 import com.bridge.kinder.repository.LeaveRepository;
 import com.bridge.kinder.repository.MemberRepository;
 import com.bridge.kinder.repository.ResignRepository;
@@ -21,23 +22,19 @@ public class ResignServiceImpl implements ResignService {
 
     private final ResignRepository resignRepository;
     private final MemberRepository memberRepository;
-    private final LeaveRepository leaveRepository;
 
     //퇴사 처리
     @Override
     public String resignMember(ResignDto.updateResign dto) {
-        Optional<Resign> optResign = resignRepository.findByCenter_CenterNoAndMember_MemberNo(dto.getCenter_no(), dto.getMember_no());
-        if(!optResign.isPresent()) {
-            throw new RuntimeException("존재하지 않는 기록입니다.");
-        }
 
-        Member member = optResign.get().getMember();
+        Member member = memberRepository.findByMemberNo(dto.getMember_no())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
         member.changeMemberStatus(AdmissionStatus.REJECTED);
 
-        member.setLeave(null);
+        Resign resign = resignRepository.findByCenter_CenterNoAndMember_MemberNoAndStatus(dto.getCenter_no(), dto.getMember_no(), ResignStatus.WORKING)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 퇴직입니다."));
 
-        Resign resign = optResign.get();
-        resign.updateStatus(dto.getStatus());
+        resign.updateStatus(ResignStatus.RESIGN);
 
         return String.valueOf(resign.getResignNo());
     }

@@ -1,13 +1,12 @@
 // src/pages/manager/ClassPlacement.jsx
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+
 import ContentHeader from '../../components/Common/ContentHeader';
 import ChildrenList from '../../components/ChildrenList';
 import SearchButton from '../../../src/assets/img/searchbutton.png';
-import theme from '../../styles/theme';
+
 import useLoginStore from '../../store/loginStore';
-import { memberService } from '../../api/member';
 
 const TeacherList = () => {
   const { member } = useLoginStore();
