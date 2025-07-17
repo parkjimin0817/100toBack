@@ -15,6 +15,7 @@ import CouncelInfo from '../components/MyPage/CouncelInfo';
 import ParentChildListInfo from '../components/MyPage/ParentChildListInfo';
 import AttendanceInfo from '../components/MyPage/AttendanceInfo';
 import ApprovalListInfo from '../components/MyPage/ApprovalListInfo';
+// import VacationListInfo from '../components/MyPage/VacationListInfo';
 
 // 모든 사용자가 사용하는 마이페이지
 // 직위 별로 다른 기능을 사용하도록 만들어야함.

@@ -30,6 +30,7 @@ public class VacationDto {
         public Vacation toEntity(Member member) {
             return Vacation.builder()
                     .member(member)
+                    .center(member.getCenter())
                     .type(type)
                     .typeDetail(type_detail)
                     .startDate(start_date)

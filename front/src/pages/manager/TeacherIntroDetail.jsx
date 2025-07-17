@@ -32,8 +32,7 @@ const TeacherIntroDetail = () => {
 
     const mergedData = {
       center_no: member.centerNo,
-      member_no: Number(teacherNo),
-      status: 'RESIGN',
+      member_no: teacherNo,
     };
 
     console.log(mergedData);

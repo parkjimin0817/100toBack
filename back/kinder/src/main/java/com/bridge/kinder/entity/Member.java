@@ -95,7 +95,7 @@ public class Member {// 멤버
     List<Attendance> attendances = new ArrayList<>();
     //근태
 
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Leave leave;
     //연차
 

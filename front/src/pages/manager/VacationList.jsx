@@ -27,6 +27,7 @@ const ApprovalList = () => {
     try {
       const englishType = type === '전체' ? null : type === '휴가' ? 'VACATED' : 'WORKATION';
       const data = await vacationService.getVacationListAll(centerNo, englishType, page - 1, 6);
+      console.log(data);
       setVacationData(data);
     } catch (err) {
       console.error('휴가 목록 불러오기 실패 : ', err.message);

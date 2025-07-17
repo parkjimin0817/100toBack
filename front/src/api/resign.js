@@ -6,6 +6,7 @@ import { data } from 'react-router-dom';
 export const resignService = {
   resignMember: async (mergedData) => {
     try {
+      console.log('mergedData', mergedData);
       const { data } = await api.patch(API_ENDPOINTS.RESIGN.MEMBER, mergedData);
       return data;
     } catch (error) {

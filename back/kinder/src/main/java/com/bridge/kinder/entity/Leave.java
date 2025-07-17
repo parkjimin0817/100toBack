@@ -66,6 +66,13 @@ public class Leave {// 연차
         this.usedLeave = 0;
         this.member = member;
     }
+
+    public void resetLeaveDays(int days){
+        this.leaveDays = days;
+    }
+    public void resetUsedLeave(int days){
+        this.usedLeave = days;
+    }
 }
 
 
