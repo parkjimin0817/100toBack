@@ -8,6 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import AttendanceChildSchedule from '../../components/AttendanceChildSchedule';
 import { toast } from 'react-toastify';
 import api from '../../api/axios';
+import ChildBasicInfo from '../../components/Child/ChildBasicInfo';
 
 const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
@@ -138,65 +139,8 @@ const ChildDetail = () => {
           Color={'orange'}
           ButtonProps={[{ Title: '뒤로가기', func: () => navigate(-1) }, { Title: '아동정보 삭제' }]}
         />
-        <BasicInfo>
-          <PictureLine>
-            <Picture
-              src={child.child_profile ? `${CLOUDFRONT_URL}/${child.child_profile}` : defaultimg}
-              alt="아동 프로필"
-            />
-          </PictureLine>
-          <FirstInfo>
-            <thead>
-              <NameTr>
-                <td>{child.child_name}</td>
-              </NameTr>
-            </thead>
-            <tbody>
-              <Info>
-                <InfoColumn>생년월일</InfoColumn>
-                <InfoResult>{getBirthAndAge(child.child_birthday)}</InfoResult>
-              </Info>
-              <Info>
-                <InfoColumn>키</InfoColumn>
-                <InfoResult>{child.child_height} cm</InfoResult>
-              </Info>
-              <Info>
-                <InfoColumn>몸무게</InfoColumn>
-                <InfoResult>{child.child_weight} kg</InfoResult>
-              </Info>
-              <Info>
-                <InfoColumn>주소</InfoColumn>
-                <InfoResult>{child.child_address}</InfoResult>
-              </Info>
-            </tbody>
-          </FirstInfo>
-          <FirstInfo>
-            <thead>
-              <Class>
-                <td>{child.class_name === '미배정' ? '미배정' : `${child.class_name}반`}</td>
-              </Class>
-            </thead>
-            <tbody>
-              <Info>
-                <InfoColumn>학부모</InfoColumn>
-                <InfoResult>
-                  부:{child.father_name}, 모:{child.mother_name}
-                </InfoResult>
-              </Info>
-              <Info>
-                <InfoColumn>비상연락처</InfoColumn>
-                <InfoResult1>
-                  <SpanWrapper>
-                    <span>부:{child.father_phone}</span>
-                    <span>모:{child.mother_phone}</span>
-                  </SpanWrapper>
-                </InfoResult1>
-              </Info>
-            </tbody>
-          </FirstInfo>
-        </BasicInfo>
+        <ChildBasicInfo child={child}></ChildBasicInfo>
       </BasicInfoContainer>
-
       <HealthInfoContainer>
         <SelectHeader>
           <HealthStyle select={select} onClick={() => handleSelect('health')}>
@@ -667,74 +611,6 @@ const HealthContentTr = styled.tr`
 
 const BasicInfoContainer = styled.div`
   min-width: 1024px;
-`;
-
-const BasicInfo = styled.div`
-  display: flex;
-  justify-content: space-around;
-  background-color: white;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-`;
-
-const PictureLine = styled.div`
-  /* width: 225px;
-  height: 200px; */
-  margin-left: 25px;
-  margin-top: 20px;
-  margin-bottom: 45px;
-`;
-
-const Picture = styled.img`
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 10px;
-`;
-
-const FirstInfo = styled.table`
-  text-align: left;
-  border-collapse: separate;
-  border-spacing: 10px;
-`;
-
-const NameTr = styled.tr`
-  display: flex;
-  justify-content: flex-start;
-  font-size: ${({ theme }) => theme.fontSizes['2xl']};
-  font-weight: ${({ theme }) => theme.fontWeights.bold};
-`;
-
-const Info = styled.tr`
-  text-align: left;
-`;
-
-const SpanWrapper = styled.div`
-  display: flex;
-  flex-direction: column; /* 또는 row로 가로배치 */
-  justify-content: center; /* 세로 가운데 정렬 */
-  height: 100%;
-  padding-top: 40px;
-`;
-
-const InfoColumn = styled.td`
-  font-weight: ${({ theme }) => theme.fontWeights.bold};
-`;
-
-const InfoResult = styled.td``;
-
-const InfoResult1 = styled.td`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-`;
-
-const Class = styled.tr`
-  display: flex;
-  justify-content: flex-start;
-  font-size: ${({ theme }) => theme.fontSizes['2xl']};
-  font-weight: ${({ theme }) => theme.fontWeights.bold};
 `;
 
 const HealthInfoContainer = styled.div`
