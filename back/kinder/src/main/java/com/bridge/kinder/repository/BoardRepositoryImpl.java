@@ -6,6 +6,7 @@ import com.bridge.kinder.enums.CommonEnums;
 import com.bridge.kinder.enums.CommonEnums.BoardType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.util.Collections;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -113,4 +114,121 @@ public class BoardRepositoryImpl implements BoardRepository {
                 .setMaxResults(5)
                 .getResultList();
     }
+
+    @Override
+    public List<Board> getNoteBoardsByMemberNo(BoardType type, int memberNo,int centerNo, int page, int size) {
+        // ① memberNo → childNo
+        String childJpql = "SELECT mc.child.childNo " +
+                "FROM MemberChild mc " +
+                "WHERE mc.member.memberNo = :memberNo";
+
+        List<Integer> childNos = em.createQuery(childJpql, Integer.class)
+                .setParameter("memberNo", memberNo)
+                .getResultList();
+
+        if (childNos.isEmpty()) {
+            // 자녀가 없으면 빈 리스트 반환
+            return Collections.emptyList();
+        }
+
+        // ② childNo → classNo
+        String classJpql = "SELECT DISTINCT c.classRoom.classNo " +
+                "FROM Child c " +
+                "WHERE c.childNo IN :childNos";
+
+        List<Integer> classNos = em.createQuery(classJpql, Integer.class)
+                .setParameter("childNos", childNos)
+                .getResultList();
+
+        if (classNos.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // ③ Board 조회
+        String boardJpql = "SELECT b " +
+                "FROM Board b " +
+                "WHERE b.type = :type " +
+                "AND b.center.centerNo = :centerNo " +
+                "AND b.classRoom.classNo IN :classNos " +
+                "ORDER BY b.createDate DESC";
+
+        return em.createQuery(boardJpql, Board.class)
+                .setParameter("type", type)
+                .setParameter("centerNo", centerNo)
+                .setParameter("classNos", classNos)
+                .setFirstResult(page)
+                .setMaxResults(size)
+                .getResultList();
+    }
+
+    @Override
+    public long countByTypeWithMemberNo(BoardType type, int centerNo, int memberNo) {
+        // ① memberNo → childNos
+        String childJpql = "SELECT mc.child.childNo FROM MemberChild mc WHERE mc.member.memberNo = :memberNo";
+
+        List<Integer> childNos = em.createQuery(childJpql, Integer.class)
+                .setParameter("memberNo", memberNo)
+                .getResultList();
+
+        if (childNos.isEmpty()) {
+            return 0L;
+        }
+
+        // ② childNos → classNos
+        String classJpql = "SELECT DISTINCT c.classRoom.classNo FROM Child c WHERE c.childNo IN :childNos";
+        List<Integer> classNos = em.createQuery(classJpql, Integer.class)
+                .setParameter("childNos", childNos)
+                .getResultList();
+
+        if (classNos.isEmpty()) {
+            return 0L;
+        }
+
+        // ③ 해당 반(classNo)에 해당하는 게시글 수 카운트
+        String countJpql = "SELECT COUNT(b) FROM Board b " +
+                "WHERE b.type = :type " +
+                "AND b.center.centerNo = :centerNo " +
+                "AND b.classRoom.classNo IN :classNos";
+
+        return em.createQuery(countJpql, Long.class)
+                .setParameter("type", type)
+                .setParameter("centerNo", centerNo)
+                .setParameter("classNos", classNos)
+                .getSingleResult();
+    }
+
+    @Override
+    public List<Board> getNoteBoardsByClassNo(BoardType type, int classNo,int centerNo, int page, int size) {
+
+        String boardJpql = "SELECT b " +
+                "FROM Board b " +
+                "WHERE b.type = :type " +
+                "AND b.center.centerNo = :centerNo " +
+                "AND b.classRoom.classNo = :classNo " +
+                "ORDER BY b.createDate DESC";
+
+        return em.createQuery(boardJpql, Board.class)
+                .setParameter("type", type)
+                .setParameter("centerNo", centerNo)
+                .setParameter("classNo", classNo)
+                .setFirstResult(page)
+                .setMaxResults(size)
+                .getResultList();
+    }
+
+    @Override
+    public long countByTypeWithClassNo(BoardType type, int centerNo, int classNo) {
+
+        String countJpql = "SELECT COUNT(b) FROM Board b " +
+                "WHERE b.type = :type " +
+                "AND b.center.centerNo = :centerNo " +
+                "AND b.classRoom.classNo = :classNo";
+
+        return em.createQuery(countJpql, Long.class)
+                .setParameter("type", type)
+                .setParameter("centerNo", centerNo)
+                .setParameter("classNo", classNo)
+                .getSingleResult();
+    }
+
 }

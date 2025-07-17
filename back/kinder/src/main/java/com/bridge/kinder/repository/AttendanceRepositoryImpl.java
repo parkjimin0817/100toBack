@@ -4,6 +4,7 @@ import com.bridge.kinder.entity.Attendance;
 import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.ChildAttendance;
 import com.bridge.kinder.enums.CommonEnums;
+import com.bridge.kinder.enums.CommonEnums.AdmissionStatus;
 import com.bridge.kinder.enums.CommonEnums.ChildAttendanceStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -58,33 +59,38 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
     public List<ChildAttendance> findByClassNoAndCreateDate(int classNo, LocalDate createDate) {
         return em.createQuery(
                 "SELECT c FROM ChildAttendance c " +
-                        "WHERE c.classRoom.classNo = :classNo AND c.createDate = :createDate", ChildAttendance.class)
+                        "WHERE c.classRoom.classNo = :classNo AND c.createDate = :createDate AND c.child.status = :status", ChildAttendance.class)
                 .setParameter("classNo", classNo)
                 .setParameter("createDate",createDate)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
     }
 
 
     @Override
     public ChildAttendance getChildAttendance(int classNo, int childNo, LocalDate createDate) {
-        String query = "SELECT c FROM ChildAttendance c WHERE c.classRoom.classNo = :classNo AND c.child.childNo = :childNo AND c.createDate = :createDate";
+        String query = "SELECT c FROM ChildAttendance c WHERE c.classRoom.classNo = :classNo AND c.child.childNo = :childNo AND c.createDate = :createDate AND c.child.status = :status";
         return (em.createQuery(query, ChildAttendance.class)
                 .setParameter("classNo",classNo)
                 .setParameter("childNo",childNo)
                 .setParameter("createDate",createDate)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getSingleResult());
     }
 
     @Override
     public Optional<Long> countPresentChild(int classNo, LocalDate today, ChildAttendanceStatus status) {
-        String jpql = "SELECT COUNT (ca) FROM ChildAttendance ca " +
+        String jpql = "SELECT COUNT(ca) FROM ChildAttendance ca " +
                 " WHERE ca.classRoom.classNo = :classNo " +
-                "AND ca.createDate = :today " +
-                " AND ca.status = :status";
+                " AND ca.createDate = :today " +
+                " AND ca.status = :status" +
+                " AND ca.child.status = :statusc";
+
         Long count = em.createQuery(jpql, Long.class)
                 .setParameter("classNo", classNo)
                 .setParameter("today", today)
                 .setParameter("status", status)
+                .setParameter("statusc", AdmissionStatus.APPROVED)
                 .getSingleResult();
         return Optional.ofNullable(count);
 
@@ -94,7 +100,7 @@ public class AttendanceRepositoryImpl implements AttendanceRepository {
     public boolean existsByMemberAndDateBetween(int memberNo, LocalDate startDate, LocalDate endDate) {
         String jpql = "SELECT COUNT(a) FROM Attendance a " +
                 "WHERE a.member.memberNo = :memberNo " +
-                "AND a.attendanceDate BETWEEN :startDate AND :endDate";
+                "AND a.attendanceDate BETWEEN :startDate AND :endDate" ;
 
         Long count = em.createQuery(jpql, Long.class)
                 .setParameter("memberNo", memberNo)
