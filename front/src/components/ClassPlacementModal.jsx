@@ -149,6 +149,7 @@ const ModalContainer = styled.div`
   background: ${({ theme }) => theme.colors.white};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   width: 30%;
+  min-width: 400px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   position: relative;
   overflow: hidden;
@@ -199,13 +200,13 @@ const ModalDate = styled.div`
 const ModalMain = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: center;
   width: 100%;
   height: 90%;
   padding: ${({ theme }) => theme.spacing[4]};
   font-size: ${({ theme }) => theme.fontSizes.base};
   line-height: 1.6;
   color: ${({ theme }) => theme.colors.black};
-  padding-left: 100px;
 `;
 
 const ColumnLine = styled.div`

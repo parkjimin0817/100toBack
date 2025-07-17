@@ -21,8 +21,6 @@ import boy2 from '../../assets/boy2.png';
 import girl1 from '../../assets/girl1.png';
 import girl2 from '../../assets/girl2.png';
 
-const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
-
 const ParentMyPage = () => {
   const member = useLoginStore((state) => state.member);
   const setMember = useLoginStore((state) => state.setMember);
