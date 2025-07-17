@@ -76,6 +76,7 @@ import { NavLink } from 'react-router-dom';
 import { IoPeopleOutline } from 'react-icons/io5';
 import { FaSchoolFlag } from 'react-icons/fa6';
 import useLoginStore from '../../store/loginStore';
+import { HiOutlineOfficeBuilding } from 'react-icons/hi';
 
 //교사
 const teacherSidebar = (classNo) => [
@@ -184,13 +185,21 @@ const managerSidebar = [
       { label: '휴가 관리', link: '/vacationList' },
       { label: '회원가입 승인', link: '/approvalList' },
       { label: '교사 소개', link: '/manager/introteacher' },
-      { label: '반 배정', link: '/manager/classplacement' },
-      { label: '반 목록', link: '/manager/classmanage' },
       { label: '서류 관리', link: '/teacher/mydocument' },
     ],
   },
   {
     id: 'menu5',
+    label: '시설 관리',
+    icon: <HiOutlineOfficeBuilding />,
+    color: 'lightblue',
+    subItems: [
+      { label: '반 목록', link: '/manager/classmanage' },
+      { label: '반 배정', link: '/manager/classplacement' },
+    ],
+  },
+  {
+    id: 'menu6',
     label: '내 건강 관리',
     icon: <RiHealthBookLine />,
     color: 'yellow',

@@ -79,7 +79,7 @@ const TopContent = styled.div`
 `;
 const FirstContent = styled.div`
   width: 70%;
-  height: 570px;
+  height: 550px;
   background-color: #ffffff;
   border-radius: 20px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
@@ -111,7 +111,7 @@ const Title = styled.div`
 
 const ScheduleContent = styled.div`
   width: 30%;
-  height: 570px;
+  height: 550px;
   background-color: #ffffff;
   border-radius: ${({ theme }) => theme.borderRadius['2xl']};
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
@@ -132,7 +132,6 @@ const ChildCards = styled.div`
   margin: 0 auto;
 
   gap: ${({ theme }) => theme.spacing[6]};
-  margin-top: ${({ theme }) => theme.spacing[16]};
 `;
 
 const RecentBoards = styled.div`

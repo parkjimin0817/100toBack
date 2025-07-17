@@ -198,13 +198,13 @@ const LinearBar = styled.div`
 
 const HeaderRightBox = styled.div`
   display: flex;
+  gap: 20px;
 `;
 
 const AlarmBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-right: 30px;
   position: relative;
 `;
 

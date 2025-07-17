@@ -44,14 +44,15 @@ export const classService = {
     try {
       const { data } = await api.put(API_ENDPOINTS.CLASSROOM.UPDATE(classNo), classRoomData);
 
+      console.log('뭐와?', data);
       return data;
     } catch (error) {
       console.error('반 수정 실패: ', error);
       throw error;
     }
   },
-  
-  deleteClass : async (classNo) => {
+
+  deleteClass: async (classNo) => {
     try {
       const { data } = await api.delete(API_ENDPOINTS.CLASSROOM.DELETE(classNo));
 

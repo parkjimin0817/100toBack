@@ -6,11 +6,15 @@ import com.bridge.kinder.dto.ApprovalDto.CenterApprovalUpdate;
 import com.bridge.kinder.entity.Approval;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Child;
+import com.bridge.kinder.entity.Leave;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.entity.Resign;
+import com.bridge.kinder.enums.CommonEnums;
+import com.bridge.kinder.enums.CommonEnums.AdmissionStatus;
 import com.bridge.kinder.repository.ApprovalRepository;
 import com.bridge.kinder.repository.CenterRepository;
 import com.bridge.kinder.repository.ChildRepository;
+import com.bridge.kinder.repository.LeaveRepository;
 import com.bridge.kinder.repository.MemberRepository;
 import com.bridge.kinder.repository.ResignRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +34,7 @@ public class ApprovalServiceImpl implements ApprovalService {
     private final MemberRepository memberRepository;
     private final ChildRepository childRepository;
     private final ResignRepository resignRepository;
+    private final LeaveRepository leaveRepository;
 
     //시설, 시설장 승인 대기 리스트
     @Override
@@ -107,5 +112,42 @@ public class ApprovalServiceImpl implements ApprovalService {
         child.changeChildStatus(dto.getStatus());
 
         return dto.toDto(child).toString();
+    }
+
+    //시설 재가입 요청
+    @Override
+    public String reApproval(int memberNo, int centerNo) {
+
+        Member member = memberRepository.findByMemberNo(memberNo)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
+
+        Center center = centerRepository.findById(centerNo)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
+
+        member.changeMemberStatus(AdmissionStatus.PENDING);
+
+        Approval approval = Approval.builder()
+                .center(center)
+                .member(member)
+                .build();
+
+        approvalRepository.save(approval);
+
+
+        Resign resign = Resign.builder()
+                .center(center)
+                .member(member)
+                .build();
+
+        resignRepository.save(resign);
+
+        Leave leave = Leave.builder()
+                .member(member)
+                .leaveDays(15)
+                .usedLeave(0)
+                .build();
+        leaveRepository.save(leave);
+
+        return "";
     }
 }

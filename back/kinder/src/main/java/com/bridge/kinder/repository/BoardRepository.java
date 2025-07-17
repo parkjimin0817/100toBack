@@ -18,4 +18,8 @@ public interface BoardRepository {
     List<Board> findByMemberNoAndType(int memberNo, BoardType type);
     List<Board> findByClassNo(int classNo);
     List<Board> findByMemberNoAndTypeOrderByViewedDate(int memberNo, BoardType type);
+    List<Board> getNoteBoardsByMemberNo(CommonEnums.BoardType type, int memberNo, int centerNo, int page, int size);
+    long countByTypeWithMemberNo(CommonEnums.BoardType type, int centerNo, int memberNo);
+    List<Board> getNoteBoardsByClassNo(CommonEnums.BoardType type, int classNo, int centerNo, int page, int size);
+    long countByTypeWithClassNo(CommonEnums.BoardType type, int centerNo, int classNo);
 }

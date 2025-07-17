@@ -41,14 +41,19 @@ public class ChildRepositoryImpl implements ChildRepository {
     //번호로 아동 찾기
     @Override
     public Optional<Child> findByChildNo(int childNo) {
-        return Optional.ofNullable(em.find(Child.class, childNo));
+        Child child = em.createQuery("SELECT c FROM Child c WHERE c.childNo = :child_no AND c.status = :status", Child.class)
+                .setParameter("child_no", childNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
+                .getSingleResult();
+        return Optional.ofNullable(child);
     }
 
     //주민번호로 아동 찾기
     @Override
     public Optional<Child> findByResidentNo(String residentNo) {
-        List<Child> result = em.createQuery("select c from Child c where c.childResidentNo = :residentNo", Child.class)
+        List<Child> result = em.createQuery("select c from Child c where c.childResidentNo = :residentNo AND c.status = :status ", Child.class)
                 .setParameter("residentNo", residentNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
 
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
@@ -57,24 +62,27 @@ public class ChildRepositoryImpl implements ChildRepository {
     //반 별 아동 목록
     @Override
     public List<Child> findByClassNo(int classNo) {
-        return em.createQuery("SELECT c FROM Child c WHERE c.classRoom.classNo = :classNo", Child.class)
+        return em.createQuery("SELECT c FROM Child c WHERE c.classRoom.classNo = :classNo AND c.status = :status", Child.class)
                 .setParameter("classNo", classNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
     }
 
     //시설 번호로 아동들 전부 조회
     @Override
     public List<Child> findByCenterNo(int centerNo) {
-        return em.createQuery("SELECT c FROM Child c WHERE c.center.centerNo  = :centerNo AND c.status = com.bridge.kinder.enums.CommonEnums.AdmissionStatus.APPROVED ", Child.class)
+        return em.createQuery("SELECT c FROM Child c WHERE c.center.centerNo  = :centerNo AND c.status = :status ", Child.class)
                 .setParameter("centerNo", centerNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
     }
 
     //반별 아동 수 카운트
     @Override
     public int countChildByClassroom(int classNo) {
-        Long count =  em.createQuery("SELECT COUNT(c) FROM Child c WHERE c.classRoom.classNo =: classNo", Long.class)
+        Long count =  em.createQuery("SELECT COUNT(c) FROM Child c WHERE c.classRoom.classNo =: classNo AND c.status = :status ", Long.class)
                 .setParameter("classNo", classNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getSingleResult();
 
         return count.intValue();
@@ -84,8 +92,9 @@ public class ChildRepositoryImpl implements ChildRepository {
     @Override
     public List<Child> findByClassRoom(ClassRoom classRoom) {
         int classNo = classRoom.getClassNo();
-        return em.createQuery("SELECT c FROM Child c WHERE c.classRoom.classNo  = :classNo", Child.class)
+        return em.createQuery("SELECT c FROM Child c WHERE c.classRoom.classNo  = :classNo AND c.status = :status ", Child.class)
                 .setParameter("classNo", classNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
     }
 
@@ -93,8 +102,9 @@ public class ChildRepositoryImpl implements ChildRepository {
     @Override
     public Optional<Child> getByChildNo(int childNo) {
         System.out.println("전달된 childNo: " + childNo);
-        Child child = em.createQuery("SELECT c FROM Child c WHERE c.childNo = :child_no", Child.class)
+        Child child = em.createQuery("SELECT c FROM Child c WHERE c.childNo = :child_no AND c.status = :status ", Child.class)
                 .setParameter("child_no", childNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getSingleResult();
         return Optional.ofNullable(child);
     }
@@ -102,7 +112,10 @@ public class ChildRepositoryImpl implements ChildRepository {
     //아동번호와 반 번호로 반 수정(시설장)
     @Override
     public Optional<Child> updateClass(int childNo, int classNo) {
-        Child child = em.find(Child.class, childNo);
+        Child child = em.createQuery("SELECT c FROM Child c WHERE c.childNo = :child_no AND c.status = :status ", Child.class)
+                .setParameter("child_no", childNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
+                .getSingleResult();
         if (child == null) return Optional.empty();
 
         if (classNo == 0) {
@@ -121,8 +134,9 @@ public class ChildRepositoryImpl implements ChildRepository {
     //아동 번호로 해당 아동의 건강 로그 데이터 불러오기(매일 적는 거)
     @Override
     public List<ChildHealthLog> healthLog(int childNo) {
-        return em.createQuery("SELECT c FROM ChildHealthLog c WHERE c.child.childNo  = :childNo", ChildHealthLog.class)
+        return em.createQuery("SELECT c FROM ChildHealthLog c WHERE c.child.childNo  = :childNo AND c.child.status = :status", ChildHealthLog.class)
                 .setParameter("childNo", childNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
     }
 
@@ -130,8 +144,9 @@ public class ChildRepositoryImpl implements ChildRepository {
     @Override
     public Optional<ChildHealthData> health(int childNo) {
         List<ChildHealthData> results = em.createQuery(
-                        "SELECT c FROM ChildHealthData c WHERE c.child.childNo = :childNo", ChildHealthData.class)
+                        "SELECT c FROM ChildHealthData c WHERE c.child.childNo = :childNo AND c.child.status = :status", ChildHealthData.class)
                 .setParameter("childNo", childNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
 
         return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
@@ -141,8 +156,9 @@ public class ChildRepositoryImpl implements ChildRepository {
     //아동 번호로 해당 아동의 행동 로그 데이터 불러오기(매일 적는 거)
     @Override
     public List<ChildActivityLog> activityLog(int childNo) {
-        return em.createQuery("SELECT c FROM ChildActivityLog c WHERE c.child.childNo  = :childNo", ChildActivityLog.class)
+        return em.createQuery("SELECT c FROM ChildActivityLog c WHERE c.child.childNo  = :childNo AND c.child.status = :status", ChildActivityLog.class)
                 .setParameter("childNo", childNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
     }
 
@@ -150,8 +166,9 @@ public class ChildRepositoryImpl implements ChildRepository {
     @Override
     public Optional<ChildActivityData> activity(int childNo) {
         List<ChildActivityData> results = em.createQuery(
-                        "SELECT c FROM ChildActivityData c WHERE c.child.childNo = :childNo", ChildActivityData.class)
+                        "SELECT c FROM ChildActivityData c WHERE c.child.childNo = :childNo AND c.child.status = :status", ChildActivityData.class)
                 .setParameter("childNo", childNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
 
         return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
@@ -161,8 +178,9 @@ public class ChildRepositoryImpl implements ChildRepository {
     //아동 번호로 해당 아동의 출석 내역 리스트 불러오기
     @Override
     public List<ChildAttendance> attendance(int childNo) {
-        return em.createQuery("SELECT c FROM ChildAttendance c WHERE c.child.childNo  = :childNo", ChildAttendance.class)
+        return em.createQuery("SELECT c FROM ChildAttendance c WHERE c.child.childNo  = :childNo AND c.child.status = :status", ChildAttendance.class)
                 .setParameter("childNo", childNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
     }
 
@@ -170,9 +188,10 @@ public class ChildRepositoryImpl implements ChildRepository {
     @Override
     public Optional<ChildHealthLog> recentPhysicalInfo(int childNo) {
         List<ChildHealthLog> results = em.createQuery(
-                        "SELECT c FROM ChildHealthLog c WHERE c.child.childNo = :childNo ORDER BY c.createDate DESC",
+                        "SELECT c FROM ChildHealthLog c WHERE c.child.childNo = :childNo AND c.child.status = :status ORDER BY c.createDate DESC",
                         ChildHealthLog.class)
                 .setParameter("childNo", childNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .setMaxResults(1)
                 .getResultList();
 
@@ -182,12 +201,16 @@ public class ChildRepositoryImpl implements ChildRepository {
     //아동 건강 데이터 수정
     @Override
     public Optional<ChildHealthData> updateHealthData(int childNo, ChildDto.health dto) {
-        Child child = em.find(Child.class, childNo);
+        Child child = em.createQuery("SELECT c FROM Child c WHERE c.childNo = :child_no AND c.status = :status", Child.class)
+                .setParameter("child_no", childNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
+                .getSingleResult();
         if (child == null) return Optional.empty();
 
         List<ChildHealthData> results = em.createQuery(
-                        "SELECT c FROM ChildHealthData c WHERE c.child.childNo = :childNo", ChildHealthData.class)
+                        "SELECT c FROM ChildHealthData c WHERE c.child.childNo = :childNo AND c.child.status = :status ", ChildHealthData.class)
                 .setParameter("childNo", childNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
 
         ChildHealthData entity;
@@ -211,12 +234,16 @@ public class ChildRepositoryImpl implements ChildRepository {
     //아동 생활 데이터 수정
     @Override
     public Optional<ChildActivityData> updateActivityData(int childNo, ChildDto.activity dto) {
-        Child child = em.find(Child.class, childNo);
+        Child child = em.createQuery("SELECT c FROM Child c WHERE c.childNo = :child_no AND c.status = :status", Child.class)
+                .setParameter("child_no", childNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
+                .getSingleResult();
         if (child == null) return Optional.empty();
 
         List<ChildActivityData> results = em.createQuery(
-                        "SELECT c FROM ChildActivityData c WHERE c.child.childNo = :childNo", ChildActivityData.class)
+                        "SELECT c FROM ChildActivityData c WHERE c.child.childNo = :childNo AND c.child.status = :status", ChildActivityData.class)
                 .setParameter("childNo", childNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
 
         ChildActivityData entity;
@@ -242,10 +269,11 @@ public class ChildRepositoryImpl implements ChildRepository {
         LocalDateTime start = date.atStartOfDay();
         LocalDateTime end = date.plusDays(1).atStartOfDay();
 
-        return em.createQuery("SELECT c FROM ChildHealthLog c WHERE c.child.classRoom.classNo = :classNo AND c.createDate >= :start AND c.createDate < :end", ChildHealthLog.class)
+        return em.createQuery("SELECT c FROM ChildHealthLog c WHERE c.child.classRoom.classNo = :classNo AND c.createDate >= :start AND c.createDate < :end AND c.child.status = :status ", ChildHealthLog.class)
                 .setParameter("classNo", classNo)
                 .setParameter("start", start)
                 .setParameter("end", end)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
     }
 
@@ -254,10 +282,11 @@ public class ChildRepositoryImpl implements ChildRepository {
         LocalDateTime start = date.atStartOfDay();
         LocalDateTime end = date.plusDays(1).atStartOfDay();
 
-        return em.createQuery("SELECT c FROM ChildActivityLog c WHERE c.child.classRoom.classNo = :classNo AND c.createDate >= :start AND c.createDate < :end", ChildActivityLog.class)
+        return em.createQuery("SELECT c FROM ChildActivityLog c WHERE c.child.classRoom.classNo = :classNo AND c.createDate >= :start AND c.createDate < :end AND c.child.status = :status", ChildActivityLog.class)
                 .setParameter("classNo", classNo)
                 .setParameter("start", start)
                 .setParameter("end", end)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
     }
 
@@ -283,11 +312,12 @@ public class ChildRepositoryImpl implements ChildRepository {
         // 기존 로그 조회
         List<ChildHealthLog> logs = em.createQuery(
                         "SELECT log FROM ChildHealthLog log " +
-                                "WHERE log.child.childNo = :childNo AND log.createDate >= :start AND log.createDate < :end",
+                                "WHERE log.child.childNo = :childNo AND log.createDate >= :start AND log.createDate < :end AND log.child.status = :status",
                         ChildHealthLog.class)
                 .setParameter("childNo", childNo)
                 .setParameter("start", start)
                 .setParameter("end", end)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
 
         ChildHealthLog targetLog;
@@ -304,7 +334,10 @@ public class ChildRepositoryImpl implements ChildRepository {
             );
         } else {
             // 없을 경우 → 새로 생성
-            Child child = em.find(Child.class, childNo); // 자식 엔티티 로드
+            Child child = em.createQuery("SELECT c FROM Child c WHERE c.childNo = :child_no AND c.status = :status", Child.class)
+                    .setParameter("child_no", childNo)
+                    .setParameter("status", AdmissionStatus.APPROVED)
+                    .getSingleResult(); // 자식 엔티티 로드
             if (child == null) return Optional.empty(); // child가 없으면 실패
 
             targetLog = ChildHealthLog.builder()
@@ -332,11 +365,12 @@ public class ChildRepositoryImpl implements ChildRepository {
         // 기존 로그 조회
         List<ChildActivityLog> logs = em.createQuery(
                         "SELECT log FROM ChildActivityLog log " +
-                                "WHERE log.child.childNo = :childNo AND log.createDate >= :start AND log.createDate < :end",
+                                "WHERE log.child.childNo = :childNo AND log.createDate >= :start AND log.createDate < :end AND log.child.status = :status ",
                         ChildActivityLog.class)
                 .setParameter("childNo", childNo)
                 .setParameter("start", start)
                 .setParameter("end", end)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
 
         ChildActivityLog targetLog;
@@ -354,7 +388,10 @@ public class ChildRepositoryImpl implements ChildRepository {
             );
         } else {
             // 없을 경우 → 새로 생성
-            Child child = em.find(Child.class, childNo); // 자식 엔티티 로드
+            Child child = em.createQuery("SELECT c FROM Child c WHERE c.childNo = :child_no AND c.status = :status", Child.class)
+                    .setParameter("child_no", childNo)
+                    .setParameter("status", AdmissionStatus.APPROVED)
+                    .getSingleResult(); // 자식 엔티티 로드
             if (child == null) return Optional.empty(); // child가 없으면 실패
 
             targetLog = ChildActivityLog.builder()
@@ -387,10 +424,12 @@ public class ChildRepositoryImpl implements ChildRepository {
         WHERE mc.member.memberNo = :memberNo 
           AND hl.createDate >= :start 
           AND hl.createDate < :end
+          AND c.status = :status
         """, ChildHealthLog.class)
                 .setParameter("memberNo", memberNo)
                 .setParameter("start", start)
                 .setParameter("end", end)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
     }
 
@@ -407,40 +446,49 @@ public class ChildRepositoryImpl implements ChildRepository {
         WHERE mc.member.memberNo = :memberNo 
           AND al.createDate >= :start 
           AND al.createDate < :end
+          AND c.status = :status
         """, ChildActivityLog.class)
                 .setParameter("memberNo", memberNo)
                 .setParameter("start", start)
                 .setParameter("end", end)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
     }
 
     @Override
     public Optional<Long> countTodayHealthLog(int classNo, LocalDateTime today) {
-        String jpql = "SELECT COUNT (h) FROM ChildHealthLog h " +
+        String jpql =
+                "SELECT COUNT(h) " +
+                "FROM ChildHealthLog h " +
                 "JOIN h.child c " +
                 "WHERE c.classRoom.classNo = :classNo " +
-                "AND h.createDate = :today";
+                "AND h.createDate = :today " +
+                "AND c.status = :status";
+
         Long count = em.createQuery(jpql, Long.class)
                 .setParameter("classNo", classNo)
                 .setParameter("today", today)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getSingleResult();
         return Optional.ofNullable(count);
     }
 
     @Override
     public Page<ChildHealthLog> getHealthLogByChildNo(int childNo, Pageable pageable) {
-        String jpql = "SELECT c FROM ChildHealthLog c WHERE c.child.childNo = :childNo ORDER BY c.createDate DESC";
+        String jpql = "SELECT c FROM ChildHealthLog c WHERE c.child.childNo = :childNo AND c.child.status = :status ORDER BY c.createDate DESC ";
 
         List<ChildHealthLog> logs = em.createQuery(jpql, ChildHealthLog.class)
                 .setParameter("childNo", childNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .setFirstResult((int) pageable.getOffset())
                 .setMaxResults(pageable.getPageSize())
                 .getResultList();
 
         Long totalCount = em.createQuery(
-                        "SELECT COUNT(c) FROM ChildHealthLog c WHERE c.child.childNo = :childNo",
+                        "SELECT COUNT(c) FROM ChildHealthLog c WHERE c.child.childNo = :childNo AND c.child.status = :status",
                         Long.class)
                 .setParameter("childNo", childNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getSingleResult();
 
         return new PageImpl<>(logs, pageable, totalCount);
@@ -448,18 +496,20 @@ public class ChildRepositoryImpl implements ChildRepository {
 
     @Override
     public Page<ChildActivityLog> getActivityLogByChildNo(int childNo, Pageable pageable) {
-        String jpql = "SELECT c FROM ChildActivityLog c WHERE c.child.childNo = :childNo ORDER BY c.createDate DESC";
+        String jpql = "SELECT c FROM ChildActivityLog c WHERE c.child.childNo = :childNo AND c.child.status = :status ORDER BY c.createDate DESC";
 
         List<ChildActivityLog> logs = em.createQuery(jpql, ChildActivityLog.class)
                 .setParameter("childNo", childNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .setFirstResult((int) pageable.getOffset())
                 .setMaxResults(pageable.getPageSize())
                 .getResultList();
 
         Long totalCount = em.createQuery(
-                        "SELECT COUNT(c) FROM ChildActivityLog c WHERE c.child.childNo = :childNo",
+                        "SELECT COUNT(c) FROM ChildActivityLog c WHERE c.child.childNo = :childNo AND c.child.status = :status",
                         Long.class)
                 .setParameter("childNo", childNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getSingleResult();
 
         return new PageImpl<>(logs, pageable, totalCount);

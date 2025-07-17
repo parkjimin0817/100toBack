@@ -61,4 +61,6 @@ public interface MemberRepository  {
     //모든 교사 조회
     List<Member> findTeacher();
 
+    Optional<Member> findByClassRoom_ClassNo(int classNo);
+
 }
