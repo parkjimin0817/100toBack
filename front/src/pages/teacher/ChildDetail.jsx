@@ -10,8 +10,6 @@ import { toast } from 'react-toastify';
 import api from '../../api/axios';
 import ChildBasicInfo from '../../components/Child/ChildBasicInfo';
 
-const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
-
 const GlobalStyle = createGlobalStyle`
   label[for="child-profile-upload"]:hover .profile-plus-overlay {
     opacity: 1;
@@ -32,82 +30,12 @@ const ChildDetail = () => {
   const [editHealth, setEditHealth] = useState({});
   const [isLifeEditing, setIsLifeEditing] = useState(false);
   const [editActivity, setEditActivity] = useState({});
-  const [isUploading, setIsUploading] = useState(false);
 
   const [child, setChild] = useState(null);
 
   const formatDate = (datetimeString) => {
     if (!datetimeString) return '';
     return datetimeString.split('T')[0]; // '2025-06-26T10:40:47' → '2025-06-26'
-  };
-
-  //만 몇 세인지 계산
-  const getBirthAndAge = (jumin) => {
-    if (!jumin || jumin.length !== 6) return '';
-
-    const yy = parseInt(jumin.slice(0, 2), 10);
-    const mm = parseInt(jumin.slice(2, 4), 10);
-    const dd = parseInt(jumin.slice(4, 6), 10);
-
-    const currentYear = new Date().getFullYear();
-    const currentTwoDigitYear = currentYear % 100;
-    const century = yy <= currentTwoDigitYear ? 2000 : 1900;
-    const fullYear = century + yy;
-
-    const birthDate = new Date(`${fullYear}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}`);
-    if (isNaN(birthDate.getTime())) return '';
-
-    let age = currentYear - fullYear;
-    const today = new Date();
-    if (
-      today.getMonth() < birthDate.getMonth() ||
-      (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())
-    ) {
-      age--;
-    }
-
-    return `${fullYear}.${String(mm).padStart(2, '0')}.${String(dd).padStart(2, '0')} (만 ${age}세)`;
-  };
-
-  // 아동 프로필 이미지 업로드
-  const handleProfileChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    // 파일 크기 검증 (5MB 제한)
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('파일 크기는 5MB 이하여야 합니다.');
-      return;
-    }
-    // 파일 타입 검증
-    if (!file.type.startsWith('image/')) {
-      toast.error('이미지 파일만 업로드 가능합니다.');
-      return;
-    }
-    setIsUploading(true);
-    try {
-      // S3 presigned url 요청 (아동 프로필 경로로 지정)
-      const result = await getPresignedUrl(file.name, file.type, 'profile/child/');
-      const presignedUrl = result.presigned_url;
-      const changeName = result.change_name;
-      await uploadFileToS3(presignedUrl, file);
-      // mergedData 생성
-      const mergedData = {
-        child_no: child.child_no,
-        // father_phone: child.father_phone,
-        // mother_phone: child.mother_phone,
-        child_profile: changeName,
-      };
-      // childService를 통한 정보 업데이트
-      await childService.updateChildInfo(mergedData);
-      // 프론트 상태 갱신
-      setChild((prev) => ({ ...prev, child_profile: changeName }));
-      toast.success('프로필 이미지가 업로드되었습니다.');
-    } catch (error) {
-      toast.error('프로필 이미지 업로드에 실패했습니다.');
-    } finally {
-      setIsUploading(false);
-    }
   };
 
   //정보 불러오기
