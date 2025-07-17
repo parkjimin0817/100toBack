@@ -42,6 +42,7 @@ export const API_ENDPOINTS = {
     TEACHER_DETAIL_LIST: (centerNo) => `/api/members/teacher/list/${centerNo}`,
     TEACHER_DETAIL: (memberNo) => `/api/members/teacher/${memberNo}`,
     TEACHER_INTRO_LIST: (centerNo) => `/api/members/introList?centerNo=${centerNo}`,
+    TEACHER_COUNSEL_LIST: (centerNo) => `/api/counsel/getall?centerNo=${centerNo}`,
   },
   SMS: {
     AUTHCALL: `/api/sms/sendOne`,
@@ -55,6 +56,7 @@ export const API_ENDPOINTS = {
     DECISIONCENTER: `api/approval/decision/center`,
     DECISIONMEMBER: `api/approval/decision/member`,
     DECISIONCHILD: `api/approval/decision/child`,
+    REAPPROVAL: `/api/approval/reapproval`,
   },
   CENTERS: {
     BASE: '/api/center',
@@ -108,6 +110,7 @@ export const API_ENDPOINTS = {
     GET: '/api/childs/get',
     PARENTCHILDLIST: (memberNo) => `/api/childs/parentChild?memberNo=${memberNo}`,
     PARENTPHONENUMBER: (centerNo) => `/api/childs/phoneNumber/${centerNo}`,
+    UPDATEINFO: '/api/childs/updateInfoDetail',
   },
   BOARDS: {
     BASE: '/api/boards',
@@ -121,6 +124,8 @@ export const API_ENDPOINTS = {
     GETDOCLIST: '/api/boards/documents/list',
     UPDATEVIEWED: (boardNo) => `/api/boards/documents/viewed/${boardNo}`,
     GETRECENTVIEWED: '/api/boards/documents/recent',
+    PARENT: (memberNo, centerNo, page) => `/api/boards/type/Note/parent/${memberNo}/${centerNo}?page=${page}`,
+    TEACHER: (classNo, centerNo, page) => `/api/boards/type/Note/teacher/${classNo}/${centerNo}?page=${page}`,
   },
   VACATION: {
     BASE: '/api/vacation',

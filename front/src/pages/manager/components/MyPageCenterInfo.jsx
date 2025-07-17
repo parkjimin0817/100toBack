@@ -17,6 +17,22 @@ const MyPageCenterInfo = ({ centerInfo, onChange, isEditable }) => {
     ETC: '기타',
   };
 
+  const formatPhoneNumber = (value) => {
+    const onlyNums = value.replace(/\D/g, '');
+
+    if (onlyNums.startsWith('02')) {
+      const trimmed = onlyNums.slice(0, 9);
+      if (trimmed.length <= 2) return trimmed;
+      if (trimmed.length <= 5) return trimmed.replace(/(\d{2})(\d{1,3})/, '$1-$2');
+      return trimmed.replace(/(\d{2})(\d{3})(\d{1,4})/, '$1-$2-$3');
+    }
+
+    const trimmed = onlyNums.slice(0, 11);
+    if (trimmed.length <= 3) return trimmed;
+    if (trimmed.length <= 7) return trimmed.replace(/(\d{3})(\d{1,4})/, '$1-$2');
+    return trimmed.replace(/(\d{3})(\d{4})(\d{1,4})/, '$1-$2-$3');
+  };
+
   const handleChange = (key, value) => {
     if (!isEditable) return;
     setData((prev) => ({ ...prev, [key]: value }));
@@ -108,7 +124,13 @@ const MyPageCenterInfo = ({ centerInfo, onChange, isEditable }) => {
         <InfoType>연락처</InfoType>
         <Info>
           {isEditable ? (
-            <InfoInput value={data.centerTel} onChange={(e) => handleChange('centerTel', e.target.value)} />
+            <InfoInput
+              value={data.centerTel}
+              onChange={(e) => {
+                const formatted = formatPhoneNumber(e.target.value);
+                handleChange('centerTel', formatted);
+              }}
+            />
           ) : (
             data.centerTel
           )}

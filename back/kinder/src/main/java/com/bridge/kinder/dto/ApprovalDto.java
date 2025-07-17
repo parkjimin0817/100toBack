@@ -76,6 +76,26 @@ public class ApprovalDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
+    public static class MemberReApproval{
+        private int memberNo;
+        private int centerNo;
+        private CommonEnums.AdmissionStatus status;
+
+        public static MemberReApproval toDto(Member member) {
+            return MemberReApproval.builder()
+                    .memberNo(member.getMemberNo())
+                    .status(member.getStatus())
+                    .centerNo(member.getCenter().getCenterNo())
+                    .build();
+        }
+    }
+
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
     public static class CenterApprovalResponse{
         private int approval_no;
         private LocalDateTime approval_request_date;

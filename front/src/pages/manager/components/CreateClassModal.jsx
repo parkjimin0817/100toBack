@@ -182,7 +182,7 @@ const ModalCard = styled.div`
 const TitleDiv = styled.div`
   width: 100%;
   height: 45px;
-  background-color: ${({ theme }) => theme.colors.blue};
+  background-color: ${({ theme }) => theme.colors.lightblue};
   color: ${({ theme }) => theme.colors.white};
   display: flex;
   justify-content: flex-start;
@@ -294,7 +294,7 @@ const Button = styled.button`
   border: none;
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   cursor: pointer;
-  background-color: ${({ theme }) => theme.colors.blue};
+  background-color: ${({ theme }) => theme.colors.lightblue};
   color: ${({ theme }) => theme.colors.white};
 `;
 

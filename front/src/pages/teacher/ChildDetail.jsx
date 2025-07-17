@@ -12,6 +12,13 @@ import ChildBasicInfo from '../../components/Child/ChildBasicInfo';
 
 const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
+const GlobalStyle = createGlobalStyle`
+  label[for="child-profile-upload"]:hover .profile-plus-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+`;
+
 const ChildDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams(); // childNo
@@ -25,6 +32,7 @@ const ChildDetail = () => {
   const [editHealth, setEditHealth] = useState({});
   const [isLifeEditing, setIsLifeEditing] = useState(false);
   const [editActivity, setEditActivity] = useState({});
+  const [isUploading, setIsUploading] = useState(false);
 
   const [child, setChild] = useState(null);
 
@@ -61,12 +69,54 @@ const ChildDetail = () => {
     return `${fullYear}.${String(mm).padStart(2, '0')}.${String(dd).padStart(2, '0')} (만 ${age}세)`;
   };
 
+  // 아동 프로필 이미지 업로드
+  const handleProfileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // 파일 크기 검증 (5MB 제한)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('파일 크기는 5MB 이하여야 합니다.');
+      return;
+    }
+    // 파일 타입 검증
+    if (!file.type.startsWith('image/')) {
+      toast.error('이미지 파일만 업로드 가능합니다.');
+      return;
+    }
+    setIsUploading(true);
+    try {
+      // S3 presigned url 요청 (아동 프로필 경로로 지정)
+      const result = await getPresignedUrl(file.name, file.type, 'profile/child/');
+      const presignedUrl = result.presigned_url;
+      const changeName = result.change_name;
+      await uploadFileToS3(presignedUrl, file);
+      // mergedData 생성
+      const mergedData = {
+        child_no: child.child_no,
+        // father_phone: child.father_phone,
+        // mother_phone: child.mother_phone,
+        child_profile: changeName,
+      };
+      // childService를 통한 정보 업데이트
+      await childService.updateChildInfo(mergedData);
+      // 프론트 상태 갱신
+      setChild((prev) => ({ ...prev, child_profile: changeName }));
+      toast.success('프로필 이미지가 업로드되었습니다.');
+    } catch (error) {
+      toast.error('프로필 이미지 업로드에 실패했습니다.');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   //정보 불러오기
   useEffect(() => {
     const fetchChildDetail = async () => {
       try {
         const response = await api.get(`http://localhost:8888/api/childs/detail?childNo=${id}`);
         setChild(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error('아동 상세정보 불러오기 실패:', error);
       }
@@ -133,11 +183,15 @@ const ChildDetail = () => {
 
   return (
     <>
+      <GlobalStyle />
       <BasicInfoContainer>
         <ContentHeader
           Title={'아동 상세보기'}
           Color={'orange'}
-          ButtonProps={[{ Title: '뒤로가기', func: () => navigate(-1) }, { Title: '아동정보 삭제' }]}
+          ButtonProps={[
+            { Title: '뒤로가기', func: () => navigate(-1) },
+            // { Title: '아동정보 삭제' }
+          ]}
         />
         <ChildBasicInfo child={child}></ChildBasicInfo>
       </BasicInfoContainer>
@@ -611,6 +665,74 @@ const HealthContentTr = styled.tr`
 
 const BasicInfoContainer = styled.div`
   min-width: 1024px;
+`;
+
+const BasicInfo = styled.div`
+  display: flex;
+  justify-content: space-around;
+  background-color: white;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+`;
+
+const PictureLine = styled.div`
+  /* width: 225px;
+  height: 200px; */
+  margin-left: 25px;
+  margin-top: 20px;
+  margin-bottom: 45px;
+`;
+
+const Picture = styled.img`
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+`;
+
+const FirstInfo = styled.table`
+  text-align: left;
+  border-collapse: separate;
+  border-spacing: 10px;
+`;
+
+const NameTr = styled.tr`
+  display: flex;
+  justify-content: flex-start;
+  font-size: ${({ theme }) => theme.fontSizes['2xl']};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+`;
+
+const Info = styled.tr`
+  text-align: left;
+`;
+
+const SpanWrapper = styled.div`
+  display: flex;
+  flex-direction: column; /* 또는 row로 가로배치 */
+  justify-content: center; /* 세로 가운데 정렬 */
+  height: 100%;
+  padding-top: 40px;
+`;
+
+const InfoColumn = styled.td`
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+`;
+
+const InfoResult = styled.td``;
+
+const InfoResult1 = styled.td`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+
+const Class = styled.tr`
+  display: flex;
+  justify-content: flex-start;
+  font-size: ${({ theme }) => theme.fontSizes['2xl']};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
 `;
 
 const HealthInfoContainer = styled.div`

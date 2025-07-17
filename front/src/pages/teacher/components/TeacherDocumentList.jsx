@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { IoMdDownload } from 'react-icons/io';
@@ -6,13 +5,13 @@ import { TiDocumentText } from 'react-icons/ti';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { toast } from 'react-toastify';
 import { boardService } from '../../../api/boards';
+import { getBoardDownloadUrl } from '../../../api/fileApi';
 
 const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
 const TeacherDocumentList = ({ documents, onDelete, onViewed }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
@@ -26,7 +25,7 @@ const TeacherDocumentList = ({ documents, onDelete, onViewed }) => {
     const previewable = ['pdf', 'png', 'jpg', 'jpeg', 'gif'];
 
     try {
-      await boardService.updateViewedDate(d.board_no);
+      await boardService.updateViewedDate(d.boardNo);
       onViewed();
     } catch (error) {
       console.error('최근 열람 날짜 업데이트 실패:', error);
@@ -39,11 +38,32 @@ const TeacherDocumentList = ({ documents, onDelete, onViewed }) => {
     }
   };
 
+  //파일 다운로드
   const handleDownload = async (d) => {
     if (!d.fileUrl) return;
 
     try {
-      await boardService.updateViewedDate(d.board_no);
+      //다운로드 URL
+      const { presignedUrl } = await getBoardDownloadUrl(d.boardNo);
+
+      // 파일 다운로드
+      const response = await fetch(presignedUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = d.originName;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('파일 다운로드 실패:', error);
+      alert('파일 다운로드에 실패했습니다.');
+    }
+
+    try {
+      await boardService.updateViewedDate(d.boardNo);
       onViewed();
     } catch (error) {
       console.error('최근 열람 날짜 업데이트 실패:', error);
@@ -51,12 +71,12 @@ const TeacherDocumentList = ({ documents, onDelete, onViewed }) => {
   };
 
   const handleDelete = async (d) => {
-    if (!d.board_no) return;
+    if (!d.boardNo) return;
 
     if (!window.confirm(`${d.title}을 정말 삭제하시겠습니까?`)) return;
 
     try {
-      await boardService.boardDelete(d.board_no);
+      await boardService.boardDelete(d.boardNo);
       toast.success('삭제 완료되었습니다.');
       onDelete();
     } catch (error) {
@@ -81,7 +101,7 @@ const TeacherDocumentList = ({ documents, onDelete, onViewed }) => {
           {paginatedData.map((d, index) => (
             <tr key={index}>
               <td>{index + 1}</td>
-              <td>{d.create_date.split('T')[0]}</td>
+              <td>{d.createDate.split('T')[0]}</td>
               <td>{d.title}</td>
               <td>
                 <TiDocumentText size={20} onClick={() => handlePreview(d)} style={{ cursor: 'pointer' }} />

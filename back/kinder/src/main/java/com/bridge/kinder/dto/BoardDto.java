@@ -1,5 +1,6 @@
 package com.bridge.kinder.dto;
 
+import com.bridge.kinder.dto.BoardContentDto.Detail;
 import com.bridge.kinder.dto.RecentBoardDto.Response;
 import com.bridge.kinder.entity.Board;
 import com.bridge.kinder.entity.BoardContent;
@@ -186,6 +187,7 @@ public class BoardDto {
         private int views;                   // 조회수
         private CommonEnums.BoardType type;  // 게시물 타입
         private List<BoardContentDto.Detail> boardContents;
+        private String className;
 
 
         public static NoteBoardDto fromEntity(Board board) {
@@ -201,6 +203,7 @@ public class BoardDto {
                                     .map(BoardContentDto.Detail::fromEntity)
                                     .collect(Collectors.toList())
                     )
+                    .className(board.getClassRoom().getClassName())
                     .build();
         }
     }
@@ -314,6 +317,7 @@ public class BoardDto {
     public static class DocumentRequest {
         private int memberNo;
         private String title;
+        private String attachmentOrigin;
         private String fileUrl;
     }
 
@@ -323,17 +327,19 @@ public class BoardDto {
     @AllArgsConstructor
     @Builder
     public static class DocumentResponse {
-        private int board_no;
-        private LocalDateTime create_date;
+        private int boardNo;
+        private LocalDateTime createDate;
         private String title;
         private String fileUrl;
+        private String originName;
 
         public static DocumentResponse toDto(Board board) {
             return DocumentResponse.builder()
-                    .board_no(board.getBoardNo())
-                    .create_date(board.getCreateDate())
+                    .boardNo(board.getBoardNo())
+                    .createDate(board.getCreateDate())
                     .title(board.getTitle())
                     .fileUrl(board.getAttachment())
+                    .originName(board.getAttachmentOrigin())
                     .build();
         }
     }

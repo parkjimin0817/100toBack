@@ -425,5 +425,4 @@ public class MemberDto {
                     .build();
         }
     }
-
 }

@@ -68,6 +68,7 @@ import CouncelSettingPage from './pages/manager/CouncelSettingPage';
 import ParentCouncelPage from './pages/parent/ParentCouncelPage';
 import TeacherDocument from './pages/teacher/TeacherDocument';
 import MyPage from './pages/MyPage';
+import ReSignUpPage from './pages/ReSignUpPage';
 
 function App() {
   return (
@@ -289,6 +290,7 @@ function App() {
 
           {/* Test Page */}
           <Route path="/home" element={<Home />} />
+          <Route path="/resignup" element={<ReSignUpPage />} />
         </Routes>
       </Router>
       <ToastContainer

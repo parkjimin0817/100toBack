@@ -166,19 +166,41 @@ public class ClassRoomServiceImpl implements ClassRoomService {
 
     @Override
     public ClassRoomDto.Response updateClass(ClassRoomDto.Update dto, int classNo) {
-        //교사 조회
-        Member teacher = memberRepository.findByMemberNo(dto.getMember_no())
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 교사입니다."));
+        // 반 조회
+        ClassRoom classRoom = classRoomRepository.updateClass(dto, classNo)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 반입니다."));
 
-        ClassRoom classRoom = classRoomRepository.updateClass(dto,classNo)
-                .orElseThrow(() -> new EntityNotFoundException("수정에 실패하였습니다."));
+        // 해당 반 원래 교사 조회
+        Optional<Member> prevTeacherOpt = memberRepository.findByClassRoom_ClassNo(classNo);
 
-        // 교사에 반 연결
-        teacher.setClassRoom(classRoom);
-        memberRepository.save(teacher);
-        int childCount = childRepository.countChildByClassroom(dto.getClass_no());
+        // 새로 배정할 교사
+        Member newTeacher = null;
 
-        return ClassRoomDto.Response.toDto(classRoom, teacher, childCount);
+        if (dto.getMember_no() != null) { //dto에서 받아온 memberNo의 교사
+            newTeacher = memberRepository.findByMemberNo(dto.getMember_no())
+                    .orElseThrow(() -> new RuntimeException("존재하지 않는 교사입니다."));
+        }
+
+        // 기존 교사가 배정되어 있을경우
+        // 1. (미지정)으로 수정할 경우 or 다른 교사로 수정할 경우
+        // 기존 교사랑 연결 해제
+        if (prevTeacherOpt.isPresent()) {
+            Member prevTeacher = prevTeacherOpt.get();
+            if (newTeacher == null || prevTeacher.getMemberNo() != newTeacher.getMemberNo()) {
+                prevTeacher.setClassRoom(null);
+                memberRepository.save(prevTeacher);
+            }
+        }
+
+        // 2. 새 교사가 있을 경우 새 교사에게 반 연결
+        if (newTeacher != null) {
+            newTeacher.setClassRoom(classRoom);
+            memberRepository.save(newTeacher);
+        }
+
+        int childCount = childRepository.countChildByClassroom(classNo);
+
+        return ClassRoomDto.Response.toDto(classRoom, newTeacher, childCount);
     }
 
     @Override

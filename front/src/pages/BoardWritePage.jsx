@@ -28,7 +28,7 @@ const BoardWritePage = () => {
   const [formState, setFormState] = useState({
     title: '',
     type: String(category).toUpperCase(),
-    classRoomNo: null,
+    classRoomNo: member?.classNo || null,
     attachment: null,
     memberName: member.memberName,
     memberId: member.memberNo,
@@ -105,10 +105,10 @@ const BoardWritePage = () => {
     if (otherFile instanceof File) {
       // 1. Presigned URL 요청 [첨부파일]
       const presigned = await getPresignedUrl(otherFile.name, otherFile.type, path);
-  
+
       console.log(presigned);
       console.log(otherFile.type);
-  
+
       // 2. S3에 업로드 [첨부파일]
       await uploadFileToS3(presigned.presigned_url, otherFile);
       attachmentChangeName = presigned.change_name;
@@ -224,7 +224,7 @@ const BoardWritePage = () => {
 
   // 게시판 종류에 따라 초기 블록 추가.
   useEffect(() => {
-    if(category === "photo" || category === "meal_plan") {
+    if (category === 'photo' || category === 'meal_plan') {
       const newBlock = {
         boardContentNo: Date.now(),
         type: 'IMG',
@@ -245,7 +245,7 @@ const BoardWritePage = () => {
         contents: [...prev.contents, newBlock],
       }));
     }
-  }, [])
+  }, []);
 
   return (
     <PageContainer onSubmit={handleSubmit} onChange={() => setIsDirty(true)}>
