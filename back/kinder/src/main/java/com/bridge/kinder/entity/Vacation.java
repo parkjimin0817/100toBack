@@ -72,6 +72,11 @@ public class Vacation { //휴가, 워케이션
     //멤버
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CENTER_NO")
+    private Center center;
+    //시설
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LEAVE_NO")
     private Leave leave;
     //연차

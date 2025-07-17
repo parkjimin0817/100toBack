@@ -3,6 +3,7 @@ package com.bridge.kinder.service;
 import com.bridge.kinder.dto.ApprovalDto;
 import com.bridge.kinder.dto.ApprovalDto.CenterApprovalResponse;
 import com.bridge.kinder.dto.ApprovalDto.CenterApprovalUpdate;
+import com.bridge.kinder.dto.ApprovalDto.MemberReApproval;
 import com.bridge.kinder.entity.Approval;
 import com.bridge.kinder.entity.Center;
 import com.bridge.kinder.entity.Child;
@@ -116,15 +117,24 @@ public class ApprovalServiceImpl implements ApprovalService {
 
     //시설 재가입 요청
     @Override
-    public String reApproval(int memberNo, int centerNo) {
+    public MemberReApproval reApproval(ApprovalDto.MemberReApproval dto) {
 
-        Member member = memberRepository.findByMemberNo(memberNo)
+        Member member = memberRepository.findByMemberNo(dto.getMemberNo())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 멤버입니다."));
 
-        Center center = centerRepository.findById(centerNo)
+        Center center = centerRepository.findById(dto.getCenterNo())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
+        
+        Leave leave = leaveRepository.findByMember_MemberNo(dto.getMemberNo())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 연차입니다."));
+
+        System.out.println("=========================찾기 완료");
+
 
         member.changeMemberStatus(AdmissionStatus.PENDING);
+        System.out.println("=========================멤버상태변경완료");
+        member.setCenter(center);
+        System.out.println("=========================멤버 센터 변경 완료");
 
         Approval approval = Approval.builder()
                 .center(center)
@@ -132,22 +142,13 @@ public class ApprovalServiceImpl implements ApprovalService {
                 .build();
 
         approvalRepository.save(approval);
+        System.out.println("=========================승인요청 생성 완료");
 
 
-        Resign resign = Resign.builder()
-                .center(center)
-                .member(member)
-                .build();
+        leave.resetLeaveDays(15);
+        leave.resetUsedLeave(0);
+        System.out.println("=========================연차 초기화 완료");
 
-        resignRepository.save(resign);
-
-        Leave leave = Leave.builder()
-                .member(member)
-                .leaveDays(15)
-                .usedLeave(0)
-                .build();
-        leaveRepository.save(leave);
-
-        return "";
+        return MemberReApproval.toDto(member);
     }
 }

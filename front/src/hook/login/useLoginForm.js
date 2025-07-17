@@ -45,6 +45,7 @@ export const useLoginForm = () => {
       const memberData = await memberService.login(memberId, memberPwd);
 
       login(memberData);
+      console.log('memberData', memberData);
 
       if (memberData.memberType === 'MANAGER') {
         toast.success('로그인 성공하였습니다.');

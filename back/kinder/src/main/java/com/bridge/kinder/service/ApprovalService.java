@@ -18,6 +18,6 @@ public interface ApprovalService {
     //아동 승인거절 결정
     String updateChildApprovals(ApprovalDto.ChildApprovalUpdate dto);
     //시설 재가입 요청
-    String reApproval(int memberNo, int centerNo);
+    ApprovalDto.MemberReApproval reApproval (ApprovalDto.MemberReApproval dto);
 
 }
