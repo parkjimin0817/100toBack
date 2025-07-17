@@ -70,6 +70,105 @@ const BoardWritePage = () => {
     }
   };
 
+// ✅ 3. 콘텐츠가 최소 1개 이상 있어야 함
+    if (formState.contents.length === 0) {
+      alert('내용을 최소 1개 이상 작성해주세요.');
+      return;
+    }
+
+    // ✅ 4. 콘텐츠 내용 검증 (빈 텍스트 or 이미지 파일 없음 등)
+    const hasInvalidBlock = formState.contents.some((item) => {
+      if (item.type === 'TEXT' && !item.contentText?.trim()) return true;
+      if (item.type === 'IMG' && !item.contentFile) return true;
+      return false;
+    });
+
+    if (hasInvalidBlock) {
+      alert('빈 텍스트 블록이나 이미지가 누락된 블록이 있습니다.');
+      return;
+    }
+
+    // console.log(formState.attachment);
+
+    //S3 게시판 첨부파일 저장 위치
+    const path = `board/${category}/`;
+
+    //S3 게시판 컨텐츠 파일 저장 위치
+    const detailPath = 'board/content/';
+
+    //컨텐츠 부분에 있는 파일들
+    const filterData = formState.contents.filter((item) => item.type === 'IMG');
+
+    //첨부파일
+    const otherFile = formState?.attachment;
+    let attachmentChangeName = null;
+
+    if (otherFile instanceof File) {
+      // 1. Presigned URL 요청 [첨부파일]
+      const presigned = await getPresignedUrl(otherFile.name, otherFile.type, path);
+
+      console.log(presigned);
+      console.log(otherFile.type);
+
+      // 2. S3에 업로드 [첨부파일]
+      await uploadFileToS3(presigned.presigned_url, otherFile);
+      attachmentChangeName = presigned.change_name;
+    }
+
+    // 1. Presigned URL 요청 [컨텐츠 부분에 있는 파일]
+    const presignedResults = await Promise.all(
+      filterData.map((item) => getPresignedUrl(item.contentFile.name, item.contentFile.type, detailPath))
+    );
+
+    // 2. S3에 업로드 [컨텐츠 부분에 있는 파일]
+    await Promise.all(
+      presignedResults.map((presigned, index) => uploadFileToS3(presigned.presigned_url, filterData[index].contentFile))
+    );
+
+    let imgFileIndex = 0;
+
+    const contents = formState.contents.map((item, index) => {
+      if (item.type === 'IMG') {
+        const changeName = presignedResults[imgFileIndex]?.change_name;
+        imgFileIndex += 1;
+
+        return {
+          type: item.type, // "IMG"
+          contentText: null,
+          contentFile: changeName, // "board/content/xxx.jpg"
+          contentFileOriginal: item.contentFile.name,
+        };
+      } else {
+        return {
+          type: item.type, // "TEXT"
+          contentText: item.contentText,
+          contentFile: null,
+          contentFileOriginal: null,
+        };
+      }
+    });
+
+    const payload = {
+      title: formState.title,
+      type: formState.type,
+      attachment: attachmentChangeName ? attachmentChangeName : null,
+      attachmentOriginal: otherFile instanceof File ? otherFile.name : null,
+      centerId: formState.centerId,
+      classRoomId: formState.classRoomNo,
+      memberId: formState.memberId,
+      contents: contents,
+    };
+
+    // 게시판 저장
+    const boardNo = await boardService.createBoard(payload);
+    if (!boardNo) {
+      throw new Error('게시판 생성 실패했습니다.');
+    }
+
+    allowNavigation();
+    navigate(`/${category}/list`);
+  };
+  
   const updateFormField = (key, value) => {
     setFormState((prev) => ({
       ...prev,
