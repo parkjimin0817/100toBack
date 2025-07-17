@@ -42,6 +42,7 @@ export const API_ENDPOINTS = {
     TEACHER_DETAIL_LIST: (centerNo) => `/api/members/teacher/list/${centerNo}`,
     TEACHER_DETAIL: (memberNo) => `/api/members/teacher/${memberNo}`,
     TEACHER_INTRO_LIST: (centerNo) => `/api/members/introList?centerNo=${centerNo}`,
+    TEACHER_COUNSEL_LIST: (centerNo) => `/api/counsel/getall?centerNo=${centerNo}`,
   },
   SMS: {
     AUTHCALL: `/api/sms/sendOne`,

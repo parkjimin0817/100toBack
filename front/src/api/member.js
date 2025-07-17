@@ -290,4 +290,14 @@ export const memberService = {
       throw new Error('서버 통신 불량: ' + error.message);
     }
   },
+
+  //교사 메인페이지 상담일정 불러오기
+  teacherCounselGet: async (centerNo) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.MEMBERS.TEACHER_COUNSEL_LIST(centerNo));
+      return data;
+    } catch (error) {
+      throw new Error('서버 통신 오류: ' + error.message);
+    }
+  },
 };

@@ -12,6 +12,7 @@ import useLoginStore from '../../store/loginStore';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../api/axios';
+import { memberService } from '../../api/member';
 
 const TeacherMainPage = () => {
   const [activeTab, setActiveTab] = useState('상담');
@@ -29,10 +30,10 @@ const TeacherMainPage = () => {
 
   const fetchCounselData = async () => {
     try {
-      const res = await api.get(`http://localhost:8888/api/counsel/getall?centerNo=${centerNo}`);
-      setCounselList(res.data);
+      const data = await memberService.teacherCounselGet(member.centerNo);
+      setCounselList(data);
     } catch (error) {
-      toast.error('상담 목록 불러오기 실패:', error);
+      toast.error('상담 목록 불러오기 실패: ' + error.message);
     }
   };
 
