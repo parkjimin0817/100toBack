@@ -64,7 +64,7 @@ const BoardWritePage = () => {
     }
 
     // ✅ 2. 반 선택 유효성 검사 (category가 반이 필요한 경우만)
-    if ((category === 'family_notice' || category === 'note') && !formState.classRoomNo) {
+    if ((category === 'note') && !formState.classRoomNo) {
       alert('반을 선택해주세요.');
       return;
     }

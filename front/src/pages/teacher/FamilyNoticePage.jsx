@@ -17,11 +17,6 @@ const columns = [
     align: 'center',
   },
   {
-    label: '반',
-    key: 'className',
-    width: '100px',
-  },
-  {
     label: '파일',
     key: 'attachment',
     width: '120px',
