@@ -42,7 +42,6 @@ public interface MemberRepository  {
     //멤버no으로 한명 찾기
     Optional<Member> findByMemberNo(int memberNo);
 
-
     //마이페이지 정보 수정
     Optional<Member> myPageUpdate(int id, MypageDto.Update dto);
 
