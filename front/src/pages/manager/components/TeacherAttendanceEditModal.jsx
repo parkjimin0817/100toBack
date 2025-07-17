@@ -24,7 +24,13 @@ const TeacherAttendanceEditModal = ({ onClose, onEdit, attendance, memberNo, cen
 
     const isUpdate = !!attendance; //근태 데이터 없으면 false, 있으면 true
     const rawDate = isUpdate ? attendance.attendanceDate : selectedDate;
-    const date = typeof rawDate === 'string' ? rawDate.slice(0, 10) : new Date(rawDate).toISOString().slice(0, 10);
+    const date = (() => {
+      const dateObj = new Date(rawDate);
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const d = String(dateObj.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    })();
     const fullInTime = inTime ? `${attendance?.attendanceDate || date}T${inTime}` : null;
     const fullOutTime = outTime ? `${attendance?.attendanceDate || date}T${outTime}` : null;
 
@@ -46,6 +52,8 @@ const TeacherAttendanceEditModal = ({ onClose, onEdit, attendance, memberNo, cen
       memberNo,
       centerNo,
     };
+
+    console.log('dk', payload);
 
     if (isUpdate) {
       //수정
