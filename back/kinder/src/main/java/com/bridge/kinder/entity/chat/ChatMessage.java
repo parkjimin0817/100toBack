@@ -52,6 +52,7 @@ public class ChatMessage extends BaseTimeEntity {
     //채팅방
 
     @OneToMany(mappedBy = "chatMessage", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @Builder.Default
     private List<ReadStatus> readStatuses = new ArrayList<>();
     //메세지 읽음
 }
