@@ -1,15 +1,15 @@
-import React from 'react'
+import React from 'react';
 import styled from 'styled-components';
 import { childInfo } from '../../api/childInfo';
 import ChildPicture from '../../pages/parent/components/childpic.png';
 import AddImage from '../../pages/parent/components/addsquare.png';
-import SearchImage from '../../pages/parent/components/search.png'
+import SearchImage from '../../pages/parent/components/search.png';
 import ChildImage from '../../assets/img/cardchild.png';
 import ScrollWrapper from './MyPageScrollWrapper';
-
-const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
+import { useNavigate } from 'react-router-dom';
 
 const ParentChildListInfo = ({ childList, openAddModal, openBringModal }) => {
+  const navigate = useNavigate();
   return (
     // <MenuBox>
     //   {childList.map((data) => {
@@ -32,16 +32,16 @@ const ParentChildListInfo = ({ childList, openAddModal, openBringModal }) => {
     //       </Card>
     //     );
     //   })}
-      // <AddChild>
-      //   <AddBox onClick={openAddModal}>
-      //     <Plus>아동 추가</Plus>
-      //     <Img src={AddImage} />
-      //   </AddBox>
-      //   <AddBox onClick={openBringModal}>
-      //     <Plus>아동 검색</Plus>
-      //     <Img src={SearchImage} />
-      //   </AddBox>
-      // </AddChild>
+    // <AddChild>
+    //   <AddBox onClick={openAddModal}>
+    //     <Plus>아동 추가</Plus>
+    //     <Img src={AddImage} />
+    //   </AddBox>
+    //   <AddBox onClick={openBringModal}>
+    //     <Plus>아동 검색</Plus>
+    //     <Img src={SearchImage} />
+    //   </AddBox>
+    // </AddChild>
     // </MenuBox>
     <>
       <ScrollWrapper>
@@ -55,7 +55,9 @@ const ParentChildListInfo = ({ childList, openAddModal, openBringModal }) => {
               >
                 <CardContent>
                   <Name>{data.child_name}</Name>
-                  <CounselDate>({age}세/{gender === '남자' ? '남' : '여'})</CounselDate>
+                  <CounselDate>
+                    ({age}세/{gender === '남자' ? '남' : '여'})
+                  </CounselDate>
                   <Time>생일 {birthday}</Time>
                 </CardContent>
                 <CardImage src={ChildImage} alt="아이" />
@@ -77,11 +79,10 @@ const ParentChildListInfo = ({ childList, openAddModal, openBringModal }) => {
         </CardList>
       </ScrollWrapper>
     </>
-  )
-}
+  );
+};
 
 export default ParentChildListInfo;
-
 
 const MenuBox = styled.div`
   padding: 20px;

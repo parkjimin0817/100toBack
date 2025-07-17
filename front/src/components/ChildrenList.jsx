@@ -83,6 +83,7 @@ const ChildrenList = ({
             <Card
               key={id}
               className={classPlacement && selectedItem?.id === id && selectedItem?.role === role ? 'selected' : ''}
+              color={Color}
               onClick={() => {
                 const id = item.child_no || item.member_no;
                 if (classPlacement) {
@@ -97,7 +98,10 @@ const ChildrenList = ({
                 }
               }}
             >
-              <PictureBox color={Color}>
+              <PictureBox
+                color={Color}
+                className={classPlacement && selectedItem?.id === id && selectedItem?.role === role ? 'selected' : ''}
+              >
                 <ChildPic
                   src={item.member_profile ? `${CLOUDFRONT_URL}/${item.member_profile}` : defaultImg}
                   alt="사용자 프로필"
@@ -140,8 +144,8 @@ const Card = styled.div`
     box-shadow 0.2s ease;
 
   &.selected {
-    transform: translateY(-5px); // 위로 살짝 띄우기
-    box-shadow: 0 8px 24px rgba(0, 123, 255, 0.4); // 강조
+    /* transform: translateY(-5px); // 위로 살짝 띄우기
+    box-shadow: 0 8px 24px rgba(0, 123, 255, 0.4); // 강조 */
   }
 `;
 
@@ -155,6 +159,11 @@ const PictureBox = styled.div`
   border-radius: 5px;
   &:hover {
     cursor: pointer;
+    border: solid 5px ${({ theme, color }) => theme.colors[color]};
+  }
+  &.selected {
+    /* transform: translateY(-5px); // 위로 살짝 띄우기
+    box-shadow: 0 8px 24px rgba(0, 123, 255, 0.4); // 강조 */
     border: solid 5px ${({ theme, color }) => theme.colors[color]};
   }
 `;
