@@ -49,4 +49,12 @@ public class ApprovalController {
         return ResponseEntity.ok(approvalService.updateChildApprovals(dto));
     }
 
+    //시설 재가입 요청
+    @PatchMapping("/reapproval")
+    public ResponseEntity<String> reApproval(@RequestBody ApprovalDto.MemberReApproval dto) {
+        System.out.println("=========================");
+        System.out.println(dto.getMemberNo());
+        System.out.println(dto.getCenterNo());
+        return ResponseEntity.ok(approvalService.reApproval(dto.getMemberNo(), dto.getCenterNo()));
+    }
 }

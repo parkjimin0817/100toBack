@@ -28,7 +28,7 @@ const BoardWritePage = () => {
   const [formState, setFormState] = useState({
     title: '',
     type: String(category).toUpperCase(),
-    classRoomNo: member.classNo,
+    classRoomNo: member?.classNo || null,
     attachment: null,
     memberName: member.memberName,
     memberId: member.memberNo,

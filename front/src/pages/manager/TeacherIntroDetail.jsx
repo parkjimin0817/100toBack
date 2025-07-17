@@ -74,8 +74,8 @@ const TeacherIntroDetail = () => {
         Color={'blue'}
         FontSize="xl"
         ButtonProps={[
-          { Title: '뒤로가기', func: handleGoBack },
           { Title: '퇴직처리', func: handleResignment },
+          { Title: '뒤로가기', func: handleGoBack },
         ]}
       />
 

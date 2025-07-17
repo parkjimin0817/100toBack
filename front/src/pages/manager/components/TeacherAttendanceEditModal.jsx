@@ -94,10 +94,10 @@ const TeacherAttendanceEditModal = ({ onClose, onEdit, attendance, memberNo, cen
             </Label>
             <br />
             <ButtonGroup>
+              <Button type="submit">저장</Button>
               <Button type="close" onClick={onClose}>
                 닫기
               </Button>
-              <Button type="submit">저장</Button>
             </ButtonGroup>
           </Form>
         </Content>
