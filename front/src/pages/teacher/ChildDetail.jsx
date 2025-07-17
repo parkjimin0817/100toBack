@@ -191,7 +191,7 @@ const ChildDetail = () => {
         <ContentHeader
           Title={'아동 상세보기'}
           Color={'orange'}
-          ButtonProps={[{ Title: '뒤로가기', func: () => navigate(-1) }, { Title: '아동정보 삭제' }]}
+          ButtonProps={[{ Title: '아동정보 삭제' }, { Title: '뒤로가기', func: () => navigate(-1) }]}
         />
         <BasicInfo>
           <PictureLine>

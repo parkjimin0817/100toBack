@@ -225,22 +225,6 @@ public class MemberServiceImpl implements MemberService {
         return member;
     }
 
-//    //로그인
-//    @Override
-//    public MemberDto.LoginResponse getLoginMember(String memberId, String memberPwd) {
-//        Member member = memberRepository.findByMemberId(memberId).get();
-//
-//        if(!member.getMemberPwd().equals(memberPwd)) {
-//            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
-//        }
-//
-//        if(member.getStatus().equals(AdmissionStatus.PENDING) || member.getStatus().equals(AdmissionStatus.REJECTED)) {
-//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "승인되지 않은 계정입니다.");
-//        }
-//
-//        return MemberDto.LoginResponse.toDto(member);
-//    }
-
     //시설 별 교사 목록 찾기 (for selectbar)
     @Override
     @Transactional(readOnly = true)

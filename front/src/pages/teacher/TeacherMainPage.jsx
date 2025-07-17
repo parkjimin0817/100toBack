@@ -189,7 +189,7 @@ const FirstContent = styled.div`
   border-radius: 20px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   overflow: hidden;
-  height: 570px;
+  height: 550px;
 `;
 
 const TabBar = styled.div`

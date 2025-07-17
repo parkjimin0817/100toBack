@@ -167,11 +167,6 @@ export const memberService = {
         return;
       }
 
-      if (camelData.memberStatus === 'REJECTED') {
-        toast.error('승인 거절되었습니다.');
-        return;
-      }
-
       sessionStorage.setItem('accessToken', camelData.accessToken);
 
       return camelData;
@@ -298,6 +293,16 @@ export const memberService = {
       return data;
     } catch (error) {
       throw new Error('서버 통신 오류: ' + error.message);
+    }
+  },
+
+  //교사 시설 재가입
+  teacherResignUp: async (formData) => {
+    try {
+      const { data } = await api.post(API_ENDPOINTS.MEMBERS.RESIGNUP, formData);
+      return data;
+    } catch (error) {
+      throw new Error('서버 통신 불량: ' + error.message);
     }
   },
 };

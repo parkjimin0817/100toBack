@@ -60,4 +60,17 @@ export const approvalListService = {
       throw new Error(error, '서버 통신 불량');
     }
   },
+
+  //시설 재승인 요청
+  reSignup: async (memberNo, center_no) => {
+    try {
+      const { data } = await api.patch(API_ENDPOINTS.APPLOVALLIST.REAPPROVAL, {
+        memberNo: memberNo,
+        centerNo: center_no,
+      });
+      return data;
+    } catch (error) {
+      throw new Error(error, '서버 통신 불량');
+    }
+  },
 };

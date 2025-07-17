@@ -46,10 +46,12 @@ export const useLoginForm = () => {
 
       login(memberData);
 
-      toast.success('로그인 성공하였습니다.');
-
       if (memberData.memberType === 'MANAGER') {
         navigator('/manager/main');
+        toast.success('로그인 성공하였습니다.');
+      } else if (memberData.memberType === 'TEACHER' && memberData.memberStatus === 'REJECTED') {
+        toast.success('가입하실 근무지를 선택해주세요.');
+        navigator('/resignup');
       } else if (memberData.memberType === 'TEACHER') {
         //교사용 오늘 출퇴근 기록
         const attendance = await attendanceService.getTodayAttendance(memberData.memberNo);

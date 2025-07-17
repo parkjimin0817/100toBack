@@ -44,7 +44,7 @@ const MainSchedule = () => {
   //일정 더보기 / 등록하기 버튼
   const handleClickButton = () => {
     if (member.memberType === 'PARENT') {
-      navigate('나중에 생기는 학부모 유치원 일정페이지');
+      navigate('/manager/schedule');
     } else if (member.memberType === 'TEACHER') {
       navigate('/scheduleteacher');
     } else {
@@ -221,7 +221,7 @@ const Button = styled.button`
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   position: absolute;
   left: 50%;
-  bottom: 0;
+  bottom: 12px;
   transform: translateX(-50%);
 
   :hover {
