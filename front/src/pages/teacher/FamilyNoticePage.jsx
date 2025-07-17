@@ -87,7 +87,7 @@ const FamilyNoticePage = () => {
         Color={member.memberType === 'PARENT' ? 'purple' : 'green'}
         // 교사면 버튼 추가, 학부모면 없음.
         ButtonProps={
-          member.memberType === 'PARENT'
+          member.memberType === 'PARENT' || member.memberType === 'TEACHER'
             ? []
             : [
                 {

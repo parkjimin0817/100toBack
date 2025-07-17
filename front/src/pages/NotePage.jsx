@@ -97,6 +97,10 @@ const NotePage = () => {
                 {
                   Title: '작성하기',
                   func: () => {
+                    if (member.memberType === 'TEACHER' && member.classNo === 0) {
+                      toast.warning('배정된 반이 없습니다.');
+                      return;
+                    }
                     navigate('/note/write', { state: { category: 'note' } });
                   },
                 },
