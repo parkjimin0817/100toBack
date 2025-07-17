@@ -107,6 +107,27 @@ public class ClassRoomServiceImpl implements ClassRoomService {
     }
 
     @Override
+    public AttendanceRateResponse getAttendanceClassRate(int classNo) {
+        //오늘 날짜
+        LocalDate today = LocalDate.now();
+
+        // 반
+        ClassRoom classRoom = classRoomRepository.findByClassNo(classNo)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 반입니다."));
+
+        //반 아동 수
+        int childCount = childRepository.countChildByClassroom(classRoom.getClassNo());
+
+        //출석 아동 수 -- 오늘 날짜, 반 번호, 출석 상태
+        int presentChildCount = attendanceRepository.countPresentChild(classRoom.getClassNo(), today,
+                ChildAttendanceStatus.PRESENT).map(Long::intValue).orElse(0);
+        //출석률 계산
+        int attendanceRate = childCount == 0 ?
+                0 : (int) (((double)presentChildCount / childCount) * 100);
+        return AttendanceRateResponse.toDto(classRoom, attendanceRate);
+    }
+
+    @Override
     public List<HealthLogProgressResponse> getHealthLogProgress(int centerNo) {
         //오늘 날짜
         LocalDateTime today = LocalDate.now().atStartOfDay();
@@ -124,6 +145,23 @@ public class ClassRoomServiceImpl implements ClassRoomService {
                     return HealthLogProgressResponse.toDto(classRoom, completed, childCount);
                         })
                 .toList();
+    }
+
+    @Override
+    public HealthLogProgressResponse getClassHealthLogProgress(int classNo) {
+        //오늘 날짜
+        LocalDateTime today = LocalDate.now().atStartOfDay();
+
+        //반
+        ClassRoom classRoom = classRoomRepository.findByClassNo(classNo)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 반입니다."));
+
+        //반 별 아동 수
+        int childCount = childRepository.countChildByClassroom(classRoom.getClassNo());
+        //health-log 오늘 날짜 log 갯수
+        int completed = childRepository.countTodayHealthLog(classRoom.getClassNo(), today).map(Long::intValue).orElse(0);
+
+        return HealthLogProgressResponse.toDto(classRoom, completed, childCount);
     }
 
     @Override

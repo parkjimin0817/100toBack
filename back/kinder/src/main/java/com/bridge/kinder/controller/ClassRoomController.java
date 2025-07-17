@@ -38,10 +38,21 @@ public class ClassRoomController {
         return ResponseEntity.ok(classRoomService.getAttendanceRate(centerNo));
     }
 
+    // 반의 출석률
+    @GetMapping("/main/attendance-class-rate/{classNo}")
+    public ResponseEntity<ClassRoomDto.AttendanceRateResponse> getAttendanceRateByClassNo(@PathVariable int classNo){
+        return ResponseEntity.ok(classRoomService.getAttendanceClassRate(classNo));
+    }
+
     //반별 건강 로그 완료 현황
     @GetMapping("/main/healthlog-progress/{centerNo}")
     public ResponseEntity<List<HealthLogProgressResponse>> getHealthLogProgress(@PathVariable int centerNo){
         return ResponseEntity.ok(classRoomService.getHealthLogProgress(centerNo));
+    }
+
+    @GetMapping("/main/class-healthlog-progress/{classNo}")
+    public ResponseEntity<HealthLogProgressResponse> getClassHealthLogProgress(@PathVariable int classNo){
+        return ResponseEntity.ok(classRoomService.getClassHealthLogProgress(classNo));
     }
 
     //반 수정하기
@@ -49,7 +60,6 @@ public class ClassRoomController {
     public ResponseEntity<ClassRoomDto.Response> updateClass(@RequestBody ClassRoomDto.Update dto, @PathVariable int classNo) {
         return ResponseEntity.ok(classRoomService.updateClass(dto,classNo));
     }
-
 
     //반 삭제하기
     @DeleteMapping("/delete/{classNo}")
