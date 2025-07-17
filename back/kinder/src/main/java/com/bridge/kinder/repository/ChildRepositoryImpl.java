@@ -41,9 +41,8 @@ public class ChildRepositoryImpl implements ChildRepository {
     //번호로 아동 찾기
     @Override
     public Optional<Child> findByChildNo(int childNo) {
-        Child child = em.createQuery("SELECT c FROM Child c WHERE c.childNo = :child_no AND c.status = :status", Child.class)
+        Child child = em.createQuery("SELECT c FROM Child c WHERE c.childNo = :child_no", Child.class)
                 .setParameter("child_no", childNo)
-                .setParameter("status", AdmissionStatus.APPROVED)
                 .getSingleResult();
         return Optional.ofNullable(child);
     }
