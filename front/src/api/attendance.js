@@ -32,7 +32,8 @@ export const attendanceService = {
       };
       return camelData;
     } catch (error) {
-      throw new Error('서버 통신 불량' + error.message);
+      const message = error?.response?.data?.message || '서버 통신 오류';
+      throw new Error(message);
     }
   },
   //교사 퇴근 기록
