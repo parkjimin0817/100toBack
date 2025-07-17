@@ -29,8 +29,6 @@ const TeacherAttendanceCalendar = ({
       .catch((err) => console.error('공휴일 불러오기 실패:', err));
   }, [activeMonth]);
 
-  console.log(monthlyAttendanceList);
-
   return (
     <StyledCalendar
       calendarType="gregory"
