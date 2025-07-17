@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { memberService } from '../../../api/member';
 import theme from '../../../styles/theme';
 import { getPresignedUrl, uploadFileToS3 } from '../../../api/fileApi';
+import classdefaultimg from '../../../assets/classdefault.png';
 
 const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
@@ -30,11 +31,12 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuc
   }, [centerNo]);
 
   const [classImage, setClassImage] = useState(classRoom.class_image); //반 이미지
-  const [previewUrl, setPreviewUrl] = useState(`${CLOUDFRONT_URL}/${classRoom.class_image}`);
-
+  const [previewUrl, setPreviewUrl] = useState(
+    classRoom.class_image ? `${CLOUDFRONT_URL}/${classRoom.class_image}` : classdefaultimg
+  );
   const [className, setClassName] = useState(classRoom.class_name); //반 이름
   const [capacity, setCapacity] = useState(classRoom.capacity); //반 정원
-  const [teacherNo, setTeacherNo] = useState(classRoom.member_no); //선택된 멤버 no
+  const [teacherNo, setTeacherNo] = useState(classRoom.member_no ?? ''); //선택된 멤버 no
   const [classColor, setClassColor] = useState(classRoom.color); //반 색상
 
   const handleImageChange = (e) => {
@@ -147,8 +149,7 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuc
           <InputRow>
             <Label>반 이미지 :</Label>
             <FileDiv>
-              {previewUrl && <PreviewImage src={previewUrl} alt="미리보기" />}
-              {}
+              <PreviewImage src={previewUrl} alt="미리보기" />
               <FileInput type="file" accept="image/*" onChange={handleImageChange} />
             </FileDiv>
           </InputRow>

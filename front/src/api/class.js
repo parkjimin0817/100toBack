@@ -43,8 +43,6 @@ export const classService = {
   updateClass: async (classNo, classRoomData) => {
     try {
       const { data } = await api.put(API_ENDPOINTS.CLASSROOM.UPDATE(classNo), classRoomData);
-
-      console.log('뭐와?', data);
       return data;
     } catch (error) {
       console.error('반 수정 실패: ', error);

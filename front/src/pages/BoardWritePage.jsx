@@ -7,6 +7,7 @@ import useLoginStore from '../store/loginStore';
 import { boardService } from '../api/boards';
 import { useBlockNavigation } from '../hook/useBlockNavigation';
 import { getPresignedUrl, uploadFileToS3 } from '../api/fileApi';
+import { toast } from 'react-toastify';
 
 const categoryName = {
   family_notice: '가정통신문',
@@ -64,7 +65,7 @@ const BoardWritePage = () => {
     }
 
     // ✅ 2. 반 선택 유효성 검사 (category가 반이 필요한 경우만)
-    if ((category === 'note') && !formState.classRoomNo) {
+    if (category === 'note' && !formState.classRoomNo) {
       alert('반을 선택해주세요.');
       return;
     }
@@ -87,8 +88,6 @@ const BoardWritePage = () => {
       return;
     }
 
-    // console.log(formState.attachment);
-
     //S3 게시판 첨부파일 저장 위치
     const path = `board/${category}/`;
 
@@ -105,9 +104,6 @@ const BoardWritePage = () => {
     if (otherFile instanceof File) {
       // 1. Presigned URL 요청 [첨부파일]
       const presigned = await getPresignedUrl(otherFile.name, otherFile.type, path);
-
-      console.log(presigned);
-      console.log(otherFile.type);
 
       // 2. S3에 업로드 [첨부파일]
       await uploadFileToS3(presigned.presigned_url, otherFile);
@@ -166,6 +162,7 @@ const BoardWritePage = () => {
 
     allowNavigation();
     navigate(`/${category}/list`);
+    toast.success('작성 완료');
   };
 
   const updateFormField = (key, value) => {

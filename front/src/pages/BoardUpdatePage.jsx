@@ -8,6 +8,7 @@ import { boardService } from '../api/boards';
 import { useBlockNavigation } from '../hook/useBlockNavigation';
 import api from '../api/axios';
 import { getPresignedUrl, uploadFileToS3 } from '../api/fileApi';
+import { toast } from 'react-toastify';
 
 const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
@@ -41,9 +42,6 @@ const BoardUpdatePage = () => {
     centerId: member.centerNo,
     contents: postData.boardContents,
   });
-
-  // console.log(postData);
-  // console.log(formState);
 
   /**
    * 수정중 페이지 이동 감지시 경고창 띄움.
@@ -81,7 +79,7 @@ const BoardUpdatePage = () => {
     }
 
     // ✅ 2. 반 선택 유효성 검사 (category가 반이 필요한 경우만)
-    if ((category === 'note') && !formState.classRoomNo) {
+    if (category === 'note' && !formState.classRoomNo) {
       alert('반을 선택해주세요.');
       return;
     }
@@ -111,11 +109,8 @@ const BoardUpdatePage = () => {
     const detailPath = 'board/content/';
 
     // ✅ 1. 새로 등록된 File 객체만 골라냄 (수정된 이미지)
-    const newImageItems = formState.contents.filter(
-      (item) => item.type === 'IMG' && item.contentFile instanceof File
-    );
+    const newImageItems = formState.contents.filter((item) => item.type === 'IMG' && item.contentFile instanceof File);
 
-    // console.log(filterData);
     //첨부파일
     const otherFile = formState?.attachment;
     let attachmentChangeName = null;
@@ -124,20 +119,15 @@ const BoardUpdatePage = () => {
     if (otherFile instanceof File) {
       // 1. Presigned URL 요청 [첨부파일]
       const presigned = await getPresignedUrl(otherFile.name, otherFile.type, path);
-        
-      console.log(presigned);
-      console.log(otherFile.type);
-  
+
       // 2. S3에 업로드 [첨부파일]
       await uploadFileToS3(presigned.presigned_url, otherFile);
       attachmentChangeName = presigned.change_name;
     }
-    
+
     // ✅ 2. Presigned URL 요청 (새로운 이미지만)
     const presignedResults = await Promise.all(
-      newImageItems.map((item) =>
-        getPresignedUrl(item.contentFile.name, item.contentFile.type, detailPath)
-      )
+      newImageItems.map((item) => getPresignedUrl(item.contentFile.name, item.contentFile.type, detailPath))
     );
 
     // ✅ 3. S3 업로드 (새로운 이미지만)
@@ -182,7 +172,6 @@ const BoardUpdatePage = () => {
       }
     });
 
-    
     const payload = {
       title: formState.title,
       type: formState.type,
@@ -193,20 +182,19 @@ const BoardUpdatePage = () => {
       memberId: formState.memberId,
       contents: contents,
     };
-    
-    console.log("payload: ", payload);
-    
+
     // api 전송 예시
     const responseData = await boardService.updateBoard(postData.boardNo, payload);
     // await api.put(`http://localhost:8888/api/boards/${postData.boardNo}`, formData, {
     //   headers: { 'Content-Type': 'multipart/form-data' },
     // });
-    console.log(responseData);
+
     if (!responseData) {
       throw new Error('게시판 수정 실패했습니다.');
     }
     allowNavigation();
     navigate(`/${category}/${postData.boardNo}`);
+    toast.success('수정 완료');
   };
 
   const updateFormField = (key, value) => {

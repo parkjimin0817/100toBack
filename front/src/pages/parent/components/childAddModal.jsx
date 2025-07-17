@@ -287,7 +287,7 @@ const ModalHeader = styled.div`
   display: flex;
   justify-content: left;
   align-items: center;
-  background-color: ${({ theme }) => theme.colors.orange};
+  background-color: ${({ theme }) => theme.colors.lightblue};
   color: ${({ theme }) => theme.colors.white};
   span {
     margin: ${({ theme }) => theme.spacing[4]} 0;

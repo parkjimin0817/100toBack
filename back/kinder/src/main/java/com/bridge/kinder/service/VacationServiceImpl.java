@@ -122,10 +122,10 @@ public class VacationServiceImpl implements VacationService {
         Page<Vacation> vacationPage;
         if(vacationType != null) {
             //vacated,workcation 핕터
-            vacationPage = vacationRepository.findByMember_Center_CenterNoAndType(centerNo, vacationType, pageable);
+            vacationPage = vacationRepository.findByCenterNoAndType(centerNo, vacationType, pageable);
         } else {
             //전체
-            vacationPage = vacationRepository.findByMember_Center_CenterNo(centerNo, pageable);
+            vacationPage = vacationRepository.findByCenterNo(centerNo, pageable);
         }
 
         return vacationPage.map(v -> VacationDto.Response.toDto(v, v.getMember()));
