@@ -34,9 +34,7 @@ public class ResignServiceImpl implements ResignService {
         Member member = optResign.get().getMember();
         member.changeMemberStatus(AdmissionStatus.REJECTED);
 
-        Leave leave = leaveRepository.findByMember_MemberNo(dto.getMember_no()).orElseThrow();
-
-        leave.leaveReset(member);
+        member.setLeave(null);
 
         Resign resign = optResign.get();
         resign.updateStatus(dto.getStatus());

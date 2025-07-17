@@ -67,6 +67,7 @@ import CouncelClassList from './pages/manager/CouncelClassList';
 import CouncelSettingPage from './pages/manager/CouncelSettingPage';
 import ParentCouncelPage from './pages/parent/ParentCouncelPage';
 import TeacherDocument from './pages/teacher/TeacherDocument';
+import MyPage from './pages/MyPage';
 import ReSignUpPage from './pages/ReSignUpPage';
 
 function App() {
@@ -89,7 +90,7 @@ function App() {
              * */}
             <Route path="/parent/main" element={<ParentMainPage />} />
             <Route path="/parent/mychild" element={<ParentChildList />} />
-            <Route path="/parent/mypage" element={<ParentMyPage />} />
+            <Route path="/parent/mypage" element={<MyPage />} />
             <Route path="/councel/parent" element={<ParentCouncelPage />} />
 
             {/**
@@ -104,6 +105,7 @@ function App() {
              * 7. 교사 개인, 유치원 일정 관리 페이지
              * 8. 교사 근태 관리 페이지
              * 9. 교사 마이페이지
+             * 10. 교사 서류 관리
              *
              * */}
             <Route path="/teacher/main" element={<TeacherMainPage />} />
@@ -114,7 +116,7 @@ function App() {
             <Route path="/teacher/parentcontactinfo" element={<ParentContact />} />
             <Route path="/scheduleTeacher" element={<ScheduleTeacher />} />
             <Route path="/teacher/myattendance" element={<MyAttendance />} />
-            <Route path="/teacher/mypage" element={<TeacherMyPage />} />
+            <Route path="/teacher/mypage" element={/*<TeacherMyPage />*/ <MyPage />}  />
             <Route path="/teacher/mydocument" element={<TeacherDocument />} />
             {/**
              * 시설장
@@ -134,7 +136,7 @@ function App() {
              *
              * */}
             <Route path="/manager/main" element={<TeacherMainPage />} />
-            <Route path="/manager/mypage" element={<TeacherMyPage />} />
+            <Route path="/manager/mypage" element={/*<TeacherMyPage />*/ <MyPage />} />
             <Route path="/manager/classplacement" element={<ClassPlacement />} />
             <Route path="/manager/teacherlist" element={<TeacherList />} />
             <Route path="/approvalList" element={<ApprovalList />} />

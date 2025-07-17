@@ -67,7 +67,7 @@ export const classService = {
       const { data } = await api.get(API_ENDPOINTS.CLASSROOM.CLASSROOMLIST(centerNo));
       return data; // 시설별 반 목록
     } catch (error) {
-      throw new Error('서버 통신 불량' + error.message);
+      throw new Error('서버 통신 불량' + error.message);  
     }
   },
   getAttendanceRate: async (centerNo) => {
@@ -78,9 +78,25 @@ export const classService = {
       throw new Error('서버 통신 불량' + error.message);
     }
   },
+  getAttendanceClassRate: async (classNo) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.CLASSROOM.GETCLASSRATE(classNo));
+      return data;
+    } catch (error) {
+      throw new Error('서버 통신 불량' + error.message);
+    }
+  },
   getHealthLogProgress: async (centerNo) => {
     try {
       const { data } = await api.get(API_ENDPOINTS.CLASSROOM.GETHEALTHPROGRESS(centerNo));
+      return data;
+    } catch (error) {
+      throw new Error('서버 통신 불량' + error.message);
+    }
+  },
+  getClassHealthLogProgress: async (classNo) => {
+    try {
+      const { data } = await api.get(API_ENDPOINTS.CLASSROOM.GETCLASSHEALTHPROGRESS(classNo));
       return data;
     } catch (error) {
       throw new Error('서버 통신 불량' + error.message);

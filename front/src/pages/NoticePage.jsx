@@ -81,7 +81,7 @@ const NoticePage = () => {
         Color={member.memberType === 'PARENT' ? 'purple' : 'green'}
         // 학부모는 못봄, 교사는 작성하기 못함, 시설장만 가능
         ButtonProps={
-          member.memberType === 'PARENT'
+          (member.memberType === 'PARENT' || member.memberType === 'TEACHER')
             ? []
             : [
                 {

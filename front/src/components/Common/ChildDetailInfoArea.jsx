@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../api/axios';
+import ChildBasicInfo from '../Child/ChildBasicInfo';
 
 const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
@@ -93,7 +94,7 @@ const ChildDetailInfoArea = ({ childNo }) => {
   return (
     <>
       {/* 기본 정보 */}
-      <BasicInfo>
+      {/* <BasicInfo>
         <PictureLine>
           <Picture
             src={childData.child_profile ? `${CLOUDFRONT_URL}/${childData.child_profile}` : defaultImg}
@@ -149,7 +150,8 @@ const ChildDetailInfoArea = ({ childNo }) => {
             </Info>
           </tbody>
         </FirstInfo>
-      </BasicInfo>
+      </BasicInfo> */}
+      <ChildBasicInfo child={childData}></ChildBasicInfo>
 
       {/* 탭 */}
       <HealthInfoContainer>
