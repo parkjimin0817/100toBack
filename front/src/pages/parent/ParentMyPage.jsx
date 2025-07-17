@@ -16,6 +16,11 @@ import ChildAddModal from './components/childAddModal.jsx';
 import ChildBringModal from './components/childBringModal.jsx';
 import MyPageCenterInfo from '../manager/components/MyPageCenterInfo.jsx';
 
+import boy1 from '../../assets/boy1.png';
+import boy2 from '../../assets/boy2.png';
+import girl1 from '../../assets/girl1.png';
+import girl2 from '../../assets/girl2.png';
+
 const CLOUDFRONT_URL = import.meta.env.VITE_CLOUDFRONT_URL;
 
 const ParentMyPage = () => {
@@ -148,20 +153,21 @@ const ParentMyPage = () => {
         <MenuBox>
           {childList.map((data) => {
             const { age, gender, birthday } = childInfo(data.child_resident_no);
+            const boyImg = [boy1, boy2];
+            const girlImg = [girl1, girl2];
+            const imgList = gender === '남' ? boyImg : girlImg;
+            const randomImg = imgList[Math.floor(Math.random() * imgList.length)];
             return (
               <Card key={data.child_no} onClick={() => navigate(`/parent/mychild?childNo=${data.child_no}`)}>
                 <ProfileDiv>
                   <NameDiv>{data.child_name}</NameDiv>
                   <AgeDiv>
-                    ({age}세/{gender === '남자' ? '남' : '여'})
+                    ({age}세/{gender})
                   </AgeDiv>
                   <BirthDiv>생일 {birthday}</BirthDiv>
                 </ProfileDiv>
                 <ImgDiv>
-                  <Img
-                    src={data.child_profile ? `${CLOUDFRONT_URL}/${data.child_profile}` : ChildPicture}
-                    alt="아이 이미지"
-                  />
+                  <Img src={randomImg} alt="아동 랜덤 일러스트" />
                 </ImgDiv>
               </Card>
             );

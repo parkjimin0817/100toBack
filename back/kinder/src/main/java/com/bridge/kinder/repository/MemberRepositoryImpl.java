@@ -79,7 +79,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     //시설 별 교사 불러오기 (for 셀렉트바 / 간단)
     @Override
     public List<Member> findTeacherByCenterNo(int centerNo) {
-        return em.createQuery("select m from Member m where m.memberType =:memberType and m.status =: status and m.center.centerNo =:centerNo", Member.class)
+        return em.createQuery("select m from Member m where m.memberType =:memberType and m.status =: status and m.center.centerNo =:centerNo AND m.classRoom IS NULL", Member.class)
                 .setParameter("memberType", CommonEnums.MemberType.TEACHER)
                 .setParameter("status", CommonEnums.AdmissionStatus.APPROVED)
                 .setParameter("centerNo", centerNo)
@@ -224,5 +224,15 @@ public class MemberRepositoryImpl implements MemberRepository {
         return em.createQuery("SELECT m FROM Member m WHERE m.memberType = :type", Member.class)
                 .setParameter("type", CommonEnums.MemberType.TEACHER)
                 .getResultList();
+    }
+
+    @Override
+    public Optional<Member> findByClassRoom_ClassNo(int classNo) {
+        return em.createQuery(
+                        "SELECT m FROM Member m WHERE m.classRoom.classNo = :classNo", Member.class)
+                .setParameter("classNo", classNo)
+                .getResultList()
+                .stream()
+                .findFirst();
     }
 }

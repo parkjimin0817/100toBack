@@ -5,6 +5,7 @@ import com.bridge.kinder.dto.ClassRoomDto.HealthLogProgressResponse;
 import com.bridge.kinder.dto.CounselDto;
 import com.bridge.kinder.entity.ClassRoom;
 import com.bridge.kinder.service.ClassRoomService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +48,7 @@ public class ClassRoomController {
     //반 수정하기
     @PutMapping("/update/{classNo}")
     public ResponseEntity<ClassRoomDto.Response> updateClass(@RequestBody ClassRoomDto.Update dto, @PathVariable int classNo) {
-        return ResponseEntity.ok(classRoomService.updateClass(dto,classNo));
+       return ResponseEntity.ok(classRoomService.updateClass(dto,classNo));
     }
 
 
