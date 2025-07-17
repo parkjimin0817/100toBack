@@ -57,10 +57,8 @@ public class CounselRepositoryCustomImpl implements CounselRepositoryCustom {
         JOIN mc.child child
         JOIN Counsel c ON c.child = child
         WHERE mc.member.memberNo = :memberNo
-        AND child.status = :status
         """, Counsel.class)
                 .setParameter("memberNo", memberNo)
-                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
     }
 
