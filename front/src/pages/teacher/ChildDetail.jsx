@@ -1,6 +1,6 @@
 // src/pages/teacher/ChildDetail.jsx
 
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import ContentHeader from '../../components/Common/ContentHeader';
 import defaultimg from '../../assets/defaultimg.png';
 import React, { useEffect, useState } from 'react';
