@@ -223,13 +223,13 @@ public class ChildRepositoryImpl implements ChildRepository {
     //아동 생활 데이터 수정
     @Override
     public Optional<ChildActivityData> updateActivityData(int childNo, ChildDto.activity dto) {
-        Child child = em.createQuery("SELECT c FROM Child c WHERE c.childNo = :child_no AND c.status = :status", Child.class)
+        Child child = em.createQuery("SELECT c FROM Child c WHERE c.childNo = :child_no", Child.class)
                 .setParameter("child_no", childNo)
                 .getSingleResult();
         if (child == null) return Optional.empty();
 
         List<ChildActivityData> results = em.createQuery(
-                        "SELECT c FROM ChildActivityData c WHERE c.child.childNo = :childNo AND c.child.status = :status", ChildActivityData.class)
+                        "SELECT c FROM ChildActivityData c WHERE c.child.childNo = :childNo", ChildActivityData.class)
                 .setParameter("childNo", childNo)
                 .getResultList();
 
