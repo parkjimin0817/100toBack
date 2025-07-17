@@ -30,7 +30,8 @@ const AttendanceButton = ({ member }) => {
       toast.success('출근 완료되었습니다.');
     } catch (err) {
       console.error('출근 기록 실패 : ', err);
-      toast.error('출근 기록이 안되었습니다. 다시 시도해주세요.');
+      const errorMessage = err.message || '출근 기록이 안되었습니다. 다시 시도해주세요.';
+      toast.error(errorMessage);
     }
   };
 
@@ -38,7 +39,7 @@ const AttendanceButton = ({ member }) => {
   const handleWorkOut = async () => {
     try {
       // 퇴근 확인 메세지 출력
-      const isConfirmed = window.confirm("퇴근하시겠습니까?");
+      const isConfirmed = window.confirm('퇴근하시겠습니까?');
       if (!isConfirmed) return;
 
       const data = await attendanceService.workOut(memberNo);

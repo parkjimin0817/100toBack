@@ -108,10 +108,10 @@ const SignUpBasicInfo = () => {
   };
 
   const onSubmit = (data) => {
-    if (!access) {
-      toast.warning('인증을 하셔야합니다.');
-      return;
-    }
+    // if (!access) {
+    //   toast.warning('인증을 하셔야합니다.');
+    //   return;
+    // }
 
     if (!isChecked) {
       setError('memberId', {

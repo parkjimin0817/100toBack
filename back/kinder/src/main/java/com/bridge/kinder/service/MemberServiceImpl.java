@@ -348,7 +348,7 @@ public class MemberServiceImpl implements MemberService {
         Center center = centerRepository.findById(centerNo)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 시설입니다."));
 
-        return memberRepository.findTeacherByCenterNo(center.getCenterNo())
+        return memberRepository.findTeacherByCenterNoAll(center.getCenterNo())
                 .stream()
                 .map(TeacherIntroList::toDto)
                 .collect(Collectors.toList());

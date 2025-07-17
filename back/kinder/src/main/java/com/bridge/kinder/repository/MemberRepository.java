@@ -31,6 +31,9 @@ public interface MemberRepository  {
 
     //시설별 교사 목록(for셀렉트바 / 간단)
     List<Member> findTeacherByCenterNo(int centerNo);
+
+    //시설별 교사 목록(for셀렉트바 / 간단)
+    List<Member> findTeacherByCenterNoAll(int centerNo);
     //클래스no으로 담당 교사 찾기
     Optional<Member> findTeacherByClassNo(int classNo);
     //memberNo으로 교사 찾기

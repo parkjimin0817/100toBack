@@ -69,7 +69,9 @@ export const API_ENDPOINTS = {
     DELETE: (no) => `/api/classroom/delete/${no}`,
     CLASSROOMLIST: (centerNo) => `/api/classroom/list/${centerNo}`,
     GETRATE: (centerNo) => `/api/classroom/main/attendance-rate/${centerNo}`,
+    GETCLASSRATE: (classNo) => `/api/classroom/main/attendance-class-rate/${classNo}`,
     GETHEALTHPROGRESS: (centerNo) => `/api/classroom/main/healthlog-progress/${centerNo}`,
+    GETCLASSHEALTHPROGRESS: (classNo) => `/api/classroom/main/class-healthlog-progress/${classNo}`,
   },
   ATTENDANCE: {
     BASE: '/api/attendance',

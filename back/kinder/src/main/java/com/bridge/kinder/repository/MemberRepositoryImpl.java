@@ -86,6 +86,16 @@ public class MemberRepositoryImpl implements MemberRepository {
                 .getResultList();
     }
 
+    //시설 별 교사 불러오기 (for 셀렉트바 / 간단)
+    @Override
+    public List<Member> findTeacherByCenterNoAll(int centerNo) {
+        return em.createQuery("select m from Member m where m.memberType =:memberType and m.status =: status and m.center.centerNo =:centerNo", Member.class)
+                .setParameter("memberType", CommonEnums.MemberType.TEACHER)
+                .setParameter("status", CommonEnums.AdmissionStatus.APPROVED)
+                .setParameter("centerNo", centerNo)
+                .getResultList();
+    }
+
     //member_no으로 멤버 찾기
     @Override
     public Optional<Member> findByMemberNo(int memberNo) {
@@ -161,10 +171,12 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public List<Member> findByCenterNo(int centerNo) {
         return em.createQuery(
-                        "SELECT m FROM Member m WHERE m.center.centerNo = :centerNo AND m.memberType = :memberType",
+                        "SELECT m FROM Member m WHERE m.center.centerNo = :centerNo AND m.memberType = :memberType "
+                                + "AND m.status =: status",
                         Member.class)
                 .setParameter("centerNo", centerNo)
                 .setParameter("memberType", CommonEnums.MemberType.TEACHER)
+                .setParameter("status", CommonEnums.AdmissionStatus.APPROVED)
                 .getResultList();
     }
 

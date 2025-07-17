@@ -19,6 +19,7 @@ const TeacherIntroList = () => {
   const fetchData = async () => {
     try {
       const data = await memberService.teacherIntroList(member.centerNo);
+      console.log('교사목록', data);
       setTeachers(data);
     } catch (e) {
       console.error(e);

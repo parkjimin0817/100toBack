@@ -18,6 +18,7 @@ const TeacherIntroDetail = () => {
   const navigate = useNavigate();
   const [editableInfo, setEditableInfo] = useState({});
   const { member } = useLoginStore();
+  console.log(member);
 
   const handleGoBack = () => {
     navigate('/manager/introteacher');
@@ -32,9 +33,9 @@ const TeacherIntroDetail = () => {
     const mergedData = {
       center_no: member.centerNo,
       member_no: teacherNo,
-      status: 'RESIGN',
     };
 
+    console.log(mergedData);
     try {
       await resignService.resignMember(mergedData);
       toast.success('퇴직 처리가 완료되었습니다.');
