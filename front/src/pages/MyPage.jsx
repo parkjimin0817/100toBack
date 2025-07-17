@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import ContentHeader from '../components/Common/ContentHeader'
+import React, { useEffect, useState } from 'react';
+import ContentHeader from '../components/Common/ContentHeader';
 import styled from 'styled-components';
 import MemberBasicInfo from '../components/MyPage/MemberBasicInfo';
 import useLoginStore from '../store/loginStore';
@@ -15,7 +15,6 @@ import CouncelInfo from '../components/MyPage/CouncelInfo';
 import ParentChildListInfo from '../components/MyPage/ParentChildListInfo';
 import AttendanceInfo from '../components/MyPage/AttendanceInfo';
 import ApprovalListInfo from '../components/MyPage/ApprovalListInfo';
-import VacationListInfo from '../components/MyPage/VacationListInfo';
 
 // 모든 사용자가 사용하는 마이페이지
 // 직위 별로 다른 기능을 사용하도록 만들어야함.
@@ -175,46 +174,42 @@ const MyPage = () => {
         Title={'마이페이지'}
         Color={'blue'}
         FontSize="xl"
-        ButtonProps={[{ Title: isEditing ? '수정완료' : '수정하기', func: handleSave}]}
+        ButtonProps={[{ Title: isEditing ? '수정완료' : '수정하기', func: handleSave }]}
       />
       <Wrapper>
         {/* 사용자 정보를 띄우는 InfoBox */}
-        <MemberBasicInfo 
+        <MemberBasicInfo
           editableInfo={editableInfo}
           isEditing={isEditing}
           onProfileUpdate={handleProfileUpdate}
           onChange={setEditableInfo}
         ></MemberBasicInfo>
 
-        <div style={{ display: "flex"}}>
+        <div style={{ display: 'flex' }}>
           {/* 시설 정보 카드 */}
-          <CenterBasicInfo 
+          <CenterBasicInfo
             center={centerInfo}
             isEditing={isEditing && member.memberType === 'MANAGER'}
-            isTeacher={member.memberType === "TEACHER"}
+            isTeacher={member.memberType === 'TEACHER'}
             onChange={setCenterInfo}
-          ></CenterBasicInfo> 
+          ></CenterBasicInfo>
 
-          {/* [교사] 담당 반 출결 & 건강  정보  */} 
-          {member.memberType === "TEACHER" && (
-            <ClassBasicInfo
-              classNo={member.classNo}
-            ></ClassBasicInfo>
-          )}
+          {/* [교사] 담당 반 출결 & 건강  정보  */}
+          {member.memberType === 'TEACHER' && <ClassBasicInfo classNo={member.classNo}></ClassBasicInfo>}
         </div>
 
         {/* [교사&학부모] 대기중인 상담 리스트 */}
-        {member.memberType !== "MANAGER" && (
+        {member.memberType !== 'MANAGER' && (
           <FlexBox>
-            <h1 style={{textAlign: "start"}}>상담 대기 목록</h1>
+            <h1 style={{ textAlign: 'start' }}>상담 대기 목록</h1>
             <CouncelInfo counselList={counselList}></CouncelInfo>
           </FlexBox>
         )}
 
         {/* [학부모] 아동 리스트 */}
-        {member.memberType === "PARENT" && (
+        {member.memberType === 'PARENT' && (
           <FlexBox>
-            <h1 style={{textAlign: "start"}}>아동 목록</h1>
+            <h1 style={{ textAlign: 'start' }}>아동 목록</h1>
             <ParentChildListInfo
               childList={childList}
               openAddModal={openAddModal}
@@ -224,24 +219,23 @@ const MyPage = () => {
         )}
 
         {/* [교사] 근태 정보 카드 */}
-        {member.memberType === "TEACHER" && (
+        {member.memberType === 'TEACHER' && (
           <FlexBox>
-            <h1 style={{textAlign: "start"}}>근태 정보</h1>
+            <h1 style={{ textAlign: 'start' }}>근태 정보</h1>
             <AttendanceInfo></AttendanceInfo>
           </FlexBox>
         )}
 
         {/* [시설장] 회원가입 대기 리스트 */}
-        {member.memberType === "MANAGER" && (
+        {member.memberType === 'MANAGER' && (
           <FlexBox>
-            <h1 style={{textAlign: "start"}}>대기 현황</h1>
-            <ApprovalListInfo></ApprovalListInfo> 
+            <h1 style={{ textAlign: 'start' }}>대기 현황</h1>
+            <ApprovalListInfo></ApprovalListInfo>
           </FlexBox>
         )}
 
         {/* [시설장] 대기중인 휴가 & 워케이션 리스트 */}
         {/* <VacationListInfo></VacationListInfo> */}
-
       </Wrapper>
       <ChildAddModal isOpen={isAddModalOpen} onClose={closeAddModal} />
       <ChildBringModal isOpen={isBringModalOpen} onClose={closeBringModal} />
