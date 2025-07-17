@@ -116,6 +116,7 @@ export const useSearchPwdForm2 = () => {
 
   const handleSendAuthNumber = () => {
     // 인증번호 전송 API 호출 로직 추가
+    setAccess(true);
     console.log('인증번호 전송됨');
     start(); // 타이머 시작
   };
