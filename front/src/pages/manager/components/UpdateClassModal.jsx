@@ -34,7 +34,7 @@ const UpdateClassModal = ({ onClose, centerNo, classRoom, onSuccess, onDeleteSuc
 
   const [className, setClassName] = useState(classRoom.class_name); //반 이름
   const [capacity, setCapacity] = useState(classRoom.capacity); //반 정원
-  const [teacherNo, setTeacherNo] = useState(classRoom.member_no); //선택된 멤버 no
+  const [teacherNo, setTeacherNo] = useState(classRoom.member_no ?? ''); //선택된 멤버 no
   const [classColor, setClassColor] = useState(classRoom.color); //반 색상
 
   const handleImageChange = (e) => {
