@@ -1,10 +1,12 @@
 package com.bridge.kinder.service;
 
 import com.bridge.kinder.dto.ResignDto;
+import com.bridge.kinder.entity.Leave;
 import com.bridge.kinder.entity.Member;
 import com.bridge.kinder.entity.Resign;
 import com.bridge.kinder.enums.CommonEnums;
 import com.bridge.kinder.enums.CommonEnums.AdmissionStatus;
+import com.bridge.kinder.repository.LeaveRepository;
 import com.bridge.kinder.repository.MemberRepository;
 import com.bridge.kinder.repository.ResignRepository;
 import java.util.Optional;
@@ -19,6 +21,7 @@ public class ResignServiceImpl implements ResignService {
 
     private final ResignRepository resignRepository;
     private final MemberRepository memberRepository;
+    private final LeaveRepository leaveRepository;
 
     //퇴사 처리
     @Override
@@ -30,6 +33,10 @@ public class ResignServiceImpl implements ResignService {
 
         Member member = optResign.get().getMember();
         member.changeMemberStatus(AdmissionStatus.REJECTED);
+
+        Leave leave = leaveRepository.findByMember_MemberNo(dto.getMember_no()).orElseThrow();
+
+        leave.leaveReset(member);
 
         Resign resign = optResign.get();
         resign.updateStatus(dto.getStatus());

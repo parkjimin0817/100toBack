@@ -149,5 +149,4 @@ public class MemberController {
     public ResponseEntity<List<MemberDto.SimpleDto>> centerMemberList(@RequestParam int centerNo){
         return ResponseEntity.ok(memberService.centerMemberList(centerNo));
     }
-
 }
