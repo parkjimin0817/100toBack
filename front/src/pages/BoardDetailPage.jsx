@@ -65,7 +65,7 @@ const BoardDetailPage = () => {
       if (!isConfirmed) return;
 
       const responseData = await boardService.boardDelete(boardNo);
-      toast.error('게시글 삭제 성공');
+      toast.success('게시글 삭제 성공');
       handleGoBack();
     } catch (error) {
       console.error('게시글 삭제 실패');
