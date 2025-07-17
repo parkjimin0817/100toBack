@@ -30,7 +30,7 @@ public class Leave {// 연차
 
 
     //---------------------------------------------------------------------------------------------
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_NO")
     private Member member;
     //멤버
@@ -59,6 +59,12 @@ public class Leave {// 연차
     public void cancelLeave(int days){
         this.usedLeave -= days; //사용한 연차 - 신청했던 연차
         if(usedLeave < 0) usedLeave = 0; //사용한 연차는 0보다 작은 음수가 되면 안된다
+    }
+
+    public void leaveReset(Member member){
+        this.leaveDays = 15;
+        this.usedLeave = 0;
+        this.member = member;
     }
 }
 

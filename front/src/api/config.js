@@ -55,6 +55,7 @@ export const API_ENDPOINTS = {
     DECISIONCENTER: `api/approval/decision/center`,
     DECISIONMEMBER: `api/approval/decision/member`,
     DECISIONCHILD: `api/approval/decision/child`,
+    REAPPROVAL: `/api/approval/reapproval`,
   },
   CENTERS: {
     BASE: '/api/center',
