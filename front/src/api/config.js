@@ -121,6 +121,8 @@ export const API_ENDPOINTS = {
     GETDOCLIST: '/api/boards/documents/list',
     UPDATEVIEWED: (boardNo) => `/api/boards/documents/viewed/${boardNo}`,
     GETRECENTVIEWED: '/api/boards/documents/recent',
+    PARENT: (memberNo, centerNo, page) => `/api/boards/type/Note/parent/${memberNo}/${centerNo}?page=${page}`,
+    TEACHER: (classNo, centerNo, page) => `/api/boards/type/Note/teacher/${classNo}/${centerNo}?page=${page}`,
   },
   VACATION: {
     BASE: '/api/vacation',

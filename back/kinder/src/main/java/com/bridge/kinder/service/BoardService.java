@@ -32,5 +32,9 @@ public interface BoardService {
     void updateViewedDate(int boardNo);
     //개인 서류 최근 열람한 5개
     List<BoardDto.DocumentResponse> getRecentViewedDocument(String memberId);
+    //멤버 번호로 연관 아동의 반 알림장 불러오기
+    Page<BoardDto.NoteBoardDto> getNoteBoardsByMemberNo(CommonEnums.BoardType type, int memberNo, int centerNo,int page, int size);
+    //반 번호로 알림장 불러오기
+    Page<BoardDto.NoteBoardDto> getNoteBoardsByClassNo(CommonEnums.BoardType type, int classNo, int centerNo,int page, int size);
 
 }

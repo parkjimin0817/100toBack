@@ -3,6 +3,7 @@ package com.bridge.kinder.repository;
 import com.bridge.kinder.dto.CounselDto.Update;
 import com.bridge.kinder.entity.Child;
 import com.bridge.kinder.entity.Counsel;
+import com.bridge.kinder.enums.CommonEnums.AdmissionStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
@@ -22,8 +23,9 @@ public class CounselRepositoryCustomImpl implements CounselRepositoryCustom {
     //반번호로 상담일정 리스트 조회
     @Override
     public List<Counsel> findCounselByClassNo(int classNo) {
-        return em.createQuery("SELECT c FROM Counsel c WHERE c.child.classRoom.classNo = :classNo", Counsel.class)
+        return em.createQuery("SELECT c FROM Counsel c WHERE c.child.classRoom.classNo = :classNo AND c.child.status = :status", Counsel.class)
                 .setParameter("classNo", classNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
     }
 
@@ -55,8 +57,10 @@ public class CounselRepositoryCustomImpl implements CounselRepositoryCustom {
         JOIN mc.child child
         JOIN Counsel c ON c.child = child
         WHERE mc.member.memberNo = :memberNo
+        AND child.status = :status
         """, Counsel.class)
                 .setParameter("memberNo", memberNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
     }
 
@@ -66,8 +70,10 @@ public class CounselRepositoryCustomImpl implements CounselRepositoryCustom {
         SELECT c
         FROM Counsel c
         WHERE c.center.centerNo = :centerNo
+        AND c.child.status = :status
         """, Counsel.class)
                 .setParameter("centerNo", centerNo)
+                .setParameter("status", AdmissionStatus.APPROVED)
                 .getResultList();
     }
 }

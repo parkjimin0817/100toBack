@@ -9,39 +9,46 @@ import { boardService } from '../api/boards';
 import useLoginStore from '../store/loginStore';
 import { toast } from 'react-toastify';
 
-const columns = [
-  {
-    label: '번호',
-    key: 'boardNo',
-    width: '100px',
-    align: 'center',
-  },
-  {
-    label: '제목',
-    key: 'title',
-  },
-  {
-    label: '작성자',
-    key: 'memberName',
-    width: '120px',
-  },
-  {
-    label: '작성일',
-    key: 'createDate',
-    width: '160px',
-  },
-  {
-    label: '조회수',
-    key: 'views',
-    width: '100px',
-  },
-];
-
 const NotePage = () => {
   const [data, setData] = useState(null);
   const [page, setPage] = useState(1); // 1부터 시작
   const navigate = useNavigate();
   const member = useLoginStore((state) => state.member);
+
+  const columns = [
+    member.memberType === 'PARENT'
+      ? {
+          label: '반 이름',
+          key: 'className', // 백엔드에서 오는 반 이름 key
+          width: '120px',
+          align: 'center',
+        }
+      : {
+          label: '번호',
+          key: 'boardNo',
+          width: '100px',
+          align: 'center',
+        },
+    {
+      label: '제목',
+      key: 'title',
+    },
+    {
+      label: '작성자',
+      key: 'memberName',
+      width: '120px',
+    },
+    {
+      label: '작성일',
+      key: 'createDate',
+      width: '160px',
+    },
+    {
+      label: '조회수',
+      key: 'views',
+      width: '100px',
+    },
+  ];
 
   const tableInfo = {
     color: theme.colors.white,
@@ -53,9 +60,18 @@ const NotePage = () => {
   useEffect(() => {
     const getPostList = async () => {
       try {
-        const responseData = await boardService.typeBoardList('NOTE', member.centerNo, page);
+        let responseData;
+        if (member.memberType === 'PARENT') {
+          // 부모용 API 호출(본인 아동의 알림장)
+          responseData = await boardService.typeBoardListForParent(member.memberNo, member.centerNo, page);
+        } else if (member.memberType === 'TEACHER') {
+          // 교사용 API 호출(본인 반의 알림장)
+          responseData = await boardService.typeBoardListForTeacher(member.classNo, member.centerNo, page);
+        } else {
+          // 시설장 기존 API 호출
+          responseData = await boardService.typeBoardList('NOTE', member.centerNo, page);
+        }
         setData(responseData);
-        // alert("게시글 조회 성공");
       } catch (error) {
         console.error('게시글 조회 실패 : ', error);
         //alert('게시글 조회 실패');
