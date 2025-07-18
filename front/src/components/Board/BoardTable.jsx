@@ -76,6 +76,7 @@ const BoardTable = ({ tableInfo, columns, boardData }) => {
               <BoardTD key={rowIndex + col.key}>
                 {col.key === "attachment" ? <FiDownload /> : 
                   col.key === "createDate" ? formatDate(row[col.key]) : 
+                  col.key === "boardNo" ? boardData.length - rowIndex :
                   row[col.key]
                 }
               </BoardTD>
