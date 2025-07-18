@@ -106,7 +106,7 @@ const ScheduleModal = ({ isOpen, onClose, selectedDate, initialData, type, onSuc
   return (
     <Backdrop onClick={onClose}>
       <ModalContainer onClick={(e) => e.stopPropagation()}>
-        <ModalHeader memberType={member.memberType}>
+        <ModalHeader>
           <Span>{viewMode ? '일정 보기' : initialData ? '일정 수정' : '일정 추가'}</Span>
         </ModalHeader>
         <ModalContent>

@@ -62,7 +62,7 @@ export const useSearchPwdForm3 = () => {
 
       pwdSelectReaction(reactions);
 
-      toast.success(reaction.reaction);
+      toast.success('비밀번호 변경 완료');
       navigator('/');
       reset('member');
     } catch (error) {

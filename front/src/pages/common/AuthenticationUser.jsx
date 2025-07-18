@@ -15,6 +15,7 @@ const AuthenticationUser = () => {
     writeNumber,
     isLoading,
     isLoading2,
+    access,
     error,
     auth,
     handleChange,
@@ -66,7 +67,7 @@ const AuthenticationUser = () => {
               </ContentInner>
             </form>
 
-            {auth.auth_no > 0 ? (
+            {access ? (
               <form onSubmit={submitAuth}>
                 <ContentInner>
                   <Input
