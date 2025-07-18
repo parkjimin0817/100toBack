@@ -37,11 +37,11 @@ const ChildLifeCheck = () => {
 
   useEffect(() => {
     // 부모가 아니고, 반이 미소속인 경우 불러오지 않음.
-    if(memberType !== 'PARENT' && !selectedClassNo) return;
+    if (memberType !== 'PARENT' && !selectedClassNo) return;
 
     // 부모이거나 소속된 반이 있는 경우 바로 조회
     handleSearch();
-  }, [])
+  }, []);
 
   // 검색 실행
   const handleSearch = async () => {
@@ -88,16 +88,21 @@ const ChildLifeCheck = () => {
       // 병합
       const checklist = children.map((child) => {
         const matchedLog = logs.find((log) => log.child_no === child.child_no);
+        console.log(matchedLog);
         return {
           name: child.child_name,
           child_no: child.child_no,
           meal: matchedLog?.dailyMeal_amount || '',
           napStart: matchedLog?.napStart_time || '',
           napEnd: matchedLog?.napEnd_time || '',
-          napTime:
-            matchedLog?.napStart_time && matchedLog?.napEnd_time
-              ? `${matchedLog.napStart_time.substring(0, 5)} ~ ${matchedLog.napEnd_time.substring(0, 5)}`
-              : '',
+          napTime: (() => {
+            const start = matchedLog?.napStart_time;
+            const end = matchedLog?.napEnd_time;
+            if (start && end && start.length >= 5 && end.length >= 5) {
+              return `${toAmPm(start)} ~ ${toAmPm(end)}`;
+            }
+            return '';
+          })(),
           play: matchedLog?.play_participation || '',
           social: matchedLog?.daily_friendship || '',
           memo: matchedLog?.activity_log_memo || '',
@@ -146,7 +151,22 @@ const ChildLifeCheck = () => {
   };
 
   const handleChange = (index, field, value) => {
-    setChecklist((prev) => prev.map((item, i) => (i === index ? { ...item, [field]: value } : item)));
+    setChecklist((prev) =>
+      prev.map((item, i) => {
+        if (i !== index) return item;
+        // napStart 또는 napEnd가 바뀌면 napTime도 다시 계산
+        if (field === 'napStart' || field === 'napEnd') {
+          const newNapStart = field === 'napStart' ? value : item.napStart;
+          const newNapEnd = field === 'napEnd' ? value : item.napEnd;
+          let newNapTime = '';
+          if (newNapStart && newNapEnd && newNapStart.length >= 5 && newNapEnd.length >= 5) {
+            newNapTime = `${toAmPm(newNapStart)} ~ ${toAmPm(newNapEnd)}`;
+          }
+          return { ...item, [field]: value, napTime: newNapTime };
+        }
+        return { ...item, [field]: value };
+      })
+    );
   };
 
   return (
@@ -182,3 +202,12 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
+function toAmPm(timeStr) {
+  if (!timeStr || timeStr.length < 5) return '';
+  const [hour, minute] = timeStr.split(':');
+  const h = parseInt(hour, 10);
+  const ampm = h < 12 ? '오전' : '오후';
+  const displayHour = h % 12 === 0 ? 12 : h % 12;
+  return `${ampm} ${displayHour}:${minute}`;
+}

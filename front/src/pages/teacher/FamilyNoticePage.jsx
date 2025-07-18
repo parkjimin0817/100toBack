@@ -42,16 +42,9 @@ const columns = [
   },
 ];
 
-const BoardData = [
-  { id: 1, title: '[가정통신문] 6월1주차', writer: '정형일', class: '햇님', file: '', created_Date: '2025-06-03' },
-  { id: 2, title: '[가정통신문] 6월2주차', writer: '정형일', class: '햇님', file: '', created_Date: '2025-06-10' },
-  { id: 3, title: '[가정통신문] 6월3주차', writer: '정형일', class: '햇님', file: '', created_Date: '2025-06-17' },
-  { id: 4, title: '[가정통신문] 6월4주차', writer: '정형일', class: '햇님', file: '', created_Date: '2025-06-24' },
-];
-
 const FamilyNoticePage = () => {
   const [data, setData] = useState(null);
-  const [page, setPage] = useState(1); // 1부터 시작
+  const [page, setPage] = useState(1);
   const navigate = useNavigate();
   const member = useLoginStore((state) => state.member);
 
@@ -67,7 +60,6 @@ const FamilyNoticePage = () => {
       try {
         const responseData = await boardService.typeBoardList('FAMILY_NOTICE', member.centerNo, page);
         setData(responseData);
-        // alert("게시글 조회 성공");
       } catch (error) {
         console.error('게시글 조회 실패 : ', error);
         alert('게시글 조회 실패');

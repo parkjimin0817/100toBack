@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 import styled from 'styled-components';
-import { FiDownload } from "react-icons/fi";
+import { FiDownload } from 'react-icons/fi';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 /**
@@ -19,7 +19,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
  * !    onclick ?: 컬럼을 클릭했을 때, 작동할 클릭 이벤트
  * ! }, ]
  * ! boardData {} : 실제 게시판 데이터
- * 
+ *
  */
 
 const BoardTable = ({ tableInfo, columns, boardData }) => {
@@ -48,57 +48,56 @@ const BoardTable = ({ tableInfo, columns, boardData }) => {
 
   return (
     <>
-    <BoardTableContainer>
-      <BoardTHead 
-        $fontSize={tableInfo?.thFontSize}
-        $color={tableInfo?.color}
-        $backgroundColor={tableInfo?.backgroundColor}
-      >
-        <tr>
-          {columns.map(col => (
-            <BoardTH 
-              key={col.key}
-              $width={col.width}
-              $align={col.align}
-            >{col.label}</BoardTH>
-          ))}
-        </tr>
-      </BoardTHead>
-      <BoardTBody
-        $fontSize={tableInfo?.tbFontSize}
-      >
-        {boardData && boardData.map((row, rowIndex) => (
-          <BoardTR 
-            key={rowIndex}
-            onClick={() => handleRowClick(row.boardNo)}
-          >
+      <BoardTableContainer>
+        <BoardTHead
+          $fontSize={tableInfo?.thFontSize}
+          $color={tableInfo?.color}
+          $backgroundColor={tableInfo?.backgroundColor}
+        >
+          <tr>
             {columns.map((col) => (
-              <BoardTD key={rowIndex + col.key}>
-                {col.key === "attachment" ? <FiDownload /> : 
-                  col.key === "createDate" ? formatDate(row[col.key]) : 
-                  row[col.key]
-                }
-              </BoardTD>
+              <BoardTH key={col.key} $width={col.width} $align={col.align}>
+                {col.label}
+              </BoardTH>
             ))}
-          </BoardTR>
-        ))}
-      </BoardTBody>
-    </BoardTableContainer>
-    {(boardData.length < 1) && (
-      <div>작성된 게시글이 없습니다.</div>
-    )}
+          </tr>
+        </BoardTHead>
+        <BoardTBody $fontSize={tableInfo?.tbFontSize}>
+          {boardData &&
+            boardData.map((row, rowIndex) => (
+              <BoardTR key={rowIndex} onClick={() => handleRowClick(row.boardNo)}>
+                {columns.map((col) => (
+                  <BoardTD key={rowIndex + col.key}>
+                    {col.key === 'attachment' ? (
+                      row[col.key] ? (
+                        <FiDownload />
+                      ) : null
+                    ) : col.key === 'createDate' ? (
+                      formatDate(row[col.key])
+                    ) : col.key === 'boardNo' ? (
+                      boardData.length - rowIndex
+                    ) : (
+                      row[col.key]
+                    )}
+                  </BoardTD>
+                ))}
+              </BoardTR>
+            ))}
+        </BoardTBody>
+      </BoardTableContainer>
+      {boardData.length < 1 && <div>작성된 게시글이 없습니다.</div>}
     </>
-  )
-}
+  );
+};
 
 const BoardTableContainer = styled.table`
   width: 90%;
 `;
 
 const BoardTHead = styled.thead`
-  color : ${({ $color }) => $color ? $color : ""};
-  background-color : ${({ $backgroundColor }) => $backgroundColor ? $backgroundColor : ""};
-  font-size: ${({ $fontSize }) => $fontSize ? $fontSize : ""};
+  color: ${({ $color }) => ($color ? $color : '')};
+  background-color: ${({ $backgroundColor }) => ($backgroundColor ? $backgroundColor : '')};
+  font-size: ${({ $fontSize }) => ($fontSize ? $fontSize : '')};
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 
@@ -112,18 +111,18 @@ const BoardTHead = styled.thead`
 `;
 
 const BoardTH = styled.th`
-  min-width : 30px;
-  max-width : ${({ $width }) => $width ? $width : ""};
-  text-align : ${({ $align }) => $align ? $align : ""};
+  min-width: 30px;
+  max-width: ${({ $width }) => ($width ? $width : '')};
+  text-align: ${({ $align }) => ($align ? $align : '')};
   padding: 10px 5px;
 `;
 
 const BoardTBody = styled.tbody`
-  font-size: ${({ $fontSize }) => $fontSize ? $fontSize : ""};
+  font-size: ${({ $fontSize }) => ($fontSize ? $fontSize : '')};
 `;
 
 const BoardTR = styled.tr`
-  border-bottom: 1px solid #BFBFBF;
+  border-bottom: 1px solid #bfbfbf;
   transition: background-color 0.3s ease;
 
   &:hover {
