@@ -58,7 +58,6 @@ const ChatContainer = () => {
     const getChatRoomList = async () => {
       try {
         const responseData = await chatService.getMyChatRoom();
-        console.log(responseData);
         // 불러온 참여중인 채팅방 리스트 저장
         setChatRoomList(responseData);
       } catch (error) {
@@ -75,7 +74,6 @@ const ChatContainer = () => {
     const getMemberList = async () => {
       try {
         const responseData = await chatService.getMemberList(member.centerNo);
-        console.log(responseData);
 
         const filteredData = responseData.filter((chatMember) => chatMember.member_no !== member.memberNo);
         // 시설 내 멤버 리스트 불러오기
@@ -99,7 +97,7 @@ const ChatContainer = () => {
     const getChatRoomHistory = async () => {
       try {
         const responseData = await chatService.getChatRoomHistory(selectChatRoomNo);
-        console.log(responseData);
+
         // 불러온 메세지 기록들 저장
         setMessages(responseData);
       } catch (error) {
@@ -125,9 +123,7 @@ const ChatContainer = () => {
 
     websocket.onmessage = (event) => {
       try {
-        console.log('메세지 수신 : ', event);
         const message = JSON.parse(event.data);
-        console.log('메세지 파싱 : ', message);
         setMessages((prev) => [...prev, message]);
       } catch (error) {
         console.error('메시지 파싱 실패:', error);
@@ -163,7 +159,6 @@ const ChatContainer = () => {
       message: newMessage,
     };
     ws.send(JSON.stringify(message));
-    console.log('메세지 목록 : ', messages);
     setNewMessage('');
   };
 
@@ -185,7 +180,6 @@ const ChatContainer = () => {
 
     try {
       const chatRoomId = await chatService.privateChatCreate(otherMember.member_no);
-      console.log(chatRoomId);
       setSelectChatRoomNo(chatRoomId);
       onChangeStatus('chatRoom', otherMember.member_name);
     } catch (error) {
